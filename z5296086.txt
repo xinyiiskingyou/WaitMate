@@ -1,1 +1,5 @@
-
+Week 1
+We have formed groups, setup moodle groups, jira and github classroom. 
+We finalised on the decision of which project to do. We did some background
+research on the wait management system that we are going to do. We did some
+user stories and the acceptance criterias of them.
