@@ -1,1 +1,3 @@
-
+Week 1
+Formed groups, created jira and joined github. Also decided on the project to do with team and wrote a bit about background and did research into
+current systems that solve the problem domain.
