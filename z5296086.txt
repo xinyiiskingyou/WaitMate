@@ -3,3 +3,8 @@ We have formed groups, setup moodle groups, jira and github classroom.
 We finalised on the decision of which project to do. We did some background
 research on the wait management system that we are going to do. We did some
 user stories and the acceptance criterias of them.
+
+Week 2 
+Claify doubts with tutor. Confirmed the functionalities that we are going to 
+include in the project. Decided on the novel functionalities to implement.
+Divide workload between user stories and storyboards drawing.
