@@ -1,1 +1,13 @@
+Week 1 
+
+We formed the group of 4 people and setup jira as required. 
+We also decided to have an additional regular meeting every Saturday night. 
+We delegated some tasks of the proposal, Leanna and Sunnie will be working on the user stories, 
+while Trinh and me will be working on the background.
+
+Week 2
+
+We have roughly completed the background research, user stories, and defined both the normal 
+and novel functionalities. We have then divided the remaining tasks. Leanna and Sunnie will 
+be working on the storyboard, while Trinh and I will be working on the rest of Part B.
 
