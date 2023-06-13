@@ -1,6 +1,10 @@
 Week 1
-We have set up everything including forming a group, finalising our project idea, setting up Jira and github classroom. We started our proposal draft, started working on the background and user stories.
+We have set up everything including forming a group, finalising our project idea, 
+setting up Jira and github classroom. We started our proposal draft, 
+started working on the background and user stories.
 
 Week 2 
 Moving forward to users storyboards, interface and jira user stories.
-Finalised the functionalities including the novel functionalities. Decided what the user stories should be implemented in sprint 1 and put all the user stories into backlog. We are going to discuss the technologies to be used in week 3. 
+Finalised the functionalities including the novel functionalities. 
+Decided what the user stories should be implemented in sprint 1 and put all the user stories into backlog. 
+We are going to discuss the technologies to be used in week 3. 
