@@ -8,3 +8,8 @@ Week 2
 Claify doubts with tutor. Confirmed the functionalities that we are going to 
 include in the project. Decided on the novel functionalities to implement.
 Divide workload between user stories and storyboards drawing.
+
+Week 3
+Finalising the project proposal for submission on Friday. Made and design 
+user interfaces and storyboards for the user flow diagrams. Moving the 
+project proposal onto latex. Clarify last minute questions with tutor.
