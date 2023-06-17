@@ -8,4 +8,8 @@ Moving forward to users storyboards, interface and jira user stories.
 Finalised the functionalities including the novel functionalities. 
 Decided what the user stories should be implemented in sprint 1 and put all the user stories into backlog. 
 We are going to discuss the technologies to be used in week 3. 
-testing
+
+Week3 
+Decided what technolgies/languages we use for the project. 
+Worked on the storyboard for the 4 different users.
+Migrated our proposal from google doc to latex. Finalising everything in the proposal.
