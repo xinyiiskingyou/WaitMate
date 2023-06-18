@@ -1,11 +1,13 @@
 # **How to run Backend:**
-    cd backend
-    python main.py
+    `cd backend`
+    `python main.py`
 
 # **How to run Frontend:**
-    cd frontend
-    start react app:
-    npm run start
+    `cd frontend`
+    `npm install`
+    `npm install @mui/material @emotion/react @emotion/styled`
+    `npm start`
+    runs the react app
 
 # **Documentation:** 
     #MUI
