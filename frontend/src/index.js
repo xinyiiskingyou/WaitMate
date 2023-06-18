@@ -3,11 +3,12 @@
 import * as React from 'react';
 import { render } from 'react-dom';
 import Button from '@mui/material/Button';
+import MyComponent from './components/Header';
 
 export default function App() {
   return (
     <div>
-      <Button variant="contained">Hello World</Button>
+      <MyComponent />
     </div>
   );
 }
