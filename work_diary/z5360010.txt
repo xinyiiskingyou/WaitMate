@@ -3,3 +3,6 @@ Formed groups, created jira and joined github. Had another meeting with the team
 
 Week 2
 Continued discuss on goals for the project proposal and finished a draft for the background with another member. Decided with members on functionaility for project and continued to split the project proposal. Finished up the background and worked on creating user stories and defining functionality.
+
+Week 3
+Finished creating user stories and grouped them with functionality. Added them to relevant Jira tickets. Created a system diagram poster.
