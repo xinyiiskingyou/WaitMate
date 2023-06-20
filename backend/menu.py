@@ -4,6 +4,8 @@ def category_already(name: str) -> bool:
     con = sqlite3.connect("restaurant.db")
     cur = con.cursor()
     cur.execute("CREATE TABLE IF NOT EXISTS categories(name)")
+    con.commit()
+
     cur.execute("SELECT 1 FROM categories c WHERE c.name = (?)",(name,))
     items = cur.fetchall()
     con.commit()
@@ -17,6 +19,8 @@ def item_already(name: str) -> bool:
     con = sqlite3.connect("restaurant.db")
     cur = con.cursor()
     cur.execute("CREATE TABLE IF NOT EXISTS items(name, cost, description)")
+    con.commit()
+
     cur.execute("SELECT 1 FROM items i WHERE i.name = (?)",(name,))
     items = cur.fetchall()
     con.commit()
@@ -57,9 +61,13 @@ def item_add(category: str, name: str, cost: float, description: str) -> None:
     con = sqlite3.connect("restaurant.db")
     cur = con.cursor()
     cur.execute("INSERT INTO items values(?,?,?)",(name,cost,description))
-    cur.execute("CREATE TABLE IF NOT EXISTS menu(category, item, order)")
+    con.commit()
+
+    cur.execute("CREATE TABLE IF NOT EXISTS menu(category, item, order_id)")
+    con.commit()
+
     order: int = get_next_order(category)
-    cur.execute("INSERT INTO menu values(?,?)",(category,name, order))
+    cur.execute("INSERT INTO menu values(?,?,?)",(category,name,order))
     con.commit()
     con.close()
 
@@ -83,12 +91,14 @@ def sql_show_all() -> None:
     items = cur.fetchall()
     for item in items:
         print(item)
+    con.commit()
 
     print("Items")
     cur.execute("SELECT rowid, * FROM items")
     items = cur.fetchall()
     for item in items:
         print(item)   
+    con.commit()
 
     print("Menu")
     cur.execute("SELECT rowid, * FROM menu")
@@ -106,8 +116,7 @@ if __name__ == "__main__":
     con.commit()
     con.close()
     category_add("Yms")
-    item_add("Yms", )
-
+    item_add("Yms", "Bread", 10, "")
     sql_show_all()
 
 
