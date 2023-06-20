@@ -43,7 +43,7 @@ def item_already(name: str) -> bool:
         return True
     return False
 
-def get_next_order(category) -> int:
+def get_next_order(category: str) -> int:
     con = sqlite3.connect("restaurant.db")
     cur = con.cursor()
     cur.execute("SELECT * FROM menu m WHERE m.category = (?)",(category,))
@@ -51,7 +51,7 @@ def get_next_order(category) -> int:
     con.close()    
     return len(items)
 
-def category_add_db(name):
+def category_add_db(name: str):
     con = sqlite3.connect("restaurant.db")
     cur = con.cursor()
 
@@ -89,3 +89,14 @@ def menu_view_db() -> list[tuple]:
     con.close() 
     return items
 
+def menu_item_update_details_db(category: str, item: str, name: str, cost: float, description: str) -> None:
+    con = sqlite3.connect("restaurant.db")
+    cur = con.cursor()
+    cur.execute(
+        """UPDATE item i 
+        SET name = (?), cost = (?), description = (?) 
+        WHERE i.name = (?)""",
+        (name,cost,description,item)
+    )
+    con.commit()
+    con.close()

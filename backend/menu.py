@@ -1,4 +1,4 @@
-from menu_db import category_already, category_add_db, item_already, item_add_db, menu_view_db
+from menu_db import category_already, category_add_db, item_already, item_add_db, menu_view_db, menu_item_update_details_db
 
 #TODO Error
 def category_add(name: str) -> None:
@@ -27,7 +27,26 @@ def menu_view() -> dict[str, list[dict]]:
             {"item": item[1], "cost": item[2], "description": item[3]}
         )
 
-    return menu  
+    return menu 
+
+def menu_item_update_details(category: str, item: str, name: str, cost: float, description: str):
+    if len(name) < 1 or len(name) > 15:
+        return
+    if item_already(name):
+        return
+    menu_item_update_details_db(category, item, name, cost, description)
+    pass 
+
+def menu_category_update_details(old_name: str, new_name: str):
+    if len(new_name) < 1 or len(new_name) > 15:
+        return
+    if category_already(new_name):
+        return
+    pass
+
+def menu_item_remove(category: str, item: str):
+    pass
+
 
 # def sql_show_all() -> None:
 #     con = sqlite3.connect("restaurant.db")
