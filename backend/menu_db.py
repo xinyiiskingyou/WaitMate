@@ -100,3 +100,15 @@ def menu_item_update_details_db(category: str, item: str, name: str, cost: float
     )
     con.commit()
     con.close()
+
+def menu_category_update_details_db(old_name: str, new_name: str) -> None:
+    con = sqlite3.connect("restaurant.db")
+    cur = con.cursor()
+    cur.execute(
+        """UPDATE categories c 
+        SET name = (?) 
+        WHERE c.name = (?)""",
+        (new_name,old_name)
+    )
+    con.commit()
+    con.close()
