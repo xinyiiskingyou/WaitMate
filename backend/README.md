@@ -68,7 +68,7 @@
     <td> Dictionary containing category_id, category
   <tr>
     <td>(outputs only) named exactly <b> order </b></td>
-    <td>Dictionary containing name, amount </td>
+    <td>Dictionary containing name, amount, timestamp </td>
   </tr>
   <tr>
     <td>(outputs only) named exactly <b> orders </b></td>
@@ -189,7 +189,7 @@
   <tr>
     <td><code>order/cart/list</code><br /><br />List the menu items that customer has added.</td>
     <td style="font-weight: bold; color: green;">GET</td>
-    <td><b>Parameters:</b><br /><code>{ table_id }</code><br /><br /><b>Return Type:</b><br /><code>{}</code></td>
+    <td><b>Parameters:</b><br /><code>{ table_id }</code><br /><br /><b>Return Type:</b><br /><code>{ order }</code></td>
     <td>
       <b>InputError</b> when:
       <ul>
@@ -211,7 +211,7 @@
   <tr>
     <td><code>order/listall</code><br /><br />Return the list all current orders</td>
     <td style="font-weight: bold; color: green;">GET</td>
-    <td><b>Parameters:</b><br /><code>{}</code><br /><br /><b>Return Type:</b><br /><code>{ timestamp, orders }</code></td>
+    <td><b>Parameters:</b><br /><code>{}</code><br /><br /><b>Return Type:</b><br /><code>{ orders }</code></td>
     <td>
       N/A
     </td>
