@@ -1,93 +1,29 @@
-import sqlite3
-
-
-def category_already(name: str) -> bool:
-    con = sqlite3.connect("restaurant.db")
-    cur = con.cursor()
-    cur.execute("CREATE TABLE IF NOT EXISTS categories(name)")
-    con.commit()
-
-    cur.execute("SELECT 1 FROM categories c WHERE c.name = (?)",(name,))
-    items = cur.fetchall()
-    con.close()
-    
-    if len(items) == 1:
-        return True
-    return False
-
-def item_already(name: str) -> bool:
-    con = sqlite3.connect("restaurant.db")
-    cur = con.cursor()
-    cur.execute("CREATE TABLE IF NOT EXISTS items(name, cost, description)")
-    con.commit()
-
-    cur.execute("SELECT 1 FROM items i WHERE i.name = (?)",(name,))
-    items = cur.fetchall()
-    con.close()
-    
-    if len(items) == 1:
-        return True
-    return False
-
-def get_next_order(category) -> int:
-    con = sqlite3.connect("restaurant.db")
-    cur = con.cursor()
-    cur.execute("SELECT * FROM menu m WHERE m.category = (?)",(category,))
-    items = cur.fetchall()
-    con.close()    
-    return len(items)
+from menu_db import category_already, category_add_db, item_already, item_add_db, menu_view_db
 
 def category_add(name: str) -> None:
     if len(name) < 1 or len(name) > 15:
         return
     if category_already(name):
-        print("exist")
         return
-    con = sqlite3.connect("restaurant.db")
-    cur = con.cursor()
-    cur.execute("INSERT INTO categories values(?)",(name,))
-    con.commit()
-    con.close()
-
+    
+    category_add_db(name)
 
 def item_add(category: str, name: str, cost: float, description: str) -> None:
     if len(name) < 1 or len(name) > 15:
         return
     if item_already(name):
-        print("exist")
         return
-    con = sqlite3.connect("restaurant.db")
-    cur = con.cursor()
-    cur.execute("INSERT INTO items values(?,?,?)",(name,cost,description))
-    con.commit()
-
-    cur.execute("CREATE TABLE IF NOT EXISTS menu(category, item, order_id)")
-    con.commit()
-
-    order: int = get_next_order(category)
-    cur.execute("INSERT INTO menu values(?,?,?)",(category,name,order))
-    con.commit()
-    con.close()
-
+    
+    item_add_db(category, name, cost, description)
+    
 def menu_view() -> dict[str, list[dict]]:
     menu: dict[str, list[dict]] = {}
-    con = sqlite3.connect("restaurant.db")
-    cur = con.cursor()
-    cur.execute("SELECT * FROM categories")
-    items = cur.fetchall()
-    for item in items:
-        menu[item[0]] = []
-
-    cur.execute(
-        """SELECT category, item, cost, description, order_id 
-        FROM menu 
-        INNER JOIN items 
-        ON menu.item = items.name"""
-    )
-    items = cur.fetchall()
-    for item in items:
-        menu[item[0]].append({"item": item[1], "cost": item[2], "description": item[3]})
-    con.close()  
+    for item in menu_view_db():
+        if item[0] not in menu:
+            menu[item[0]] = []
+        menu[item[0]].append(
+            {"item": item[1], "cost": item[2], "description": item[3]}
+        )
 
     return menu  
 
