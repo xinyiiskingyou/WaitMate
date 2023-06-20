@@ -1,6 +1,6 @@
 - [1. Interface specifications](#1-interface-specifications)
-    - [1.1. Input/Output types](#11-inputoutput-types)
-    - [1.2. Interface](#12-interface)
+  - [1.1. Input/Output types](#11-inputoutput-types)
+  - [1.2. Interface](#12-interface)
 
 
 # 1. Interface specifications
@@ -110,12 +110,12 @@
       </ul></td>
   </tr>
   <tr>
-    <td><code>menu/category/update/name</code><br /><br />Update the name of menu categories.</td>
+    <td><code>menu/category/update/name</code><br /><br />Update the name of menu category.</td>
     <td style="font-weight: bold; color: orange;">PUT</td>
-    <td><b>Parameters:</b><br /><code>{ categories, old_name, new_name }</code><br /><br /><b>Return Type:</b><br /><code>{}</code></td>
+    <td><b>Parameters:</b><br /><code>{ categories, category_id, new_name }</code><br /><br /><b>Return Type:</b><br /><code>{}</code></td>
     <td><b>InputError</b> when any of:
       <ul>
-        <li>old_name is not valid</li>
+        <li>category_id is not valid</li>
         <li>new_name already exists</li>
         <li>length of new_name is not between 1 and 15 characters inclusive</li>
       </ul></td>
@@ -156,7 +156,7 @@
   <tr>
     <td><code>menu/item/update/details</code><br /><br />Update the description, ingredient, category, or cost of a menu item to the menu.</td>
     <td style="font-weight: bold; color: orange;">PUT</td>
-    <td><b>Parameters:</b><br /><code>{ category, menu_item }</code><br /><br /><b>Return Type:</b><br /><code>{}</code></td>
+    <td><b>Parameters:</b><br /><code>{ category, item_id }</code><br /><br /><b>Return Type:</b><br /><code>{}</code></td>
     <td>
       <b>InputError</b> when:
       <ul>
