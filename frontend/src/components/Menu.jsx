@@ -20,6 +20,7 @@ const Menu = ({ onCreateItem }) => {
 
   const handleTickButtonClick = () => {
     setNewButtonVisible(true);
+    setEditing(true);
   };
 
   const handleNewButtonClick = () => {
