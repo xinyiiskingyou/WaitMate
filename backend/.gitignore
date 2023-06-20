@@ -1,4 +1,6 @@
 # Ignore db files
 *.db
 
+# Ignore cache
+**/__pycache__
 
