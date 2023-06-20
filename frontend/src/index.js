@@ -3,12 +3,12 @@
 import * as React from 'react';
 import { render } from 'react-dom';
 import Button from '@mui/material/Button';
-import MyComponent from './components/Header';
+import Home from './components/Home';
 
 export default function App() {
   return (
     <div>
-      <MyComponent />
+      <Home />
     </div>
   );
 }
