@@ -1,6 +1,4 @@
 # Ignore db files
 *.db
 
-# Ignore vscode files
-/\.vscode
 

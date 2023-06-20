@@ -72,13 +72,26 @@ def item_add(category: str, name: str, cost: float, description: str) -> None:
     con.close()
 
 def menu_view() -> dict[str, list[dict]]:
-    menu: dict[str, list[dict]]
+    menu: dict[str, list[dict]] = {}
     con = sqlite3.connect("restaurant.db")
     cur = con.cursor()
-    cur.execute("SELECT * FROM menu INNER JOIN items ON menu.item = items.name")
+    cur.execute("SELECT * FROM categories")
     items = cur.fetchall()
     for item in items:
-        print(item)
+        menu[item[0]] = []
+    con.commit()
+
+    cur.execute(
+        """SELECT category, item, cost, description, order_id 
+        FROM menu 
+        INNER JOIN items 
+        ON menu.item = items.name"""
+    )
+    items = cur.fetchall()
+    for item in items:
+        menu[item[0]].append({"item": item[1], "cost": item[2], "description": item[3]})
+
+
     con.commit()
     con.close()  
     return menu  
@@ -110,14 +123,17 @@ def sql_show_all() -> None:
     con.close()
 
 if __name__ == "__main__":
-    con = sqlite3.connect("restaurant.db")
-    cur = con.cursor()
-    cur.execute("CREATE TABLE IF NOT EXISTS categories (name)")
-    con.commit()
-    con.close()
-    category_add("Yms")
-    item_add("Yms", "Bread", 10, "")
-    sql_show_all()
+    # con = sqlite3.connect("restaurant.db")
+    # cur = con.cursor()
+    # cur.execute("CREATE TABLE IF NOT EXISTS categories (name)")
+    # con.commit()
+    # con.close()
+    # category_add("Yms")
+    #item_add("Yms", "Jam", 5, "strawberry")
+    # sql_show_all()
+    print(menu_view())
+
+
 
 
 
