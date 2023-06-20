@@ -1,5 +1,6 @@
 from menu_db import category_already, category_add_db, item_already, item_add_db, menu_view_db
 
+#TODO Error
 def category_add(name: str) -> None:
     if len(name) < 1 or len(name) > 15:
         return
@@ -8,6 +9,7 @@ def category_add(name: str) -> None:
     
     category_add_db(name)
 
+#TODO Error
 def item_add(category: str, name: str, cost: float, description: str) -> None:
     if len(name) < 1 or len(name) > 15:
         return
