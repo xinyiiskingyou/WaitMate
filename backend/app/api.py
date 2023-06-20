@@ -1,7 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from menu import category_add, item_add, menu_view
-
+from menu import (
+    category_add, item_add, menu_view, menu_item_update_details, menu_category_update_details,
+    menu_item_remove
+)
 
 app = FastAPI()
 
@@ -37,3 +39,18 @@ def item_add_api(category: str, name: str, cost: float, description: str):
 @app.get("/menu/listall")
 def menu_view_api():
     return menu_view()
+
+@app.put("/menu/item/update/details")
+def menu_item_update_details_api(category: str, item: str, name: str, cost: float, description: str):
+    menu_item_update_details(category, item,  name, cost, description)
+    return {}
+
+@app.put("/menu/category/update/details")
+def menu_category_update_details_api(old_name: str, new_name: str):
+    menu_category_update_details(old_name, new_name)
+    return {}
+
+@app.delete("menu/item/remove")
+def menu_item_remove_api(category: str, item: str):
+    menu_item_remove(category, item)
+    return {}
