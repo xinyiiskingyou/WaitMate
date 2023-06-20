@@ -1,5 +1,6 @@
 import sqlite3
 
+
 def category_already(name: str) -> bool:
     con = sqlite3.connect("restaurant.db")
     cur = con.cursor()
@@ -8,7 +9,6 @@ def category_already(name: str) -> bool:
 
     cur.execute("SELECT 1 FROM categories c WHERE c.name = (?)",(name,))
     items = cur.fetchall()
-    con.commit()
     con.close()
     
     if len(items) == 1:
@@ -23,7 +23,6 @@ def item_already(name: str) -> bool:
 
     cur.execute("SELECT 1 FROM items i WHERE i.name = (?)",(name,))
     items = cur.fetchall()
-    con.commit()
     con.close()
     
     if len(items) == 1:
@@ -35,7 +34,6 @@ def get_next_order(category) -> int:
     cur = con.cursor()
     cur.execute("SELECT * FROM menu m WHERE m.category = (?)",(category,))
     items = cur.fetchall()
-    con.commit()
     con.close()    
     return len(items)
 
@@ -79,7 +77,6 @@ def menu_view() -> dict[str, list[dict]]:
     items = cur.fetchall()
     for item in items:
         menu[item[0]] = []
-    con.commit()
 
     cur.execute(
         """SELECT category, item, cost, description, order_id 
@@ -90,39 +87,37 @@ def menu_view() -> dict[str, list[dict]]:
     items = cur.fetchall()
     for item in items:
         menu[item[0]].append({"item": item[1], "cost": item[2], "description": item[3]})
-
-
-    con.commit()
     con.close()  
+
     return menu  
 
-def sql_show_all() -> None:
-    con = sqlite3.connect("restaurant.db")
-    cur = con.cursor()
-    print("Categories")
-    cur.execute("SELECT rowid, * FROM categories")
-    items = cur.fetchall()
-    for item in items:
-        print(item)
-    con.commit()
+# def sql_show_all() -> None:
+#     con = sqlite3.connect("restaurant.db")
+#     cur = con.cursor()
+#     print("Categories")
+#     cur.execute("SELECT rowid, * FROM categories")
+#     items = cur.fetchall()
+#     for item in items:
+#         print(item)
+#     con.commit()
 
-    print("Items")
-    cur.execute("SELECT rowid, * FROM items")
-    items = cur.fetchall()
-    for item in items:
-        print(item)   
-    con.commit()
+#     print("Items")
+#     cur.execute("SELECT rowid, * FROM items")
+#     items = cur.fetchall()
+#     for item in items:
+#         print(item)   
+#     con.commit()
 
-    print("Menu")
-    cur.execute("SELECT rowid, * FROM menu")
-    items = cur.fetchall()
-    for item in items:
-        print(item)  
+#     print("Menu")
+#     cur.execute("SELECT rowid, * FROM menu")
+#     items = cur.fetchall()
+#     for item in items:
+#         print(item)  
 
-    con.commit()
-    con.close()
+#     con.commit()
+#     con.close()
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
     # con = sqlite3.connect("restaurant.db")
     # cur = con.cursor()
     # cur.execute("CREATE TABLE IF NOT EXISTS categories (name)")
@@ -131,7 +126,7 @@ if __name__ == "__main__":
     # category_add("Yms")
     #item_add("Yms", "Jam", 5, "strawberry")
     # sql_show_all()
-    print(menu_view())
+    # print(menu_view())
 
 
 
