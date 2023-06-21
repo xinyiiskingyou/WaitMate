@@ -1,4 +1,7 @@
-from menu_db import category_already, category_add_db, item_already, item_add_db, menu_view_db, menu_item_update_details_db, menu_category_update_details_db
+from menu_db import (
+    category_already, category_add_db, item_already, item_add_db, menu_view_db, 
+    menu_item_update_details_db, menu_category_update_details_db, menu_item_remove_db
+)
 
 #TODO Error
 def category_add(name: str) -> None:
@@ -44,6 +47,12 @@ def menu_category_update_details(old_name: str, new_name: str):
     menu_category_update_details_db(old_name, new_name)
 
 def menu_item_remove(category: str, item: str):
+    menu_item_remove_db(category, item)
+
+def menu_item_update_order():
+    pass
+
+def menu_category_update_order():
     pass
 
 

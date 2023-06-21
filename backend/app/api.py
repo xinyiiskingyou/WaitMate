@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from menu import (
     category_add, item_add, menu_view, menu_item_update_details, menu_category_update_details,
-    menu_item_remove
+    menu_item_remove, menu_item_update_order, menu_category_update_order
 )
 
 app = FastAPI()
@@ -48,6 +48,16 @@ def menu_item_update_details_api(category: str, item: str, name: str, cost: floa
 @app.put("/menu/category/update/details")
 def menu_category_update_details_api(old_name: str, new_name: str):
     menu_category_update_details(old_name, new_name)
+    return {}
+
+@app.put("/menu/item/update/order")
+def menu_item_update_order_api(old_name: str, new_name: str):
+    menu_item_update_order(old_name, new_name)
+    return {}
+
+@app.put("/menu/category/update/order")
+def menu_category_update_order_api(old_name: str, new_name: str):
+    menu_category_update_order(old_name, new_name)
     return {}
 
 @app.delete("menu/item/remove")

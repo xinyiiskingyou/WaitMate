@@ -112,3 +112,15 @@ def menu_category_update_details_db(old_name: str, new_name: str) -> None:
     )
     con.commit()
     con.close()
+
+def menu_item_remove_db(category: str, item: str) -> None:
+    con = sqlite3.connect("restaurant.db")
+    cur = con.cursor()
+    cur.execute(
+        """DELETE categories c 
+        SET name = (?) 
+        WHERE c.name = (?)""",
+        (item)
+    )
+    con.commit()
+    con.close()    
