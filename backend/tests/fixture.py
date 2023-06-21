@@ -1,6 +1,4 @@
 import pytest
-
-from src.clear import clear_database
 from src.table_db import TableDB
 
 @pytest.fixture
