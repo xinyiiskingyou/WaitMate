@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from src.table_db import table_DB
+from src.table_db import TableDB
 
 app = FastAPI()
-table = table_DB()
+table = TableDB()
 
 origins = [
     "http://localhost:3000",
