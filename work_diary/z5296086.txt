@@ -13,3 +13,9 @@ Week 3
 Finalising the project proposal for submission on Friday. Made and design 
 user interfaces and storyboards for the user flow diagrams. Moving the 
 project proposal onto latex. Clarify last minute questions with tutor.
+
+Week 4
+Distributed workload between frontend and backend according to the 
+functionalities allocated for Sprint 1. Clarify doubts with tutor.
+Setup codebase. Start working on the code. Double check with teammates 
+for the usage and features of different functionalities.
