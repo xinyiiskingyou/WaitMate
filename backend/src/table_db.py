@@ -6,7 +6,7 @@ It utilizes SQLite as the underlying database engine to store and retrieve table
 '''
 
 import sqlite3
-from src.error import InputError
+from src.error import InputError, NotFoundError
 from src.clear import clear_database
 from src.helper import check_table_exists
 from constant import TABLE_DB_PATH
@@ -88,12 +88,16 @@ class TableDB():
         Return Value:
             Returns <table_dict> of table_id with respective table status.
         '''
+        try:
+            con = sqlite3.connect(self.database)
+            cur = con.cursor()
 
-        con = sqlite3.connect(self.database)
-        cur = con.cursor()
-
-        cur.execute('SELECT * FROM Tables ORDER BY table_id ASC')
-        table_list = cur.fetchall()
+            cur.execute('SELECT * FROM Tables ORDER BY table_id ASC')
+            table_list = cur.fetchall()
+        except Exception:
+            raise NotFoundError('Table database not found.')
+        finally:
+            con.close()
 
         table_dict = {}
 
@@ -101,7 +105,6 @@ class TableDB():
             table_id = table_stat[0]
             table_dict[table_id] = table_stat[1]
 
-        con.close()
         return table_dict
 
     def update_table_status(self, table_id: int, status: str) -> None:
@@ -118,8 +121,6 @@ class TableDB():
         Return Value:
             Returns <table_dict> of table_id with respective table status.
         '''
-        con = sqlite3.connect(self.database)
-        cur = con.cursor()
 
         # check if table number exists
         result = check_table_exists(table_id)
@@ -132,15 +133,21 @@ class TableDB():
         if status not in ['OCCUPIED', 'ASSIST', 'BILL', 'EMPTY']:
             raise InputError('Unknown status')
 
-        # update table status
-        cur.execute('UPDATE Tables SET status = ? WHERE table_id = ?', (status, table_id))
-        con.commit()
+        try:
+            con = sqlite3.connect(self.database)
+            cur = con.cursor()
 
-        # if the status is empty the table_id will be available again
-        cur.execute('DELETE FROM Tables WHERE status = ?', ('EMPTY',))
-        con.commit()
+            # update table status
+            cur.execute('UPDATE Tables SET status = ? WHERE table_id = ?', (status, table_id))
+            con.commit()
 
-        con.close()
+            # if the status is empty the table_id will be available again
+            cur.execute('DELETE FROM Tables WHERE status = ?', ('EMPTY',))
+            con.commit()
+        except Exception:
+            raise NotFoundError('Table database not found.')
+        finally:
+            con.close()
 
     def clear_tables_data(self) -> None:
         '''

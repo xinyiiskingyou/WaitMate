@@ -8,7 +8,7 @@ including adding orders, retrieving orders etc.
 import sqlite3
 import datetime
 from constant import ORDER_DB_PATH
-from src.error import InputError
+from src.error import InputError, NotFoundError
 from src.clear import clear_database
 from src.helper import check_table_exists
 
@@ -105,13 +105,16 @@ class OrderDB:
         if not result:
             raise InputError('The table_id does not refer to a valid table')
 
-        con = sqlite3.connect(self.database)
-        cur = con.cursor()
+        try:
+            con = sqlite3.connect(self.database)
+            cur = con.cursor()
 
-        cur.execute('SELECT item_name, amount FROM Orders WHERE table_id = ?', (table_id,))
-        order_list = cur.fetchall()
-
-        con.close()
+            cur.execute('SELECT item_name, amount FROM Orders WHERE table_id = ?', (table_id,))
+            order_list = cur.fetchall()
+        except Exception:
+            raise NotFoundError('Order database not found.')
+        finally:
+            con.close()
         return order_list
 
     def get_all_orders(self):
@@ -125,13 +128,16 @@ class OrderDB:
         Return Value:
             Returns <order_list> that containing all orders details
         '''
-        con = sqlite3.connect(self.database)
-        cur = con.cursor()
+        try:
+            con = sqlite3.connect(self.database)
+            cur = con.cursor()
 
-        cur.execute('SELECT * FROM Orders ORDER BY timestamp ASC')
-        order_list = cur.fetchall()
-
-        con.close()
+            cur.execute('SELECT * FROM Orders ORDER BY timestamp ASC')
+            order_list = cur.fetchall()
+        except Exception:
+            raise NotFoundError('Order database not found.')
+        finally:
+            con.close()
         return order_list
 
     def clear_order_table(self):
