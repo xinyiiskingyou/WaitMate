@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from table_db import table_DB
+from src.table_db import table_DB
 
 app = FastAPI()
 table = table_DB()
