@@ -223,14 +223,6 @@
   </tr>
   <tr>
   <tr>
-    <td><code>table/type</code><br /><br />Select dine in or takeaway method.</td>
-    <td style="font-weight: bold; color: blue;">POST</td>
-    <td><b>Parameters:</b><br /><code>{ is_dine_in }</code><br /><br /><b>Return Type:</b><br /><code>{}</code></td>
-    <td>
-      N/A
-    </td>
-  </tr>
-  <tr>
    <tr>
     <td><code>table/select</code><br /><br />Select table number.</td>
     <td style="font-weight: bold; color: blue;">POST</td>
