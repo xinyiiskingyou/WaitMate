@@ -1,13 +1,13 @@
-from werkzeug.exceptions import HTTPException
+from fastapi import HTTPException
 
 class AccessError(HTTPException):
-    code = 403
-    message = 'No message specified'
+    def __init__(self, detail: str = 'No message specified'):
+        super().__init__(status_code=403, detail=detail)
 
 class InputError(HTTPException):
-    code = 400
-    message = 'No message specified'
+    def __init__(self, detail: str = 'No message specified'):
+        super().__init__(status_code=400, detail=detail)
 
 class NotFoundError(HTTPException):
-    code = 404
-    message = 'No message specified'
+    def __init__(self, detail: str = 'No message specified'):
+        super().__init__(status_code=404, detail=detail)

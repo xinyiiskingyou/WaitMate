@@ -12,12 +12,12 @@ from src.helper import check_table_exists
 from constant import TABLE_DB_PATH
 
 class TableDB():
-    """
+    '''
     The TableDB class implements operations related to tables.
 
     Args:
         database_path (str): The path to the SQLite database file.
-    """
+    '''
 
     def __init__(self, database=TABLE_DB_PATH) -> None:
         self.database = database
@@ -47,7 +47,7 @@ class TableDB():
         con.commit()
         con.close()
 
-    def select_table_number(self, table_id: int) -> None:
+    def select_table_number(self, table_id: int) -> int:
         '''
         Selects a table_id and marks it as 'OCCUPIED' by default.
 
@@ -68,7 +68,7 @@ class TableDB():
         result = check_table_exists(table_id)
 
         if result:
-            raise InputError(description='Table id is not available.')
+            raise InputError('Table id is not available.')
 
         cur.execute('INSERT INTO Tables (table_id, status) \
         VALUES (?, ?)', (table_id, 'OCCUPIED'))
@@ -126,18 +126,18 @@ class TableDB():
 
         # if the table_id is not selected by customer or not valid
         if not result:
-            raise InputError(description='Table id is not available.')
+            raise InputError('Table id is not available.')
 
         # if the status is not valid
         if status not in ['OCCUPIED', 'ASSIST', 'BILL', 'EMPTY']:
-            raise InputError(description="Unknown status")
+            raise InputError('Unknown status')
 
         # update table status
-        cur.execute("UPDATE Tables SET status = ? WHERE table_id = ?", (status, table_id))
+        cur.execute('UPDATE Tables SET status = ? WHERE table_id = ?', (status, table_id))
         con.commit()
 
         # if the status is empty the table_id will be available again
-        cur.execute("DELETE FROM Tables WHERE status = ?", ("EMPTY",))
+        cur.execute('DELETE FROM Tables WHERE status = ?', ('EMPTY',))
         con.commit()
 
         con.close()
@@ -153,4 +153,4 @@ class TableDB():
         Return Value:
             N/A
         '''
-        clear_database(self.database, "Tables")
+        clear_database(self.database, 'Tables')

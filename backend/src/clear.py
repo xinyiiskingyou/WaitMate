@@ -18,7 +18,7 @@ def clear_database(database: str, database_name: str):
     cur = con.cursor()
 
     # Execute the DELETE statement to clear the table
-    cur.execute(f"DELETE FROM {database_name}")
+    cur.execute(f'DELETE FROM {database_name}')
 
     # Commit the changes and close the connection
     con.commit()

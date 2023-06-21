@@ -50,26 +50,26 @@ def test_update_table_status_invalid_table_id():
 
     with pytest.raises(InputError) as error:
         table.update_table_status(1, 'ASSIST')
-    assert str(error.value) == "400 Bad Request: Table id is not available."
+    assert str(error.value) == 'Table id is not available.'
     
     with pytest.raises(InputError) as error:
         table.update_table_status(100, 'ASSIST')
-    assert str(error.value) == "400 Bad Request: Table id is not available."
+    assert str(error.value) == 'Table id is not available.'
 
     with pytest.raises(InputError) as error:
         table.update_table_status(-1, 'ASSIST')
-    assert str(error.value) == "400 Bad Request: Table id is not available."
+    assert str(error.value) == 'Table id is not available.'
 
 def test_update_table_status_invalid_status(table_id_1):
     table = TableDB()
 
     with pytest.raises(InputError) as error:
         table.update_table_status(table_id_1, 'abc')
-    assert str(error.value) == "400 Bad Request: Unknown status"
+    assert str(error.value) == 'Unknown status'
 
     with pytest.raises(InputError) as error:
         table.update_table_status(table_id_1, 'fdsfadfs')
-    assert str(error.value) == "400 Bad Request: Unknown status"
+    assert str(error.value) == 'Unknown status'
     
 def test_valid_update_table_status(table_id_1, table_id_2):
     table = TableDB()

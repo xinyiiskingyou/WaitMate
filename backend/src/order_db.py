@@ -13,12 +13,12 @@ from src.clear import clear_database
 from src.helper import check_table_exists
 
 class OrderDB:
-    """
+    '''
     The OrderDB class implements operations related to orders.
 
     Args:
         database_path (str): The path to the SQLite database file.
-    """
+    '''
 
     def __init__(self, database=ORDER_DB_PATH):
         self.database = database
@@ -71,13 +71,13 @@ class OrderDB:
         # check if the table_id is valid
         result = check_table_exists(table_id)
         if not result:
-            raise InputError(description = 'The table_id does not refer to a valid table')
+            raise InputError('The table_id does not refer to a valid table')
 
         # if not isinstance(item_name, str):
-        #     raise InputError(description = 'The item_name does not refer to a valid item')
+        #     raise InputError('The item_name does not refer to a valid item')
 
         if amount < 1:
-            raise InputError(description = 'The amount must be more than 1')
+            raise InputError('The amount must be more than 1')
 
         con = sqlite3.connect(self.database)
         cur = con.cursor()
@@ -103,7 +103,7 @@ class OrderDB:
         result = check_table_exists(table_id)
 
         if not result:
-            raise InputError(description = 'The table_id does not refer to a valid table')
+            raise InputError('The table_id does not refer to a valid table')
 
         con = sqlite3.connect(self.database)
         cur = con.cursor()
@@ -145,4 +145,4 @@ class OrderDB:
         Return Value:
             N/A
         '''
-        clear_database(self.database, "Orders")
+        clear_database(self.database, 'Orders')
