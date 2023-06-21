@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import sys
 sys.path.append('..')
-from backend.src.menu import (
+from src.menu import (
     category_add, item_add, menu_view, menu_item_update_details, menu_category_update_details,
     menu_item_remove, menu_item_update_order, menu_category_update_order
 )
@@ -24,9 +24,9 @@ app.add_middleware(
 )
 
 
-# @app.get("/", tags=["root"])
-# async def read_root() -> dict:
-#     return {"message": "Welcome to our wait management system."}
+@app.get("/", tags=["root"])
+async def read_root() -> dict:
+    return {"message": "Welcome to our wait management system."}
 
 @app.post("/menu/category/add")
 def category_add_api(name: str):    
