@@ -1,8 +1,9 @@
 import sqlite3
 import datetime
+from src.error import InputError, AccessError
 
 class OrderDB:
-    ORDER_DB_PATH = "./database/order.db"
+    ORDER_DB_PATH = './database/order.db'
 
     def __init__(self, database=ORDER_DB_PATH):
         self.database = database
@@ -11,7 +12,7 @@ class OrderDB:
         con = sqlite3.connect(self.database)
         cur = con.cursor()
 
-        cur.execute("PRAGMA foreign_keys = OFF")
+        cur.execute('PRAGMA foreign_keys = OFF')
         con.commit()
         cur.execute('''CREATE TABLE IF NOT EXISTS Orders (
                         timestamp TIMESTAMP NOT NULL,
@@ -20,26 +21,40 @@ class OrderDB:
                         amount INTEGER NOT NULL
                     )''')
 
-        print("Table created successfully")
         con.commit()
         con.close()
 
-    def add_order(self, table_id, item_name, amount):
+    def add_order(self, table_id: int, item_name: str, amount: int):
+
+        self.create_order_table()
+
+        if table_id < 0:
+            raise InputError(description = 'The table_id does not refer to a valid table')
+        
+        # if not isinstance(item_name, str):
+        #     raise InputError(description = 'The item_name does not refer to a valid item')
+        
+        if amount < 1:
+            raise InputError(description = 'The amount must be more than 1')
+            
         con = sqlite3.connect(self.database)
         cur = con.cursor()
         curr_time = datetime.datetime.now()
-        timestamp = curr_time.strftime("%H:%M:%S")
+        timestamp = curr_time.strftime('%H:%M:%S')
 
-        cur.execute("INSERT INTO Orders (timestamp, table_id, item_name, amount) \
-        VALUES (?, ?, ?, ?)", (timestamp, table_id, item_name, amount))
+        cur.execute('INSERT INTO Orders (timestamp, table_id, item_name, amount) \
+        VALUES (?, ?, ?, ?)', (timestamp, table_id, item_name, amount))
         con.commit()
         con.close()
 
-    def table_order_list(self, table_id):
+    def get_table_order(self, table_id: int):
+        if table_id < 0:
+            raise InputError(description = 'The table_id does not refer to a valid table')
+            
         con = sqlite3.connect(self.database)
         cur = con.cursor()
 
-        cur.execute("SELECT item_name, amount FROM Orders WHERE table_id = ?", (table_id,))
+        cur.execute('SELECT item_name, amount FROM Orders WHERE table_id = ?', (table_id,))
         order_list = cur.fetchall()
 
         con.close()
@@ -49,48 +64,19 @@ class OrderDB:
         con = sqlite3.connect(self.database)
         cur = con.cursor()
 
-        cur.execute("SELECT * FROM Orders ORDER BY timestamp ASC")
+        cur.execute('SELECT * FROM Orders ORDER BY timestamp ASC')
         order_list = cur.fetchall()
 
         con.close()
         return order_list
-
-class HistoryOrder:
-
-    HISTORY_DB_PATH = "./database/history.db"
-
-    def __init__(self, database=HISTORY_DB_PATH) -> None:
-        self.database = database
-
-    def create_history_table(self):
+    
+    def clear_order_table(self):
         con = sqlite3.connect(self.database)
         cur = con.cursor()
 
-        cur.execute("PRAGMA foreign_keys = OFF")
-        con.commit()
-        cur.execute('''CREATE TABLE IF NOT EXISTS HistoryOrder (
-                        customer_id INTEGER NOT NULL,
-                        item_name TEXT NOT NULL
-                    )''')
+        # Execute the DELETE statement to clear the table
+        cur.execute("DELETE FROM Orders")
+
+        # Commit the changes and close the connection
         con.commit()
         con.close()
-
-    def add_to_history(self, customer_id, item_name):
-        con = sqlite3.connect(self.database)
-        cur = con.cursor()
-
-        cur.execute("INSERT INTO HistoryOrder (customer_id, item_name) \
-        VALUES (?, ?)", (customer_id, item_name))
-        con.commit()
-
-        con.close()
-
-    def get_history(self, customer_id):
-        con = sqlite3.connect(self.database)
-        cur = con.cursor()
-
-        cur.execute("SELECT item_name FROM HistoryOrder WHERE customer_id = ?", (customer_id,))
-        history_order_list = cur.fetchall()
-
-        con.close()
-        return history_order_list
