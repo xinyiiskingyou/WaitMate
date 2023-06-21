@@ -1,6 +1,6 @@
 import pytest
 
-from database.order_db import OrderDB
+from src.order_db import OrderDB
 from src.error import InputError
 
 def test_add_order_invalid_table_number():
