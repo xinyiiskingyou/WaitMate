@@ -190,35 +190,11 @@
     </td>
   </tr>
   <tr>
-    <td><code>order/history</code><br /><br />List the menu items that customer has ordered before.</td>
-    <td style="font-weight: bold; color: green;">GET</td>
-    <td><b>Parameters:</b><br /><code>{ customer_id }</code><br /><br /><b>Return Type:</b><br /><code>{ order }</code></td>
-    <td>
-      <b>InputError</b> when:
-      <ul>
-        <li>customer_id is not valid</li>
-      </ul>
-    </td>
-  </tr>
-  <tr>
     <td><code>order/listall</code><br /><br />Return the list all current orders</td>
     <td style="font-weight: bold; color: green;">GET</td>
     <td><b>Parameters:</b><br /><code>{}</code><br /><br /><b>Return Type:</b><br /><code>{ orders }</code></td>
     <td>
       N/A
-    </td>
-  </tr>
-  <tr>
-   <tr>
-    <td><code>table/add</code><br /><br />Add table details.</td>
-    <td style="font-weight: bold; color: blue;">POST</td>
-    <td><b>Parameters:</b><br /><code>{ table_id, seat_capacity }</code><br /><br /><b>Return Type:</b><br /><code>{}</code></td>
-    <td>
-     <b>InputError</b> when:
-      <ul>
-        <li>table_id is not valid</li>
-        <li>seat_capacity is not valid</li>
-      </ul>
     </td>
   </tr>
   <tr>
