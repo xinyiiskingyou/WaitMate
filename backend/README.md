@@ -137,14 +137,14 @@
       <b>InputError</b> when:
       <ul>
         <li>category does not refer to a valid category</li>
-        <li>item_id does not refer to a valid item_id</li>
+        <li>item_name does not refer to a valid item_name</li>
       </ul>
     </td>
   </tr>
   <tr>
     <td><code>menu/item/update/order</code><br /><br /> Update the order in which menu items are shown within a category.</td>
     <td style="font-weight: bold; color: green;">PUS</td>
-    <td><b>Parameters:</b><br /><code>{ category, is_up }</code><br /><br /><b>Return Type:</b><br /><code>{}</code></td>
+    <td><b>Parameters:</b><br /><code>{ category, item_name, is_up }</code><br /><br /><b>Return Type:</b><br /><code>{}</code></td>
     <td>N/A</td>
   </tr>
   <tr>
