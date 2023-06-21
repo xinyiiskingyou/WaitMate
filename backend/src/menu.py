@@ -49,8 +49,8 @@ def menu_category_update_details(old_name: str, new_name: str):
         return
     menu_category_update_details_db(old_name, new_name)
 
-def menu_item_remove(category: str, item: str):
-    menu_item_remove_db(category, item)
+def menu_item_remove(item: str):
+    menu_item_remove_db(item)
 
 def menu_item_update_order(category: str, item_name: str, is_up: bool):
     # if is top

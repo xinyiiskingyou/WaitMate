@@ -62,7 +62,7 @@ def menu_category_update_order_api(category: str, is_up: bool):
     menu_category_update_order(category, is_up)
     return {}
 
-@app.delete("menu/item/remove")
-def menu_item_remove_api(category: str, item_name: str):
-    menu_item_remove(category, item_name)
+@app.delete("/menu/item/remove")
+def menu_item_remove_api(item_name: str):
+    menu_item_remove(item_name)
     return {}
