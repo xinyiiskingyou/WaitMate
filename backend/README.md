@@ -57,7 +57,7 @@
   </tr>
   <tr>
     <td>(outputs only) name exactly <b>item</b></td>
-    <td>Dictionary containing name, description, price, ingredient, is_veggie </td>
+    <td>Dictionary containing name, description, price, ingredient, is_vegan </td>
   </tr>
   <tr>
     <td>(outputs only) named exactly <b>category</b></td>
