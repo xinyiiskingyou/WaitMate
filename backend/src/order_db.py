@@ -1,16 +1,40 @@
+'''
+The `order_db` module provides functionality for managing order information.
+
+This module provides functionality to interact with an order database,
+including adding orders, retrieving orders etc.
+'''
+
 import sqlite3
 import datetime
+from constant import ORDER_DB_PATH
 from src.error import InputError
 from src.clear import clear_database
-from constant import ORDER_DB_PATH
 from src.helper import check_table_exists
 
 class OrderDB:
+    """
+    The OrderDB class implements operations related to orders.
+
+    Args:
+        database_path (str): The path to the SQLite database file.
+    """
 
     def __init__(self, database=ORDER_DB_PATH):
         self.database = database
 
     def create_order_table(self):
+        '''
+        Create a database for orders.
+
+        Arguments:
+            N / A
+        Exceptions:
+            N /A
+        Return Value:
+            N/A
+        '''
+
         con = sqlite3.connect(self.database)
         cur = con.cursor()
 
@@ -27,6 +51,20 @@ class OrderDB:
         con.close()
 
     def add_order(self, table_id: int, item_name: str, amount: int):
+        '''
+        Adds an order for a specific table number.
+
+        Arguments:
+            <table_id>  (<int>)    - unique id of a table to select
+            <item_name> (<int>)    - the name of the item being ordered
+            <amount>    (<int>)    - the amount of the item being ordered.
+        Exceptions:
+            InputError  - Occurs when table_id does not exist
+                        - Occurs when item_name does not exist
+                        - Occurs when amount is less than 0
+        Return Value:
+            N/A
+        '''
 
         self.create_order_table()
 
@@ -34,13 +72,13 @@ class OrderDB:
         result = check_table_exists(table_id)
         if not result:
             raise InputError(description = 'The table_id does not refer to a valid table')
-        
+
         # if not isinstance(item_name, str):
         #     raise InputError(description = 'The item_name does not refer to a valid item')
-        
+
         if amount < 1:
             raise InputError(description = 'The amount must be more than 1')
-            
+
         con = sqlite3.connect(self.database)
         cur = con.cursor()
         curr_time = datetime.datetime.now()
@@ -52,7 +90,16 @@ class OrderDB:
         con.close()
 
     def get_table_order(self, table_id: int):
-        
+        '''
+        Returns the order associated with the specified table ID.
+
+        Arguments:
+            <table_id>  (<int>)    - unique id of a table to select
+        Exceptions:
+            InputError  - Occurs when table_id does not exist
+        Return Value:
+            Returns <order_list> that contains all the orders are placed by a table
+        '''
         result = check_table_exists(table_id)
 
         if not result:
@@ -68,6 +115,16 @@ class OrderDB:
         return order_list
 
     def get_all_orders(self):
+        '''
+        Retrieves all orders that is sorted by timestamp from the database.
+
+        Arguments:
+            N/A
+        Exceptions:
+            N/A
+        Return Value:
+            Returns <order_list> that containing all orders details
+        '''
         con = sqlite3.connect(self.database)
         cur = con.cursor()
 
@@ -76,6 +133,16 @@ class OrderDB:
 
         con.close()
         return order_list
-    
+
     def clear_order_table(self):
+        '''
+        Resets all the data of the order database.
+
+        Arguments:
+            N/A
+        Exceptions:
+            N /A
+        Return Value:
+            N/A
+        '''
         clear_database(self.database, "Orders")

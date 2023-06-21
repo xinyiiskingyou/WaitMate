@@ -13,7 +13,7 @@ from constant import TABLE_DB_PATH
 
 class TableDB():
     """
-    The TableDB class implement operations related to tables.
+    The TableDB class implements operations related to tables.
 
     Args:
         database_path (str): The path to the SQLite database file.
@@ -52,7 +52,7 @@ class TableDB():
         Selects a table_id and marks it as 'OCCUPIED' by default.
 
         Arguments:
-            <table_id> (<int>)    - unique id of an table to select
+            <table_id> (<int>)    - unique id of a table to select
         Exceptions:
             InputError  - Occurs when table_id has been selected
                         - Occurs when table_id is less than 0
@@ -109,7 +109,7 @@ class TableDB():
         Updates the status of a table identified by table_id in the Tables database.
 
         Arguments:
-            <table_id> (<int>)    - unique id of an table to select
+            <table_id> (<int>)    - unique id of a table to select
             <status>   (<str>)    - the new status to set for the table.
         Exceptions:
             InputError  - Occurs when table_id is not available in the database
