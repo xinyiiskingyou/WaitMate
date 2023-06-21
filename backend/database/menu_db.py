@@ -58,7 +58,15 @@ def get_next_order_cat() -> int:
     cur.execute('SELECT * FROM categories')
     items = cur.fetchall()
     con.close()    
-    return len(items)
+    return len(items) 
+
+def get_item_cat(item_name: str) -> str:
+    con = sqlite3.connect(DATABASE)
+    cur = con.cursor()
+    cur.execute('SELECT category FROM menu WHERE item = (?)', (item_name,))
+    category = cur.fetchone()
+    con.close()    
+    return category[0]
 
 def get_cat_order(category: str) -> int:
     con = sqlite3.connect(DATABASE)
@@ -68,13 +76,13 @@ def get_cat_order(category: str) -> int:
     con.close()    
     return items[0][1]
 
-def get_item_order(category: str, item_name: str) -> int:
+def get_item_order(item_name: str) -> int:
     con = sqlite3.connect(DATABASE)
     cur = con.cursor()
-    cur.execute('SELECT * FROM menu m WHERE m.category = (?)',(category,))
-    items = cur.fetchall()
+    cur.execute('SELECT item_order FROM menu m WHERE m.item = (?)',(item_name,))
+    items = cur.fetchone()
     con.close()    
-    return items[6]
+    return items[0]
 
 def category_add_db(name: str):
     con = sqlite3.connect(DATABASE)
@@ -169,7 +177,11 @@ def menu_category_update_details_db(old_name: str, new_name: str) -> None:
     con.commit()
     con.close()
 
+#TODO update order for others
 def menu_item_remove_db(item: str) -> None:
+    item_order = get_item_order(item)
+    cat = get_item_cat(item)
+
     con = sqlite3.connect(DATABASE)
     cur = con.cursor()
     cur.execute(
@@ -185,10 +197,42 @@ def menu_item_remove_db(item: str) -> None:
         (item,)
     )
     con.commit()
+
+    cur.execute(
+        '''UPDATE menu
+        SET item_order = item_order - 1  
+        WHERE category = (?) AND item_order > (?)''',
+        (cat,item_order)
+    )
+    con.commit()
     con.close()   
 
-def menu_item_update_order_db(category: str, item_name: str, is_up: bool) -> None:
-    pass
+def menu_item_update_order_db(item_name: str, is_up: bool) -> None:
+    prev_order = get_item_order(item_name)
+    new_order = prev_order
+    if is_up:
+        new_order -= 1
+    else: 
+        new_order += 1
+
+    con = sqlite3.connect(DATABASE)
+    cur = con.cursor()
+    cur.execute(
+        '''UPDATE menu  
+        SET item_order = (?)
+        WHERE item = (?)''',
+        (new_order,item_name)
+    )
+    con.commit()
+
+    cur.execute(
+        '''UPDATE menu  
+        SET item_order = (?)
+        WHERE NOT item = (?)''',
+        (prev_order,item_name)
+    )
+    con.commit()
+    con.close() 
 
 def menu_category_update_order_db(category: str, is_up: bool) -> None:
     pass

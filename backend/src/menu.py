@@ -1,7 +1,8 @@
 from database.menu_db import (
     category_already, category_add_db, item_already, item_add_db, menu_view_db, 
     menu_item_update_details_db, menu_category_update_details_db, menu_item_remove_db,
-    menu_item_update_order_db, menu_category_update_order_db
+    menu_item_update_order_db, menu_category_update_order_db, get_item_order,
+    get_next_order, get_item_cat
 )
 
 #TODO Error
@@ -52,10 +53,14 @@ def menu_category_update_details(old_name: str, new_name: str):
 def menu_item_remove(item: str):
     menu_item_remove_db(item)
 
-def menu_item_update_order(category: str, item_name: str, is_up: bool):
+def menu_item_update_order(item_name: str, is_up: bool):
     # if is top
+    if get_item_order(item_name) == 0 and is_up:
+        return
+    elif get_item_order(item_name) == get_next_order(get_item_cat(item_name)) - 1 and not is_up:
+        return
     # if is bottom
-    menu_item_update_order_db(category, item_name, is_up)
+    menu_item_update_order_db(item_name, is_up)
 
 def menu_category_update_order(category, is_up):
     # if is top

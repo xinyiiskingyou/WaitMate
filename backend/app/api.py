@@ -53,8 +53,8 @@ def menu_category_update_details_api(old_name: str, new_name: str):
     return {}
 
 @app.put("/menu/item/update/order")
-def menu_item_update_order_api(category: str, item_name: str, is_up: bool):
-    menu_item_update_order(category, item_name, is_up)
+def menu_item_update_order_api(item_name: str, is_up: bool):
+    menu_item_update_order(item_name, is_up)
     return {}
 
 @app.put("/menu/category/update/order")
