@@ -43,8 +43,8 @@ def menu_view_api():
     return menu_view()
 
 @app.put("/menu/item/update/details")
-def menu_item_update_details_api(category: str, item: str, name: str, cost: float, description: str, ingredients: str, is_vegan: bool):
-    menu_item_update_details(category, item,  name, cost, description, ingredients, is_vegan)
+def menu_item_update_details_api(item: str, name: str, cost: float, description: str, ingredients: str, is_vegan: bool):
+    menu_item_update_details(item,  name, cost, description, ingredients, is_vegan)
     return {}
 
 @app.put("/menu/category/update/details")

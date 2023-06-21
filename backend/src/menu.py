@@ -34,12 +34,13 @@ def menu_view() -> dict[str, list[dict]]:
 
     return menu 
 
-def menu_item_update_details(category: str, item: str, name: str, cost: float, description: str, ingredients: str, is_vegan: bool):
+def menu_item_update_details(item: str, name: str, cost: float, description: str, ingredients: str, is_vegan: bool):
     if len(name) < 1 or len(name) > 15:
         return
-    if item_already(name):
+    if item != name and item_already(name):
         return
-    menu_item_update_details_db(category, item, name, cost, description, ingredients, is_vegan)
+    
+    menu_item_update_details_db(item, name, cost, description, ingredients, is_vegan)
 
 def menu_category_update_details(old_name: str, new_name: str):
     if len(new_name) < 1 or len(new_name) > 15:

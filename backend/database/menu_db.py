@@ -129,14 +129,22 @@ def menu_view_db() -> list[tuple]:
 
     return items
 
-def menu_item_update_details_db(category: str, item: str, name: str, cost: float, description: str, ingredients: str, is_vegan: bool) -> None:
+def menu_item_update_details_db(item: str, name: str, cost: float, description: str, ingredients: str, is_vegan: bool) -> None:
     con = sqlite3.connect(DATABASE)
     cur = con.cursor()
     cur.execute(
-        '''UPDATE item i 
-        SET name = (?), cost = (?), description = (?) 
-        WHERE i.name = (?)''',
-        (name,cost,description,item)
+        '''UPDATE items
+        SET name = (?), cost = (?), description = (?) , ingredients = (?), is_vegan = (?)
+        WHERE name = (?)''',
+        (name,cost,description,ingredients,is_vegan,item)
+    )
+    con.commit()
+
+    cur.execute(
+        '''UPDATE menu  
+        SET item = (?)
+        WHERE item = (?)''',
+        (name,item)
     )
     con.commit()
     con.close()
@@ -151,6 +159,7 @@ def menu_category_update_details_db(old_name: str, new_name: str) -> None:
         (new_name,old_name)
     )
     con.commit()
+
     cur.execute(
         '''UPDATE menu  
         SET category = (?)
