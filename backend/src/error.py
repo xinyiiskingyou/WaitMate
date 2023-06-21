@@ -7,3 +7,7 @@ class AccessError(HTTPException):
 class InputError(HTTPException):
     code = 400
     message = 'No message specified'
+
+class NotFoundError(HTTPException):
+    code = 404
+    message = 'No message specified'

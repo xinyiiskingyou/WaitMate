@@ -2,9 +2,10 @@ import sqlite3
 import datetime
 from src.error import InputError
 from src.clear import clear_database
+from constant import ORDER_DB_PATH
+from src.helper import check_table_exists
 
 class OrderDB:
-    ORDER_DB_PATH = './src/database/order.db'
 
     def __init__(self, database=ORDER_DB_PATH):
         self.database = database
@@ -29,7 +30,9 @@ class OrderDB:
 
         self.create_order_table()
 
-        if table_id < 0:
+        # check if the table_id is valid
+        result = check_table_exists(table_id)
+        if not result:
             raise InputError(description = 'The table_id does not refer to a valid table')
         
         # if not isinstance(item_name, str):
@@ -49,9 +52,12 @@ class OrderDB:
         con.close()
 
     def get_table_order(self, table_id: int):
-        if table_id < 0:
+        
+        result = check_table_exists(table_id)
+
+        if not result:
             raise InputError(description = 'The table_id does not refer to a valid table')
-            
+
         con = sqlite3.connect(self.database)
         cur = con.cursor()
 

@@ -8,6 +8,8 @@ It utilizes SQLite as the underlying database engine to store and retrieve table
 import sqlite3
 from src.error import InputError
 from src.clear import clear_database
+from src.helper import check_table_exists
+from constant import TABLE_DB_PATH
 
 class TableDB():
     """
@@ -16,8 +18,6 @@ class TableDB():
     Args:
         database_path (str): The path to the SQLite database file.
     """
-
-    TABLE_DB_PATH = "./src/database/table.db"
 
     def __init__(self, database=TABLE_DB_PATH) -> None:
         self.database = database
@@ -64,17 +64,18 @@ class TableDB():
         con = sqlite3.connect(self.database)
         cur = con.cursor()
 
-        cur.execute('SELECT * FROM Tables WHERE table_id = ?', (table_id,))
+        # check if table id exists
+        result = check_table_exists(table_id)
 
-        result = cur.fetchone()
-
-        if result or table_id < 0:
-            raise InputError(description='This table number is not available')
+        if result:
+            raise InputError(description='Table id is not available.')
 
         cur.execute('INSERT INTO Tables (table_id, status) \
         VALUES (?, ?)', (table_id, 'OCCUPIED'))
         con.commit()
         con.close()
+
+        return table_id
 
     def get_all_tables_status(self) -> dict:
         '''
@@ -120,13 +121,12 @@ class TableDB():
         con = sqlite3.connect(self.database)
         cur = con.cursor()
 
-        cur.execute('SELECT * FROM Tables WHERE table_id = ?', (table_id,))
-
-        result = cur.fetchone()
+        # check if table number exists
+        result = check_table_exists(table_id)
 
         # if the table_id is not selected by customer or not valid
-        if not result or table_id < 0:
-            raise InputError(description='Table number is not available')
+        if not result:
+            raise InputError(description='Table id is not available.')
 
         # if the status is not valid
         if status not in ['OCCUPIED', 'ASSIST', 'BILL', 'EMPTY']:
