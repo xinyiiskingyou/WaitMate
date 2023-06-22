@@ -1,21 +1,6 @@
 import sqlite3
 from constant import MENU_DB_PATH
 
-#TODO
-def category_count(name: str) -> bool:
-    con = sqlite3.connect(MENU_DB_PATH)
-    cur = con.cursor()
-    cur.execute('CREATE TABLE IF NOT EXISTS categories(name, cat_order)')
-    con.commit()
-
-    cur.execute('SELECT 1 FROM categories c WHERE c.name = (?)',(name,))
-    items = cur.fetchall()
-    con.close()
-    
-    if len(items) == 1:
-        return True
-    return False
-
 def category_already(name: str) -> bool:
     con = sqlite3.connect(MENU_DB_PATH)
     cur = con.cursor()
@@ -81,7 +66,7 @@ def get_item_order(item_name: str) -> int:
     cur = con.cursor()
     cur.execute('SELECT item_order FROM menu m WHERE m.item = (?)',(item_name,))
     items = cur.fetchone()
-    con.close()    
+    con.close()  
     return items[0]
 
 def category_add_db(name: str):
@@ -133,8 +118,8 @@ def menu_view_db() -> list[tuple]:
 
     items = cur.fetchall()
     con.close() 
-    print(items)
-
+    
+    print(items) #TODO
     return items
 
 def menu_item_update_details_db(item: str, name: str, cost: float, description: str, ingredients: str, is_vegan: bool) -> None:
@@ -177,10 +162,9 @@ def menu_category_update_details_db(old_name: str, new_name: str) -> None:
     con.commit()
     con.close()
 
-#TODO update order for others
 def menu_item_remove_db(item: str) -> None:
-    item_order = get_item_order(item)
-    cat = get_item_cat(item)
+    item_order: int = get_item_order(item)
+    cat: str = get_item_cat(item)
 
     con = sqlite3.connect(MENU_DB_PATH)
     cur = con.cursor()
@@ -208,8 +192,8 @@ def menu_item_remove_db(item: str) -> None:
     con.close()   
 
 def menu_item_update_order_db(item_name: str, is_up: bool) -> None:
-    prev_order = get_item_order(item_name)
-    new_order = prev_order
+    prev_order: int = get_item_order(item_name)
+    new_order: int = prev_order
     if is_up:
         new_order -= 1
     else: 
@@ -229,14 +213,14 @@ def menu_item_update_order_db(item_name: str, is_up: bool) -> None:
         '''UPDATE menu  
         SET item_order = (?)
         WHERE NOT item = (?) AND item_order = (?)''',
-        (prev_order,item_name)
+        (prev_order,item_name,new_order)
     )
     con.commit()
     con.close() 
 
 def menu_category_update_order_db(category: str, is_up: bool) -> None:
-    prev_order = get_cat_order(category)
-    new_order = prev_order
+    prev_order: int = get_cat_order(category)
+    new_order: int = prev_order
     if is_up:
         new_order -= 1
     else: 
