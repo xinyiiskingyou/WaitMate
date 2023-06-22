@@ -6,3 +6,7 @@ Continued discuss on goals for the project proposal and finished a draft for the
 
 Week 3
 Finished creating user stories and grouped them with functionality. Added them to relevant Jira tickets. Created a system diagram poster.
+
+Week 4
+Meet with the team and discussed how functionality would be split for the first sprint. I choose to do menu which I have finished on Thursday including test. 
+Have started to research how to use Firebase Authentication. 
