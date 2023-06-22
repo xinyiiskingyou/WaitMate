@@ -87,6 +87,7 @@ def ordre_listall():
     return order.get_all_orders()
 
 ############ TABLE #################
+
 @app.get('/table/select/{table_id}')
 def table_select(table_id: int):
     table.select_table_number(table_id)

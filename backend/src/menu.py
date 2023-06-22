@@ -1,3 +1,4 @@
+from src.error import InputError
 from database.menu_db import (
     category_already, category_add_db, item_already, item_add_db, menu_view_db, 
     menu_item_update_details_db, menu_category_update_details_db, menu_item_remove_db,
@@ -5,21 +6,18 @@ from database.menu_db import (
     get_next_order_item, get_item_cat, get_next_order_cat, get_cat_order
 )
 
-#TODO Error
 def category_add(name: str) -> None:
     if len(name) < 1 or len(name) > 15:
-        return
+        raise InputError('Invalid name length')
     if category_already(name):
-        return
+        raise InputError('Name already used')
     category_add_db(name)
 
-#TODO Error
 def item_add(category: str, name: str, cost: float, description: str, ingredients: str, is_vegan: bool) -> None:
     if len(name) < 1 or len(name) > 15:
-        return
+        raise InputError('Invalid name length')
     if item_already(name):
-        return
-    
+        raise InputError('Name already used')    
     item_add_db(category, name, cost, description, ingredients, is_vegan)
     
 def menu_view() -> dict[str, list[dict]]:
@@ -37,17 +35,18 @@ def menu_view() -> dict[str, list[dict]]:
 
 def menu_item_update_details(item: str, name: str, cost: float, description: str, ingredients: str, is_vegan: bool):
     if len(name) < 1 or len(name) > 15:
-        return
+        raise InputError('Invalid name length')
     if item != name and item_already(name):
-        return
+        raise InputError('Name already used')
     
     menu_item_update_details_db(item, name, cost, description, ingredients, is_vegan)
 
 def menu_category_update_details(old_name: str, new_name: str):
     if len(new_name) < 1 or len(new_name) > 15:
-        return
+        raise InputError('Invalid name length')
     if category_already(new_name):
-        return
+        raise InputError('Name already used')
+
     menu_category_update_details_db(old_name, new_name)
 
 def menu_item_remove(item: str):
@@ -55,16 +54,16 @@ def menu_item_remove(item: str):
 
 def menu_item_update_order(item_name: str, is_up: bool):
     if get_item_order(item_name) == 0 and is_up:
-        return
-    elif get_item_order(item_name) == get_next_order_item(get_item_cat(item_name)) - 1 and not is_up:
-        return
+        raise InputError('Invalid order')
+    elif get_item_order(item_name) == get_next_order_item(get_item_cat(item_name)) and not is_up:
+        raise InputError('Invalid order')
     menu_item_update_order_db(item_name, is_up)
 
 def menu_category_update_order(category, is_up):
     if get_cat_order(category) == 0 and is_up:
-        return
+        raise InputError('Invalid order')
     elif get_cat_order(category) == get_next_order_cat() and not is_up:
-        return
+        raise InputError('Invalid order')
     menu_category_update_order_db(category, is_up)
 
 

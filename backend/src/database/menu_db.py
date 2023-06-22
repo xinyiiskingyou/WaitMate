@@ -1,9 +1,9 @@
 import sqlite3
-from constant import DATABASE
+from constant import MENU_DB_PATH
 
 #TODO
 def category_count(name: str) -> bool:
-    con = sqlite3.connect(DATABASE)
+    con = sqlite3.connect(MENU_DB_PATH)
     cur = con.cursor()
     cur.execute('CREATE TABLE IF NOT EXISTS categories(name, cat_order)')
     con.commit()
@@ -17,7 +17,7 @@ def category_count(name: str) -> bool:
     return False
 
 def category_already(name: str) -> bool:
-    con = sqlite3.connect(DATABASE)
+    con = sqlite3.connect(MENU_DB_PATH)
     cur = con.cursor()
     cur.execute('CREATE TABLE IF NOT EXISTS categories(name, cat_order)')
     con.commit()
@@ -31,7 +31,7 @@ def category_already(name: str) -> bool:
     return False
 
 def item_already(name: str) -> bool:
-    con = sqlite3.connect(DATABASE)
+    con = sqlite3.connect(MENU_DB_PATH)
     cur = con.cursor()
     cur.execute('CREATE TABLE IF NOT EXISTS items(name, cost, description, ingredients, is_vegan)')
     con.commit()
@@ -45,7 +45,7 @@ def item_already(name: str) -> bool:
     return False
 
 def get_next_order_item(category: str) -> int:
-    con = sqlite3.connect(DATABASE)
+    con = sqlite3.connect(MENU_DB_PATH)
     cur = con.cursor()
     cur.execute('SELECT * FROM menu m WHERE m.category = (?)',(category,))
     items = cur.fetchall()
@@ -53,7 +53,7 @@ def get_next_order_item(category: str) -> int:
     return len(items)
 
 def get_next_order_cat() -> int:
-    con = sqlite3.connect(DATABASE)
+    con = sqlite3.connect(MENU_DB_PATH)
     cur = con.cursor()
     cur.execute('SELECT * FROM categories')
     items = cur.fetchall()
@@ -61,7 +61,7 @@ def get_next_order_cat() -> int:
     return len(items) 
 
 def get_item_cat(item_name: str) -> str:
-    con = sqlite3.connect(DATABASE)
+    con = sqlite3.connect(MENU_DB_PATH)
     cur = con.cursor()
     cur.execute('SELECT category FROM menu WHERE item = (?)', (item_name,))
     category = cur.fetchone()
@@ -69,7 +69,7 @@ def get_item_cat(item_name: str) -> str:
     return category[0]
 
 def get_cat_order(category: str) -> int:
-    con = sqlite3.connect(DATABASE)
+    con = sqlite3.connect(MENU_DB_PATH)
     cur = con.cursor()
     cur.execute('SELECT cat_order FROM categories c WHERE c.name = (?)',(category,))
     items = cur.fetchone()
@@ -77,7 +77,7 @@ def get_cat_order(category: str) -> int:
     return items[0]
 
 def get_item_order(item_name: str) -> int:
-    con = sqlite3.connect(DATABASE)
+    con = sqlite3.connect(MENU_DB_PATH)
     cur = con.cursor()
     cur.execute('SELECT item_order FROM menu m WHERE m.item = (?)',(item_name,))
     items = cur.fetchone()
@@ -85,7 +85,7 @@ def get_item_order(item_name: str) -> int:
     return items[0]
 
 def category_add_db(name: str):
-    con = sqlite3.connect(DATABASE)
+    con = sqlite3.connect(MENU_DB_PATH)
     cur = con.cursor()
     order: int = get_next_order_cat()
     cur.execute('INSERT INTO categories values(?,?)',(name,order))
@@ -93,7 +93,7 @@ def category_add_db(name: str):
     con.close()
 
 def item_add_db(category: str, name: str, cost: float, description: str, ingredients: str, is_vegan: bool):
-    con = sqlite3.connect(DATABASE)
+    con = sqlite3.connect(MENU_DB_PATH)
     cur = con.cursor()
 
     cur.execute('INSERT INTO items values(?,?,?,?,?)',(name,cost,description,ingredients,is_vegan))
@@ -109,7 +109,7 @@ def item_add_db(category: str, name: str, cost: float, description: str, ingredi
 
 def menu_view_db() -> list[tuple]:
     items: list[tuple]
-    con = sqlite3.connect(DATABASE)
+    con = sqlite3.connect(MENU_DB_PATH)
     cur = con.cursor()
 
     cur.execute('CREATE TABLE IF NOT EXISTS menu(category, item, item_order)')
@@ -138,7 +138,7 @@ def menu_view_db() -> list[tuple]:
     return items
 
 def menu_item_update_details_db(item: str, name: str, cost: float, description: str, ingredients: str, is_vegan: bool) -> None:
-    con = sqlite3.connect(DATABASE)
+    con = sqlite3.connect(MENU_DB_PATH)
     cur = con.cursor()
     cur.execute(
         '''UPDATE items
@@ -158,7 +158,7 @@ def menu_item_update_details_db(item: str, name: str, cost: float, description: 
     con.close()
 
 def menu_category_update_details_db(old_name: str, new_name: str) -> None:
-    con = sqlite3.connect(DATABASE)
+    con = sqlite3.connect(MENU_DB_PATH)
     cur = con.cursor()
     cur.execute(
         '''UPDATE categories  
@@ -182,7 +182,7 @@ def menu_item_remove_db(item: str) -> None:
     item_order = get_item_order(item)
     cat = get_item_cat(item)
 
-    con = sqlite3.connect(DATABASE)
+    con = sqlite3.connect(MENU_DB_PATH)
     cur = con.cursor()
     cur.execute(
         '''DELETE FROM items 
@@ -215,7 +215,7 @@ def menu_item_update_order_db(item_name: str, is_up: bool) -> None:
     else: 
         new_order += 1
 
-    con = sqlite3.connect(DATABASE)
+    con = sqlite3.connect(MENU_DB_PATH)
     cur = con.cursor()
     cur.execute(
         '''UPDATE menu  
@@ -242,7 +242,7 @@ def menu_category_update_order_db(category: str, is_up: bool) -> None:
     else: 
         new_order += 1
 
-    con = sqlite3.connect(DATABASE)
+    con = sqlite3.connect(MENU_DB_PATH)
     cur = con.cursor()
     cur.execute(
         '''UPDATE categories  
