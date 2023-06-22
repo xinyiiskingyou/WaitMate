@@ -44,7 +44,7 @@ def item_already(name: str) -> bool:
         return True
     return False
 
-def get_next_order(category: str) -> int:
+def get_next_order_item(category: str) -> int:
     con = sqlite3.connect(DATABASE)
     cur = con.cursor()
     cur.execute('SELECT * FROM menu m WHERE m.category = (?)',(category,))
@@ -71,10 +71,10 @@ def get_item_cat(item_name: str) -> str:
 def get_cat_order(category: str) -> int:
     con = sqlite3.connect(DATABASE)
     cur = con.cursor()
-    cur.execute('SELECT * FROM categories c WHERE c.name = (?)',(category,))
-    items = cur.fetchall()
+    cur.execute('SELECT cat_order FROM categories c WHERE c.name = (?)',(category,))
+    items = cur.fetchone()
     con.close()    
-    return items[0][1]
+    return items[0]
 
 def get_item_order(item_name: str) -> int:
     con = sqlite3.connect(DATABASE)
@@ -102,7 +102,7 @@ def item_add_db(category: str, name: str, cost: float, description: str, ingredi
     cur.execute('CREATE TABLE IF NOT EXISTS menu(category, item, item_order)')
     con.commit()
 
-    order: int = get_next_order(category)
+    order: int = get_next_order_item(category)
     cur.execute('INSERT INTO menu values(?,?,?)',(category,name,order))
     con.commit()
     con.close()
@@ -228,14 +228,38 @@ def menu_item_update_order_db(item_name: str, is_up: bool) -> None:
     cur.execute(
         '''UPDATE menu  
         SET item_order = (?)
-        WHERE NOT item = (?)''',
+        WHERE NOT item = (?) AND item_order = (?)''',
         (prev_order,item_name)
     )
     con.commit()
     con.close() 
 
 def menu_category_update_order_db(category: str, is_up: bool) -> None:
-    pass
+    prev_order = get_cat_order(category)
+    new_order = prev_order
+    if is_up:
+        new_order -= 1
+    else: 
+        new_order += 1
+
+    con = sqlite3.connect(DATABASE)
+    cur = con.cursor()
+    cur.execute(
+        '''UPDATE categories  
+        SET cat_order = (?)
+        WHERE name = (?)''',
+        (new_order,category)
+    )
+    con.commit()
+
+    cur.execute(
+        '''UPDATE categories  
+        SET cat_order = (?)
+        WHERE NOT name = (?) AND cat_order = (?)''',
+        (prev_order,category,new_order)
+    )
+    con.commit()
+    con.close() 
 
 
 # def sql_show_all() -> None:

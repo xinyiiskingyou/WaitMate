@@ -2,7 +2,7 @@ from database.menu_db import (
     category_already, category_add_db, item_already, item_add_db, menu_view_db, 
     menu_item_update_details_db, menu_category_update_details_db, menu_item_remove_db,
     menu_item_update_order_db, menu_category_update_order_db, get_item_order,
-    get_next_order, get_item_cat
+    get_next_order_item, get_item_cat, get_next_order_cat, get_cat_order
 )
 
 #TODO Error
@@ -54,17 +54,17 @@ def menu_item_remove(item: str):
     menu_item_remove_db(item)
 
 def menu_item_update_order(item_name: str, is_up: bool):
-    # if is top
     if get_item_order(item_name) == 0 and is_up:
         return
-    elif get_item_order(item_name) == get_next_order(get_item_cat(item_name)) - 1 and not is_up:
+    elif get_item_order(item_name) == get_next_order_item(get_item_cat(item_name)) - 1 and not is_up:
         return
-    # if is bottom
     menu_item_update_order_db(item_name, is_up)
 
 def menu_category_update_order(category, is_up):
-    # if is top
-    # if is bottom
+    if get_cat_order(category) == 0 and is_up:
+        return
+    elif get_cat_order(category) == get_next_order_cat() and not is_up:
+        return
     menu_category_update_order_db(category, is_up)
 
 
