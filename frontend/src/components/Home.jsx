@@ -7,13 +7,13 @@ import Typography from '@mui/material/Typography';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import {Link} from 'react-router-dom';
 import Staff from './Staff';
-import ResponsiveDrawer from './Menu';
+import Menu from './Menu';
 const Home = () => {
   return (
     <Router>
       <Routes>
         <Route path="/staff" element={<Staff />} />
-        <Route path="/menu" element={<ResponsiveDrawer />} />
+        <Route path="/menu" element={<Menu />} />
         <Route path="/" element={(
           <Container maxWidth="sm">
             <Box>

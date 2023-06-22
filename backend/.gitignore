@@ -3,4 +3,4 @@
 
 # Ignore cache
 **/__pycache__
-
+venv/
