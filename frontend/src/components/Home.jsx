@@ -8,12 +8,14 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import {Link} from 'react-router-dom';
 import Staff from './Staff';
 import Menu from './Menu';
+import Table from './Table';
 const Home = () => {
   return (
     <Router>
       <Routes>
         <Route path="/staff" element={<Staff />} />
         <Route path="/menu" element={<Menu />} />
+        <Route path="/table" element={<Table />} />
         <Route path="/" element={(
           <Container maxWidth="sm">
             <Box>
