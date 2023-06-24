@@ -5,7 +5,6 @@ from src.menu import (
 from src.error import InputError
 import os
 
-
 def fill_menu():
     if os.path.exists("../src/database/menu.db"):
         os.remove("../src/database/menu.db")
