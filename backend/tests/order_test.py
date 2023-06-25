@@ -1,12 +1,13 @@
 import pytest
 
-from src.order_db import OrderDB
+from src.order import OrderDB
 from src.error import InputError
 from tests.fixture import table_id_1, table_id_2, table_id_3
 
+order = OrderDB()
+
 def test_add_order_invalid_table_number():
 
-    order = OrderDB()
     order.clear_order_table()
 
     with pytest.raises(InputError):
@@ -15,7 +16,6 @@ def test_add_order_invalid_table_number():
         order.add_order(100, 'sushi', 1)
 
 def test_add_order_invalid_amount(table_id_1):
-    order = OrderDB()
     order.clear_order_table()
 
     with pytest.raises(InputError):
@@ -27,7 +27,6 @@ def test_add_order_invalid_amount(table_id_1):
 # TODO: check valid menu item
 
 def test_list_order_invalid_table_id():
-    order = OrderDB()
     order.clear_order_table()
 
     with pytest.raises(InputError):
@@ -38,7 +37,6 @@ def test_list_order_invalid_table_id():
         order.get_table_order(100)
 
 def test_valid_order_list(table_id_1, table_id_2):
-    order = OrderDB()
     order.clear_order_table()
 
     order.add_order(table_id_1, 'sushi', 1)
@@ -53,7 +51,6 @@ def test_valid_order_list(table_id_1, table_id_2):
 
 def test_get_all_orders(table_id_1, table_id_2, table_id_3):
 
-    order = OrderDB()
     order.clear_order_table()
 
     order.add_order(table_id_1, 'salmon sushi', 2)

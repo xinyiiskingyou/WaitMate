@@ -1,11 +1,12 @@
 import pytest
 
 from src.error import InputError
-from src.table_db import TableDB
+from src.table import TableDB
 from tests.fixture import table_id_1, table_id_2
 
+table = TableDB()
+
 def test_invalid_select_table_id():
-    table = TableDB()
 
     with pytest.raises(InputError):
         table.select_table_number(-1)
@@ -13,7 +14,7 @@ def test_invalid_select_table_id():
         table.select_table_number(-100)
 
 def test_invalid_select_duplicate_table_id(table_id_1):
-    table = TableDB()
+
     table.clear_tables_data()
 
     table.select_table_number(table_id_1)
@@ -22,7 +23,7 @@ def test_invalid_select_duplicate_table_id(table_id_1):
         table.select_table_number(table_id_1)
 
 def test_valid_select_table_id():
-    table = TableDB()
+
     table.clear_tables_data()
 
     table.select_table_number(1)
@@ -34,7 +35,7 @@ def test_valid_select_table_id():
     assert len(tables) == 4
 
 def test_valid_check_table_status():
-    table = TableDB()
+
     table.clear_tables_data()
 
     table.select_table_number(1)
@@ -45,7 +46,7 @@ def test_valid_check_table_status():
     assert tables[1] == 'OCCUPIED'
 
 def test_update_table_status_invalid_table_id():
-    table = TableDB()
+
     table.clear_tables_data()
 
     with pytest.raises(InputError) as error:
@@ -61,7 +62,6 @@ def test_update_table_status_invalid_table_id():
     assert str(error.value) == 'Table id is not available.'
 
 def test_update_table_status_invalid_status(table_id_1):
-    table = TableDB()
 
     with pytest.raises(InputError) as error:
         table.update_table_status(table_id_1, 'abc')
@@ -72,7 +72,6 @@ def test_update_table_status_invalid_status(table_id_1):
     assert str(error.value) == 'Unknown status'
     
 def test_valid_update_table_status(table_id_1, table_id_2):
-    table = TableDB()
 
     table.update_table_status(table_id_1, 'BILL')
     tables = table.get_all_tables_status()
@@ -86,7 +85,7 @@ def test_valid_update_table_status(table_id_1, table_id_2):
     assert tables[table_id_1] == 'BILL'
 
 def test_valid_update_reselect_table_id():
-    table = TableDB()
+
     table.clear_tables_data()
 
     # customer selects table 88
