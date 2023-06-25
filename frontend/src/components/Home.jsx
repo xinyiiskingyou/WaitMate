@@ -19,9 +19,11 @@ const Home = () => {
       <Box sx={{ width: 500, height: 1000 }} display="flex" flexDirection="column" alignItems="center" marginTop="100px">
         <Box mb={10}>
           <Grid item xs={12} sm={8}>
-            <Button variant="contained" color="primary">
-              <Typography variant="h4">Dine in</Typography>
-            </Button>
+            <Link to="/SelectTable">
+              <Button variant="contained" color="primary">
+                <Typography variant="h4">Dine in</Typography>
+              </Button>
+            </Link>
           </Grid>
         </Box>
 
