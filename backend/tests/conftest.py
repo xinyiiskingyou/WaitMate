@@ -1,6 +1,12 @@
 import pytest
 from src.table_db import TableDB
 from src.menu import category_add, item_add
+from fastapi.testclient import TestClient
+from app.api import app
+
+@pytest.fixture
+def client():
+    return TestClient(app, raise_server_exceptions=False)
 
 @pytest.fixture
 def table_id_1():

@@ -1,9 +1,18 @@
 import pytest
+import json
 from src.menu import (
     menu_view, category_add, item_add, menu_item_update_details, menu_item_remove,
     menu_category_update_details, menu_item_update_order, menu_category_update_order)
 from src.error import InputError
 import os
+
+def test_endpoint(client):
+    resp = client.post("/menu/category/add", json={'name': '23425'})
+    assert resp.status_code == 200
+
+def test_used_category_name(client):
+    resp = client.post("/menu/category/add", json={'name': '23425'})
+    assert resp.status_code == 400
 
 def fill_menu():
     if os.path.exists("../src/database/menu.db"):

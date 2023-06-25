@@ -17,9 +17,35 @@ const Menu = () => {
 
   const handleSaveCategory = () => {
     if (categoryText.trim() !== '') {
-      setCategories([...categories, categoryText.trim()]);
-      setCategoryText('');
-      setEditing(false);
+      //setCategories([...categories, categoryText.trim()]);
+      //setCategoryText('');
+      //setEditing(false);
+      const payload = { name: categoryText.trim() };
+
+      fetch('http://localhost:8000/menu/category/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      })
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error('Failed to save category');
+          }
+        })
+        .then(data => {
+          // Handle the response data if necessary
+          setCategories([...categories, categoryText.trim()]);
+          setCategoryText('');
+          setEditing(false);
+        })
+        .catch(error => {
+          // Handle the error if necessary
+          console.error(error);
+        });
     }
   };
 
