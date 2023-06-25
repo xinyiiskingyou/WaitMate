@@ -132,7 +132,7 @@
   <tr>
     <td><code>menu/item/remove</code><br /><br />Remove existing menu item from the menu.</td>
     <td style="font-weight: bold; color: red;">DELETE</td>
-    <td><b>Parameters:</b><br /><code>{ category, item_name }</code><br /><br /><b>Return Type:</b><br /><code>{}</code></td>
+    <td><b>Parameters:</b><br /><code>{ item_name }</code><br /><br /><b>Return Type:</b><br /><code>{}</code></td>
     <td>
       <b>InputError</b> when:
       <ul>
@@ -143,14 +143,14 @@
   </tr>
   <tr>
     <td><code>menu/item/update/order</code><br /><br /> Update the order in which menu items are shown within a category.</td>
-    <td style="font-weight: bold; color: green;">PUS</td>
-    <td><b>Parameters:</b><br /><code>{ category, item_name, is_up }</code><br /><br /><b>Return Type:</b><br /><code>{}</code></td>
+    <td style="font-weight: bold; color: green;">PUT</td>
+    <td><b>Parameters:</b><br /><code>{ item_name, is_up }</code><br /><br /><b>Return Type:</b><br /><code>{}</code></td>
     <td>N/A</td>
   </tr>
   <tr>
     <td><code>menu/item/update/details</code><br /><br />Update the description, ingredient, category, or cost of a menu item to the menu.</td>
     <td style="font-weight: bold; color: orange;">PUT</td>
-    <td><b>Parameters:</b><br /><code>{ category, item }</code><br /><br /><b>Return Type:</b><br /><code>{}</code></td>
+    <td><b>Parameters:</b><br /><code>{ item }</code><br /><br /><b>Return Type:</b><br /><code>{}</code></td>
     <td>
       <b>InputError</b> when:
       <ul>
