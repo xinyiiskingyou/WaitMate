@@ -8,7 +8,7 @@ from src.menu import (
 )
 from src.order_db import OrderDB
 from src.table_db import TableDB
-
+from src.category_req import Category
 app = FastAPI()
 order = OrderDB()
 table = TableDB()
@@ -33,8 +33,8 @@ async def read_root() -> dict:
 ############ MENU #################
 
 @app.post("/menu/category/add")
-def category_add_api(name: str):    
-    category_add(name)
+def category_add_api(reqBody: Category):   
+    category_add(reqBody.name)
     return {}
 
 @app.post("/menu/item/add")

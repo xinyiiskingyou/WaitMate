@@ -1,63 +1,145 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
+import { Box, Card, FormControlLabel, CardActions, CardContent, Checkbox, Button, Typography, TextField, InputAdornment } from '@mui/material';
 
-const useStyles = makeStyles({
-  root: {
-    minWidth: 275
-  },
-  bullet: {
-    display: "inline-block",
-    margin: "0 2px",
-    transform: "scale(0.8)"
-  },
-  title: {
-    fontSize: 14
-  },
-  pos: {
-    marginBottom: 12
-  }
-});
+const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVegetarian, onItemRemove }) => {
 
-export default function OutlinedCard() {
-  const [isEditable, setIsEditable] = useState(false);
-  const [name, setName] = useState("");
-  const classes = useStyles();
+    const [isEditable, setIsEditable] = useState(false);
+    const [Done, setDone] = useState(false);
+    const [vegetarian, setVegetarian] = useState(ItemVegetarian);
+    const [name, setName] = useState(ItemName);
+    const [price, setPrice] = useState(ItemPrice);
+    const [description, setDescription] = useState(ItemDescription);
+    const [ingredient, setIngredient] = useState(ItemIngredient);
+    const handleEdit = () => {
+        console.log("I am here");
+        setIsEditable(!isEditable);
+    };
 
-  const handleEdit = () => {
-    console.log("I am here");
-    setIsEditable(!isEditable);
-  };
+    const handleRemove = () => {
+        onItemRemove();
+    }
+    const handleDone = () => {
+        console.log("I am here");
+        setDone(true);
+        setIsEditable(!isEditable);
+        };
+    const cardStyle = {
+        width: '390px',
+        height: '390px',
+    }
+    return (
+        <Box margin='2%'>
+            {isEditable ? (
+            <Card>
+            <CardContent>
+            <TextField
+            label="Name"
+            disabled={!isEditable}
+            value={name}
+            size="small"
+            margin= 'normal'
+            fullWidth
+            onChange={(e) => setName(e.target.value)}
+            />
 
-  return (
-    <Card className={classes.root} variant="outlined">
-      <CardContent>
-        <Typography
-          className={classes.title}
-          color="textSecondary"
-          gutterBottom
-        >
-          Word of the Day
-        </Typography>
-        <TextField
-          id="standard-basic"
-          label="Name:"
-          disabled={!isEditable}
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          onBlur={() => setIsEditable(false)}
-        />
-      </CardContent>
-      <CardActions>
-        <Button size="small" onClick={handleEdit}>
-          Edit
-        </Button>
-      </CardActions>
-    </Card>
-  );
-}
+            <Box display="flex" flexDirection="row" flexWrap="wrap">
+            <TextField
+            label="Price"
+            disabled={!isEditable}
+            value={price}
+            size="small"
+            margin= 'normal'
+            InputProps={{
+                startAdornment: <InputAdornment position="start">$</InputAdornment>,
+            }}
+            onChange={(e) => setPrice(e.target.value)}
+            />
+            <Box margin="3%">
+                <FormControlLabel 
+                control={<Checkbox checked={vegetarian}/>}
+                disabled={!isEditable}
+                label="Vegetarian" 
+                labelPlacement="start"
+                onChange={(e) => setVegetarian(e.target.checked)}/>
+            </Box>
+            </Box>
+
+            
+            <TextField
+            label="Description"
+            disabled={!isEditable}
+            value={description}
+            size="small"
+            margin= 'normal'
+            fullWidth
+            onChange={(e) => setDescription(e.target.value)}
+            />
+
+            <TextField
+            label="Ingredients"
+            disabled={!isEditable}
+            value={ingredient}
+            size="small"
+            margin= 'normal'
+            fullWidth
+            onChange={(e) => setIngredient(e.target.value)}
+            />
+            </CardContent>
+
+            <CardActions>
+
+            {isEditable && (
+                <Button size="small" onClick={handleDone}>
+                DONE
+                </Button>
+            )}
+
+            </CardActions>
+            </Card>
+            ): (
+                <Card>
+                <CardContent>
+                  <Typography variant="h4" gutterBottom style={{ display: 'flex'}}>
+                    <div style={{ flexGrow: 1 }}>{name}</div>
+                    <Typography variant="h6" gutterBottom style={{ marginTop: '5%' }}>
+                        ${price}
+                    </Typography>
+                    
+                  </Typography>
+                  <Typography variant="h6" gutterBottom color={"grey"}>
+                    {description}
+                  </Typography>
+
+                  <Typography variant="h7" gutterBottom>
+                    ingredient:
+                    <br />
+                  </Typography>
+                  <Typography variant="h7" gutterBottom>
+                    {ingredient}
+                  </Typography>
+                </CardContent>
+      
+                <CardActions>
+                  <Button 
+                    size="small" 
+                    onClick={handleEdit}
+                    style={{ color: 'white', backgroundColor: '#7CBD96' }}>
+                    Update
+                  </Button>
+      
+                  <Button 
+                    variant="contained"
+                    size="small" 
+                    onClick={handleRemove}
+                    style={{ color: 'white', backgroundColor: '#FF7A7A' }}>
+                    Remove
+                  </Button>
+                </CardActions>
+              </Card>     
+            ) }
+
+            </Box>
+    ); 
+};
+
+export default MenuItem;
