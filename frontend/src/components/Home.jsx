@@ -8,14 +8,15 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import {Link} from 'react-router-dom';
 import Staff from './Staff';
 import Menu from './Menu';
-import Table from './Table';
+import Cart from './Cart';
+
 const Home = () => {
   return (
     <Router>
       <Routes>
         <Route path="/staff" element={<Staff />} />
         <Route path="/menu" element={<Menu />} />
-        <Route path="/table" element={<Table />} />
+        <Route path="/cart" element={<Cart />} />
         <Route path="/" element={(
           <Container maxWidth="sm">
             <Box>
@@ -27,7 +28,7 @@ const Home = () => {
             <Box sx={{ width: 500, height: 1000 }} display="flex" flexDirection="column" alignItems="center" marginTop="100px">
               <Box mb={10}>
                 <Grid item xs={12} sm={8}>
-                  <Link to="/menu">
+                  <Link to="/cart">
                     <Button variant="contained" color="primary">
                       <Typography variant="h4">Dine in</Typography>
                     </Button>
