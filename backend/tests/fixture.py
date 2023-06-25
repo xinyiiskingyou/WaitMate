@@ -1,5 +1,6 @@
 import pytest
 from src.table_db import TableDB
+from src.menu import category_add, item_add
 
 @pytest.fixture
 def table_id_1():
@@ -16,4 +17,9 @@ def table_id_2():
 def table_id_3():
     table = TableDB()
     return table.select_table_number(3)
+
+
+
+
+
 
