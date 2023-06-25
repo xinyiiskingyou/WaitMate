@@ -2,16 +2,15 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import sys
 sys.path.append('..')
-from src.menu import (
-    category_add, item_add, menu_view, menu_item_update_details, menu_category_update_details,
-    menu_item_remove, menu_item_update_order, menu_category_update_order
-)
-from src.order_db import OrderDB
-from src.table_db import TableDB
+
+from src.order import OrderDB
+from src.table import TableDB
+from src.menu import MenuDB
 
 app = FastAPI()
 order = OrderDB()
 table = TableDB()
+menu = MenuDB()
 
 origins = [
     'http://localhost:3000',
@@ -34,41 +33,41 @@ async def read_root() -> dict:
 
 @app.post("/menu/category/add")
 def category_add_api(name: str):    
-    category_add(name)
+    menu.category_add(name)
     return {}
 
 @app.post("/menu/item/add")
 def item_add_api(category: str, name: str, cost: float, description: str, ingredients: str, is_vegan: bool):    
-    item_add(category, name, cost, description, ingredients, is_vegan)
+    menu.item_add(category, name, cost, description, ingredients, is_vegan)
     return {}
 
-@app.get("/menu/listall")
-def menu_view_api():
-    return menu_view()
+# @app.get("/menu/listall")
+# def menu_view_api():
+#     return menu_view()
 
 @app.put("/menu/item/update/details")
 def menu_item_update_details_api(item: str, name: str, cost: float, description: str, ingredients: str, is_vegan: bool):
-    menu_item_update_details(item,  name, cost, description, ingredients, is_vegan)
+    menu.menu_item_update_details(item,  name, cost, description, ingredients, is_vegan)
     return {}
 
 @app.put("/menu/category/update/details")
 def menu_category_update_details_api(old_name: str, new_name: str):
-    menu_category_update_details(old_name, new_name)
+    menu.menu_category_update_details(old_name, new_name)
     return {}
 
 @app.put("/menu/item/update/order")
 def menu_item_update_order_api(item_name: str, is_up: bool):
-    menu_item_update_order(item_name, is_up)
+    menu.menu_item_update_order(item_name, is_up)
     return {}
 
 @app.put("/menu/category/update/order")
 def menu_category_update_order_api(category: str, is_up: bool):
-    menu_category_update_order(category, is_up)
+    menu.menu_category_update_order(category, is_up)
     return {}
 
 @app.delete("/menu/item/remove")
 def menu_item_remove_api(item_name: str):
-    menu_item_remove(item_name)
+    menu.menu_item_remove(item_name)
     return {}
 
 ############ ORDER #################
