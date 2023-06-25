@@ -2,6 +2,8 @@ import React from 'react';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Grid';
 import Grid from '@mui/material/Grid';
+import {Link} from 'react-router-dom';
+import Menu from './Menu';
 
 const Staff = () => {
   const buttonStyle = {
@@ -26,9 +28,11 @@ const Staff = () => {
           <h2 style={headingStyle}>Select Staff Type</h2>
         </Grid>
         <Grid item xs={4} textAlign={'right'}>
-          <Button variant='contained' color='primary' style={buttonStyle}>
-            Manager
-          </Button>
+          <Link to="/menu">
+            <Button variant='contained' color='primary' style={buttonStyle}>
+              Manager
+            </Button>
+            </Link>
         </Grid>
         <Grid item xs={4} textAlign={'center'}>
           <Button variant='contained' color='primary' style={buttonStyle}>

@@ -7,11 +7,11 @@ from src.error import InputError
 import os
 
 def test_endpoint(client):
-    resp = client.post("/menu/category/add", json={'name': '23425'})
+    resp = client.post("/menu/category/add", json={'name': 'pizza'})
     assert resp.status_code == 200
 
 def test_used_category_name(client):
-    resp = client.post("/menu/category/add", json={'name': '23425'})
+    resp = client.post("/menu/category/add", json={'name': 'pizza'})
     assert resp.status_code == 400
 
 def fill_menu():
