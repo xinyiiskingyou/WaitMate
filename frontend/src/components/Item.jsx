@@ -2,10 +2,11 @@
 import React, { useState } from "react";
 import { Box, Card, FormControlLabel, CardActions, CardContent, Checkbox, Button, Typography, TextField, InputAdornment } from '@mui/material';
 
-const Item = () => {
+const Item = ({ onItemAdd, onItemCancel, category}) => {
 
     const [isEditable, setIsEditable] = useState(false);
     const [Done, setDone] = useState(false);
+    const [vegetarian, setVegetarian] = useState(false);
     const [name, setName] = useState("");
     const [price, setPrice] = useState("");
     const [description, setDescription] = useState("");
@@ -15,6 +16,13 @@ const Item = () => {
     setIsEditable(!isEditable);
     };
 
+    const handleAdd = () => {
+        onItemAdd(category, name, price, description, ingredient, vegetarian)
+    }
+
+    const handleCancel = () => {
+        onItemCancel();
+    }
     const handleDone = () => {
         console.log("I am here");
         setDone(true);
@@ -26,7 +34,6 @@ const Item = () => {
             <CardContent>
             <TextField
             label="Name"
-            disabled={!isEditable}
             value={name}
             size="small"
             margin= 'normal'
@@ -37,7 +44,6 @@ const Item = () => {
             <Box display="flex" flexDirection="row" flexWrap="wrap">
             <TextField
             label="Price"
-            disabled={!isEditable}
             value={price}
             size="small"
             margin= 'normal'
@@ -47,14 +53,17 @@ const Item = () => {
             onChange={(e) => setPrice(e.target.value)}
             />
             <Box margin="3%">
-                <FormControlLabel control={<Checkbox/>} label="Vegetarian" labelPlacement="start"/>
+                <FormControlLabel
+                    control={<Checkbox/>} 
+                    label="Vegetarian" 
+                    labelPlacement="start"
+                    onChange={(e) => setVegetarian(e.target.checked)}/>
             </Box>
             </Box>
 
             
             <TextField
             label="Description"
-            disabled={!isEditable}
             value={description}
             size="small"
             margin= 'normal'
@@ -64,7 +73,6 @@ const Item = () => {
 
             <TextField
             label="Ingredients"
-            disabled={!isEditable}
             value={ingredient}
             size="small"
             margin= 'normal'
@@ -75,17 +83,13 @@ const Item = () => {
 
             <CardActions>
 
-            <Button size="small" onClick={handleEdit}>
-            Edit
+            <Button size="small" onClick={handleAdd}>
+            Add
             </Button>
 
-
-            {isEditable && (
-                <Button size="small" onClick={handleDone}>
-                DONE
-                </Button>
-            )}
-
+            <Button size="small" onClick={handleCancel}>
+            Cancel
+            </Button>
             </CardActions>
             </Card>
             </Box>
