@@ -2,7 +2,6 @@ import pytest
 
 from src.error import InputError
 from src.table_db import TableDB
-from tests.fixture import table_id_1, table_id_2
 
 def test_invalid_select_table_id():
     table = TableDB()

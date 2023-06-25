@@ -5,6 +5,6 @@ from pydantic import BaseModel, Field
 
 
 class Category(BaseModel):
-    name: Optional[str] = Field(alias="name", default=None)
+    name: str = Field(alias="name", default=None)
 
 Category.update_forward_refs()

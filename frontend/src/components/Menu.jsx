@@ -281,8 +281,8 @@ const Menu = () => {
 
           </Box>
         ) : (
-          <Typography variant="h6" align="center" style={{ margin: '20px' }}>
-            The menu item is currently empty. Please add an menu category to get started {selectedCategory}
+          <Typography variant="h4" align="center" style={{ margin: '20px' }}>
+            The menu item is currently empty. Please add a menu category to get started.
           </Typography>
 
         )}

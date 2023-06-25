@@ -8,7 +8,8 @@ from src.menu import (
 )
 from src.order_db import OrderDB
 from src.table_db import TableDB
-from src.category_req import Category
+from src.model.category_req import Category
+from src.model.item_req import Item
 app = FastAPI()
 order = OrderDB()
 table = TableDB()
@@ -38,8 +39,8 @@ def category_add_api(reqBody: Category):
     return {}
 
 @app.post("/menu/item/add")
-def item_add_api(category: str, name: str, cost: float, description: str, ingredients: str, is_vegan: bool):    
-    item_add(category, name, cost, description, ingredients, is_vegan)
+def item_add_api(reqbody: Item):    
+    item_add(reqbody.category, reqbody.name, reqbody.cost, reqbody.description, reqbody.ingredients, reqbody.is_vegan)
     return {}
 
 @app.get("/menu/listall")
