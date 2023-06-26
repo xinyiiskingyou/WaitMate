@@ -1,11 +1,11 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 import sys
-sys.path.append('..')
-
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI
 from src.order import OrderDB
 from src.table import TableDB
 from src.menu import MenuDB
+
+sys.path.append('..')
 
 app = FastAPI()
 order = OrderDB()
@@ -32,12 +32,12 @@ async def read_root() -> dict:
 ############ MENU #################
 
 @app.post("/menu/category/add")
-def category_add_api(name: str):    
+def category_add_api(name: str):
     menu.category_add(name)
     return {}
 
 @app.post("/menu/item/add")
-def item_add_api(category: str, name: str, cost: float, description: str, ingredients: str, is_vegan: bool):    
+def item_add_api(category: str, name: str, cost: float, description: str, ingredients: str, is_vegan: bool):
     menu.item_add(category, name, cost, description, ingredients, is_vegan)
     return {}
 
@@ -76,7 +76,7 @@ def menu_item_remove_api(item_name: str):
 def ordre_cart_add(table_id: int, item_name: str, amount: int):
     order.add_order(table_id, item_name, amount)
     return {}
-    
+
 @app.get('/order/cart/list/{table_id}')
 def ordre_cart_list(table_id: int):
     return order.get_table_order(table_id)
