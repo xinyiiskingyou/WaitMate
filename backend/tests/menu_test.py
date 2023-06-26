@@ -33,78 +33,97 @@ def test_cat_add_invalid_name():
         menu.category_add('BigSeaBassTodayYum')
     with pytest.raises(InputError):
         menu.category_add('Fish')
+    
+def test_get_categories_valid():
+    menu_1()
+
+    res = menu.get_all_categories()
+    assert len(res) == 2
 
 def test_item_update_details_invalid_id():
     menu_1()
 
     with pytest.raises(InputError):
-        menu.menu_item_update_details(100)
+        menu.update_details_menu_items(100)
     with pytest.raises(InputError):
-        menu.menu_item_update_details(3000, name='Big')
+        menu.update_details_menu_items(3000, name='Big')
     with pytest.raises(InputError):
-        menu.menu_item_update_details(-1, name='fsd')
+        menu.update_details_menu_items(-1, name='fsd')
 
 def test_item_update_details_invalid_name():
 
     menu_1()
     with pytest.raises(InputError):
-        menu.menu_item_update_details(1, name='SeaBass')
+        menu.update_details_menu_items(1, name='SeaBass')
     with pytest.raises(InputError):
-        menu.menu_item_update_details(1, name='BigSeaBassTodayYum')
+        menu.update_details_menu_items(1, name='BigSeaBassTodayYum')
     with pytest.raises(InputError):
-        menu.menu_item_update_details(1, name='')
+        menu.update_details_menu_items(1, name='')
 
-# # def test_item_update_details_valid_name():
-#     # menu.menu_item_update_details(1, name='Haddock')
+def test_item_update_details_valid_name():
+    menu_1()
+    original = menu.get_items_in_category(1)
+    menu.update_details_menu_items(1, name='Haddock')
+    result = menu.get_items_in_category(1)
+
+    assert result != original
         
 def test_cat_update_details_invalid():
     menu_1()
     with pytest.raises(InputError):
-        menu.menu_category_update_details('Fish', '') 
+        menu.update_details_category('Fish', '') 
     with pytest.raises(InputError):
-        menu.menu_category_update_details('Fish', 'BigSeaBassTodayYum')  
+        menu.update_details_category('Fish', 'BigSeaBassTodayYum')  
 
 def test_item_update_order_invalid():
     menu_1()
     with pytest.raises(InputError):
-        menu.menu_item_update_order('SeaBass', True) 
+        menu.update_order_menu_items('SeaBass', True) 
     with pytest.raises(InputError):
-        menu.menu_item_update_order('FlatFish', False)
+        menu.update_order_menu_items('FlatFish', False)
+
+def test_item_update_order_valid():
+    menu_1()
+    original = menu.get_items_in_category(1)
+    menu.update_order_menu_items('SeaBass', False) 
+    res = menu.get_items_in_category(1)
+
+    assert original != res
 
 def test_cat_update_order_invalid():
     menu_1()
     with pytest.raises(InputError):
-        menu.menu_category_update_order('Fish', True) 
+        menu.update_order_menu_category('Fish', True) 
     with pytest.raises(InputError):
-        menu.menu_category_update_order('Water', False)
+        menu.update_order_menu_category('Water', False)
 
-# # # def test_menu_view():
-# # #     fill_menu()
-# # #     assert menu_view() == {
-# # #         'Fish': [
-# # #             {'item': 'SeaBass',
-# # #             'cost': 10,
-# # #             'description': '_',
-# # #             'ingredients': '_',
-# # #             'is_vegan': False},
-# # #             {'item': 'FlatFish',
-# # #             'cost': 10,
-# # #             'description': '_',
-# # #             'ingredients': '_',
-# # #             'is_vegan': False},
-            
-# # #         ], 
-# # #         'Water': []}
+def test_cat_update_order_valid():
+    menu_1()
 
-# # # def test_menu_remove():
-# # #     fill_menu()
-# # #     menu_item_remove('FlatFish')
-# # #     assert menu_view() == {
-# # #         'Fish': [
-# # #             {'item': 'SeaBass',
-# # #             'cost': 10,
-# # #             'description': '_',
-# # #             'ingredients': '_',
-# # #             'is_vegan': False},           
-# # #         ], 
-# # #         'Water': []}
+    original = menu.get_all_categories()
+    menu.update_order_menu_category('Fish', False) 
+    result = menu.get_all_categories()
+    assert original != result
+
+def test_invalid_view_menu_item_in_category():
+    menu_1()
+
+    with pytest.raises(InputError):
+        menu.get_items_in_category(3) 
+    with pytest.raises(InputError):
+        menu.get_items_in_category(4) 
+    with pytest.raises(InputError):
+        menu.get_items_in_category(-1) 
+
+def test_valid_view_menu_item_in_category():
+    menu_1()
+    
+    result = menu.get_items_in_category(1)
+    assert result == [('SeaBass', 10, '_', '_', 0), ('FlatFish', 20, '_', '_', 0)]
+
+def test_menu_remove():
+    menu_1()
+    assert len(menu.get_items_in_category(1)) == 2
+
+    menu.remove_menu_items('FlatFish')
+    assert len(menu.get_items_in_category(1)) == 1

@@ -122,7 +122,7 @@ class MenuDB:
 
         return categories_dict
 
-    def view_items_in_category(self, category_id: int):
+    def get_items_in_category(self, category_id: int):
         
         self.create_category_table()
         self.create_item_table()
@@ -138,12 +138,12 @@ class MenuDB:
         cur = con.cursor()
 
         cur.execute(
-            '''SELECT c.name, item, cost, description, ingredients, is_vegan, cat_order, item_order
+            '''SELECT item, cost, description, ingredients, is_vegan
             FROM Categories c
             LEFT JOIN Menu m
-            ON m.category = c.name
+                ON m.category = c.name
             LEFT JOIN Items i
-            ON i.name = m.item
+                ON i.name = m.item
             where c.cat_id = ?
             ORDER BY m.item_order
             ''', (category_id,)
