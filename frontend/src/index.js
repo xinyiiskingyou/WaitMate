@@ -12,6 +12,8 @@ import SelectTable from './components/SelectTable';
 import CustomerMain from './components/CustomerMain';
 import CustomerMenuPage from './components/CustomerMenuPage';
 import Kitchenlist from './components/Kitchenlist';
+import Cart from './components/Cart';
+
 
 function App() {
   return (
@@ -25,6 +27,8 @@ function App() {
         <Route path="/CustomerMenuPage" element={<CustomerMenuPage />} />
         <Route path="/Kitchenlist" element={<Kitchenlist />} />
         <Route path="/customerMenu" element={<customerMenu />} />
+        <Route path="/Cart" element={<Cart />} />
+
       </Routes>
     </Router>
   );

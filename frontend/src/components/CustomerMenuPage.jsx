@@ -35,9 +35,11 @@ const CustomerMenuPage = () => {
               </Link>    
             </Grid>
             <Grid item xs={5.5} textAlign={'left'}>
+              <Link to="/Cart">
                 <Button variant='contained' color='primary' style={buttonStyle}>
                     View Order Summary           
-                </Button>      
+                </Button>    
+              </Link>  
             </Grid>
         </Grid>
       </Grid>
