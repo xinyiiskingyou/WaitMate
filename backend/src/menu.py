@@ -106,7 +106,23 @@ class MenuDB:
 
         con.close()
 
-    def menu_view_by_category(self, category_id: int):
+    def get_all_categories(self):
+        con = sqlite3.connect(MENU_DB_PATH)
+        cursor = con.cursor()
+
+        cursor.execute("SELECT cat_order, name FROM Categories ORDER BY cat_order")
+        info = cursor.fetchall()
+
+        con.close()
+
+        categories_dict = {}
+        for item in info:
+            cat_order, name = item
+            categories_dict[cat_order] = name
+
+        return categories_dict
+
+    def view_items_in_category(self, category_id: int):
         
         self.create_category_table()
         self.create_item_table()
@@ -128,7 +144,9 @@ class MenuDB:
             ON m.category = c.name
             LEFT JOIN Items i
             ON i.name = m.item
-            ORDER BY c.cat_order, m.item_order'''
+            where c.cat_id = ?
+            ORDER BY m.item_order
+            ''', (category_id,)
         )
 
         items = cur.fetchall()
@@ -137,7 +155,7 @@ class MenuDB:
         print(items)
         return items
 
-    def menu_item_update_details(self, item_id: int, name=None, cost=None, description=None,
+    def update_details_menu_items(self, item_id: int, name=None, cost=None, description=None,
         ingredients=None, is_vegan=None):
 
         if not get_item_info('item_id', item_id):
@@ -173,7 +191,7 @@ class MenuDB:
         con.commit()
         con.close()
 
-    def menu_category_update_details(self, old_name: str, new_name: str):
+    def update_details_category(self, old_name: str, new_name: str):
 
         if len(new_name) < 1 or len(new_name) > 15:
             raise InputError('Invalid name length')
@@ -199,7 +217,7 @@ class MenuDB:
         con.commit()
         con.close()
 
-    def menu_item_remove(self, item: str):
+    def remove_menu_items(self, item: str):
 
         con = sqlite3.connect(self.database)
         cur = con.cursor()
@@ -218,7 +236,7 @@ class MenuDB:
         con.commit()
         con.close()
 
-    def menu_item_update_order(self, item_name: str, is_up: bool):
+    def update_order_menu_items(self, item_name: str, is_up: bool):
         
         if not get_item_info('name', item_name):
             raise InputError('Invalid name')
@@ -245,7 +263,7 @@ class MenuDB:
 
         con.close()
 
-    def menu_category_update_order(self, category_name: str, is_up: bool):
+    def update_order_menu_category(self, category_name: str, is_up: bool):
 
         # check if the category name exists
         if not check_categories_key_is_valid('name', category_name):
@@ -273,46 +291,3 @@ class MenuDB:
         con.commit()
 
         con.close()
-
-    def print_info(self):
-        conn = sqlite3.connect(MENU_DB_PATH)
-        cursor = conn.cursor()
-
-        cursor.execute("SELECT * FROM Categories ORDER BY cat_order")
-        rows = cursor.fetchall()
-
-        for row in rows:
-            print(row)
-
-        cursor.close()
-        conn.close()
-
-# def menu_view_db() -> list[tuple]:
-#     items: list[tuple]
-#     con = sqlite3.connect(MENU_DB_PATH)
-#     cur = con.cursor()
-
-#     cur.execute('CREATE TABLE IF NOT EXISTS menu(category, item, item_order)')
-#     con.commit()
-
-#     cur.execute('CREATE TABLE IF NOT EXISTS items(name, cost, description, ingredients, is_vegan)')
-#     con.commit()
-
-#     cur.execute('CREATE TABLE IF NOT EXISTS categories(name, cat_order)')
-#     con.commit()
-
-#     cur.execute(
-#         '''SELECT c.name, item, cost, description, ingredients, is_vegan, cat_order, item_order
-#         FROM categories c
-#         LEFT JOIN menu m
-#         ON m.category = c.name
-#         LEFT JOIN items i
-#         ON i.name = m.item
-#         ORDER BY c.cat_order, m.item_order'''
-#     )
-
-#     items = cur.fetchall()
-#     con.close()
-    
-#     print(items) #TODO
-#     return items

@@ -47,27 +47,27 @@ def item_add_api(category: str, name: str, cost: float, description: str, ingred
 
 @app.put("/menu/item/update/details")
 def menu_item_update_details_api(item: str, name: str, cost: float, description: str, ingredients: str, is_vegan: bool):
-    menu.menu_item_update_details(item,  name, cost, description, ingredients, is_vegan)
+    menu.update_details_menu_items(item,  name, cost, description, ingredients, is_vegan)
     return {}
 
 @app.put("/menu/category/update/details")
 def menu_category_update_details_api(old_name: str, new_name: str):
-    menu.menu_category_update_details(old_name, new_name)
+    menu.update_details_category(old_name, new_name)
     return {}
 
 @app.put("/menu/item/update/order")
 def menu_item_update_order_api(item_name: str, is_up: bool):
-    menu.menu_item_update_order(item_name, is_up)
+    menu.update_order_menu_items(item_name, is_up)
     return {}
 
 @app.put("/menu/category/update/order")
 def menu_category_update_order_api(category: str, is_up: bool):
-    menu.menu_category_update_order(category, is_up)
+    menu.update_order_menu_category(category, is_up)
     return {}
 
 @app.delete("/menu/item/remove")
 def menu_item_remove_api(item_name: str):
-    menu.menu_item_remove(item_name)
+    menu.remove_menu_items(item_name)
     return {}
 
 ############ ORDER #################
