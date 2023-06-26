@@ -84,7 +84,7 @@ class MenuDB:
         if len(name) < 1 or len(name) > 15:
             raise InputError('Invalid name length')
 
-        # check if the item name exists
+        # check if the item name exists in the same category
         if get_item_info('name', name):
             raise AccessError('Name already used')
 
@@ -195,8 +195,14 @@ class MenuDB:
 
     def update_details_category(self, old_name: str, new_name: str):
 
+        print(self.get_all_categories())
+        # length is not between 1 to 15
         if len(new_name) < 1 or len(new_name) > 15:
             raise InputError('Invalid name length')
+        # old category name not exists
+        if not check_if_category_exists(old_name):
+            raise InputError('Name not found')
+        # new category name exists
         if old_name == new_name or check_if_category_exists(new_name):
             raise InputError('Name already used')
 
