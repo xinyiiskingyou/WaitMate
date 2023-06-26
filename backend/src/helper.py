@@ -32,26 +32,12 @@ def check_if_category_exists(category_name: str):
 
     return result
 
-def check_if_item_exists(item_name: str) -> bool:
+def get_item_info(column_name: str, item: str):
 
     try:
         con = sqlite3.connect(MENU_DB_PATH)
         cur = con.cursor()
-        cur.execute('SELECT * FROM Items i WHERE i.name = (?)',(item_name,))
-        result = cur.fetchone()
-    except Exception:
-        raise NotFoundError('Database not found.')
-    finally:
-        con.close()
-
-    return result
-
-def check_if_item_id_valid(item_id):
-    
-    try:
-        con = sqlite3.connect(MENU_DB_PATH)
-        cur = con.cursor()
-        cur.execute('SELECT * FROM Items i WHERE i.item_id = (?)',(item_id,))
+        cur.execute('SELECT * FROM Items i WHERE i.{} = (?)'.format(column_name),(item,))
         result = cur.fetchone()
     except Exception:
         raise NotFoundError('Database not found.')
@@ -76,7 +62,7 @@ def get_item_id_by_name(item_name: str):
     else:
         return None
 
-def get_item_order_by_name(item_name: str):
+def get_menu_item_order_by_name(item_name: str):
 
     conn = sqlite3.connect(MENU_DB_PATH)
     cur = conn.cursor()
@@ -92,13 +78,18 @@ def get_item_order_by_name(item_name: str):
     else:
         return None
 
-def get_total_item_count():
-    conn = sqlite3.connect(MENU_DB_PATH)
-    cur = conn.cursor()
+def check_categories_key_is_valid(column, value):
+    try:
+        con = sqlite3.connect(MENU_DB_PATH)
+        cur = con.cursor()
+        cur.execute('SELECT * FROM Categories c WHERE c.{} = ?'.format(column), (value,))
+        result = cur.fetchone()
+    except Exception:
+        raise NotFoundError('Database not found.')
+    finally:
+        con.close()
 
-    cur.execute('SELECT COUNT(*) FROM Items')
-    count = cur.fetchone()[0]
-    return count
+    return result
 
 def get_category_order_by_name(category_name: str):
     con = sqlite3.connect(MENU_DB_PATH)
@@ -110,12 +101,13 @@ def get_category_order_by_name(category_name: str):
 
     return items[0]
 
-def get_total_category_count():
-    conn = sqlite3.connect(MENU_DB_PATH)
-    cur = conn.cursor()
-
-    cur.execute('SELECT COUNT(*) FROM Categories')
+def get_total_count(table_name):
+    con = sqlite3.connect(MENU_DB_PATH)
+    cur = con.cursor()
+    cur.execute('SELECT COUNT(*) FROM {}'.format(table_name))
     count = cur.fetchone()[0]
+    con.close()
+
     return count
 
 def get_new_order_num(is_up: bool, new_order):
@@ -125,4 +117,3 @@ def get_new_order_num(is_up: bool, new_order):
         new_order += 1
 
     return new_order
-
