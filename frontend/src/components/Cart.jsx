@@ -1,4 +1,4 @@
-import React, { useState }  from 'react';
+import React, { useEffect, useState }  from 'react';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -26,16 +26,27 @@ const rows = [
 
 const Cart = () => {
   const [amount, setAmount] = useState(0);
-  const emptyRows = 5 - rows.length;
+  let [orders, setOrder] = useState([])
+  const emptyRows = 5 - orders.length;
 
   const printhello = () => {
     console.log('hello')
   };
   
   let getCart = async () => {
-    let response = await fetch('http://localhost:8000/order/cart/0')
+    let response = await fetch('http://localhost:8000/order/cart/list/1')
     let data = await response.json()
+    let order_list = []
+    for (var i of data) {
+      console.log(i)
+      order_list.push({name: i[0], amount: i[1]})
+    }
+    setOrder(order_list)
   }
+
+  useEffect(() => {
+    getCart()
+  }, [])
 
   return (
     <Container >
@@ -98,7 +109,7 @@ const Cart = () => {
               }}>
               <Table aria-label='custom pagination table' >
                 <TableBody>
-                  {rows.map((row) => (
+                  {orders.map((row) => (
                     <TableRow key={row.name}>
                       <TableCell component='th' scope='row' sx={{ fontSize: 30, borderBottom: 'none', pl: 10}}>
                         {row.name}
