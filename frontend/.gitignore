@@ -1,9 +1,4 @@
-<<<<<<< HEAD
 
 # Ignore cache
 **/__pycache__
 node_modules/
-=======
-# Ignore modules
-**/node_modules
->>>>>>> cust_table_front
