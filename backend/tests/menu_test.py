@@ -1,21 +1,10 @@
 import json
 import os
 import pytest
-from src.error import InputError
+from src.error import InputError, AccessError
 from src.menu import MenuDB
 
 menu = MenuDB()
-def test_endpoint(client):
-    resp = client.post("/menu/category/add", json={'name': 'pizza'})
-    assert resp.status_code == 200
-
-def test_used_category_name(client):
-    resp = client.post("/menu/category/add", json={'name': 'pizza'})
-    assert resp.status_code == 400
-
-def fill_menu():
-    if os.path.exists("../src/database/menu.db"):
-        os.remove("../src/database/menu.db")
 
 def menu_1():
     if os.path.exists("./src/database/menu.db"):
@@ -33,7 +22,7 @@ def test_item_add_invalid_name():
         menu.item_add('Fish', '', '1', '_', '_', False) 
     with pytest.raises(InputError):
         menu.item_add('Fish', 'BigSeaBassTodayYum', '1', '_', '_', False) 
-    with pytest.raises(InputError):
+    with pytest.raises(AccessError):
         menu.item_add('Fish', 'SeaBass', '1', '_', '_', False) 
 
 def test_cat_add_invalid_name():
@@ -148,3 +137,157 @@ def test_menu_remove():
 
     menu.remove_menu_items('FlatFish')
     assert len(menu.get_items_in_category(1)) == 1
+
+######################################
+########## endpoint tests ############
+######################################
+
+def test_category_add_endpoint(client):
+    # valid case
+    resp = client.post("/menu/category/add", json={'name': 'pizza'})
+    assert resp.status_code == 200
+
+    resp = client.post("/menu/category/add", json={'name': 'dessert'})
+    assert resp.status_code == 200
+
+    # duplicate name
+    resp = client.post("/menu/category/add", json={'name': 'pizza'})
+    assert resp.status_code == 400
+
+    # invalid length naem
+    resp = client.post("/menu/category/add", json={'name': 'fakdsjkdkfhdskfh'})
+    assert resp.status_code == 400
+
+def test_category_update_order_endpoint(client):
+    # valid case
+    resp = client.put("/menu/category/update/order", json={"name": "pizza"}, params={"is_up": False})
+    assert resp.status_code == 200
+
+    # invalid move
+    resp = client.put("/menu/category/update/order", json={"name": "pizza"}, params={"is_up": False})
+    assert resp.status_code == 400
+
+    # invalid category name
+    resp = client.put("/menu/category/update/order", json={"name": "random"}, params={"is_up": False})
+    assert resp.status_code == 400
+
+def test_category_update_name_endpoint(client):
+    # valid case
+    resp = client.put("/menu/category/update/details", json={"name": "pizza"}, params={"new_name": 'Pizza'})
+    assert resp.status_code == 200
+
+    resp = client.put("/menu/category/update/details", json={"name": "Pizza"}, params={"new_name": 'pizza'})
+    assert resp.status_code == 200
+
+    # invalid name
+    resp = client.put("/menu/category/update/details", json={"name": "pizza"}, params={"new_name": 'pizza'})
+    assert resp.status_code == 400
+
+    resp = client.put("/menu/category/update/details", json={"name": "Pizza"}, params={"new_name": 'pizza'})
+    assert resp.status_code == 400
+
+    resp = client.put("/menu/category/update/details", json={"name": "pizza"}, params={"new_name": ''})
+    assert resp.status_code == 400
+
+def test_add_item_endpoint(client):
+
+    # valid case
+    resp = client.post("/menu/item/add", json={
+        "category": {
+            "name": "pizza",
+        },
+        "name": "pepperoni",
+        "cost": 10,
+        "description": "N/A",
+        "ingredients": "pepperoni, cheese",
+        "is_vegan": False
+    })
+    assert resp.status_code == 200
+
+    resp = client.post("/menu/item/add", json={
+        "category": {
+            "name": "pizza",
+        },
+        "name": "hawaiian",
+        "cost": 10,
+        "description": "N/A",
+        "ingredients": "ham, pineapple, cheese",
+        "is_vegan": False
+    })
+    assert resp.status_code == 200
+
+    # duplicate name
+    resp = client.post("/menu/item/add", json={
+        "category": {
+            "name": "pizza",
+        },
+        "name": "pepperoni",
+        "cost": 10,
+        "description": "N/A",
+        "ingredients": "pepperoni, cheese",
+        "is_vegan": False
+    })
+    assert resp.status_code == 403
+
+    # invalid length name
+    resp = client.post("/menu/item/add", json={
+        "category": {
+            "name": "pizza",
+        },
+        "name": "gaskdlfjdsfldsfkldsjfls",
+        "cost": 10,
+        "description": "N/A",
+        "ingredients": "pepperoni, cheese",
+        "is_vegan": False
+    })
+    assert resp.status_code == 400
+
+def test_remove_item_endpoint(client):
+    resp = client.put("/menu/item/remove", json={
+        "name": "hawaiian",
+    })
+    assert resp.status_code == 200
+
+    # invalid remove
+    resp = client.put("/menu/item/remove", json={
+        "name": "hawaiian",
+    })
+
+    assert resp.status_code == 400
+
+def test_item_update_details(client):
+
+    # valid case
+    resp = client.put("/menu/item/update/details", json={
+        "id": 1,
+        "name": "Haddock",
+        "cost": 20,
+    })
+    assert resp.status_code == 200
+
+    # invalid id
+    resp = client.put("/menu/item/update/details", json={
+        "id": 100,
+        "name": "Haddock",
+        "cost": 20,
+    })
+    assert resp.status_code == 400
+
+def test_item_update_order_endpoint(client):
+    resp = client.post("/menu/item/add", json={
+        "category": {
+            "name": "pizza",
+        },
+        "name": "hawaiian",
+        "cost": 10,
+        "description": "N/A",
+        "ingredients": "ham, pineapple, cheese",
+        "is_vegan": False
+    })
+    assert resp.status_code == 200
+
+    resp = client.put("/menu/item/update/order", json={"name": "hawaiian"}, params={"is_up": True})
+    assert resp.status_code == 200
+
+    resp = client.put("/menu/item/update/order", json={"name": "hawaiian"}, params={"is_up": False})
+    assert resp.status_code == 400

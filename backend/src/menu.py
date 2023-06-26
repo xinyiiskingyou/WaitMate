@@ -1,6 +1,6 @@
 import sqlite3
 from constant import MENU_DB_PATH
-from src.error import InputError
+from src.error import InputError, AccessError
 from src.helper import (
     check_if_category_exists, get_item_id_by_name, get_category_order_by_name, 
     get_menu_item_order_by_name, get_item_info, check_categories_key_is_valid, update_order
@@ -86,7 +86,7 @@ class MenuDB:
 
         # check if the item name exists
         if get_item_info('name', name):
-            raise InputError('Name already used')
+            raise AccessError('Name already used')
 
         # insert new item to the Items table
         con = sqlite3.connect(self.database)
@@ -106,6 +106,9 @@ class MenuDB:
         con.close()
 
     def get_all_categories(self):
+
+        self.create_category_table()
+        
         con = sqlite3.connect(MENU_DB_PATH)
         cursor = con.cursor()
 
@@ -151,7 +154,6 @@ class MenuDB:
         items = cur.fetchall()
         con.close()
         
-        print(items)
         return items
 
     def update_details_menu_items(self, item_id: int, name=None, cost=None, description=None,
@@ -195,7 +197,7 @@ class MenuDB:
 
         if len(new_name) < 1 or len(new_name) > 15:
             raise InputError('Invalid name length')
-        if old_name == new_name and check_if_category_exists(new_name):
+        if old_name == new_name or check_if_category_exists(new_name):
             raise InputError('Name already used')
 
         con = sqlite3.connect(self.database)
@@ -217,21 +219,24 @@ class MenuDB:
         con.commit()
         con.close()
 
-    def remove_menu_items(self, item: str):
+    def remove_menu_items(self, item_name: str):
 
+        if not get_item_info('name', item_name):
+            raise InputError('Invalid name')
+    
         con = sqlite3.connect(self.database)
         cur = con.cursor()
         cur.execute(
             '''DELETE FROM Items 
             WHERE name = (?)''',
-            (item,)
+            (item_name,)
         )
         con.commit()
 
         cur.execute(
             '''DELETE FROM Menu 
             WHERE item = (?)''',
-            (item,)
+            (item_name,)
         )
         con.commit()
         con.close()
