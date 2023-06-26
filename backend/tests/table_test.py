@@ -1,12 +1,10 @@
 import pytest
-
 from src.error import InputError
 from src.table import TableDB
 
 table = TableDB()
 
 def test_invalid_select_table_id():
-
     with pytest.raises(InputError):
         table.select_table_number(-1)
     with pytest.raises(InputError):
@@ -15,9 +13,7 @@ def test_invalid_select_table_id():
 def test_invalid_select_duplicate_table_id(table_id_1):
 
     table.clear_tables_data()
-
     table.select_table_number(table_id_1)
-
     with pytest.raises(InputError):
         table.select_table_number(table_id_1)
 
@@ -97,3 +93,34 @@ def test_valid_update_reselect_table_id():
 
     # table no. 1 is avaliable again
     table.select_table_number(88)
+
+######################################
+########## endpoint tests ############
+######################################
+
+def test_select_table(client):
+    resp = client.post("/table/select", json={'id': '5'})
+    assert resp.status_code == 200
+
+    # duplicate table id
+    resp = client.post("/table/select", json={'id': '5'})
+    assert resp.status_code == 400
+
+    resp = client.post("/table/select", json={'id': '-1'})
+    assert resp.status_code == 400
+
+def test_check_table_status(client):
+    resp = client.get("/table/status")
+    assert resp.status_code == 200
+
+def test_update_table_status(client):
+    resp = client.put("/table/status/update", json={"id": 5, "status": "BILL"})
+    assert resp.status_code == 200
+
+    # invalid status
+    resp = client.put("/table/status/update", json={"id": 5, "status": "--"})
+    assert resp.status_code == 400
+
+    # invalid table id
+    resp = client.put("/table/status/update", json={"id": 100, "status": "BILL"})
+    assert resp.status_code == 400

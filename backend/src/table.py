@@ -123,10 +123,7 @@ class TableDB():
         '''
 
         # check if table number exists
-        result = check_table_exists(table_id)
-
-        # if the table_id is not selected by customer or not valid
-        if not result:
+        if not check_table_exists(table_id):
             raise InputError('Table id is not available.')
 
         # if the status is not valid
