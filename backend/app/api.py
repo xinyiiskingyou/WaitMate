@@ -80,12 +80,12 @@ def menu_item_remove_api(reqbody: Item):
 
 ############ ORDER #################
 
-@app.post('/order/cart/add/{table_id}')
+@app.post('/order/cart/add')
 def ordre_cart_add(reqbody: Order):
     order.add_order(reqbody.table_id, reqbody.item_name, reqbody.amount)
     return {}
 
-@app.get('/order/cart/list')
+@app.post('/order/cart/list')
 def ordre_cart_list(reqbody: Order):
     return order.get_table_order(reqbody.table_id)
 

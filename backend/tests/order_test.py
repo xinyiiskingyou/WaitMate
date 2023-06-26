@@ -42,7 +42,7 @@ def test_list_order_invalid_table_id():
 
 def test_valid_order_list(table_id_1, table_id_2, menu_japanese):
     order.clear_order_table()
-
+    
     order.add_order(table_id_1, 'salmon sushi', 1)
     order.add_order(table_id_1, 'dorayaki', 1)
 
@@ -64,3 +64,38 @@ def test_get_all_orders(table_id_1, table_id_2, table_id_3, menu_japanese):
     table_order = order.get_all_orders()
 
     assert len(table_order) == 3
+
+######################################
+########## endpoint tests ############
+######################################
+
+def test_add_order_endpoint(client, table_id_1, menu_japanese):
+    # valid
+    resp = client.post('/order/cart/add', json={'id': table_id_1, 'name': 'dorayaki', 'amount': 1})
+    assert resp.status_code == 200
+
+    # invalid table id
+    resp = client.post('/order/cart/add', json={'id': 23, 'name': 'dorayaki', 'amount': 1})
+    assert resp.status_code == 400
+
+    # invalid item
+    resp = client.post('/order/cart/add', json={'id': table_id_1, 'name': 'tuna sushi', 'amount': 1})
+    assert resp.status_code == 400
+
+    # invalid amount
+    resp = client.post('/order/cart/add', json={'id': table_id_1, 'name': 'dorayaki', 'amount': -1})
+    assert resp.status_code == 400
+
+def test_table_view_order_endpoint(client, table_id_1):
+    # valid case
+    resp = client.post('/order/cart/list', json={'id': table_id_1})
+    assert resp.status_code == 200
+
+    # invalid table id
+    resp = client.post('/order/cart/list', json={'id': 23})
+    assert resp.status_code == 400
+
+def test_table_view_all_order_endpoint(client):
+    # valid case
+    resp = client.get('/order/listall')
+    assert resp.status_code == 200
