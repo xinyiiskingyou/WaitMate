@@ -2,9 +2,8 @@ import sqlite3
 from constant import MENU_DB_PATH
 from src.error import InputError
 from src.helper import (
-    check_if_category_exists, get_item_id_by_name,get_category_order_by_name, 
-    get_new_order_num, get_menu_item_order_by_name, get_item_info,
-    check_categories_key_is_valid, get_total_count
+    check_if_category_exists, get_item_id_by_name, get_category_order_by_name, 
+    get_menu_item_order_by_name, get_item_info, check_categories_key_is_valid, update_order
 )
 
 class MenuDB:
@@ -178,6 +177,7 @@ class MenuDB:
             )
             con.commit()
 
+        # update item detail in Items table
         cur.execute('''UPDATE Items
             SET
                 name = COALESCE(?, name),
@@ -201,7 +201,7 @@ class MenuDB:
         con = sqlite3.connect(self.database)
         cur = con.cursor()
         cur.execute(
-            '''UPDATE categories  
+            '''UPDATE Categories  
             SET name = (?)
             WHERE name = (?)''',
             (new_name, old_name)
@@ -209,7 +209,7 @@ class MenuDB:
         con.commit()
 
         cur.execute(
-            '''UPDATE menu  
+            '''UPDATE Menu  
             SET category = (?)
             WHERE category = (?)''',
             (new_name, old_name)
@@ -241,27 +241,8 @@ class MenuDB:
         if not get_item_info('name', item_name):
             raise InputError('Invalid name')
 
-        prev_order: int = get_menu_item_order_by_name(item_name)
-
-        new_order = get_new_order_num(is_up, prev_order)
-
-        if prev_order == 1 and is_up:
-            raise InputError('Invalid order')
-        if prev_order + 1 > get_total_count('Items') and not is_up:
-            raise InputError('Invalid order')
-
-        con = sqlite3.connect(self.database)
-        cur = con.cursor()
-        cur.execute('''UPDATE Menu SET item_order =
-            CASE
-                WHEN item_order = ? THEN ?
-                WHEN item_order = ? THEN ?
-                ELSE item_order
-            END''',
-        (prev_order, new_order, new_order, prev_order))
-        con.commit()
-
-        con.close()
+        prev_order = get_menu_item_order_by_name(item_name)
+        update_order('Menu', 'item_order', is_up, prev_order)
 
     def update_order_menu_category(self, category_name: str, is_up: bool):
 
@@ -270,24 +251,4 @@ class MenuDB:
             raise InputError('Invalid category name')
 
         prev_order = get_category_order_by_name(category_name)
-
-        new_order = get_new_order_num(is_up, prev_order)
-        print(category_name, prev_order)
-
-        if prev_order == 1 and is_up:
-            raise InputError('Invalid order')
-        if prev_order + 1 > get_total_count('Categories') and not is_up:
-            raise InputError('Invalid order')
-
-        con = sqlite3.connect(self.database)
-        cur = con.cursor()
-        cur.execute('''UPDATE Categories SET cat_order =
-            CASE
-                WHEN cat_order = ? THEN ?
-                WHEN cat_order = ? THEN ?
-                ELSE cat_order
-            END''',
-        (prev_order, new_order, new_order, prev_order))
-        con.commit()
-
-        con.close()
+        update_order('Categories', 'cat_order', is_up, prev_order)

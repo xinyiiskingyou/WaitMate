@@ -108,12 +108,26 @@ def get_total_count(table_name):
     count = cur.fetchone()[0]
     con.close()
 
-    return count
+    return count  
 
-def get_new_order_num(is_up: bool, new_order):
-    if is_up:
-        new_order -= 1
-    else: 
-        new_order += 1
+def update_order(table_name, column_name, is_up, prev_order):
 
-    return new_order
+    if prev_order == 1 and is_up:
+        raise InputError('Invalid order')
+    if prev_order + 1 > get_total_count(table_name) and not is_up:
+        raise InputError('Invalid order')
+
+    new_order = prev_order - 1 if is_up else prev_order + 1
+
+    con = sqlite3.connect(MENU_DB_PATH)
+    cur = con.cursor()
+    cur.execute('''UPDATE {table}
+        SET {column} = CASE
+            WHEN {column} = ? THEN ?
+            WHEN {column} = ? THEN ?
+            ELSE {column}
+        END'''.format(table=table_name, column=column_name), 
+    (prev_order, new_order, new_order, prev_order))
+
+    con.commit()
+    con.close()
