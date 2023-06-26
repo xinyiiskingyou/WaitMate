@@ -2,9 +2,15 @@ import pytest
 import os
 from src.table import TableDB
 from src.menu import MenuDB
+from fastapi.testclient import TestClient
+from app.api import app
 
 table = TableDB()
 menu = MenuDB()
+
+@pytest.fixture
+def client():
+    return TestClient(app, raise_server_exceptions=False)
 
 @pytest.fixture
 def table_id_1():

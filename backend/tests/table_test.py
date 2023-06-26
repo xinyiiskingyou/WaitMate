@@ -2,7 +2,6 @@ import pytest
 
 from src.error import InputError
 from src.table import TableDB
-from tests.fixture import table_id_1, table_id_2
 
 table = TableDB()
 

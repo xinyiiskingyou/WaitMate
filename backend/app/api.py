@@ -4,6 +4,8 @@ from fastapi import FastAPI
 from src.order import OrderDB
 from src.table import TableDB
 from src.menu import MenuDB
+from src.model.category_req import Category
+from src.model.item_req import Item
 
 sys.path.append('..')
 
@@ -32,13 +34,13 @@ async def read_root() -> dict:
 ############ MENU #################
 
 @app.post("/menu/category/add")
-def category_add_api(name: str):
-    menu.category_add(name)
+def category_add_api(reqBody: Category):   
+    menu.category_add(reqBody.name)
     return {}
 
 @app.post("/menu/item/add")
-def item_add_api(category: str, name: str, cost: float, description: str, ingredients: str, is_vegan: bool):
-    menu.item_add(category, name, cost, description, ingredients, is_vegan)
+def item_add_api(reqbody: Item):    
+    menu.item_add(reqbody.category, reqbody.name, reqbody.cost, reqbody.description, reqbody.ingredients, reqbody.is_vegan)
     return {}
 
 # @app.get("/menu/listall")

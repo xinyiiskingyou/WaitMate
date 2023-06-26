@@ -1,9 +1,21 @@
+import json
 import os
 import pytest
 from src.error import InputError
 from src.menu import MenuDB
 
 menu = MenuDB()
+def test_endpoint(client):
+    resp = client.post("/menu/category/add", json={'name': 'pizza'})
+    assert resp.status_code == 200
+
+def test_used_category_name(client):
+    resp = client.post("/menu/category/add", json={'name': 'pizza'})
+    assert resp.status_code == 400
+
+def fill_menu():
+    if os.path.exists("../src/database/menu.db"):
+        os.remove("../src/database/menu.db")
 
 def menu_1():
     if os.path.exists("./src/database/menu.db"):

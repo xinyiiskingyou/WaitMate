@@ -2,10 +2,8 @@ import pytest
 
 from src.order import OrderDB
 from src.error import InputError
-from tests.fixture import table_id_1, table_id_2, table_id_3, menu_japanese
 
 order = OrderDB()
-
 def test_add_order_invalid_table_number():
 
     order.clear_order_table()
