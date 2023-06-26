@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Grid';
 import Grid from '@mui/material/Grid';
 import {Link} from 'react-router-dom';
-import Menu from './Menu';
+// import Menu from './Menu';
 
 const Staff = () => {
   const buttonStyle = {
@@ -35,9 +35,11 @@ const Staff = () => {
             </Link>
         </Grid>
         <Grid item xs={4} textAlign={'center'}>
-          <Button variant='contained' color='primary' style={buttonStyle}>
-            Kitchen Staff
-          </Button>
+          <Link to="/Kitchenlist">
+            <Button variant='contained' color='primary' style={buttonStyle}>
+              Kitchen Staff
+            </Button>
+          </Link>
         </Grid>
         <Grid item xs={4} textAlign={'left'}>
           <Button variant='contained' color='primary' style={buttonStyle}>

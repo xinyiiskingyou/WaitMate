@@ -11,6 +11,7 @@ import Staff from './components/Staff';
 import SelectTable from './components/SelectTable';
 import CustomerMain from './components/CustomerMain';
 import CustomerMenuPage from './components/CustomerMenuPage';
+import Kitchenlist from './components/Kitchenlist';
 
 function App() {
   return (
@@ -22,6 +23,8 @@ function App() {
         <Route path="/SelectTable" element={<SelectTable />} />
         <Route path="/CustomerMain" element={<CustomerMain />} />
         <Route path="/CustomerMenuPage" element={<CustomerMenuPage />} />
+        <Route path="/Kitchenlist" element={<Kitchenlist />} />
+        <Route path="/customerMenu" element={<customerMenu />} />
       </Routes>
     </Router>
   );

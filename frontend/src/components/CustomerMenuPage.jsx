@@ -2,6 +2,7 @@ import React from 'react';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Grid';
 import Grid from '@mui/material/Grid';
+import {Link} from 'react-router-dom';
 
 const CustomerMenuPage = () => {
   const buttonStyle = {
@@ -27,9 +28,11 @@ const CustomerMenuPage = () => {
         </Grid>
         <Grid container spacing={0} justifyContent="space-between" alignContent="center">
             <Grid item xs={5.5} textAlign={'right'}>
+            <Link to="/customerMenu">
                 <Button variant='contained' color='primary' style={buttonStyle}>
                     Browse Menu
-                </Button>      
+                </Button>  
+              </Link>    
             </Grid>
             <Grid item xs={5.5} textAlign={'left'}>
                 <Button variant='contained' color='primary' style={buttonStyle}>
