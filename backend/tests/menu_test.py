@@ -75,6 +75,15 @@ def test_cat_update_details_invalid():
     with pytest.raises(InputError):
         menu.update_details_category('Fish', 'BigSeaBassTodayYum')  
 
+def test_cat_update_details_valid():
+    menu_1()
+
+    orig = menu.get_all_categories()
+    menu.update_details_category('Fish', 'Seafood') 
+    res = menu.get_all_categories()
+
+    assert orig != res
+
 def test_item_update_order_invalid():
     menu_1()
     with pytest.raises(InputError):
