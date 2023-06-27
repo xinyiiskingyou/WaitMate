@@ -128,6 +128,9 @@ class OrderDB:
         Return Value:
             Returns <order_list> that containing all orders details
         '''
+
+        self.create_order_table()
+
         try:
             con = sqlite3.connect(self.database)
             cur = con.cursor()

@@ -30,19 +30,17 @@ const rows = [
 ];
 
 const Kitchenlist = () => {
-  const [amount, setAmount] = useState(0);
-  let [orders, setOrder] = useState([])
-  const emptyRows = 5 - rows.length;
+  let [orders, setKitchen] = useState([])
   
   let getKitchenList = async () => {
-    let response = await fetch('http://localhost:8000/order/listall/1')
+    let response = await fetch('http://localhost:8000/order/listall')
     let data = await response.json()
     let order_list = []
     for (var i of data) {
       console.log(i)
-      order_list.push({time: i[0], tablenum: i[0], name: i[0], amount: i[1]})
+      order_list.push({time: i[0], tablenum: i[1], name: i[2], amount: i[3]})
     }
-    setOrder(order_list)
+    setKitchen(order_list)
   }
 
   useEffect(() => {
@@ -111,13 +109,13 @@ const Kitchenlist = () => {
               }}>
               <Table aria-label='custom pagination table' >
                 <TableBody>
-                  {rows.map((row) => (
+                  {orders.map((row) => (
                     <TableRow key={row.name}>
                       <TableCell style={{ width: '25%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pl: 10}}>
                         {row.time}
                       </TableCell>
                       <TableCell style={{ width: '25%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pl: -5}}>
-                        {row.tablenum}
+                        Table {row.tablenum}
                       </TableCell>
                       <TableCell style={{ width: '25%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -5}}>
                         {row.name}

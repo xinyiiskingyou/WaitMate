@@ -21,10 +21,10 @@ function App() {
         <Route path="/menu" element={<Menu />} />
         <Route path="/staff" element={<Staff />} />
         <Route path="/SelectTable" element={<SelectTable />} />
-        <Route path="/CustomerMain" element={<CustomerMain />} />
-        <Route path="/CustomerMenuPage" element={<CustomerMenuPage />} />
+        <Route path="/CustomerMain/:id" element={<CustomerMain />} />
+        <Route path="/CustomerMenuPage/:id" element={<CustomerMenuPage />} />
         <Route path="/Kitchenlist" element={<Kitchenlist />} />
-        <Route path="/Cart" element={<Cart />} />
+        <Route path="/Cart/:id" element={<Cart />} />
         <Route path="/Browse" element={<Browse />} />
       </Routes>
     </Router>
