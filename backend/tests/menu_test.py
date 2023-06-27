@@ -1,3 +1,4 @@
+import requests
 import json
 import os
 import pytest
@@ -131,7 +132,8 @@ def test_valid_view_menu_item_in_category():
     menu_1()
     
     result = menu.get_items_in_category(1)
-    assert result == [('SeaBass', 10, '_', '_', 0), ('FlatFish', 20, '_', '_', 0)]
+    assert result == [{'name': 'SeaBass', 'cost': 10, 'description': '_', 'ingredients': '_', 'is_vegan': 0}, 
+                {'name': 'FlatFish', 'cost': 20, 'description': '_', 'ingredients': '_', 'is_vegan': 0}]
 
 def test_menu_remove():
     menu_1()
@@ -253,18 +255,12 @@ def test_add_item_endpoint(client):
     })
     assert resp.status_code == 400
 
-def test_remove_item_endpoint(client):
-    resp = client.put("/menu/item/remove", json={
-        "name": "hawaiian",
-    })
-    assert resp.status_code == 200
+def test_remove_item_endpoint():
+    response = requests.delete(f"http://localhost:8000/menu/item/remove/", json={"name": "hawaiian"})
+    assert response.status_code == 200
 
-    # invalid remove
-    resp = client.put("/menu/item/remove", json={
-        "name": "hawaiian",
-    })
-
-    assert resp.status_code == 400
+    response = requests.delete(f"http://localhost:8000/menu/item/remove/", json={"name": "hawaiian"})
+    assert response.status_code == 400
 
 def test_item_update_details(client):
 

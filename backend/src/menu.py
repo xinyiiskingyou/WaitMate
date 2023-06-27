@@ -125,16 +125,16 @@ class MenuDB:
         return categories_dict
 
     def get_items_in_category(self, category_id: str):
-        
+
         self.create_category_table()
         self.create_item_table()
         self.create_menu_table()
 
-        # check if the category id exists
+        # Check if the category ID exists
         if not check_categories_key_is_valid('cat_id', int(category_id)):
             raise InputError('Invalid ID')
 
-        items: list[tuple]
+        items = []
 
         con = sqlite3.connect(self.database)
         cur = con.cursor()
@@ -146,14 +146,19 @@ class MenuDB:
                 ON m.category = c.name
             LEFT JOIN Items i
                 ON i.name = m.item
-            where c.cat_id = ?
+            WHERE c.cat_id = ?
             ORDER BY m.item_order
             ''', (category_id,)
         )
 
-        items = cur.fetchall()
+        columns = ['name', 'cost', 'description', 'ingredients', 'is_vegan']
+        info = cur.fetchall()
         con.close()
-        
+
+        for data in info:
+            item_dict = dict(zip(columns, data))
+            items.append(item_dict)
+
         return items
 
     def update_details_menu_items(self, item_id: int, name=None, cost=None, description=None,
@@ -196,7 +201,7 @@ class MenuDB:
     def update_details_category(self, old_name: str, new_name: str):
         
         # if the name does not change then do nothing
-        if old_name == new_name:
+        if old_name.lower() == new_name.lower():
             return
         # length is not between 1 to 15
         if len(new_name) < 1 or len(new_name) > 15:
