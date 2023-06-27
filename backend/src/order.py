@@ -100,6 +100,7 @@ class OrderDB:
         Return Value:
             Returns <order_list> that contains all the orders are placed by a table
         '''
+
         result = check_table_exists(table_id)
 
         if not result:
