@@ -12,13 +12,44 @@ const Item = ({ onItemAdd, onItemCancel, category}) => {
     const [description, setDescription] = useState("");
     const [ingredient, setIngredient] = useState("");
     const handleEdit = () => {
-    console.log("I am here");
-    setIsEditable(!isEditable);
+        console.log("I am here");
+        setIsEditable(!isEditable);
     };
 
     const handleAdd = () => {
-        onItemAdd(category, name, price, description, ingredient, vegetarian)
+        console.log(category);
+        const payload = {
+            category: category,
+            name: name,
+            cost: parseFloat(price),
+            description: description,
+            ingredients: ingredient,
+            is_vegan: vegetarian
+         };
+
+        fetch('http://localhost:8000/menu/item/add', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+        })
+        .then(response => {
+            if (response.ok) {
+            return response.json();
+            } else {
+            throw new Error('Failed to add item');
+            }
+        })
+        .then(data => {
+            onItemAdd(category, name, price, description, ingredient, vegetarian);
+        })
+        .catch(error => {
+            // Handle the error if necessary
+            console.error(error);
+        });
     }
+    
 
     const handleCancel = () => {
         onItemCancel();

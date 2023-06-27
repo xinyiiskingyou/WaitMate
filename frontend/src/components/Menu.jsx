@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useTheme } from '@mui/material/styles';
 import { Card, CardActions, CardContent, Container, Drawer, Box, Button, Typography, TextField, ButtonGroup } from '@mui/material';
 import Item from './Item';
@@ -10,6 +11,7 @@ const Menu = () => {
   const [editing, setEditing] = useState(false);
   const [categoryEditingIndex, setCategoryEditingIndex] = useState(-1);
   const [categoryediting, setCategoryEditing] = useState(false);
+  const [editedCategory, setEditedCategory] = useState('');
   const [categoryText, setCategoryText] = useState('');
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(-1);
@@ -58,6 +60,7 @@ const Menu = () => {
 
   const handleCategoryClick = (index) => {
     setSelectedCategory(index);
+    fetchMenuItems(index);
   };
 
   const handleCategoryEdit = () => {
@@ -109,23 +112,99 @@ const Menu = () => {
     setCategoryEditingIndex(index);
   };
   
-  const handleSaveCategoryName = (index) => {
-    // Save the updated category name
-    const updatedCategories = [...categories];
-    updatedCategories[index] = categories[index];
-    setCategories(updatedCategories);
-  
-    // Reset the category editing index
-    setCategoryEditingIndex(-1);
+  const handleSaveCategoryName = async (index) => {
+    console.log(categories[index]);
+    console.log(editedCategory);
+    const payload = { 
+      name: categories[index],
+      new_name: editedCategory};
+
+    await fetch('http://localhost:8000/menu/category/update/details', {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload),
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Failed to update category');
+        }
+      })
+      .then(data => {
+        // Save the updated category name
+        const updatedCategories = [...categories];
+        updatedCategories[index] = categories[index];
+        setCategories(updatedCategories);
+      
+        // Reset the category editing index
+        setCategoryEditingIndex(-1);
+        setEditedCategory("");
+      })
+      .catch(error => {
+        // Handle the error if necessary
+        console.error(error);
+      });
   };
-  const handleCategoryInputChange = (value, index) => {
-    setCategories((prevCategories) => {
-      const updatedCategories = [...prevCategories];
-      updatedCategories[index] = value;
-      return updatedCategories;
-    });
+  const handleCategoryInputChange = (value) => {
+    setEditedCategory(value);
   };
 
+  const handleUpdateOrder = async (index, is_up) => {
+    const payload = {
+      id: parseInt(index, 10) + 1,
+      name: categories[index],
+      is_up: is_up};
+    
+    console.log(payload);
+    await fetch('http://localhost:8000/menu/category/update/order', {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload),
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Failed to update order');
+        }
+      })
+      .then(data => {
+        /* swap order*/
+      })
+      .catch(error => {
+        // Handle the error if necessary
+        console.error(error);
+      });
+  };
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/menu/list/categories');
+      const data = await response.json();
+      const categoryArray = Object.values(data);
+      console.log(categoryArray);
+      setCategories(categoryArray);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
+
+  const fetchMenuItems = async (index) => {
+    index = parseInt(index, 10) + 1;
+    console.log(index);
+    try {
+      const response = await fetch('http://localhost:8000/menu/list/items/' + index);
+      const data = await response.json();
+      const itemArray = Object.values(data);
+      console.log(itemArray);
+      setMenuItems(itemArray);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
   
   const theme = useTheme();
   const styles = {
@@ -208,12 +287,13 @@ const Menu = () => {
             Add Category
           </Button>
         )}
-        {categories.map((category, index) => (
+        
+        { Object.entries(categories).map(([index, category]) => (
           <Box key={index}>
             {categoryEditingIndex === index ? (
               <Box display="flex" justifyContent="space-between">
                 <TextField 
-                  value={category} 
+                  value={editedCategory || category} 
                   size='small'
                   variant='outlined'
                   color='primary'
@@ -252,7 +332,7 @@ const Menu = () => {
                 <Button
                   color="primary"
                   style={{ ...smallbuttonStyle, padding: '4px 8px', fontSize: '10px' }}
-                  onClick={() => handleEditCategory(index)}
+                  onClick={() => handleUpdateOrder(index, true)}
                   >
                   <ArrowUpwardIcon/>
                 </Button>
@@ -260,7 +340,7 @@ const Menu = () => {
                 <Button
                   color="primary"
                   style={{ ...smallbuttonStyle, padding: '4px 8px',fontSize: '10px' }}
-                  onClick={() => handleEditCategory(index)}
+                  onClick={() => handleUpdateOrder(index, false)}
                   >
                   <ArrowDownwardIcon/>
                 </Button>
@@ -300,11 +380,24 @@ const Menu = () => {
             <Box display="flex" flexDirection="row" alignItems="flex-start" marginTop={5} style={{ gap: '20px' }}>
             { adding && (
               <Box display="flex" flexDirection="row" alignItems="flex-start">
-              <Item onItemAdd={handleCardDoneClick} onItemCancel={handleCardCancelClick} category={selectedCategory}/>
+              <Item onItemAdd={handleCardDoneClick} onItemCancel={handleCardCancelClick} category={categories[selectedCategory]}/>
               <div onBlur={handleCardBlur} tabIndex={-1} />
               </Box>
             ) 
             }
+        { Object.entries(menuItems).map(([index, menuItem]) => (
+              <Box key={index} display="flex" flexDirection="row" mt={2}>
+              <MenuItem
+                ItemName={menuItem.name}
+                ItemDescription={menuItem.description}
+                ItemPrice={menuItem.price}
+                ItemIngredient={menuItem.ingredient}
+                ItemVegetarian={menuItem.vegetarian}
+                onItemRemove={handleRemoveItemClick}/>
+            </Box>
+
+        ))}
+            
             {menuItems
             .filter((menuItem) => menuItem.category === selectedCategory)
             .map((menuItem, index) => (

@@ -124,14 +124,14 @@ class MenuDB:
 
         return categories_dict
 
-    def get_items_in_category(self, category_id: int):
+    def get_items_in_category(self, category_id: str):
         
         self.create_category_table()
         self.create_item_table()
         self.create_menu_table()
 
         # check if the category id exists
-        if not check_categories_key_is_valid('cat_id', category_id):
+        if not check_categories_key_is_valid('cat_id', int(category_id)):
             raise InputError('Invalid ID')
 
         items: list[tuple]
@@ -194,7 +194,6 @@ class MenuDB:
         con.close()
 
     def update_details_category(self, old_name: str, new_name: str):
-
         print(self.get_all_categories())
         # length is not between 1 to 15
         if len(new_name) < 1 or len(new_name) > 15:
