@@ -10,7 +10,7 @@ import datetime
 from constant import ORDER_DB_PATH
 from src.error import InputError, NotFoundError
 from src.clear import clear_database
-from src.helper import check_table_exists
+from src.helper import check_table_exists, get_item_info
 
 class OrderDB:
     '''
@@ -73,8 +73,8 @@ class OrderDB:
         if not result:
             raise InputError('The table_id does not refer to a valid table')
 
-        # if not isinstance(item_name, str):
-        #     raise InputError('The item_name does not refer to a valid item')
+        if not get_item_info('name', item_name):
+            raise InputError('The item_name does not refer to a valid item')
 
         if amount < 1:
             raise InputError('The amount must be more than 1')

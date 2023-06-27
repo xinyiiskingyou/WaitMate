@@ -88,7 +88,7 @@
     Add new category to the menu.
     </td>
     <td style="font-weight: bold; color: blue;">POST</td>
-    <td><b>Parameters:</b><br /><code>{ name }</code><br /><br /><b>Return Type:</b><br /><code>{}</code></td>
+    <td><b>Parameters:</b><br /><code>{ cat_name }</code><br /><br /><b>Return Type:</b><br /><code>{}</code></td>
     <td>
       <b>InputError</b> when any of:
       <ul>
@@ -100,8 +100,8 @@
   <tr>
     <td><code>menu/category/update/order</code><br /><br />Update the order in which categories are shown on the menu.</td>
     <td style="font-weight: bold; color: orange;">PUT</td>
-    <td><b>Parameters:</b><br /><code>{ category, is_up }</code><br /><br /><b>Return Type:</b><br /><code>{}</code></td>
-      <td>N/A</td>
+    <td><b>Parameters:</b><br /><code>{ category_name, is_up }</code><br /><br /><b>Return Type:</b><br /><code>{}</code></td>
+      <td>category name not exists</td>
   </tr>
   <tr>
     <td><code>menu/category/update/name</code><br /><br />Update the name of menu category.</td>
@@ -117,11 +117,12 @@
   <tr>
     <td><code>menu/item/add</code><br /><br />Add new menu item with titles, descriptions, ingredients, category, and cost to the menu</td>
     <td style="font-weight: bold; color: blue;">POST</td>
-    <td><b>Parameters:</b><br /><code>{ category, item }</code><br /><br /><b>Return Type:</b><br /><code>{}</code></td>
+    <td><b>Parameters:</b><br /><code>{ category, name, cost, description, ingredient, is_vegan }</code><br /><br /><b>Return Type:</b><br /><code>{}</code></td>
     <td>
       <b>InputError</b> when:
       <ul>
         <li>category not exists</li>
+        <li>length of name is not between 1 and 15 characters inclusive</li>
       </ul>
       <b>AccessError</b> when:
       <ul>
@@ -131,8 +132,8 @@
   </tr>
   <tr>
     <td><code>menu/item/remove</code><br /><br />Remove existing menu item from the menu.</td>
-    <td style="font-weight: bold; color: red;">DELETE</td>
-    <td><b>Parameters:</b><br /><code>{ category, item_name }</code><br /><br /><b>Return Type:</b><br /><code>{}</code></td>
+    <td style="font-weight: bold; color: orange;">PUT</td>
+    <td><b>Parameters:</b><br /><code>{ item_name }</code><br /><br /><b>Return Type:</b><br /><code>{}</code></td>
     <td>
       <b>InputError</b> when:
       <ul>
@@ -143,27 +144,34 @@
   </tr>
   <tr>
     <td><code>menu/item/update/order</code><br /><br /> Update the order in which menu items are shown within a category.</td>
-    <td style="font-weight: bold; color: green;">PUS</td>
-    <td><b>Parameters:</b><br /><code>{ category, item_name, is_up }</code><br /><br /><b>Return Type:</b><br /><code>{}</code></td>
-    <td>N/A</td>
+    <td style="font-weight: bold; color: orange;">PUT</td>
+    <td><b>Parameters:</b><br /><code>{ item_name, is_up }</code><br /><br /><b>Return Type:</b><br /><code>{}</code></td>
+    <td>item name not exists</td>
   </tr>
   <tr>
     <td><code>menu/item/update/details</code><br /><br />Update the description, ingredient, category, or cost of a menu item to the menu.</td>
     <td style="font-weight: bold; color: orange;">PUT</td>
-    <td><b>Parameters:</b><br /><code>{ category, item }</code><br /><br /><b>Return Type:</b><br /><code>{}</code></td>
+    <td><b>Parameters:</b><br /><code>{ item_id, name, cost, description, ingredient, is_vegan }</code><br /><br /><b>Return Type:</b><br /><code>{}</code></td>
     <td>
       <b>InputError</b> when:
       <ul>
-        <li>category does not refer to a valid category</li>
+        <li>item id does not refer to a valid id</li>
         <li>item does not refer to a valid item</li>
+        <li>length of name is not between 1 and 15 characters inclusive</li>
       </ul>
     </td>
   </tr>
   <tr>
-    <td><code>menu/listall</code><br /><br />Return a list of all categories and their associated menu items.</td>
+    <td><code>menu/list/categories</code><br /><br />Return a list of all categories name.</td>
     <td style="font-weight: bold; color: green;">GET</td>
     <td><b>Parameters:</b><br /><code>{}</code><br /><br /><b>Return Type:</b><br /><code>{ category }</code></td>
     <td>N/A</td>
+  </tr>
+  <tr>
+    <td><code>menu/list/items</code><br /><br />Return a list of items in a category.</td>
+    <td style="font-weight: bold; color: green;">GET</td>
+    <td><b>Parameters:</b><br /><code>{ cat_id }</code><br /><br /><b>Return Type:</b><br /><code>{ category }</code></td>
+    <td>category id does not refer to a valid id</td>
   </tr>
   <tr>
     <td><code>order/cart/add</code><br /><br />Add menu items to the order cart.</td>
@@ -180,7 +188,7 @@
   </tr>
   <tr>
     <td><code>order/cart/list</code><br /><br />List the menu items that customer has added.</td>
-    <td style="font-weight: bold; color: green;">GET</td>
+    <td style="font-weight: bold; color: blue;">POST</td>
     <td><b>Parameters:</b><br /><code>{ table_id }</code><br /><br /><b>Return Type:</b><br /><code>{ order }</code></td>
     <td>
       <b>InputError</b> when:
@@ -207,7 +215,6 @@
      <b>InputError</b> when:
       <ul>
         <li>table_id is not valid</li>
-        <li>table_id is not available</li>
       </ul>
     </td>
   </tr>
