@@ -29,11 +29,11 @@ const Browse = () => {
         let data = await response.json()
 
         let categories = []
-        for (var i of data) {
-          console.log(i)
+        for (const [key, value] of Object.entries(data)) {
+          console.log(key, value)
           categories.push({
-            name: i.name,
-            id: i.id,
+            name: value,
+            id: key,
           })
         }
         console.log(categories)
@@ -54,10 +54,13 @@ const Browse = () => {
         return
       }
 
-      let response = await fetch(`http://localhost:8000/menu/list/items?cat_id=${cat}`)
+      let response = await fetch(`http://localhost:8000/menu/list/items/${cat}`)
       let data = await response.json()
       let items = []
       for (var i of data) {
+        if (i[0] === null) {
+          break
+        }
         console.log(i)
         items.push({
           name: i[0],
@@ -288,7 +291,6 @@ const Browse = () => {
             { Object.entries(menuItems).map(([name, menuItem]) => (
               <Box key={name} display="flex" flexDirection="row" >
                 <Typography variant="h5" align="center" style={{ margin: '5px' }}>
-                  1 22
                 </Typography> 
                 <ItemCard
                   ItemName={menuItem.name}
