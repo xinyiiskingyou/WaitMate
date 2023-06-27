@@ -11,13 +11,37 @@ const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
     const [price, setPrice] = useState(ItemPrice);
     const [description, setDescription] = useState(ItemDescription);
     const [ingredient, setIngredient] = useState(ItemIngredient);
+
     const handleEdit = () => {
         setIsEditable(!isEditable);
     };
 
     const handleRemove = () => {
-        onItemRemove();
+      const payload = {
+        name: name
+      };
+      fetch('http://localhost:8000/menu/item/remove', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      })
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error('Failed to remove item. Please try again.');
+          }
+        })
+        .then(data => {
+          onItemRemove()
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
     }
+    
     const handleDone = () => {
         setDone(true);
         setIsEditable(!isEditable);

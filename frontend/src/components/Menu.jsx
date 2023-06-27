@@ -7,6 +7,7 @@ import MenuItem from './Card';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { margin, width } from '@mui/system';
+
 const Menu = () => {
   const [editing, setEditing] = useState(false);
   const [categoryEditingIndex, setCategoryEditingIndex] = useState(-1);
@@ -18,8 +19,10 @@ const Menu = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [adding, setAdding] = useState(false);
   const [cardData, setCardData] = useState({ category: -1, name: '', price: '', description: '', ingredient: '', vegetarian: false });
+  const [error, setError] = useState(null);
 
   const handleSaveCategory = () => {
+    
     if (categoryText.trim() !== '') {
       const payload = { name: categoryText.trim() };
 
@@ -46,6 +49,10 @@ const Menu = () => {
         .catch(error => {
           // Handle the error if necessary
           console.error(error);
+          alert('Failed to save category. Please try again.');
+          setTimeout(() => {
+            window.location.reload();
+          }, 10);
         });
     }
   };
@@ -103,6 +110,7 @@ const Menu = () => {
       setAdding(false);
     }
   };
+  
   const handleItemAdd = (name, price, description) => {
     // Perform any necessary logic with the item details
     console.log('Item details:', name, price, description);
@@ -113,6 +121,7 @@ const Menu = () => {
   };
   
   const handleSaveCategoryName = async (index) => {
+
     console.log(categories[index]);
     console.log(editedCategory);
     const payload = { 
@@ -128,7 +137,7 @@ const Menu = () => {
         if (response.ok) {
           return response.json();
         } else {
-          throw new Error('Failed to update category');
+          throw new Error('Failed to save category');
         }
       })
       .then(data => {
@@ -144,6 +153,10 @@ const Menu = () => {
       .catch(error => {
         // Handle the error if necessary
         console.error(error);
+        alert('Failed to rename the category. Please try again.');
+        setTimeout(() => {
+          window.location.reload();
+        }, 10);
       });
   };
   const handleCategoryInputChange = (value) => {
@@ -171,15 +184,25 @@ const Menu = () => {
       })
       .then(data => {
         /* swap order*/
+        const updatedCategories = [...categories];
+        const currentIndex = parseInt(index, 10);
+        const newIndex = is_up ? currentIndex - 1 : currentIndex + 1;
+        [updatedCategories[currentIndex], updatedCategories[newIndex]] = [updatedCategories[newIndex], updatedCategories[currentIndex]];
+        setCategories(updatedCategories);
       })
       .catch(error => {
         // Handle the error if necessary
         console.error(error);
+        alert('Failed to update the order. Please try again.');
+        setTimeout(() => {
+          window.location.reload();
+        }, 10);
       });
   };
   useEffect(() => {
     fetchCategories();
   }, []);
+
   const fetchCategories = async () => {
     try {
       const response = await fetch('http://localhost:8000/menu/list/categories');
@@ -200,12 +223,17 @@ const Menu = () => {
       const data = await response.json();
       const itemArray = Object.values(data);
       console.log(itemArray);
+
       setMenuItems(itemArray);
     } catch (error) {
       console.error('Error fetching categories:', error);
+      alert('Error fetching categories:', error);
+      setTimeout(() => {
+        window.location.reload();
+      }, 10);
     }
   };
-  
+
   const theme = useTheme();
   const styles = {
     cardContainer: {
@@ -229,9 +257,16 @@ const Menu = () => {
     marginBottom: '5%',
     height: '50%',
   }
+
   return (
     <Container maxWidth="sm">
-
+    {error && (
+      <Card variant="outlined">
+        <CardContent>
+          <div className="error-alert">{error}</div>
+        </CardContent>
+      </Card>
+    )}
     <Drawer 
       variant="permanent" 
       sx={{
@@ -346,8 +381,6 @@ const Menu = () => {
                 </Button>
 
                 </ButtonGroup>
-
-
               </Box>
 
             )}
@@ -385,7 +418,7 @@ const Menu = () => {
               </Box>
             ) 
             }
-        { Object.entries(menuItems).map(([index, menuItem]) => (
+          { Object.entries(menuItems).map(([index, menuItem]) => (
               <Box key={index} display="flex" flexDirection="row" mt={2}>
               <MenuItem
                 ItemName={menuItem.name}
@@ -393,11 +426,11 @@ const Menu = () => {
                 ItemPrice={menuItem.price}
                 ItemIngredient={menuItem.ingredient}
                 ItemVegetarian={menuItem.vegetarian}
+                // onItemRemove={() => handleRemoveItemClick(index)
                 onItemRemove={handleRemoveItemClick}/>
             </Box>
-
         ))}
-            
+        
             {menuItems
             .filter((menuItem) => menuItem.category === selectedCategory)
             .map((menuItem, index) => (
@@ -431,5 +464,4 @@ const Menu = () => {
     </Container>
   );
 };
-
 export default Menu;

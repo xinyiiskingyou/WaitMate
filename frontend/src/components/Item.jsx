@@ -36,21 +36,23 @@ const Item = ({ onItemAdd, onItemCancel, category}) => {
         })
         .then(response => {
             if (response.ok) {
-            return response.json();
+                return response.json();
             } else {
-            throw new Error('Failed to add item');
+                throw new Error('Failed to add item. Please try again.');
             }
         })
         .then(data => {
             onItemAdd(category, name, price, description, ingredient, vegetarian);
+            alert("You've successfully added items")
+            window.location.reload()
         })
         .catch(error => {
             // Handle the error if necessary
             console.error(error);
+            alert(error)
         });
     }
     
-
     const handleCancel = () => {
         onItemCancel();
     }
@@ -58,7 +60,7 @@ const Item = ({ onItemAdd, onItemCancel, category}) => {
         console.log("I am here");
         setDone(true);
         setIsEditable(!isEditable);
-        };
+    };
     return (
         <Box margin='2%'>
         <Card>
@@ -92,7 +94,6 @@ const Item = ({ onItemAdd, onItemCancel, category}) => {
             </Box>
             </Box>
 
-            
             <TextField
             label="Description"
             value={description}
