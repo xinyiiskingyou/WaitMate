@@ -91,7 +91,7 @@ const SelectTable = () => {
         </Grid>     
         <Grid container spacing={0} justifyContent="center" alignItems="center">
             <Link to={nextLink}>
-                <Button variant='contained' color='primary' style={buttonStyle} onClick={[handleSubmit]}>
+                <Button variant='contained' color='primary' style={buttonStyle} onClick={handleSubmit}>
                     Confirm
                 </Button>
             </Link>

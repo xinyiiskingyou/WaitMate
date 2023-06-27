@@ -105,6 +105,7 @@ def order_listall():
 
 @app.post('/table/select')
 def table_select(reqbody: Table_Cust):
+    print(reqbody)
     table.select_table_number(reqbody.table_id)
     return {}
 
