@@ -54,7 +54,7 @@ const Browse = () => {
         return
       }
 
-      let response = await fetch(`http://localhost:8000/menu/list/items?cat_id=${cat}`)
+      let response = await fetch(`http://localhost:8000/menu/list/items/${cat}`)
       let data = await response.json()
       let items = []
       for (var i of data) {
