@@ -4,3 +4,9 @@
 # Ignore cache
 **/__pycache__
 venv/
+
+# Ignore mod
+node_modules/
+package.json
+package-lock.json
+
