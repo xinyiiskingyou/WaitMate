@@ -20,10 +20,11 @@ def check_table_exists(table_id: int):
     return result
 
 def check_if_category_exists(category_name: str):
+
     try:
         con = sqlite3.connect(MENU_DB_PATH)
         cur = con.cursor()
-        cur.execute('SELECT * FROM Categories c WHERE c.name = (?)',(category_name,))
+        cur.execute('SELECT * FROM Categories c WHERE lower(c.name) = (?)',(category_name,))
         result = cur.fetchone()
     except Exception:
         raise NotFoundError('Database not found.')

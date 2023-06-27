@@ -55,7 +55,7 @@ class MenuDB:
             raise InputError('Invalid name length')
 
         # check if the category exists
-        if check_if_category_exists(name):
+        if check_if_category_exists(name.lower()):
             raise InputError('Name already used')
 
         con = sqlite3.connect(self.database)
@@ -125,16 +125,16 @@ class MenuDB:
         return categories_dict
 
     def get_items_in_category(self, category_id: str):
-        
+
         self.create_category_table()
         self.create_item_table()
         self.create_menu_table()
 
-        # check if the category id exists
+        # Check if the category ID exists
         if not check_categories_key_is_valid('cat_id', int(category_id)):
             raise InputError('Invalid ID')
 
-        items: list[tuple]
+        items = []
 
         con = sqlite3.connect(self.database)
         cur = con.cursor()
@@ -146,14 +146,19 @@ class MenuDB:
                 ON m.category = c.name
             LEFT JOIN Items i
                 ON i.name = m.item
-            where c.cat_id = ?
+            WHERE c.cat_id = ?
             ORDER BY m.item_order
             ''', (category_id,)
         )
 
-        items = cur.fetchall()
+        columns = ['name', 'cost', 'description', 'ingredients', 'is_vegan']
+        info = cur.fetchall()
         con.close()
-        
+
+        for data in info:
+            item_dict = dict(zip(columns, data))
+            items.append(item_dict)
+
         return items
 
     def update_details_menu_items(self, item_id: int, name=None, cost=None, description=None,
@@ -194,15 +199,18 @@ class MenuDB:
         con.close()
 
     def update_details_category(self, old_name: str, new_name: str):
-        print(self.get_all_categories())
+        
+        # if the name does not change then do nothing
+        if old_name.lower() == new_name.lower():
+            return
         # length is not between 1 to 15
         if len(new_name) < 1 or len(new_name) > 15:
             raise InputError('Invalid name length')
         # old category name not exists
-        if not check_if_category_exists(old_name):
+        if not check_if_category_exists(old_name.lower()):
             raise InputError('Name not found')
         # new category name exists
-        if old_name == new_name or check_if_category_exists(new_name):
+        if old_name != new_name and check_if_category_exists(new_name.lower()):
             raise InputError('Name already used')
 
         con = sqlite3.connect(self.database)
@@ -247,7 +255,6 @@ class MenuDB:
         con.close()
 
     def update_order_menu_items(self, item_name: str, is_up: bool):
-        
         if not get_item_info('name', item_name):
             raise InputError('Invalid name')
 
