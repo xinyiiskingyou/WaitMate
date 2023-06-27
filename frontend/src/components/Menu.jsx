@@ -54,6 +54,8 @@ const Menu = () => {
             window.location.reload();
           }, 10);
         });
+    } else {
+      window.location.reload();
     }
   };
 
