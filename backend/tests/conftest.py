@@ -1,8 +1,12 @@
 import pytest
-from src.table_db import TableDB
-from src.menu import category_add, item_add
+import os
+from src.table import TableDB
+from src.menu import MenuDB
 from fastapi.testclient import TestClient
 from app.api import app
+
+table = TableDB()
+menu = MenuDB()
 
 @pytest.fixture
 def client():
@@ -10,22 +14,22 @@ def client():
 
 @pytest.fixture
 def table_id_1():
-    table = TableDB()
     table.clear_tables_data()
     return table.select_table_number(1)
     
 @pytest.fixture
 def table_id_2():
-    table = TableDB()
     return table.select_table_number(2)
 
 @pytest.fixture
 def table_id_3():
-    table = TableDB()
     return table.select_table_number(3)
 
+@pytest.fixture
+def menu_japanese():
+    if os.path.exists("./src/database/menu.db"):
+        os.remove("./src/database/menu.db")
 
-
-
-
-
+    menu.category_add('Japanese')
+    menu.item_add('Japanese', 'salmon sushi', 10, '_', '_', False)
+    menu.item_add('Japanese', 'dorayaki', 6, '_', '_', False)

@@ -1,18 +1,20 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 import sys
-sys.path.append('..')
-from src.menu import (
-    category_add, item_add, menu_view, menu_item_update_details, menu_category_update_details,
-    menu_item_remove, menu_item_update_order, menu_category_update_order
-)
-from src.order_db import OrderDB
-from src.table_db import TableDB
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI
+from src.order import OrderDB
+from src.table import TableDB
+from src.menu import MenuDB
 from src.model.category_req import Category
 from src.model.item_req import Item
+from src.model.table_req import Table
+from src.model.order_req import Order
+
+sys.path.append('..')
+
 app = FastAPI()
 order = OrderDB()
 table = TableDB()
+menu = MenuDB()
 
 origins = [
     'http://localhost:3000',
@@ -35,53 +37,57 @@ async def read_root() -> dict:
 
 @app.post("/menu/category/add")
 def category_add_api(reqBody: Category):   
-    category_add(reqBody.name)
-    return {}
-
-@app.post("/menu/item/add")
-def item_add_api(reqbody: Item):    
-    item_add(reqbody.category, reqbody.name, reqbody.cost, reqbody.description, reqbody.ingredients, reqbody.is_vegan)
-    return {}
-
-@app.get("/menu/listall")
-def menu_view_api():
-    return menu_view()
-
-@app.put("/menu/item/update/details")
-def menu_item_update_details_api(item: str, name: str, cost: float, description: str, ingredients: str, is_vegan: bool):
-    menu_item_update_details(item,  name, cost, description, ingredients, is_vegan)
-    return {}
-
-@app.put("/menu/category/update/details")
-def menu_category_update_details_api(old_name: str, new_name: str):
-    menu_category_update_details(old_name, new_name)
-    return {}
-
-@app.put("/menu/item/update/order")
-def menu_item_update_order_api(item_name: str, is_up: bool):
-    menu_item_update_order(item_name, is_up)
+    menu.category_add(reqBody.name)
     return {}
 
 @app.put("/menu/category/update/order")
-def menu_category_update_order_api(category: str, is_up: bool):
-    menu_category_update_order(category, is_up)
+def menu_category_update_order_api(reqbody: Category, is_up: bool):
+    menu.update_order_menu_category(reqbody.name, is_up)
     return {}
 
-@app.delete("/menu/item/remove")
-def menu_item_remove_api(item_name: str):
-    menu_item_remove(item_name)
+@app.put("/menu/category/update/details")
+def menu_category_update_details_api(reqbody: Category, new_name: str):
+    menu.update_details_category(reqbody.name, new_name)
+    return {}
+
+@app.get("/menu/list/categories")
+def menu_view_categories():
+    return menu.get_all_categories()
+
+@app.get("/menu/list/items")
+def menu_view_api(reqBody: Category):
+    return menu.get_items_in_category(reqBody.cat_id)
+
+@app.post("/menu/item/add")
+def item_add_api(reqbody: Item):    
+    menu.item_add(reqbody.category.name, reqbody.name, reqbody.cost, reqbody.description, reqbody.ingredients, reqbody.is_vegan)
+    return {}
+
+@app.put("/menu/item/update/details")
+def menu_item_update_details_api(reqbody: Item):
+    menu.update_details_menu_items(reqbody.item_id, reqbody.name, reqbody.cost, reqbody.description, reqbody.ingredients, reqbody.is_vegan)
+    return {}
+
+@app.put("/menu/item/update/order")
+def menu_item_update_order_api(reqbody: Item, is_up: bool):
+    menu.update_order_menu_items(reqbody.name, is_up)
+    return {}
+
+@app.put("/menu/item/remove")
+def menu_item_remove_api(reqbody: Item):
+    menu.remove_menu_items(reqbody.name)
     return {}
 
 ############ ORDER #################
 
-@app.post('/order/cart/add/{table_id}')
-def ordre_cart_add(table_id: int, item_name: str, amount: int):
-    order.add_order(table_id, item_name, amount)
+@app.post('/order/cart/add')
+def ordre_cart_add(reqbody: Order):
+    order.add_order(reqbody.table_id, reqbody.item_name, reqbody.amount)
     return {}
-    
-@app.get('/order/cart/list/{table_id}')
-def ordre_cart_list(table_id: int):
-    return order.get_table_order(table_id)
+
+@app.post('/order/cart/list')
+def ordre_cart_list(reqbody: Order):
+    return order.get_table_order(reqbody.table_id)
 
 @app.get('/order/listall')
 def ordre_listall():
@@ -89,16 +95,16 @@ def ordre_listall():
 
 ############ TABLE #################
 
-@app.get('/table/select/{table_id}')
-def table_select(table_id: int):
-    table.select_table_number(table_id)
+@app.post('/table/select')
+def table_select(reqbody: Table):
+    table.select_table_number(reqbody.table_id)
     return {}
 
 @app.get('/table/status')
 def table_status():
     return table.get_all_tables_status()
 
-@app.post('/table/status/update')
-def table_status_update(table_id: int, status: str):
-    table.update_table_status(table_id, status)
+@app.put('/table/status/update')
+def table_status_update(reqbody: Table):
+    table.update_table_status(reqbody.table_id, reqbody.status)
     return {}
