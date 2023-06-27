@@ -28,7 +28,7 @@ const CustomerMenuPage = () => {
         </Grid>
         <Grid container spacing={0} justifyContent="space-between" alignContent="center">
             <Grid item xs={5.5} textAlign={'right'}>
-            <Link to="/customerMenu">
+            <Link to="/Browse">
                 <Button variant='contained' color='primary' style={buttonStyle}>
                     Browse Menu
                 </Button>  

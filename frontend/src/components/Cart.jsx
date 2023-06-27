@@ -53,7 +53,7 @@ const Cart = () => {
 
         <Grid container spacing={2}>
           <Grid item xs={2}>
-            <Link to="/CustomerMain">
+            <Link to="/">
               <Button              
                 sx={{ 
                   border: 5,

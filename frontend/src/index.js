@@ -1,5 +1,3 @@
-
-
 import * as React from 'react';
 import { render } from 'react-dom';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
@@ -13,7 +11,7 @@ import CustomerMain from './components/CustomerMain';
 import CustomerMenuPage from './components/CustomerMenuPage';
 import Kitchenlist from './components/Kitchenlist';
 import Cart from './components/Cart';
-
+import Browse from './components/Browse';
 
 function App() {
   return (
@@ -26,9 +24,8 @@ function App() {
         <Route path="/CustomerMain" element={<CustomerMain />} />
         <Route path="/CustomerMenuPage" element={<CustomerMenuPage />} />
         <Route path="/Kitchenlist" element={<Kitchenlist />} />
-        <Route path="/customerMenu" element={<customerMenu />} />
         <Route path="/Cart" element={<Cart />} />
-
+        <Route path="/Browse" element={<Browse />} />
       </Routes>
     </Router>
   );
