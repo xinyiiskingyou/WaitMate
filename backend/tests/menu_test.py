@@ -194,9 +194,17 @@ def test_category_update_name_endpoint(client):
     })
     assert resp.status_code == 400
 
+    # invalid name length
     resp = client.put("/menu/category/update/details", json={
         "name": "pizza",
         "new_name": ""
+    })
+    assert resp.status_code == 400
+
+    # name already exists
+    resp = client.put("/menu/category/update/details", json={
+        "name": "pizza",
+        "new_name": "dessert"
     })
     assert resp.status_code == 400
 
