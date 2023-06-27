@@ -1,3 +1,4 @@
+import requests
 import json
 import os
 import pytest
@@ -34,6 +35,8 @@ def test_cat_add_invalid_name():
         menu.category_add('BigSeaBassTodayYum')
     with pytest.raises(InputError):
         menu.category_add('Fish')
+    with pytest.raises(InputError):
+        menu.category_add('fish')
     
 def test_get_categories_valid():
     menu_1()
@@ -129,7 +132,8 @@ def test_valid_view_menu_item_in_category():
     menu_1()
     
     result = menu.get_items_in_category(1)
-    assert result == [('SeaBass', 10, '_', '_', 0), ('FlatFish', 20, '_', '_', 0)]
+    assert result == [{'name': 'SeaBass', 'cost': 10, 'description': '_', 'ingredients': '_', 'is_vegan': 0}, 
+                {'name': 'FlatFish', 'cost': 20, 'description': '_', 'ingredients': '_', 'is_vegan': 0}]
 
 def test_menu_remove():
     menu_1()
@@ -173,29 +177,44 @@ def test_category_update_order_endpoint(client):
 
 def test_category_update_name_endpoint(client):
     # valid case
-    resp = client.put("/menu/category/update/details", json={"name": "pizza"}, params={"new_name": 'Pizza'})
+    resp = client.put("/menu/category/update/details", json={
+        "name": "pizza",
+        "new_name": "Pizzas"
+    })
     assert resp.status_code == 200
 
-    resp = client.put("/menu/category/update/details", json={"name": "Pizza"}, params={"new_name": 'pizza'})
+    resp = client.put("/menu/category/update/details", json={
+        "name": "Pizzas",
+        "new_name": "pizza"
+    })
     assert resp.status_code == 200
 
     # invalid name
-    resp = client.put("/menu/category/update/details", json={"name": "pizza"}, params={"new_name": 'pizza'})
+    resp = client.put("/menu/category/update/details", json={
+        "name": "Pizzas",
+        "new_name": "pizza"
+    })
     assert resp.status_code == 400
 
-    resp = client.put("/menu/category/update/details", json={"name": "Pizza"}, params={"new_name": 'pizza'})
+    # invalid name length
+    resp = client.put("/menu/category/update/details", json={
+        "name": "pizza",
+        "new_name": ""
+    })
     assert resp.status_code == 400
 
-    resp = client.put("/menu/category/update/details", json={"name": "pizza"}, params={"new_name": ''})
+    # name already exists
+    resp = client.put("/menu/category/update/details", json={
+        "name": "pizza",
+        "new_name": "dessert"
+    })
     assert resp.status_code == 400
 
 def test_add_item_endpoint(client):
 
     # valid case
     resp = client.post("/menu/item/add", json={
-        "category": {
-            "name": "pizza",
-        },
+        "category": "pizza",
         "name": "pepperoni",
         "cost": 10,
         "description": "N/A",
@@ -205,9 +224,7 @@ def test_add_item_endpoint(client):
     assert resp.status_code == 200
 
     resp = client.post("/menu/item/add", json={
-        "category": {
-            "name": "pizza",
-        },
+        "category": "pizza",
         "name": "hawaiian",
         "cost": 10,
         "description": "N/A",
@@ -218,9 +235,7 @@ def test_add_item_endpoint(client):
 
     # duplicate name
     resp = client.post("/menu/item/add", json={
-        "category": {
-            "name": "pizza",
-        },
+        "category": "pizza",
         "name": "pepperoni",
         "cost": 10,
         "description": "N/A",
@@ -231,9 +246,7 @@ def test_add_item_endpoint(client):
 
     # invalid length name
     resp = client.post("/menu/item/add", json={
-        "category": {
-            "name": "pizza",
-        },
+        "category": "pizza",
         "name": "gaskdlfjdsfldsfkldsjfls",
         "cost": 10,
         "description": "N/A",
@@ -242,18 +255,12 @@ def test_add_item_endpoint(client):
     })
     assert resp.status_code == 400
 
-def test_remove_item_endpoint(client):
-    resp = client.put("/menu/item/remove", json={
-        "name": "hawaiian",
-    })
-    assert resp.status_code == 200
+def test_remove_item_endpoint():
+    response = requests.delete(f"http://localhost:8000/menu/item/remove/", json={"name": "hawaiian"})
+    assert response.status_code == 200
 
-    # invalid remove
-    resp = client.put("/menu/item/remove", json={
-        "name": "hawaiian",
-    })
-
-    assert resp.status_code == 400
+    response = requests.delete(f"http://localhost:8000/menu/item/remove/", json={"name": "hawaiian"})
+    assert response.status_code == 400
 
 def test_item_update_details(client):
 
@@ -275,9 +282,7 @@ def test_item_update_details(client):
 
 def test_item_update_order_endpoint(client):
     resp = client.post("/menu/item/add", json={
-        "category": {
-            "name": "pizza",
-        },
+        "category": "pizza",
         "name": "hawaiian",
         "cost": 10,
         "description": "N/A",
@@ -286,8 +291,8 @@ def test_item_update_order_endpoint(client):
     })
     assert resp.status_code == 200
 
-    resp = client.put("/menu/item/update/order", json={"name": "hawaiian"}, params={"is_up": True})
+    resp = client.put("/menu/item/update/order", json={"name": "hawaiian", "is_up": True})
     assert resp.status_code == 200
 
-    resp = client.put("/menu/item/update/order", json={"name": "hawaiian"}, params={"is_up": False})
+    resp = client.put("/menu/item/update/order", json={"name": "hawaiian", "is_up": False})
     assert resp.status_code == 400

@@ -1,7 +1,12 @@
 import React, { useState } from "react";
-import { Box, Card, FormControlLabel, CardActions, CardContent, Checkbox, Button, Typography, TextField, InputAdornment } from '@mui/material';
+import { Box, Card, FormControlLabel, CardActions, CardContent, Checkbox, Button, Typography, TextField, InputAdornment, ButtonGroup } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import veg from '../assets/vege.jpeg'
+import { useTheme } from '@mui/material/styles';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import Menu from './Menu';
+
 const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVegetarian, onItemRemove }) => {
 
     const [isEditable, setIsEditable] = useState(false);
@@ -11,17 +16,80 @@ const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
     const [price, setPrice] = useState(ItemPrice);
     const [description, setDescription] = useState(ItemDescription);
     const [ingredient, setIngredient] = useState(ItemIngredient);
+
     const handleEdit = () => {
         setIsEditable(!isEditable);
     };
 
+    const handleUpdateOrder = async (is_up) => {
+
+      const payload = {
+        name: name,
+        is_up: is_up
+      };
+      
+      console.log(payload);
+      await fetch('http://localhost:8000/menu/item/update/order', {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload),
+      })
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error('Failed to update order. Please try again.');
+          }
+        })
+        .then(data => {
+          alert("Order Updated");
+          window.location.reload();
+        })
+        .catch(error => {
+          // Handle the error if necessary
+          console.error(error);
+          alert(error);
+          setTimeout(() => {
+            window.location.reload();
+          }, 10);
+        });
+    };
+
+    const smallbuttonStyle = {
+      color: 'white',
+      backgroundColor: '#7CBD96',
+    };
+
     const handleRemove = () => {
-        onItemRemove();
+      const payload = {
+        name: name
+      };
+      fetch('http://localhost:8000/menu/item/remove', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      })
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error('Failed to remove item. Please try again.');
+          }
+        })
+        .then(data => {
+          onItemRemove()
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
     }
+
     const handleDone = () => {
         setDone(true);
         setIsEditable(!isEditable);
-        };
+    };
     const cardStyle = {
         width: '390px',
         height: '390px',
@@ -141,7 +209,24 @@ const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
                     style={{ color: 'white', backgroundColor: '#FF7A7A' }}>
                     Remove
                   </Button>
-                </CardActions>
+
+                  <Button
+                  color="primary"
+                  style={{ ...smallbuttonStyle, padding: '4px 8px', fontSize: '10px' }}
+                  onClick={() => handleUpdateOrder(true)}
+                  >
+                  <ArrowUpwardIcon/>
+                </Button>
+
+                <Button
+                  color="primary"
+                  style={{ ...smallbuttonStyle, padding: '4px 8px',fontSize: '10px' }}
+                  onClick={() => handleUpdateOrder(false)}
+                  >
+                  <ArrowDownwardIcon/>
+                </Button>
+              </CardActions>
+
               </Card>     
             ) }
 

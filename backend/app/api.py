@@ -47,10 +47,7 @@ def category_add_api(reqBody: Category):
 
 @app.put("/menu/category/update/order")
 def menu_category_update_order_api(reqbody: CategoryOrder):
-    try:
-        menu.update_order_menu_category(reqbody.name, reqbody.is_up)
-    except Exception as e:
-        print(str(e))
+    menu.update_order_menu_category(reqbody.name, reqbody.is_up)
     return {}
 
 @app.put("/menu/category/update/details")
@@ -67,17 +64,11 @@ def menu_view_categories():
 #     return menu.get_items_in_category(cat_id)
 @app.get("/menu/list/items/{cat_id}")
 def menu_view_api(cat_id: str):
-    try:
-        return menu.get_items_in_category(cat_id)
-    except Exception as e:
-        print(str(e))
+    return menu.get_items_in_category(int(cat_id))
 
 @app.post("/menu/item/add")
 def item_add_api(reqbody: Item):    
-    try:
-        menu.item_add(reqbody.category, reqbody.name, reqbody.cost, reqbody.description, reqbody.ingredients, reqbody.is_vegan)
-    except Exception as e:
-        print(str(e))
+    menu.item_add(reqbody.category, reqbody.name, reqbody.cost, reqbody.description, reqbody.ingredients, reqbody.is_vegan)
     return {}
 
 @app.put("/menu/item/update/details")
@@ -86,11 +77,11 @@ def menu_item_update_details_api(reqbody: Item):
     return {}
 
 @app.put("/menu/item/update/order")
-def menu_item_update_order_api(reqbody: Item, is_up: bool):
-    menu.update_order_menu_items(reqbody.name, is_up)
+def menu_item_update_order_api(reqbody: Item):
+    menu.update_order_menu_items(reqbody.name, reqbody.is_up)
     return {}
 
-@app.put("/menu/item/remove")
+@app.delete("/menu/item/remove")
 def menu_item_remove_api(reqbody: Item):
     menu.remove_menu_items(reqbody.name)
     return {}
