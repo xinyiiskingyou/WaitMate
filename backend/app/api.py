@@ -72,8 +72,8 @@ def menu_item_update_details_api(reqbody: Item):
     return {}
 
 @app.put("/menu/item/update/order")
-def menu_item_update_order_api(reqbody: Item, is_up: bool):
-    menu.update_order_menu_items(reqbody.name, is_up)
+def menu_item_update_order_api(reqbody: Item):
+    menu.update_order_menu_items(reqbody.name, reqbody.is_up)
     return {}
 
 @app.delete("/menu/item/remove")

@@ -12,5 +12,6 @@ class Item(BaseModel):
     description: Optional[str] = Field(alias="description", default=None)
     ingredients: Optional[str] = Field(alias="ingredients", default=None)
     is_vegan: Optional[bool] = Field(alias="is_vegan", default=False)
+    is_up: Optional[bool] = Field(alias="is_up", default=False)
 
 Item.update_forward_refs()
