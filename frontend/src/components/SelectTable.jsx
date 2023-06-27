@@ -3,7 +3,15 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Grid';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
-import {Link} from 'react-router-dom';
+import {
+  Link,
+  BrowserRouter as Router,
+  generatePath,
+  Switch,
+  Route,
+  useHistory,
+  useParams
+} from 'react-router-dom';
 
 const SelectTable = () => {
   const [value, setValue] = useState('');
@@ -14,13 +22,26 @@ const SelectTable = () => {
     setValue(inputValue);
     setError(isNaN(inputValue));
   };
+
   const handleSubmit = () => {
     if (error) {
       console.log('Invalid input: must be a number');
       return;
     }
-    console.log('Submitted value:', Number(value));
+
+    console.log('Submitted value:', value);
+    const table = { table_id : value };
+
+    fetch("http://localhost:8000/table/select", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(table)
+    })
   };
+
+  // const handleProceed = (e) => {
+  //   value && history.push(generatePath("/CustomerMain/:value", { value }));
+  // };
 
   const buttonStyle = {
     width: '120px',
@@ -32,6 +53,8 @@ const SelectTable = () => {
     fontSize: '30px',
     marginBottom: '20px'
   };
+
+  const nextLink = `/CustomerMain/${value}` 
 
   return (       
     <Box
@@ -67,8 +90,8 @@ const SelectTable = () => {
             </Box> 
         </Grid>     
         <Grid container spacing={0} justifyContent="center" alignItems="center">
-            <Link to="/CustomerMain">
-                <Button variant='contained' color='primary' style={buttonStyle} onClick={handleSubmit}>
+            <Link to={nextLink}>
+                <Button variant='contained' color='primary' style={buttonStyle} onClick={[handleSubmit]}>
                     Confirm
                 </Button>
             </Link>

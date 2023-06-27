@@ -140,7 +140,7 @@ class MenuDB:
         cur = con.cursor()
 
         cur.execute(
-            '''SELECT item, cost, description, ingredients, is_vegan
+            '''SELECT item, cost, description, ingredients, is_vegan, item_id
             FROM Categories c
             LEFT JOIN Menu m
                 ON m.category = c.name

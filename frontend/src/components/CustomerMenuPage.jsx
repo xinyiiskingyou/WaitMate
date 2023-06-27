@@ -2,9 +2,12 @@ import React from 'react';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Grid';
 import Grid from '@mui/material/Grid';
-import {Link} from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
 
 const CustomerMenuPage = () => {
+  const id = useParams();
+  const orderLink = `/Cart/${id.id}` 
+
   const buttonStyle = {
     width: '400px',
     height: '500px',
@@ -35,7 +38,7 @@ const CustomerMenuPage = () => {
               </Link>    
             </Grid>
             <Grid item xs={5.5} textAlign={'left'}>
-              <Link to="/Cart">
+              <Link to={orderLink}>
                 <Button variant='contained' color='primary' style={buttonStyle}>
                     View Order Summary           
                 </Button>    

@@ -8,4 +8,10 @@ class Category(BaseModel):
     name: Optional[str] = Field(alias="name", default=None)
     cat_order: Optional[int] = Field(alias="order", default=None)
 
+class Category_ID(BaseModel):
+    cat_id: int = Field(alias="id", default=None)
+
+class Category_Name(BaseModel):
+    name: str = Field(alias="name", default=None)
+
 Category.update_forward_refs()

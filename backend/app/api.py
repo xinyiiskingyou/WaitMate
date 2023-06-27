@@ -1,12 +1,14 @@
 import sys
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi import FastAPI
+from fastapi import FastAPI, Query, Body
 from src.order import OrderDB
 from src.table import TableDB
 from src.menu import MenuDB
 from src.model.category_req import Category
+from src.model.category_req import Category_ID
 from src.model.item_req import Item
 from src.model.table_req import Table
+from src.model.table_req import Table_Cust
 from src.model.order_req import Order
 
 sys.path.append('..')
@@ -55,8 +57,8 @@ def menu_view_categories():
     return menu.get_all_categories()
 
 @app.get("/menu/list/items")
-def menu_view_api(reqBody: Category):
-    return menu.get_items_in_category(reqBody.cat_id)
+def menu_view_api(cat_id):
+    return menu.get_items_in_category(cat_id)
 
 @app.post("/menu/item/add")
 def item_add_api(reqbody: Item):    
@@ -81,22 +83,22 @@ def menu_item_remove_api(reqbody: Item):
 ############ ORDER #################
 
 @app.post('/order/cart/add')
-def ordre_cart_add(reqbody: Order):
-    order.add_order(reqbody.table_id, reqbody.item_name, reqbody.amount)
+def order_cart_add(reqbody: Order):
+    order.add_order(reqbody.table_id, reqbody.item, reqbody.amount)
     return {}
 
-@app.post('/order/cart/list')
-def ordre_cart_list(reqbody: Order):
-    return order.get_table_order(reqbody.table_id)
+@app.get('/order/cart/list')
+def order_cart_list(table_id: int):
+    return order.get_table_order(table_id)
 
 @app.get('/order/listall')
-def ordre_listall():
+def order_listall():
     return order.get_all_orders()
 
 ############ TABLE #################
 
 @app.post('/table/select')
-def table_select(reqbody: Table):
+def table_select(reqbody: Table_Cust):
     table.select_table_number(reqbody.table_id)
     return {}
 
@@ -108,3 +110,4 @@ def table_status():
 def table_status_update(reqbody: Table):
     table.update_table_status(reqbody.table_id, reqbody.status)
     return {}
+

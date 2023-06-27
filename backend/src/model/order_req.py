@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 
 class Order(BaseModel):
     table_id: int = Field(alias="id", default=None)
-    amount: Optional[int] = Field(alias="amount", default=None)
-    item_name: Optional[str] = Field(alias="name", default=None)
+    item: str = Field(alias="item", default=None)
+    amount: int = Field(alias="amount", default=None)
 
 Order.update_forward_refs()

@@ -1,15 +1,19 @@
 import React, { useEffect, useState }  from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { 
   Box, Button, Typography, Container, Grid, Table, TableContainer, TableBody, TableRow, TableCell 
 } from '@mui/material';
 
 const Cart = () => {
   let [orders, setOrder] = useState([])
+  const id = useParams();
+  const backLink = `/CustomerMain/${id.id}` 
+
   
   let getCart = async () => {
-    let response = await fetch('http://localhost:8000/order/cart/list/1')
+    let response = await fetch(`http://localhost:8000/order/cart/list?table_id=${id.id}`)
     let data = await response.json()
+    console.log(data)
     let order_list = []
     for (var i of data) {
       console.log(i)
@@ -38,7 +42,7 @@ const Cart = () => {
 
         <Grid container spacing={2}>
           <Grid item xs={2}>
-            <Link to="/CustomerMain">
+            <Link to={backLink}>
               <Button              
                 sx={{ 
                   border: 5,
