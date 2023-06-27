@@ -59,10 +59,7 @@ def menu_view_categories():
 
 @app.get("/menu/list/items/{cat_id}")
 def menu_view_api(cat_id: str):
-    try:
-        return menu.get_items_in_category(cat_id)
-    except Exception as e:
-        print(str(e))
+    return menu.get_items_in_category(int(cat_id))
 
 @app.post("/menu/item/add")
 def item_add_api(reqbody: Item):    
@@ -79,7 +76,7 @@ def menu_item_update_order_api(reqbody: Item, is_up: bool):
     menu.update_order_menu_items(reqbody.name, is_up)
     return {}
 
-@app.put("/menu/item/remove")
+@app.delete("/menu/item/remove")
 def menu_item_remove_api(reqbody: Item):
     menu.remove_menu_items(reqbody.name)
     return {}
