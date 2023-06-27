@@ -255,7 +255,6 @@ class MenuDB:
         con.close()
 
     def update_order_menu_items(self, item_name: str, is_up: bool):
-        
         if not get_item_info('name', item_name):
             raise InputError('Invalid name')
 

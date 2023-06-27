@@ -291,8 +291,8 @@ def test_item_update_order_endpoint(client):
     })
     assert resp.status_code == 200
 
-    resp = client.put("/menu/item/update/order", json={"name": "hawaiian"}, params={"is_up": True})
+    resp = client.put("/menu/item/update/order", json={"name": "hawaiian", "is_up": True})
     assert resp.status_code == 200
 
-    resp = client.put("/menu/item/update/order", json={"name": "hawaiian"}, params={"is_up": False})
+    resp = client.put("/menu/item/update/order", json={"name": "hawaiian", "is_up": False})
     assert resp.status_code == 400
