@@ -21,13 +21,7 @@ const Browse = () => {
 
     let handleCatChange = (category) => {
       cat = category.id
-      
       getItems()
-      console.log(category.id)
-      console.log(cat)
-
-      console.log(menuItems)
-      console.log('end')
     }
 
     let getCategories = async () => {
