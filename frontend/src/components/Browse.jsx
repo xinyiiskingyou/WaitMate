@@ -1,47 +1,53 @@
 import React, { useState,useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
-import { Card, CardActions, sizing, CardContent, Container, Grid, Drawer, Box, Button, Typography, TextField } from '@mui/material';
-import Item from './Item';
+import { Container, Grid, Drawer, Box, Button, Typography } from '@mui/material';
 import { Link, useParams } from 'react-router-dom';
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import ItemCard from './CardCust';
 
-function createData(name) {
-    return { name};
-}
-
-const rows = [
-    createData('Frozen yoghurt'),
-    createData('Ice cream sandwich'),
-
-];
 
 const Browse = () => {
     let [cats, setCategories] = useState([])
-    let [items, setItems] = useState([])
-    let [cat, setCurrCat] = useState(null)
+    let [menuItems, setItems] = useState([])
+    let [cat, setCurrCat] = useState(-1)
+
 
     const id = useParams();
     const backLink = `/CustomerMain/${id.id}` 
     const cartLink = `/Cart/${id.id}` 
 
+    let handleCatChange = (category) => {
+      cat = category.id
+      
+      getItems()
+      console.log(category.id)
+      console.log(cat)
+
+      console.log(menuItems)
+      console.log('end')
+    }
+
     let getCategories = async () => {
         let response = await fetch(`http://localhost:8000/menu/list/categories`)
         let data = await response.json()
-        console.log(data)
 
         let categories = []
         for (var i of data) {
           console.log(i)
-          categories.push({name: i.name, id: i.id})
+          categories.push({
+            name: i.name,
+            id: i.id,
+          })
         }
-        setCategories(categories)
-        setCurrCat(categories[0].id)
+        console.log(categories)
+
+        setCategories(categories)    
         if (categories.length > 0) {
             getItems()
+            setCurrCat(categories[0].id)
         }
     }
 
@@ -50,27 +56,27 @@ const Browse = () => {
       }, [])
 
     let getItems = async () => {
-        if (cat === null) {
-            return
-        }
-        let response = await fetch(`http://localhost:8000/menu/list/items?cat_id=${cat}`)
-        let data = await response.json()
-        console.log(data)
+      if (cat === -1) {
+        return
+      }
 
-        let items = []
-        for (var i of data) {
-          console.log(i)
-          items.push({name: i[0], id: i[1]})
-        }
-        setItems(items)
-    }
+      let response = await fetch(`http://localhost:8000/menu/list/items?cat_id=${cat}`)
+      let data = await response.json()
+      let items = []
+      for (var i of data) {
+        console.log(i)
+        items.push({
+          name: i[0],
+          id: i[5],
+          description: i[2],
+          ingredient: i[3],
+          vegetarian: i[4],
+          price: i[1]
+        })
+      }
+      setItems(items)
+      console.log(items)
 
-    let setOrder = async () => {
-        fetch("http://localhost:8000/table/select", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(table)
-          })
     }
   
   // // const [editing, setEditing] = useState(false);
@@ -231,13 +237,13 @@ const Browse = () => {
             <Typography variant="h5" align="center" style={{ margin: '20px' }}>
                 Menu Categories
             </Typography>
-            {cats.map((cat) => (
+            {cats.map((category) => (
 
-                <List>
-                    <ListItem disablePadding>
+                <List key={category.name}>
+                    <ListItem disablePadding value={category} onClick={()=>handleCatChange(category)}>
                         <ListItemButton>
                             <ListItemText 
-                            primary={cat.name}/>
+                            primary={category.name}/>
                         </ListItemButton>
                     </ListItem>
                     {/* <ListItem disablePadding>
@@ -276,11 +282,48 @@ const Browse = () => {
             </Grid>
             </Drawer>
 
-     <Box flexGrow={1} p={2}>
-        <Typography variant="h5" align="center" style={{ margin: '5px' }}>
+      <Box flexGrow={1} p={2}>
+        {cat !== -1 ? (
+          <Box>
+           <Typography variant="h5" align="center" style={{ margin: '5px' }}>
              Please browse and order from the menu below.
-        </Typography>
-        <div>
+            </Typography> 
+
+            <Box display="flex" flexDirection="row" alignItems="flex-start" marginTop={5} style={{ gap: '20px' }}>
+
+            { Object.entries(menuItems).map(([name, menuItem]) => (
+              <Box key={name} display="flex" flexDirection="row" >
+                <Typography variant="h5" align="center" style={{ margin: '5px' }}>
+                  1 22
+                </Typography> 
+                <ItemCard
+                  ItemName={menuItem.name}
+                  ItemDescription={menuItem.description}
+                  ItemPrice={menuItem.price}
+                  ItemIngredient={menuItem.ingredient}
+                  ItemVegetarian={menuItem.vegetarian}
+                  TableID={id.id}/>
+              </Box>
+
+            ))}
+
+            </Box>
+
+          </Box>
+        ) : (
+          <Box 
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          height="80vh"
+          >
+          <Typography variant="h4" align="center" alignItems="center" style={{ margin: '20px' }}>
+            No Menu Item 
+          </Typography>
+          </Box>
+        )}
+
+        {/* <div>
         <Box margin='3%'>
         <Card width='30%' margin-bottom= '20px'>
             <CardContent>
@@ -354,7 +397,7 @@ const Browse = () => {
             </CardContent>
         </Card>
         </Box>
-        </div> 
+        </div>  */}
      </Box>
     </Box>
     </Container>
