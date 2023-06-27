@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Box, Card, FormControlLabel, CardActions, CardContent, Checkbox, Button, Typography, TextField, InputAdornment } from '@mui/material';
-
+import IconButton from '@mui/material/IconButton';
+import veg from '../assets/vege.jpeg'
 const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVegetarian, onItemRemove }) => {
 
     const [isEditable, setIsEditable] = useState(false);
@@ -11,7 +12,6 @@ const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
     const [description, setDescription] = useState(ItemDescription);
     const [ingredient, setIngredient] = useState(ItemIngredient);
     const handleEdit = () => {
-        console.log("I am here");
         setIsEditable(!isEditable);
     };
 
@@ -19,7 +19,6 @@ const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
         onItemRemove();
     }
     const handleDone = () => {
-        console.log("I am here");
         setDone(true);
         setIsEditable(!isEditable);
         };
@@ -100,12 +99,20 @@ const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
                 <Card>
                 <CardContent>
                   <Typography variant="h4" gutterBottom style={{ display: 'flex'}}>
-                    <div style={{ flexGrow: 1 }}>{name}</div>
-                    <Typography variant="h6" gutterBottom style={{ marginTop: '5%' }}>
-                        ${price}
-                    </Typography>
-                    
+                    {name}   
+                    {vegetarian && (
+                        <img 
+                            src={veg} 
+                            alt="Icon" 
+                            style={{
+                                width: '30%',
+                                height: '30px',
+                                borderRadius: '50%',
+                            }}/>
+                    )}                
                   </Typography>
+                  <Typography variant="h6" gutterBottom style={{marginTop: '-10px'}}>${price}</Typography>
+
                   <Typography variant="h6" gutterBottom color={"grey"}>
                     {description}
                   </Typography>

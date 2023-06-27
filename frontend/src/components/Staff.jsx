@@ -40,9 +40,11 @@ const Staff = () => {
           </Button>
         </Grid>
         <Grid item xs={4} textAlign={'left'}>
+          <Link to="/waitstaff">
           <Button variant='contained' color='primary' style={buttonStyle}>
             Wait Staff
           </Button>
+          </Link>
         </Grid>
       </Grid>
     </Box>

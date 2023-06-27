@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 
 
 class Item(BaseModel):
-    category: str = Field(alias="name", default=None)
+    category: str = Field(alias="category", default=None)
     cost: float = Field(alias="cost", default=None)
     description: str = Field(alias="cost", default=None)
     ingredients: str = Field(alias="cost", default=None)

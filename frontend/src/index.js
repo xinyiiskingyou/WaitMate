@@ -8,6 +8,7 @@ import Home from './components/Home';
 // import Card from './components/Card';
 import Menu from './components/Menu';
 import Staff from './components/Staff';
+import WaitStaff from './components/WaitStaff';
 import SelectTable from './components/SelectTable';
 import CustomerMain from './components/CustomerMain';
 import CustomerMenuPage from './components/CustomerMenuPage';
@@ -19,6 +20,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/menu" element={<Menu />} />
         <Route path="/staff" element={<Staff />} />
+        <Route path="/waitstaff" element={<WaitStaff />} />
         <Route path="/SelectTable" element={<SelectTable />} />
         <Route path="/CustomerMain" element={<CustomerMain />} />
         <Route path="/CustomerMenuPage" element={<CustomerMenuPage />} />

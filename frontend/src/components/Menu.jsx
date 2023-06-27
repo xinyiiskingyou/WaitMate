@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
-import { Card, CardActions, CardContent, Container, Drawer, Box, Button, Typography, TextField } from '@mui/material';
+import { Card, CardActions, CardContent, Container, Drawer, Box, Button, Typography, TextField, ButtonGroup } from '@mui/material';
 import Item from './Item';
 import MenuItem from './Card';
-
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import { margin, width } from '@mui/system';
 const Menu = () => {
   const [editing, setEditing] = useState(false);
   const [categoryEditingIndex, setCategoryEditingIndex] = useState(-1);
@@ -17,9 +19,6 @@ const Menu = () => {
 
   const handleSaveCategory = () => {
     if (categoryText.trim() !== '') {
-      //setCategories([...categories, categoryText.trim()]);
-      //setCategoryText('');
-      //setEditing(false);
       const payload = { name: categoryText.trim() };
 
       fetch('http://localhost:8000/menu/category/add', {
@@ -73,7 +72,6 @@ const Menu = () => {
   };
 
   const handleCardDoneClick = (category, name, price, description, ingredient, vegetarian) => {
-    console.log('hi');
     if (name && price && description && ingredient) {
       const newMenuItem = { category, name: name, price: price, description: description, ingredient: ingredient, vegetarian: vegetarian };
       setMenuItems((prevMenuItems) => [...prevMenuItems, newMenuItem]);
@@ -146,10 +144,25 @@ const Menu = () => {
     margin: '5%',
     width: '80%'
   }
+
+  const smallbuttonStyle = {
+    marginTop: '15%',
+    marginBottom: '5%',
+    height: '50%',
+  }
   return (
     <Container maxWidth="sm">
-    <Box sx={{ display: 'flex' }}>
-    <Drawer variant="permanent">
+
+    <Drawer 
+      variant="permanent" 
+      sx={{
+        width: '400px', // Adjust the width as needed
+        flexShrink: 0,
+        '& .MuiDrawer-paper': {
+          width: '400px', // Adjust the width as needed
+          boxSizing: 'border-box',
+        },
+      }}>
       <Box 
         sx={{ 
           margin: 2, 
@@ -157,7 +170,8 @@ const Menu = () => {
           bgcolor: '#ECEBEB',
           height: '100%',
           display:"flex",
-          flexDirection:"column"
+          flexDirection:"column",
+          width: '90%'
         }}>
         <Typography variant="h5" align="center" style={{ margin: '20px' }}>
           Menu Categories
@@ -226,15 +240,34 @@ const Menu = () => {
                   {category}
                 </Button>
 
+                <ButtonGroup variant="outlined" style={{smallbuttonStyle}}>
+
                 <Button
-                  variant="outlined"
                   color="primary"
-                  size='small'
-                  style={buttonStyle}
+                  style={{...smallbuttonStyle, padding: '4px 8px', fontSize: '10px'}}
                   onClick={() => handleEditCategory(index)}
                   >
                   Edit
                 </Button>
+                <Button
+                  color="primary"
+                  style={{ ...smallbuttonStyle, padding: '4px 8px', fontSize: '10px' }}
+                  onClick={() => handleEditCategory(index)}
+                  >
+                  <ArrowUpwardIcon/>
+                </Button>
+
+                <Button
+                  color="primary"
+                  style={{ ...smallbuttonStyle, padding: '4px 8px',fontSize: '10px' }}
+                  onClick={() => handleEditCategory(index)}
+                  >
+                  <ArrowDownwardIcon/>
+                </Button>
+
+                </ButtonGroup>
+
+
               </Box>
 
             )}
@@ -244,11 +277,19 @@ const Menu = () => {
       </Box>
     </Drawer>
 
-    <Box flexGrow={1} p={2}>
+    <Box 
+      flexGrow={1} 
+      p={2} 
+      display="flex"
+      height="80vh"
+      >
         {selectedCategory !== -1 ? (
           <Box>
+            <Box display="flex">
+              
+            </Box>
             <Typography variant="h6" gutterBottom>
-              Category: {selectedCategory}
+              Menu items
             </Typography>
             <Button
               variant='contained'
@@ -281,13 +322,19 @@ const Menu = () => {
 
           </Box>
         ) : (
-          <Typography variant="h4" align="center" style={{ margin: '20px' }}>
+          <Box 
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          height="80vh"
+          >
+          <Typography variant="h4" align="center" alignItems="center" style={{ margin: '20px' }}>
             The menu item is currently empty. Please add a menu category to get started.
           </Typography>
-
+          </Box>
         )}
       </Box>
-    </Box>
+
     </Container>
   );
 };
