@@ -35,7 +35,7 @@ const Kitchenlist = () => {
   const emptyRows = 5 - rows.length;
   
   let getKitchenList = async () => {
-    let response = await fetch('http://localhost:8000/order/kitchenlist/1')
+    let response = await fetch('http://localhost:8000/order/listall/1')
     let data = await response.json()
     let order_list = []
     for (var i of data) {
