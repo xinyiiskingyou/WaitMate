@@ -69,7 +69,7 @@ const Browse = () => {
         fetch("http://localhost:8000/table/select", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(table)
+            // body: JSON.stringify(table)
           })
     }
   
