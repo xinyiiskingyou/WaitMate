@@ -1,10 +1,77 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Card, CardActions, sizing, CardContent, Container, Grid, Drawer, Box, Button, Typography, TextField } from '@mui/material';
 import Item from './Item';
-import {Link} from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+
+function createData(name) {
+    return { name};
+}
+
+const rows = [
+    createData('Frozen yoghurt'),
+    createData('Ice cream sandwich'),
+
+];
 
 const Browse = () => {
+    let [cats, setCategories] = useState([])
+    let [items, setItems] = useState([])
+    let [cat, setCurrCat] = useState(null)
+
+    const id = useParams();
+    const backLink = `/CustomerMain/${id.id}` 
+    const cartLink = `/Cart/${id.id}` 
+
+    let getCategories = async () => {
+        let response = await fetch(`http://localhost:8000/menu/list/categories`)
+        let data = await response.json()
+        console.log(data)
+
+        let categories = []
+        for (var i of data) {
+          console.log(i)
+          categories.push({name: i.name, id: i.id})
+        }
+        setCategories(categories)
+        setCurrCat(categories[0].id)
+        if (categories.length > 0) {
+            getItems()
+        }
+    }
+
+    useEffect(() => {
+        getCategories()
+      }, [])
+
+    let getItems = async () => {
+        if (cat === null) {
+            return
+        }
+        let response = await fetch(`http://localhost:8000/menu/list/items?cat_id=${cat}`)
+        let data = await response.json()
+        console.log(data)
+
+        let items = []
+        for (var i of data) {
+          console.log(i)
+          items.push({name: i[0], id: i[1]})
+        }
+        setItems(items)
+    }
+
+    let setOrder = async () => {
+        fetch("http://localhost:8000/table/select", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(table)
+          })
+    }
   
   // // const [editing, setEditing] = useState(false);
   // // const [categoryEditingIndex, setCategoryEditingIndex] = useState(-1);
@@ -164,7 +231,27 @@ const Browse = () => {
             <Typography variant="h5" align="center" style={{ margin: '20px' }}>
                 Menu Categories
             </Typography>
-            <Button variant="contained"  style={buttonStyle}>  
+            {cats.map((cat) => (
+
+                <List>
+                    <ListItem disablePadding>
+                        <ListItemButton>
+                            <ListItemText 
+                            primary={cat.name}/>
+                        </ListItemButton>
+                    </ListItem>
+                    {/* <ListItem disablePadding>
+                        <ListItemButton component="a"
+                            href="#simple-list">
+                            <ListItemText 
+                            primary="PHP" />
+                        </ListItemButton>
+                    </ListItem> */}
+
+                </List>
+            ))}
+
+            {/* <Button variant="contained"  style={buttonStyle}>  
                 Main Dish
             </Button>
             <Button variant="contained"  style={buttonStyle}>  
@@ -178,10 +265,10 @@ const Browse = () => {
             </Button> 
             <Button variant="contained" color="primary" style={buttonStyle}>  
                 Dessert
-            </Button>   
+            </Button>    */}
             </Box>
             <Grid container direction="column" spacing={2}>
-                <Link to="/Cart">
+                <Link to={cartLink}>
                     <Button variant="contained" color="primary" style={{margin: '17%', spacing: '-20', width: '70%', height: '45px'}}>  
                         Order Summary
                     </Button> 

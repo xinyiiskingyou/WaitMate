@@ -117,10 +117,14 @@ class MenuDB:
 
         con.close()
 
-        categories_dict = {}
-        for item in info:
-            cat_order, name = item
-            categories_dict[cat_order] = name
+        categories_dict = []
+        for cat_order, name in info:
+            categories_dict.append(
+                {
+                    "name" : name,
+                    "id": cat_order,
+                }
+            )
 
         return categories_dict
 
