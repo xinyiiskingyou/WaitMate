@@ -18,7 +18,7 @@ const Menu = () => {
   const [selectedCategory, setSelectedCategory] = useState(-1);
   const [menuItems, setMenuItems] = useState([]);
   const [adding, setAdding] = useState(false);
-  const [cardData, setCardData] = useState({ category: -1, name: '', price: '', description: '', ingredient: '', vegetarian: false });
+  const [cardData, setCardData] = useState({ category: -1, name: '', price: '', description: '', ingredient: '', vegetarian: false, is_up: false });
   const [error, setError] = useState(null);
 
   const handleSaveCategory = () => {
@@ -87,7 +87,7 @@ const Menu = () => {
       setMenuItems((prevMenuItems) => [...prevMenuItems, newMenuItem]);
       console.log('Item details:', cardData);
       // Reset the form data
-      setCardData({ category: -1, name: '', price: '', description: '', ingredient: '', vegetarian: false });
+      setCardData({ category: -1, name: '', price: '', description: '', ingredient: '', vegetarian: false, is_up: false });
       setAdding(false);
     }
   };
@@ -99,9 +99,9 @@ const Menu = () => {
       return updatedMenuItems;
     });
   };
-  
+
   const handleCardCancelClick = () => {
-    setCardData({ category: -1, name: '', price: '', description: '', ingredient: '', vegetarian: false });
+    setCardData({ category: -1, name: '', price: '', description: '', ingredient: '', vegetarian: false, is_up: false });
     setAdding(false);
   };
   
@@ -423,10 +423,9 @@ const Menu = () => {
               <MenuItem
                 ItemName={menuItem.name}
                 ItemDescription={menuItem.description}
-                ItemPrice={menuItem.price}
-                ItemIngredient={menuItem.ingredient}
+                ItemPrice={menuItem.cost}
+                ItemIngredient={menuItem.ingredients}
                 ItemVegetarian={menuItem.vegetarian}
-                // onItemRemove={() => handleRemoveItemClick(index)
                 onItemRemove={handleRemoveItemClick}/>
             </Box>
         ))}
@@ -438,8 +437,8 @@ const Menu = () => {
                 <MenuItem
                   ItemName={menuItem.name}
                   ItemDescription={menuItem.description}
-                  ItemPrice={menuItem.price}
-                  ItemIngredient={menuItem.ingredient}
+                  ItemPrice={menuItem.cost}
+                  ItemIngredient={menuItem.ingredients}
                   ItemVegetarian={menuItem.vegetarian}
                   onItemRemove={handleRemoveItemClick}/>
               </Box>
