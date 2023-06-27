@@ -55,7 +55,7 @@ class MenuDB:
             raise InputError('Invalid name length')
 
         # check if the category exists
-        if check_if_category_exists(name):
+        if check_if_category_exists(name.lower()):
             raise InputError('Name already used')
 
         con = sqlite3.connect(self.database)
@@ -194,15 +194,18 @@ class MenuDB:
         con.close()
 
     def update_details_category(self, old_name: str, new_name: str):
-        print(self.get_all_categories())
+        
+        # if the name does not change then do nothing
+        if old_name == new_name:
+            return
         # length is not between 1 to 15
         if len(new_name) < 1 or len(new_name) > 15:
             raise InputError('Invalid name length')
         # old category name not exists
-        if not check_if_category_exists(old_name):
+        if not check_if_category_exists(old_name.lower()):
             raise InputError('Name not found')
         # new category name exists
-        if old_name == new_name or check_if_category_exists(new_name):
+        if old_name != new_name and check_if_category_exists(new_name.lower()):
             raise InputError('Name already used')
 
         con = sqlite3.connect(self.database)

@@ -34,6 +34,8 @@ def test_cat_add_invalid_name():
         menu.category_add('BigSeaBassTodayYum')
     with pytest.raises(InputError):
         menu.category_add('Fish')
+    with pytest.raises(InputError):
+        menu.category_add('fish')
     
 def test_get_categories_valid():
     menu_1()
@@ -173,29 +175,36 @@ def test_category_update_order_endpoint(client):
 
 def test_category_update_name_endpoint(client):
     # valid case
-    resp = client.put("/menu/category/update/details", json={"name": "pizza"}, params={"new_name": 'Pizza'})
+    resp = client.put("/menu/category/update/details", json={
+        "name": "pizza",
+        "new_name": "Pizzas"
+    })
     assert resp.status_code == 200
 
-    resp = client.put("/menu/category/update/details", json={"name": "Pizza"}, params={"new_name": 'pizza'})
+    resp = client.put("/menu/category/update/details", json={
+        "name": "Pizzas",
+        "new_name": "pizza"
+    })
     assert resp.status_code == 200
 
     # invalid name
-    resp = client.put("/menu/category/update/details", json={"name": "pizza"}, params={"new_name": 'pizza'})
+    resp = client.put("/menu/category/update/details", json={
+        "name": "Pizzas",
+        "new_name": "pizza"
+    })
     assert resp.status_code == 400
 
-    resp = client.put("/menu/category/update/details", json={"name": "Pizza"}, params={"new_name": 'pizza'})
-    assert resp.status_code == 400
-
-    resp = client.put("/menu/category/update/details", json={"name": "pizza"}, params={"new_name": ''})
+    resp = client.put("/menu/category/update/details", json={
+        "name": "pizza",
+        "new_name": ""
+    })
     assert resp.status_code == 400
 
 def test_add_item_endpoint(client):
 
     # valid case
     resp = client.post("/menu/item/add", json={
-        "category": {
-            "name": "pizza",
-        },
+        "category": "pizza",
         "name": "pepperoni",
         "cost": 10,
         "description": "N/A",
@@ -205,9 +214,7 @@ def test_add_item_endpoint(client):
     assert resp.status_code == 200
 
     resp = client.post("/menu/item/add", json={
-        "category": {
-            "name": "pizza",
-        },
+        "category": "pizza",
         "name": "hawaiian",
         "cost": 10,
         "description": "N/A",
@@ -218,9 +225,7 @@ def test_add_item_endpoint(client):
 
     # duplicate name
     resp = client.post("/menu/item/add", json={
-        "category": {
-            "name": "pizza",
-        },
+        "category": "pizza",
         "name": "pepperoni",
         "cost": 10,
         "description": "N/A",
@@ -231,9 +236,7 @@ def test_add_item_endpoint(client):
 
     # invalid length name
     resp = client.post("/menu/item/add", json={
-        "category": {
-            "name": "pizza",
-        },
+        "category": "pizza",
         "name": "gaskdlfjdsfldsfkldsjfls",
         "cost": 10,
         "description": "N/A",
@@ -275,9 +278,7 @@ def test_item_update_details(client):
 
 def test_item_update_order_endpoint(client):
     resp = client.post("/menu/item/add", json={
-        "category": {
-            "name": "pizza",
-        },
+        "category": "pizza",
         "name": "hawaiian",
         "cost": 10,
         "description": "N/A",
