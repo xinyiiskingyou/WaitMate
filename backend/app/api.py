@@ -6,6 +6,8 @@ from src.table import TableDB
 from src.menu import MenuDB
 from src.model.category_req import Category
 from src.model.category_req import Category_ID
+from src.model.category_order_req import CategoryOrder
+from src.model.category_update_req import CategoryUpdate
 from src.model.item_req import Item
 from src.model.table_req import Table
 from src.model.table_req import Table_Cust
@@ -20,7 +22,8 @@ menu = MenuDB()
 
 origins = [
     'http://localhost:3000',
-    'localhost:3000'
+    'localhost:3000',
+    'localhost:3000/menu'
 ]
 
 app.add_middleware(
@@ -43,26 +46,38 @@ def category_add_api(reqBody: Category):
     return {}
 
 @app.put("/menu/category/update/order")
-def menu_category_update_order_api(reqbody: Category, is_up: bool):
-    menu.update_order_menu_category(reqbody.name, is_up)
+def menu_category_update_order_api(reqbody: CategoryOrder):
+    try:
+        menu.update_order_menu_category(reqbody.name, reqbody.is_up)
+    except Exception as e:
+        print(str(e))
     return {}
 
 @app.put("/menu/category/update/details")
-def menu_category_update_details_api(reqbody: Category, new_name: str):
-    menu.update_details_category(reqbody.name, new_name)
+def menu_category_update_details_api(reqbody: CategoryUpdate):
+    menu.update_details_category(reqbody.name, reqbody.new_name)
     return {}
 
 @app.get("/menu/list/categories")
 def menu_view_categories():
     return menu.get_all_categories()
 
-@app.get("/menu/list/items")
-def menu_view_api(cat_id):
-    return menu.get_items_in_category(cat_id)
+# @app.get("/menu/list/items")
+# def menu_view_api(cat_id):
+#     return menu.get_items_in_category(cat_id)
+@app.get("/menu/list/items/{cat_id}")
+def menu_view_api(cat_id: str):
+    try:
+        return menu.get_items_in_category(cat_id)
+    except Exception as e:
+        print(str(e))
 
 @app.post("/menu/item/add")
 def item_add_api(reqbody: Item):    
-    menu.item_add(reqbody.category.name, reqbody.name, reqbody.cost, reqbody.description, reqbody.ingredients, reqbody.is_vegan)
+    try:
+        menu.item_add(reqbody.category, reqbody.name, reqbody.cost, reqbody.description, reqbody.ingredients, reqbody.is_vegan)
+    except Exception as e:
+        print(str(e))
     return {}
 
 @app.put("/menu/item/update/details")
