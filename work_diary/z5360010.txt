@@ -8,5 +8,9 @@ Week 3
 Finished creating user stories and grouped them with functionality. Added them to relevant Jira tickets. Created a system diagram poster.
 
 Week 4
-Meet with the team and discussed how functionality would be split for the first sprint. I choose to do menu which I have finished on Thursday including test. 
+Meet with the team and discussed how functionality would be split for the first sprint. I choose to do the menu which I finished on Thursday including the test. 
 Have started to research how to use Firebase Authentication. 
+
+Week 5
+Helped connect endpoints between the frontend and backend. Had a meeting to get ready for the demo. After we had the demo we also had a meeting for the retrospective. Finished creating an authentication feature for the system
+
