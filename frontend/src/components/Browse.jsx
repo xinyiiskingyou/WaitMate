@@ -56,6 +56,8 @@ const Browse = () => {
 
       let response = await fetch(`http://localhost:8000/menu/list/items/${cat}`)
       let data = await response.json()
+      console.log(data)
+
       let items = []
       for (var i of data) {
         if (i[0] === null) {
@@ -63,12 +65,12 @@ const Browse = () => {
         }
         console.log(i)
         items.push({
-          name: i[0],
-          id: i[5],
-          description: i[2],
-          ingredient: i[3],
-          vegetarian: i[4],
-          price: i[1]
+          name: i.name,
+          id: i.id,
+          description: i.description,
+          ingredient: i.ingredient,
+          vegetarian: i.vegetarian,
+          price: i.price
         })
       }
       setItems(items)
