@@ -99,14 +99,14 @@ def test_valid_update_reselect_table_id():
 ######################################
 
 def test_select_table(client):
-    resp = client.post("/table/select", json={'id': '5'})
+    resp = client.post("/table/select", json={'table_id': '5'})
     assert resp.status_code == 200
 
     # duplicate table id
-    resp = client.post("/table/select", json={'id': '5'})
+    resp = client.post("/table/select", json={'table_id': '5'})
     assert resp.status_code == 400
 
-    resp = client.post("/table/select", json={'id': '-1'})
+    resp = client.post("/table/select", json={'table_id': '-1'})
     assert resp.status_code == 400
 
 def test_check_table_status(client):
@@ -114,13 +114,13 @@ def test_check_table_status(client):
     assert resp.status_code == 200
 
 def test_update_table_status(client):
-    resp = client.put("/table/status/update", json={"id": 5, "status": "BILL"})
+    resp = client.put("/table/status/update", json={"table_id": 5, "status": "BILL"})
     assert resp.status_code == 200
 
     # invalid status
-    resp = client.put("/table/status/update", json={"id": 5, "status": "--"})
+    resp = client.put("/table/status/update", json={"table_id": 5, "status": "--"})
     assert resp.status_code == 400
 
     # invalid table id
-    resp = client.put("/table/status/update", json={"id": 100, "status": "BILL"})
+    resp = client.put("/table/status/update", json={"table_id": 100, "status": "BILL"})
     assert resp.status_code == 400

@@ -10,7 +10,6 @@ from src.model.category_order_req import CategoryOrder
 from src.model.category_update_req import CategoryUpdate
 from src.model.item_req import Item
 from src.model.table_req import Table
-from src.model.table_req import Table_Cust
 from src.model.order_req import Order
 
 sys.path.append('..')
@@ -104,8 +103,7 @@ def order_listall():
 ############ TABLE #################
 
 @app.post('/table/select')
-def table_select(reqbody: Table_Cust):
-    print(reqbody)
+def table_select(reqbody: Table):
     table.select_table_number(reqbody.table_id)
     return {}
 
