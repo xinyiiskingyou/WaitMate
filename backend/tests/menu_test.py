@@ -58,8 +58,6 @@ def test_item_update_details_invalid_name():
 
     menu_1()
     with pytest.raises(InputError):
-        menu.update_details_menu_items(1, name='SeaBass')
-    with pytest.raises(InputError):
         menu.update_details_menu_items(1, name='BigSeaBassTodayYum')
     with pytest.raises(InputError):
         menu.update_details_menu_items(1, name='')

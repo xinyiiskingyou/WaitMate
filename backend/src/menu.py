@@ -171,10 +171,8 @@ class MenuDB:
         cur = con.cursor()
 
         if name is not None:
-            if (len(name) < 1 or len(name) > 15):
+            if len(name) < 1 or len(name) > 15:
                 raise InputError('Invalid name length')
-            if get_item_info('name', name):
-                raise InputError('Name already used')
             # update the name in menu
             cur.execute(
                 '''UPDATE Menu  
@@ -199,7 +197,7 @@ class MenuDB:
         con.close()
 
     def update_details_category(self, old_name: str, new_name: str):
-        
+
         # if the name does not change then do nothing
         if old_name.lower() == new_name.lower():
             return

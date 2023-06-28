@@ -1,8 +1,11 @@
 
 import React, { useState } from "react";
 import { Box, Card, FormControlLabel, CardActions, CardContent, Checkbox, Button, Typography, TextField, InputAdornment } from '@mui/material';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import veg from '../assets/vege.jpeg'
 
-const Item = ({ onItemAdd, onItemCancel, category}) => {
+const Item = ({ onItemAdd, onItemCancel, category }) => {
 
     const [isEditable, setIsEditable] = useState(false);
     const [Done, setDone] = useState(false);
@@ -11,13 +14,10 @@ const Item = ({ onItemAdd, onItemCancel, category}) => {
     const [price, setPrice] = useState("");
     const [description, setDescription] = useState("");
     const [ingredient, setIngredient] = useState("");
-    const handleEdit = () => {
-        console.log("I am here");
-        setIsEditable(!isEditable);
-    };
+    const [isItemAdded, setIsItemAdded] = useState(false);
 
     const handleAdd = () => {
-        console.log(category);
+        console.log('category',category);
         const payload = {
             category: category,
             name: name,
@@ -43,8 +43,7 @@ const Item = ({ onItemAdd, onItemCancel, category}) => {
         })
         .then(data => {
             onItemAdd(category, name, price, description, ingredient, vegetarian);
-            alert("You've successfully added items")
-            window.location.reload()
+            setIsItemAdded(true);
         })
         .catch(error => {
             // Handle the error if necessary
@@ -61,71 +60,72 @@ const Item = ({ onItemAdd, onItemCancel, category}) => {
         setDone(true);
         setIsEditable(!isEditable);
     };
+
     return (
-        <Box margin='2%'>
-        <Card>
-            <CardContent>
-            <TextField
-            label="Name"
-            value={name}
-            size="small"
-            margin= 'normal'
-            fullWidth
-            onChange={(e) => setName(e.target.value)}
-            />
+      <Box margin='2%'>
+      <Card>
+          <CardContent>
+          <TextField
+          label="Name"
+          value={name}
+          size="small"
+          margin= 'normal'
+          fullWidth
+          onChange={(e) => setName(e.target.value)}
+          />
 
-            <Box display="flex" flexDirection="row" flexWrap="wrap">
-            <TextField
-            label="Price"
-            value={price}
-            size="small"
-            margin= 'normal'
-            InputProps={{
-                startAdornment: <InputAdornment position="start">$</InputAdornment>,
-              }}
-            onChange={(e) => setPrice(e.target.value)}
-            />
-            <Box margin="3%">
-                <FormControlLabel
-                    control={<Checkbox/>} 
-                    label="Vegetarian" 
-                    labelPlacement="start"
-                    onChange={(e) => setVegetarian(e.target.checked)}/>
-            </Box>
-            </Box>
+          <Box display="flex" flexDirection="row" flexWrap="wrap">
+          <TextField
+          label="Price"
+          value={price}
+          size="small"
+          margin= 'normal'
+          InputProps={{
+              startAdornment: <InputAdornment position="start">$</InputAdornment>,
+            }}
+          onChange={(e) => setPrice(e.target.value)}
+          />
+          <Box margin="3%">
+              <FormControlLabel
+                  control={<Checkbox/>} 
+                  label="Vegetarian" 
+                  labelPlacement="start"
+                  onChange={(e) => setVegetarian(e.target.checked)}/>
+          </Box>
+          </Box>
 
-            <TextField
-            label="Description"
-            value={description}
-            size="small"
-            margin= 'normal'
-            fullWidth
-            onChange={(e) => setDescription(e.target.value)}
-            />
+          <TextField
+          label="Description"
+          value={description}
+          size="small"
+          margin= 'normal'
+          fullWidth
+          onChange={(e) => setDescription(e.target.value)}
+          />
 
-            <TextField
-            label="Ingredients"
-            value={ingredient}
-            size="small"
-            margin= 'normal'
-            fullWidth
-            onChange={(e) => setIngredient(e.target.value)}
-            />
-            </CardContent>
+          <TextField
+          label="Ingredients"
+          value={ingredient}
+          size="small"
+          margin= 'normal'
+          fullWidth
+          onChange={(e) => setIngredient(e.target.value)}
+          />
+          </CardContent>
 
-            <CardActions>
+          <CardActions>
 
-            <Button size="small" onClick={handleAdd}>
-            Add
-            </Button>
+          <Button size="small" onClick={handleAdd}>
+          Add
+          </Button>
 
-            <Button size="small" onClick={handleCancel}>
-            Cancel
-            </Button>
-            </CardActions>
-            </Card>
-            </Box>
-    )
+          <Button size="small" onClick={handleCancel}>
+          Cancel
+          </Button>
+          </CardActions>
+          </Card>
+          </Box>
+  )
 };
 
 export default Item;

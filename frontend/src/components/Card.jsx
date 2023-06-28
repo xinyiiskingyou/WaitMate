@@ -5,9 +5,8 @@ import veg from '../assets/vege.jpeg'
 import { useTheme } from '@mui/material/styles';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import Menu from './Menu';
 
-const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVegetarian, onItemRemove }) => {
+const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVegetarian, onItemRemove, ItemIndex }) => {
 
     const [isEditable, setIsEditable] = useState(false);
     const [Done, setDone] = useState(false);
@@ -17,8 +16,39 @@ const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
     const [description, setDescription] = useState(ItemDescription);
     const [ingredient, setIngredient] = useState(ItemIngredient);
 
-    const handleEdit = () => {
-        setIsEditable(!isEditable);
+    const handleEdit = async () => {
+      setIsEditable(true);
+      
+      const payload = {
+        id: parseInt(ItemIndex, 10) + 1,
+        name: name,
+        cost: parseFloat(price),
+        description: description,
+        ingredients: ingredient,
+        is_vegan: vegetarian
+     };
+
+      await fetch('http://localhost:8000/menu/item/update/details', {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload),
+      })
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error('Failed to update item. Please try again.');
+          }
+        })
+        .then(data => {
+          console.log('data', data);
+          setIsEditable(!isEditable);
+        })
+        .catch(error => {
+          // Handle the error if necessary
+          console.error(error);
+          alert(error);
+        });
     };
 
     const handleUpdateOrder = async (is_up) => {
@@ -27,8 +57,7 @@ const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
         name: name,
         is_up: is_up
       };
-      
-      console.log(payload);
+
       await fetch('http://localhost:8000/menu/item/update/order', {
         method: 'PUT',
         headers: {'Content-Type': 'application/json'},
@@ -79,7 +108,7 @@ const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
           }
         })
         .then(data => {
-          onItemRemove()
+          onItemRemove();
         })
         .catch(error => {
           console.error('Error:', error);
@@ -90,6 +119,7 @@ const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
         setDone(true);
         setIsEditable(!isEditable);
     };
+
     const cardStyle = {
         width: '390px',
         height: '390px',
@@ -110,17 +140,18 @@ const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
             />
 
             <Box display="flex" flexDirection="row" flexWrap="wrap">
-            <TextField
-            label="Price"
-            disabled={!isEditable}
-            value={price}
-            size="small"
-            margin= 'normal'
-            InputProps={{
-                startAdornment: <InputAdornment position="start">$</InputAdornment>,
-            }}
-            onChange={(e) => setPrice(e.target.value)}
+              <TextField
+              label="Price"
+              disabled={!isEditable}
+              value={price} 
+              size="small"
+              margin= 'normal'
+              InputProps={{
+                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
+              }}
+              onChange={(e) => setPrice(e.target.value)}
             />
+
             <Box margin="3%">
                 <FormControlLabel 
                 control={<Checkbox checked={vegetarian}/>}
@@ -131,7 +162,6 @@ const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
             </Box>
             </Box>
 
-            
             <TextField
             label="Description"
             disabled={!isEditable}
@@ -154,9 +184,8 @@ const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
             </CardContent>
 
             <CardActions>
-
             {isEditable && (
-                <Button size="small" onClick={handleDone}>
+                <Button size="small" onClick={handleEdit}>
                 DONE
                 </Button>
             )}
@@ -193,7 +222,7 @@ const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
                     {ingredient}
                   </Typography>
                 </CardContent>
-      
+                
                 <CardActions>
                   <Button 
                     size="small" 

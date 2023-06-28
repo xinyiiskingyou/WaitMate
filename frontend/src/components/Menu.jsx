@@ -139,7 +139,7 @@ const Menu = () => {
         if (response.ok) {
           return response.json();
         } else {
-          throw new Error('Failed to save category');
+          throw new Error('Failed to update category');
         }
       })
       .then(data => {
@@ -423,16 +423,18 @@ const Menu = () => {
           { Object.entries(menuItems).map(([index, menuItem]) => (
               <Box key={index} display="flex" flexDirection="row" mt={2}>
               <MenuItem
+                ItemIndex={index}
                 ItemName={menuItem.name}
                 ItemDescription={menuItem.description}
                 ItemPrice={menuItem.cost}
                 ItemIngredient={menuItem.ingredients}
                 ItemVegetarian={menuItem.vegetarian}
-                onItemRemove={handleRemoveItemClick}/>
+                onItemRemove={() => handleRemoveItemClick(index)}
+                />
             </Box>
         ))}
         
-            {menuItems
+          {menuItems
             .filter((menuItem) => menuItem.category === selectedCategory)
             .map((menuItem, index) => (
               <Box key={index} display="flex" flexDirection="row" mt={2}>
@@ -442,7 +444,8 @@ const Menu = () => {
                   ItemPrice={menuItem.cost}
                   ItemIngredient={menuItem.ingredients}
                   ItemVegetarian={menuItem.vegetarian}
-                  onItemRemove={handleRemoveItemClick}/>
+                  onItemRemove={() => handleRemoveItemClick(index)}
+                  />
               </Box>
             ))}
             </Box>
