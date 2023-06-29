@@ -420,35 +420,38 @@ const Menu = () => {
               </Box>
             ) 
             }
-          { Object.entries(menuItems).map(([index, menuItem]) => (
-              <Box key={index} display="flex" flexDirection="row" mt={2}>
-              <MenuItem
-                ItemIndex={index}
-                ItemName={menuItem.name}
-                ItemDescription={menuItem.description}
-                ItemPrice={menuItem.cost}
-                ItemIngredient={menuItem.ingredients}
-                ItemVegetarian={menuItem.vegetarian}
-                onItemRemove={() => handleRemoveItemClick(index)}
-                />
-            </Box>
-        ))}
-        
-          {menuItems
-            .filter((menuItem) => menuItem.category === selectedCategory)
-            .map((menuItem, index) => (
-              <Box key={index} display="flex" flexDirection="row" mt={2}>
-                <MenuItem
-                  ItemName={menuItem.name}
-                  ItemDescription={menuItem.description}
-                  ItemPrice={menuItem.cost}
-                  ItemIngredient={menuItem.ingredients}
-                  ItemVegetarian={menuItem.vegetarian}
-                  onItemRemove={() => handleRemoveItemClick(index)}
+            
+            {Object.entries(menuItems)
+              .filter(([index, menuItem]) => menuItem.name !== null)
+              .map(([index, menuItem]) => (
+                <Box key={index} display="flex" flexDirection="row" mt={2}>
+                  <MenuItem
+                    ItemIndex={index}
+                    ItemName={menuItem.name}
+                    ItemDescription={menuItem.description}
+                    ItemPrice={menuItem.cost}
+                    ItemIngredient={menuItem.ingredients}
+                    ItemVegetarian={menuItem.vegetarian}
+                    onItemRemove={() => handleRemoveItemClick(index)}
                   />
-              </Box>
+                </Box>
             ))}
-            </Box>
+
+            {menuItems
+              .filter((menuItem) => menuItem.category === selectedCategory && menuItem.name !== null)
+              .map((menuItem, index) => (
+                <Box key={index} display="flex" flexDirection="row" mt={2}>
+                  <MenuItem
+                    ItemName={menuItem.name}
+                    ItemDescription={menuItem.description}
+                    ItemPrice={menuItem.cost}
+                    ItemIngredient={menuItem.ingredients}
+                    ItemVegetarian={menuItem.vegetarian}
+                    onItemRemove={() => handleRemoveItemClick(index)}
+                  />
+                </Box>
+            ))}
+          </Box>
 
           </Box>
         ) : (
