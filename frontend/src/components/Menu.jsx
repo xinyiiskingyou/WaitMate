@@ -11,7 +11,6 @@ import { margin, width } from '@mui/system';
 const Menu = () => {
   const [editing, setEditing] = useState(false);
   const [categoryEditingIndex, setCategoryEditingIndex] = useState(-1);
-  const [categoryediting, setCategoryEditing] = useState(false);
   const [editedCategory, setEditedCategory] = useState('');
   const [categoryText, setCategoryText] = useState('');
   const [categories, setCategories] = useState([]);
@@ -68,17 +67,11 @@ const Menu = () => {
   };
 
   const handleCategoryClick = (index) => {
+    setMenuItems([]);
     setSelectedCategory(index);
     fetchMenuItems(index);
   };
 
-  const handleCategoryEdit = () => {
-    setCategoryEditing(true);
-  };
-
-  const handleCategoryDone = () => {
-    setCategoryEditing(false);
-  };
   const handleAddButtonClick = () => {
     setAdding(true);
   };
@@ -122,35 +115,29 @@ const Menu = () => {
     setCategoryEditingIndex(index);
   };
   
-  const handleSaveCategoryName = async (index) => {
-
-    console.log(categories[index]);
-    console.log(editedCategory);
+  const handleSaveCategoryName = (index) => {
     const payload = { 
       name: categories[index],
       new_name: editedCategory};
 
-    await fetch('http://localhost:8000/menu/category/update/details', {
+    fetch('http://localhost:8000/menu/category/update/details', {
       method: 'PUT',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(payload),
     })
       .then(response => {
         if (response.ok) {
+          const updatedCategories = [...categories];
+          updatedCategories[index] = editedCategory;
+          setCategories(updatedCategories);
+        
+          // Reset the category editing index
+          setCategoryEditingIndex(-1);
+          setEditedCategory("");
           return response.json();
         } else {
           throw new Error('Failed to update category');
         }
-      })
-      .then(data => {
-        // Save the updated category name
-        const updatedCategories = [...categories];
-        updatedCategories[index] = categories[index];
-        setCategories(updatedCategories);
-      
-        // Reset the category editing index
-        setCategoryEditingIndex(-1);
-        setEditedCategory("");
       })
       .catch(error => {
         // Handle the error if necessary
@@ -161,6 +148,7 @@ const Menu = () => {
         }, 10);
       });
   };
+
   const handleCategoryInputChange = (value) => {
     setEditedCategory(value);
   };
@@ -224,9 +212,13 @@ const Menu = () => {
       const response = await fetch('http://localhost:8000/menu/list/items/' + index);
       const data = await response.json();
       const itemArray = Object.values(data);
-      console.log(itemArray);
-
-      setMenuItems(itemArray);
+      if (itemArray.length === 1) {
+        if (itemArray[0].name !== null) {
+          setMenuItems(itemArray);
+        }
+      } else {
+        setMenuItems(itemArray);
+      }
     } catch (error) {
       console.error('Error fetching categories:', error);
       alert('Error fetching categories:', error);
@@ -420,25 +412,12 @@ const Menu = () => {
               </Box>
             ) 
             }
-          { Object.entries(menuItems).map(([index, menuItem]) => (
-              <Box key={index} display="flex" flexDirection="row" mt={2}>
-              <MenuItem
-                ItemIndex={index}
-                ItemName={menuItem.name}
-                ItemDescription={menuItem.description}
-                ItemPrice={menuItem.cost}
-                ItemIngredient={menuItem.ingredients}
-                ItemVegetarian={menuItem.vegetarian}
-                onItemRemove={() => handleRemoveItemClick(index)}
-                />
-            </Box>
-        ))}
-        
-          {menuItems
-            .filter((menuItem) => menuItem.category === selectedCategory)
-            .map((menuItem, index) => (
-              <Box key={index} display="flex" flexDirection="row" mt={2}>
+            {menuItems.length !== 0 && (
+              <>
+              { Object.entries(menuItems).map(([index, menuItem]) => (
+                <Box key={index} display="flex" flexDirection="row" mt={2}>
                 <MenuItem
+                  ItemIndex={index}
                   ItemName={menuItem.name}
                   ItemDescription={menuItem.description}
                   ItemPrice={menuItem.cost}
@@ -448,6 +427,12 @@ const Menu = () => {
                   />
               </Box>
             ))}
+              </>
+            )}
+
+            
+
+
             </Box>
 
           </Box>
