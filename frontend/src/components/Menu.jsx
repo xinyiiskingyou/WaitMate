@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useTheme } from '@mui/material/styles';
-import { Card, CardActions, CardContent, Container, Drawer, Box, Button, Typography, TextField, ButtonGroup } from '@mui/material';
+import { Card, CardActions, CardContent, Container, Drawer, Box, Button, Typography, TextField, ButtonGroup, Grid } from '@mui/material';
 import Item from './Item';
 import MenuItem from './Card';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
@@ -392,18 +392,18 @@ const Menu = () => {
       </Box>
     </Drawer>
 
-    <Box 
-      flexGrow={1} 
-      p={2} 
-      display="flex"
-      height="80vh"
-      >
+      <Box 
+        flexGrow={1} 
+        p={2} 
+        display="flex"
+        height="80vh"
+        width="350px"
+        >
         {selectedCategory !== -1 ? (
           <Box>
             <Box display="flex">
-              
             </Box>
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h5" gutterBottom>
               Menu items
             </Typography>
             <Button
@@ -412,7 +412,7 @@ const Menu = () => {
               Add menu item
             </Button>
 
-            <Box display="flex" flexDirection="row" alignItems="flex-start" marginTop={5} style={{ gap: '20px' }}>
+            <Box display="flex" flexDirection="row" alignItems="flex-start" marginTop={5} style={{ gap: '10px' }}>
             { adding && (
               <Box display="flex" flexDirection="row" alignItems="flex-start">
               <Item onItemAdd={handleCardDoneClick} onItemCancel={handleCardCancelClick} category={categories[selectedCategory]}/>
@@ -420,46 +420,52 @@ const Menu = () => {
               </Box>
             ) 
             }
-            
-            {Object.entries(menuItems)
-              .filter(([index, menuItem]) => menuItem.name !== null)
-              .map(([index, menuItem]) => (
-                <Box key={index} display="flex" flexDirection="row" mt={2}>
-                  <MenuItem
-                    ItemIndex={index}
-                    ItemName={menuItem.name}
-                    ItemDescription={menuItem.description}
-                    ItemPrice={menuItem.cost}
-                    ItemIngredient={menuItem.ingredients}
-                    ItemVegetarian={menuItem.vegetarian}
-                    onItemRemove={() => handleRemoveItemClick(index)}
-                  />
-                </Box>
-            ))}
 
-            {menuItems
-              .filter((menuItem) => menuItem.category === selectedCategory && menuItem.name !== null)
-              .map((menuItem, index) => (
-                <Box key={index} display="flex" flexDirection="row" mt={2}>
-                  <MenuItem
-                    ItemName={menuItem.name}
-                    ItemDescription={menuItem.description}
-                    ItemPrice={menuItem.cost}
-                    ItemIngredient={menuItem.ingredients}
-                    ItemVegetarian={menuItem.vegetarian}
-                    onItemRemove={() => handleRemoveItemClick(index)}
-                  />
-                </Box>
-            ))}
-          </Box>
+            <Grid container rowSpacing={1}>
+              {Object.entries(menuItems)
+                .filter(([index, menuItem]) => menuItem.name !== null)
+                .map(([index, menuItem]) => (
+                  <Grid item xs={7}>
+                    <Box key={index} display="flex" flexDirection="row" mt={2}>
+                      <MenuItem
+                        ItemIndex={index}
+                        ItemName={menuItem.name}
+                        ItemDescription={menuItem.description}
+                        ItemPrice={menuItem.cost}
+                        ItemIngredient={menuItem.ingredients}
+                        ItemVegetarian={menuItem.vegetarian}
+                        onItemRemove={() => handleRemoveItemClick(index)}
+                      />
+                    </Box>
+                  </Grid>
+              ))}
+
+              {menuItems
+                .filter((menuItem) => menuItem.category === selectedCategory && menuItem.name !== null)
+                .map((menuItem, index) => (
+                  <Grid item xs={7}>
+                    <Box key={index} display="flex" flexDirection="row" mt={2}>
+                      <MenuItem
+                        ItemName={menuItem.name}
+                        ItemDescription={menuItem.description}
+                        ItemPrice={menuItem.cost}
+                        ItemIngredient={menuItem.ingredients}
+                        ItemVegetarian={menuItem.vegetarian}
+                        onItemRemove={() => handleRemoveItemClick(index)}
+                      />
+                    </Box>
+                  </Grid>
+              ))}
+          </Grid>
 
           </Box>
+        </Box>
         ) : (
           <Box 
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          height="80vh"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            height="80vh"
           >
           <Typography variant="h4" align="center" alignItems="center" style={{ margin: '20px' }}>
             The menu item is currently empty. Please add a menu category to get started.

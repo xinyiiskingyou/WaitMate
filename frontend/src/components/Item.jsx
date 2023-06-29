@@ -76,40 +76,45 @@ const Item = ({ onItemAdd, onItemCancel, category }) => {
 
           <Box display="flex" flexDirection="row" flexWrap="wrap">
           <TextField
-          label="Price"
-          value={price}
-          size="small"
-          margin= 'normal'
-          InputProps={{
-              startAdornment: <InputAdornment position="start">$</InputAdornment>,
+            label="Price"
+            value={price}
+            type="number"
+            inputProps={{
+                step: "0.01",
+                min: "0"
             }}
-          onChange={(e) => setPrice(e.target.value)}
+            size="small"
+            margin= 'normal'
+            InputProps={{
+                startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                }}
+            onChange={(e) => setPrice(e.target.value)}
           />
           <Box margin="3%">
-              <FormControlLabel
-                  control={<Checkbox/>} 
-                  label="Vegetarian" 
-                  labelPlacement="start"
-                  onChange={(e) => setVegetarian(e.target.checked)}/>
+            <FormControlLabel
+                control={<Checkbox/>} 
+                label="Vegetarian" 
+                labelPlacement="start"
+                onChange={(e) => setVegetarian(e.target.checked)}/>
           </Box>
           </Box>
 
           <TextField
-          label="Description"
-          value={description}
-          size="small"
-          margin= 'normal'
-          fullWidth
-          onChange={(e) => setDescription(e.target.value)}
+            label="Description"
+            value={description}
+            size="small"
+            margin= 'normal'
+            fullWidth
+            onChange={(e) => setDescription(e.target.value)}
           />
 
           <TextField
-          label="Ingredients"
-          value={ingredient}
-          size="small"
-          margin= 'normal'
-          fullWidth
-          onChange={(e) => setIngredient(e.target.value)}
+            label="Ingredients"
+            value={ingredient}
+            size="small"
+            margin= 'normal'
+            fullWidth
+            onChange={(e) => setIngredient(e.target.value)}
           />
           </CardContent>
 
@@ -120,7 +125,7 @@ const Item = ({ onItemAdd, onItemCancel, category }) => {
           </Button>
 
           <Button size="small" onClick={handleCancel}>
-          Cancel
+            Cancel
           </Button>
           </CardActions>
           </Card>

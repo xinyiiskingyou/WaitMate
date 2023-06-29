@@ -141,14 +141,14 @@ const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
 
             <Box display="flex" flexDirection="row" flexWrap="wrap">
               <TextField
-              label="Price"
-              disabled={!isEditable}
-              value={price} 
-              size="small"
-              margin= 'normal'
-              InputProps={{
-                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
-              }}
+                label="Price"
+                disabled={!isEditable}
+                value={price} 
+                size="small"
+                margin= 'normal'
+                InputProps={{
+                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                }}
               onChange={(e) => setPrice(e.target.value)}
             />
 
