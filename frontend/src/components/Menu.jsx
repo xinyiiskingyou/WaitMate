@@ -145,7 +145,7 @@ const Menu = () => {
       .then(data => {
         // Save the updated category name
         const updatedCategories = [...categories];
-        updatedCategories[index] = categories[index];
+        updatedCategories[index] = editedCategory;
         setCategories(updatedCategories);
       
         // Reset the category editing index
@@ -435,11 +435,11 @@ const Menu = () => {
                         ItemIngredient={menuItem.ingredients}
                         ItemVegetarian={menuItem.vegetarian}
                         onItemRemove={() => handleRemoveItemClick(index)}
+                        onItemsCategory={() => handleCategoryClick(selectedCategory)}
                       />
                     </Box>
                   </Grid>
               ))}
-
               {menuItems
                 .filter((menuItem) => menuItem.category === selectedCategory && menuItem.name !== null)
                 .map((menuItem, index) => (

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Card, FormControlLabel, CardActions, CardContent, Checkbox, Button, Typography, TextField, InputAdornment, ButtonGroup } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import veg from '../assets/vege.jpeg'
@@ -6,7 +6,7 @@ import { useTheme } from '@mui/material/styles';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
-const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVegetarian, onItemRemove, ItemIndex }) => {
+const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVegetarian, onItemRemove, ItemIndex, onItemsCategory }) => {
 
     const [isEditable, setIsEditable] = useState(false);
     const [Done, setDone] = useState(false);
@@ -17,7 +17,6 @@ const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
     const [ingredient, setIngredient] = useState(ItemIngredient);
 
     const handleEdit = async () => {
-      setIsEditable(true);
       
       const payload = {
         id: parseInt(ItemIndex, 10) + 1,
@@ -71,8 +70,7 @@ const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
           }
         })
         .then(data => {
-          alert("Order Updated");
-          window.location.reload();
+          onItemsCategory();
         })
         .catch(error => {
           // Handle the error if necessary
@@ -95,9 +93,7 @@ const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
       };
       fetch('http://localhost:8000/menu/item/remove', {
         method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(payload),
       })
         .then(response => {
@@ -124,6 +120,16 @@ const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
         width: '390px',
         height: '390px',
     }
+
+    useEffect(() => {
+      // Update the state values when the props change
+      setName(ItemName);
+      setPrice(ItemPrice);
+      setDescription(ItemDescription);
+      setIngredient(ItemIngredient);
+      setVegetarian(ItemVegetarian);
+    }, [ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVegetarian]);
+    
     return (
         <Box margin='2%'>
             {isEditable ? (
@@ -234,7 +240,7 @@ const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
                   <Button 
                     variant="contained"
                     size="small" 
-                    onClick={handleRemove}
+                    onClick={() => handleRemove()}
                     style={{ color: 'white', backgroundColor: '#FF7A7A' }}>
                     Remove
                   </Button>

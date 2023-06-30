@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Card, FormControlLabel, CardActions, CardContent, Checkbox, Button, Typography, TextField, InputAdornment } from '@mui/material';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
@@ -60,6 +60,15 @@ const Item = ({ onItemAdd, onItemCancel, category }) => {
         setDone(true);
         setIsEditable(!isEditable);
     };
+
+    useEffect(() => {
+        // Update the state values when the props change
+        setName(name);
+        setPrice(price);
+        setDescription(description);
+        setIngredient(ingredient);
+        setVegetarian(vegetarian);
+      }, [name, price, description, ingredient, vegetarian]);
 
     return (
       <Box margin='2%'>
