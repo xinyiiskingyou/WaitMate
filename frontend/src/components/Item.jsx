@@ -1,9 +1,11 @@
 
 import React, { useState, useEffect } from "react";
 import { Box, Card, FormControlLabel, CardActions, CardContent, Checkbox, Button, Typography, TextField, InputAdornment } from '@mui/material';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import veg from '../assets/vege.jpeg'
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 const Item = ({ onItemAdd, onItemCancel, category }) => {
 
@@ -15,6 +17,21 @@ const Item = ({ onItemAdd, onItemCancel, category }) => {
     const [description, setDescription] = useState("");
     const [ingredient, setIngredient] = useState("");
     const [isItemAdded, setIsItemAdded] = useState(false);
+
+    const [NameError, setNameError] = useState(false);
+    const [PriceError, setPriceError] = useState(false);
+    const [DescriptionError, setDescriptionError] = useState(false);
+    const [IngredientError, setIngredientError] = useState(false);
+
+    const [open, setOpen] = useState(true);
+
+    const handleClickOpen = () => {
+      setOpen(true);
+    };
+    
+    const handleClose = () => {
+      setOpen(false);
+    };
 
     const handleAdd = () => {
         console.log('category',category);
@@ -44,17 +61,22 @@ const Item = ({ onItemAdd, onItemCancel, category }) => {
         .then(data => {
             onItemAdd(category, name, price, description, ingredient, vegetarian);
             setIsItemAdded(true);
+            setNameError(isNaN(name));
+            setPriceError(isNaN(price));
+            setDescriptionError(isNaN(description));
+            setIngredientError(isNaN(vegetarian));
         })
         .catch(error => {
             // Handle the error if necessary
             console.error(error);
-            alert(error)
         });
     }
     
     const handleCancel = () => {
-        onItemCancel();
+      onItemCancel();
+      setOpen(false);
     }
+
     const handleDone = () => {
         console.log("I am here");
         setDone(true);
@@ -71,74 +93,111 @@ const Item = ({ onItemAdd, onItemCancel, category }) => {
       }, [name, price, description, ingredient, vegetarian]);
 
     return (
-      <Box margin='2%'>
-      <Card>
-          <CardContent>
-          <TextField
+      <Box>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>
+          <Typography variant="h6" style={{ fontWeight: 'bold' }}>
+            Add Item
+          </Typography>
+      </DialogTitle>
+
+      <form onSubmit={(e) => {
+        e.preventDefault(); // Prevent default form submission behavior
+        // handleAdd(); // Call the handleAdd function to add the item
+      }}>
+        {/* <form onSubmit={handleAdd}> */}
+        <TextField
+          autoFocus
           label="Name"
+          id="standard-required"
           value={name}
+          error={NameError !== ''}
+          helperText={NameError && 'This field is required.'}
           size="small"
           margin= 'normal'
           fullWidth
-          onChange={(e) => setName(e.target.value)}
-          />
+          onChange={(e) => {
+            setName(e.target.value);
+            setNameError('');
+          }}
+          variant="filled"
+        />
 
-          <Box display="flex" flexDirection="row" flexWrap="wrap">
+        <Box display="flex" flexDirection="row" flexWrap="wrap">
           <TextField
-            label="Price"
+            label="Cost"
             value={price}
             type="number"
             inputProps={{
-                step: "0.01",
-                min: "0"
+              step: "0.01",
+              min: "0"
             }}
+            error={PriceError !== ''}
+            helperText={PriceError && 'This field is required.'}
             size="small"
             margin= 'normal'
             InputProps={{
-                startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                }}
-            onChange={(e) => setPrice(e.target.value)}
+              startAdornment: <InputAdornment position="start">$</InputAdornment>,
+            }}
+            onChange={(e) => {
+              setPrice(e.target.value);
+              setPriceError('');
+            }}
+            variant="filled"
           />
+          
           <Box margin="3%">
             <FormControlLabel
-                control={<Checkbox/>} 
-                label="Vegetarian" 
-                labelPlacement="start"
-                onChange={(e) => setVegetarian(e.target.checked)}/>
+              control={<Checkbox/>} 
+              label="Vegetarian" 
+              labelPlacement="start"
+              onChange={(e) => setVegetarian(e.target.checked)}
+            />
           </Box>
-          </Box>
+        </Box>
 
-          <TextField
-            label="Description"
-            value={description}
-            size="small"
-            margin= 'normal'
-            fullWidth
-            onChange={(e) => setDescription(e.target.value)}
-          />
+        <TextField
+          label="Description"
+          value={description}
+          error={DescriptionError !== ''}
+          helperText={DescriptionError && 'This field is required.'}
+          size="small"
+          margin= 'normal'
+          fullWidth
+          onChange={(e) => {
+            setDescription(e.target.value);
+            setDescriptionError('');
+          }}
+          variant="filled"
+        />
 
-          <TextField
-            label="Ingredients"
-            value={ingredient}
-            size="small"
-            margin= 'normal'
-            fullWidth
-            onChange={(e) => setIngredient(e.target.value)}
-          />
-          </CardContent>
+        <TextField
+          label="Ingredients"
+          value={ingredient}
+          error={IngredientError !== ''}
+          helperText={IngredientError && 'This field is required.'}
+          size="small"
+          margin= 'normal'
+          fullWidth
+          onChange={(e) => {
+            setIngredient(e.target.value);
+            setIngredientError('');
+          }}
+          variant="filled"
+        />
 
-          <CardActions>
-
-          <Button size="small" onClick={handleAdd}>
+      <DialogActions>
+        <Button size="small" variant="contained" color="primary" type="submit" onClick={handleAdd}>
           Add
-          </Button>
+        </Button>
 
-          <Button size="small" onClick={handleCancel}>
-            Cancel
-          </Button>
-          </CardActions>
-          </Card>
-          </Box>
+        <Button size="small" variant="outlined" color="secondary" onClick={handleCancel}>
+          Cancel
+        </Button>
+      </DialogActions>
+      </form>
+      </Dialog>
+    </Box>
   )
 };
 
