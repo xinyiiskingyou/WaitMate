@@ -152,7 +152,7 @@ class MenuDB:
                 ON m.category = c.name
             LEFT JOIN Items i
                 ON i.name = m.item
-            WHERE c.cat_id = ? AND m.item IS NOT NULL
+            WHERE c.cat_order = ? AND m.item IS NOT NULL
             ORDER BY m.item_order
             ''', (category_id,)
         )
@@ -164,7 +164,7 @@ class MenuDB:
         for data in info:
             item_dict = dict(zip(columns, data))
             items.append(item_dict)
-
+        print(items)
         return items
 
     def update_details_menu_items(self, item_id: int, name=None, cost=None, description=None,
