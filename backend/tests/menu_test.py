@@ -50,22 +50,22 @@ def test_item_update_details_invalid_id():
     with pytest.raises(InputError):
         menu.update_details_menu_items(100)
     with pytest.raises(InputError):
-        menu.update_details_menu_items(3000, name='Big')
+        menu.update_details_menu_items(3000, new_name='Big')
     with pytest.raises(InputError):
-        menu.update_details_menu_items(-1, name='fsd')
+        menu.update_details_menu_items(-1, new_name='fsd')
 
 def test_item_update_details_invalid_name():
 
     menu_1()
     with pytest.raises(InputError):
-        menu.update_details_menu_items(1, name='BigSeaBassTodayYum')
+        menu.update_details_menu_items(1, new_name='BigSeaBassTodayYum')
     with pytest.raises(InputError):
-        menu.update_details_menu_items(1, name='')
+        menu.update_details_menu_items(1, new_name='')
 
 def test_item_update_details_valid_name():
     menu_1()
     original = menu.get_items_in_category(1)
-    menu.update_details_menu_items(1, name='Haddock')
+    menu.update_details_menu_items(1, new_name='Haddock')
     result = menu.get_items_in_category(1)
 
     assert result != original
