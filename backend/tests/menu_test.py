@@ -156,7 +156,7 @@ def test_category_add_endpoint(client):
     resp = client.post("/menu/category/add", json={'name': 'pizza'})
     assert resp.status_code == 400
 
-    # invalid length naem
+    # invalid length name
     resp = client.post("/menu/category/add", json={'name': 'fakdsjkdkfhdskfh'})
     assert resp.status_code == 400
 
@@ -253,13 +253,6 @@ def test_add_item_endpoint(client):
     })
     assert resp.status_code == 400
 
-def test_remove_item_endpoint():
-    response = requests.delete(f"http://localhost:8000/menu/item/remove/", json={"name": "hawaiian"})
-    assert response.status_code == 200
-
-    response = requests.delete(f"http://localhost:8000/menu/item/remove/", json={"name": "hawaiian"})
-    assert response.status_code == 400
-
 def test_item_update_details(client):
 
     # valid case
@@ -279,18 +272,9 @@ def test_item_update_details(client):
     assert resp.status_code == 400
 
 def test_item_update_order_endpoint(client):
-    resp = client.post("/menu/item/add", json={
-        "category": "pizza",
-        "name": "hawaiian",
-        "cost": 10,
-        "description": "N/A",
-        "ingredients": "ham, pineapple, cheese",
-        "is_vegan": False
-    })
-    assert resp.status_code == 200
 
     resp = client.put("/menu/item/update/order", json={"name": "hawaiian", "is_up": True})
     assert resp.status_code == 200
 
-    resp = client.put("/menu/item/update/order", json={"name": "hawaiian", "is_up": False})
+    resp = client.put("/menu/item/update/order", json={"name": "hawaiian", "is_up": True})
     assert resp.status_code == 400

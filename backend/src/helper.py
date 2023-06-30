@@ -47,22 +47,6 @@ def get_item_info(column_name: str, item: str):
 
     return result
 
-def get_item_id_by_name(item_name: str):
-
-    conn = sqlite3.connect(MENU_DB_PATH)
-    cur = conn.cursor()
-
-    cur.execute("SELECT item_id FROM Items WHERE name = ?", (item_name,))
-    result = cur.fetchone()
-
-    conn.close()
-
-    if result is not None:
-        item_id = result[0]
-        return item_id
-    else:
-        return None
-
 def get_menu_item_order_by_name(item_name: str):
 
     conn = sqlite3.connect(MENU_DB_PATH)
@@ -70,7 +54,6 @@ def get_menu_item_order_by_name(item_name: str):
 
     cur.execute("SELECT item_order FROM Menu WHERE item = ?", (item_name,))
     result = cur.fetchone()
-
     conn.close()
 
     if result is not None:
@@ -111,11 +94,33 @@ def get_total_count(table_name):
 
     return count  
 
+def get_category_by_name(item_name: str):
+    con = sqlite3.connect(MENU_DB_PATH)
+    cur = con.cursor()
+    
+    cur.execute('SELECT category FROM Menu WHERE item = ?', (item_name, ))
+    result = cur.fetchone()
+
+    return result[0]
+    
+def get_order_in_category(category_name: str):
+    
+    con = sqlite3.connect(MENU_DB_PATH)
+    cur = con.cursor()
+
+    cur.execute("SELECT COUNT(*) FROM Menu WHERE category = ? AND item IS NOT NULL", (category_name,))
+    result = cur.fetchone()[0]
+
+    cur.close()
+    con.close()
+
+    return int(result)
+
 def update_order(table_name, column_name, is_up, prev_order):
 
     if prev_order == 1 and is_up:
-        raise InputError('Invalid order')
-    if prev_order + 1 > get_total_count(table_name) and not is_up:
+        print("here3")
+        
         raise InputError('Invalid order')
 
     new_order = prev_order - 1 if is_up else prev_order + 1

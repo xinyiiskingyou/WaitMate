@@ -2,8 +2,9 @@ import sqlite3
 from constant import MENU_DB_PATH
 from src.error import InputError, AccessError
 from src.helper import (
-    check_if_category_exists, get_item_id_by_name, get_category_order_by_name, 
-    get_menu_item_order_by_name, get_item_info, check_categories_key_is_valid, update_order
+    check_if_category_exists, get_category_order_by_name, get_menu_item_order_by_name, 
+    get_item_info, check_categories_key_is_valid, update_order, get_order_in_category,
+    get_total_count, get_category_by_name
 )
 
 class MenuDB:
@@ -63,10 +64,16 @@ class MenuDB:
 
         cur.execute('INSERT INTO Categories(name) VALUES(?)', (name,))
         con.commit()
-
-        # order = get_category_id_by_name(name)
+        
+        # update order column
         cur.execute('UPDATE Categories SET cat_order = cat_id WHERE name = ?', (name,))
         con.commit()
+        
+        # insert category in menu
+        self.create_menu_table()
+        cur.execute('INSERT INTO Menu(category, item, item_order) VALUES (?, ?, ?)', (name, None, 0))
+        con.commit()
+        
         con.close()
 
     def item_add(
@@ -99,10 +106,9 @@ class MenuDB:
 
         # insert to the menu
         self.create_menu_table()
-        order = get_item_id_by_name(name)
+        order = get_order_in_category(category) + 1
         cur.execute('INSERT INTO Menu values(?,?,?)',(category, name, order))
         con.commit()
-
         con.close()
 
     def get_all_categories(self):
@@ -146,7 +152,7 @@ class MenuDB:
                 ON m.category = c.name
             LEFT JOIN Items i
                 ON i.name = m.item
-            WHERE c.cat_id = ?
+            WHERE c.cat_id = ? AND m.item IS NOT NULL
             ORDER BY m.item_order
             ''', (category_id,)
         )
@@ -166,7 +172,8 @@ class MenuDB:
 
         if not get_item_info('item_id', item_id):
             raise InputError('Invalid ID')
-
+        print(item_id)
+        print(name)
         con = sqlite3.connect(self.database)
         cur = con.cursor()
 
@@ -253,10 +260,17 @@ class MenuDB:
         con.close()
 
     def update_order_menu_items(self, item_name: str, is_up: bool):
+        # item name not exists
         if not get_item_info('name', item_name):
             raise InputError('Invalid name')
 
         prev_order = get_menu_item_order_by_name(item_name)
+        cat_name = get_category_by_name(item_name)
+
+        # if the item is the last item in the category then it can move down
+        if prev_order + 1 > get_order_in_category(cat_name) and not is_up:
+            raise InputError('Invalid order')
+
         update_order('Menu', 'item_order', is_up, prev_order)
 
     def update_order_menu_category(self, category_name: str, is_up: bool):
@@ -264,6 +278,10 @@ class MenuDB:
         # check if the category name exists
         if not check_categories_key_is_valid('name', category_name):
             raise InputError('Invalid category name')
-
+    
         prev_order = get_category_order_by_name(category_name)
+        
+        if prev_order + 1 > get_total_count('Categories') and not is_up:
+            raise InputError('Invalid order')
+        
         update_order('Categories', 'cat_order', is_up, prev_order)
