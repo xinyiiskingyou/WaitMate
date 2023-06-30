@@ -34,7 +34,8 @@ class MenuDB:
                         cost INTEGER,
                         description TEXT,
                         ingredients TEXT,
-                        is_vegan
+                        is_vegan,
+                        item_order INTEGER
                     )''')
         con.commit()
         con.close()
@@ -104,6 +105,9 @@ class MenuDB:
         )
         con.commit()
 
+        cur.execute('UPDATE Items SET item_order = item_id WHERE name = ?', (name,))
+        con.commit()
+        
         # insert to the menu
         self.create_menu_table()
         order = get_order_in_category(category) + 1
@@ -164,28 +168,35 @@ class MenuDB:
         for data in info:
             item_dict = dict(zip(columns, data))
             items.append(item_dict)
-        print(items)
+
         return items
 
-    def update_details_menu_items(self, item_id: int, name=None, cost=None, description=None,
+    def update_details_menu_items(self, item_id: int, new_name=None, cost=None, description=None,
         ingredients=None, is_vegan=None):
-
-        if not get_item_info('item_id', item_id):
+        
+        # check if item_id is valid
+        if not get_item_info('item_id', int(item_id)):
             raise InputError('Invalid ID')
-        print(item_id)
-        print(name)
+
         con = sqlite3.connect(self.database)
         cur = con.cursor()
 
-        if name is not None:
-            if len(name) < 1 or len(name) > 15:
+        # get the old name of the menu item
+        old_name = get_item_info('item_order', item_id)[1]
+        
+        if new_name is not None:
+            # invalid name length
+            if len(new_name) < 1 or len(new_name) > 15:
                 raise InputError('Invalid name length')
+            # item name is used by another item
+            if get_item_info('name', new_name) and old_name != new_name:
+                raise InputError('Name already used')
             # update the name in menu
             cur.execute(
                 '''UPDATE Menu  
                 SET item = (?)
                 WHERE item_order = (?)''',
-                (name, item_id)
+                (new_name, item_id)
             )
             con.commit()
 
@@ -197,8 +208,8 @@ class MenuDB:
                 description = COALESCE(?, description),
                 ingredients = COALESCE(?, ingredients),
                 is_vegan = COALESCE(?, is_vegan)
-            WHERE item_id = (?)''',
-            (name, cost, description, ingredients, is_vegan, item_id)
+            WHERE item_order = (?)''',
+            (new_name, cost, description, ingredients, is_vegan, item_id)
         )
         con.commit()
         con.close()

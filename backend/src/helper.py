@@ -119,8 +119,6 @@ def get_order_in_category(category_name: str):
 def update_order(table_name, column_name, is_up, prev_order):
 
     if prev_order == 1 and is_up:
-        print("here3")
-        
         raise InputError('Invalid order')
 
     new_order = prev_order - 1 if is_up else prev_order + 1
@@ -135,5 +133,21 @@ def update_order(table_name, column_name, is_up, prev_order):
         END'''.format(table=table_name, column=column_name), 
     (prev_order, new_order, new_order, prev_order))
 
+    con.commit()
+    con.close()
+    
+    if table_name == "Menu":
+        update_menu_item_order(prev_order, new_order)
+    
+def update_menu_item_order(prev_order, new_order):
+    con = sqlite3.connect(MENU_DB_PATH)
+    cur = con.cursor()
+    cur.execute('''UPDATE Items
+        SET item_order = CASE
+            WHEN item_order = ? THEN ?
+            WHEN item_order = ? THEN ?
+            ELSE item_order
+        END''', 
+    (prev_order, new_order, new_order, prev_order))
     con.commit()
     con.close()
