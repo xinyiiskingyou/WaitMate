@@ -76,9 +76,6 @@ const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
           // Handle the error if necessary
           console.error(error);
           alert(error);
-          setTimeout(() => {
-            window.location.reload();
-          }, 10);
         });
     };
 

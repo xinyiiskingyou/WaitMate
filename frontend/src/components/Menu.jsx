@@ -50,9 +50,7 @@ const Menu = () => {
           // Handle the error if necessary
           console.error(error);
           alert('Failed to save category. Please try again.');
-          setTimeout(() => {
-            window.location.reload();
-          }, 10);
+          window.location.reload();
         });
     } else {
       window.location.reload();
@@ -156,9 +154,7 @@ const Menu = () => {
         // Handle the error if necessary
         console.error(error);
         alert('Failed to rename the category. Please try again.');
-        setTimeout(() => {
-          window.location.reload();
-        }, 10);
+        window.location.reload();
       });
   };
   const handleCategoryInputChange = (value) => {
@@ -196,9 +192,7 @@ const Menu = () => {
         // Handle the error if necessary
         console.error(error);
         alert('Failed to update the order. Please try again.');
-        setTimeout(() => {
-          window.location.reload();
-        }, 10);
+        window.location.reload();
       });
   };
   useEffect(() => {
@@ -230,9 +224,7 @@ const Menu = () => {
     } catch (error) {
       console.error('Error fetching categories:', error);
       alert('Error fetching categories:', error);
-      setTimeout(() => {
-        window.location.reload();
-      }, 10);
+      window.location.reload();
     }
   };
 
