@@ -7,10 +7,11 @@ including adding orders, retrieving orders etc.
 
 import sqlite3
 import datetime
+from typing import Any, List
 from constant import ORDER_DB_PATH
 from src.error import InputError, NotFoundError
 from src.clear import clear_database
-from src.helper import check_table_exists, get_item_info
+from src.helper import check_table_exists, get_item_info, get_order
 
 class OrderDB:
     '''
@@ -44,7 +45,9 @@ class OrderDB:
                         timestamp TIMESTAMP NOT NULL,
                         table_id INTEGER NOT NULL,
                         item_name TEXT NOT NULL,
-                        amount INTEGER NOT NULL
+                        amount INTEGER NOT NULL,
+                        is_prepared INTEGER DEFAULT 0,
+                        is_served INTEGER DEFAULT 0
                     )''')
 
         con.commit()
@@ -89,7 +92,7 @@ class OrderDB:
         con.commit()
         con.close()
 
-    def get_table_order(self, table_id: int):
+    def get_table_order(self, table_id: int) -> List[Any]:
         '''
         Returns the order associated with the specified table ID.
 
@@ -100,23 +103,7 @@ class OrderDB:
         Return Value:
             Returns <order_list> that contains all the orders are placed by a table
         '''
-
-        result = check_table_exists(table_id)
-
-        if not result:
-            raise InputError('The table_id does not refer to a valid table')
-
-        try:
-            con = sqlite3.connect(self.database)
-            cur = con.cursor()
-
-            cur.execute('SELECT item_name, amount FROM Orders WHERE table_id = ?', (table_id,))
-            order_list = cur.fetchall()
-        except Exception:
-            raise NotFoundError('Order database not found.')
-        finally:
-            con.close()
-        return order_list
+        return get_order(table_id)
 
     def get_all_orders(self):
         '''
@@ -136,7 +123,10 @@ class OrderDB:
             con = sqlite3.connect(self.database)
             cur = con.cursor()
 
-            cur.execute('SELECT * FROM Orders ORDER BY timestamp ASC')
+            cur.execute('''SELECT timestamp, table_id, item_name, amount 
+                FROM Orders 
+                WHERE is_prepared == 0 AND is_served == 0
+                ORDER BY timestamp ASC''')
             order_list = cur.fetchall()
         except Exception:
             raise NotFoundError('Order database not found.')

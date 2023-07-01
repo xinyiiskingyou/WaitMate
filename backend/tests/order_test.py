@@ -59,7 +59,7 @@ def test_get_all_orders(table_id_1, table_id_2, table_id_3, menu_japanese):
 
     order.add_order(table_id_1, 'salmon sushi', 2)
     order.add_order(table_id_2, 'dorayaki', 1)
-    order.add_order(table_id_3, 'dorayaki', 2)
+    order.add_order(table_id_2, 'dorayaki', 2)
 
     table_order = order.get_all_orders()
 

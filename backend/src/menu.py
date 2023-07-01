@@ -282,7 +282,7 @@ class MenuDB:
         if prev_order + 1 > get_order_in_category(cat_name) and not is_up:
             raise InputError('Invalid order')
 
-        update_order('Menu', 'item_order', is_up, prev_order)
+        update_order('Menu', 'item_order', is_up, prev_order) 
 
     def update_order_menu_category(self, category_name: str, is_up: bool):
 
