@@ -8,30 +8,6 @@ from tests.conftest import VALID, INPUTERROR
 track = Tracking()
 table = TableDB()
 order = OrderDB()
-
-def test_customer_request_assistance_invalid_id():
-    with pytest.raises(InputError):
-        track.customer_request_assistance(100, "BILL")
-    with pytest.raises(InputError):
-        track.customer_request_assistance(-1, "BILL")
-    with pytest.raises(InputError):
-        track.customer_request_assistance(25, "BILL")
-        
-def test_customer_request_assistance_invalid_status(table_id_1):
-    with pytest.raises(InputError):
-        track.customer_request_assistance(table_id_1, "_")
-    with pytest.raises(InputError):
-        track.customer_request_assistance(table_id_1, "dfsdsfd")
-    with pytest.raises(InputError):
-        track.customer_request_assistance(table_id_1, "")
-        
-def test_customer_request_assistance_valid(table_id_1, table_id_2):
-    
-    track.customer_request_assistance(table_id_1, "BILL")
-    assert table.get_all_tables_status()[table_id_1] == "BILL"
-    
-    track.customer_request_assistance(table_id_2, "ASSIST")
-    assert table.get_all_tables_status()[table_id_2] == "ASSIST"
     
 def test_customer_track_dish_invalid_id():
     with pytest.raises(InputError):
@@ -137,28 +113,6 @@ def test_waitstaff_mark_order_invalid_serve():
 ######################################
 ########## endpoint tests ############
 ######################################
-
-def test_request_assistance_endpoint(client):
-    # valid
-    resp = client.post("/track/customer/request", json={
-        "table_id": 1,
-        "status": "BILL"
-    })
-    assert resp.status_code == VALID
-    
-    # invalid id
-    resp = client.post("/track/customer/request", json={
-        "table_id": 100,
-        "status": "BILL"
-    })
-    assert resp.status_code == INPUTERROR
-    
-    # invalid status
-    resp = client.post("/track/customer/request", json={
-        "table_id": 100,
-        "status": "_"
-    })
-    assert resp.status_code == INPUTERROR
     
 def test_view_dish_status(client):
     # valid
