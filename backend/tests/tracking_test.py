@@ -3,7 +3,7 @@ from src.error import InputError, AccessError
 from src.tracking import Tracking
 from src.table import TableDB
 from src.order import OrderDB
-from tests.conftest import VALID, INPUTERROR, ACCESSERROR
+from tests.conftest import VALID, INPUTERROR
 
 track = Tracking()
 table = TableDB()

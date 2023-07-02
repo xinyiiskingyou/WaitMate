@@ -1,7 +1,7 @@
 import pytest
-
 from src.order import OrderDB
 from src.error import InputError
+from tests.conftest import VALID, INPUTERROR
 
 order = OrderDB()
 def test_add_order_invalid_table_number():
@@ -72,31 +72,31 @@ def test_get_all_orders(table_id_1, table_id_2, table_id_3, menu_japanese):
 def test_add_order_endpoint(client, table_id_1, menu_japanese):
     # valid
     resp = client.post('/order/cart/add', json={'id': table_id_1, 'item': 'dorayaki', 'amount': 1})
-    print(resp.json())
-    assert resp.status_code == 200
+
+    assert resp.status_code == VALID
 
     # invalid table id
     resp = client.post('/order/cart/add', json={'id': 23, 'item': 'dorayaki', 'amount': 1})
-    assert resp.status_code == 400
+    assert resp.status_code == INPUTERROR
 
     # invalid item
     resp = client.post('/order/cart/add', json={'id': table_id_1, 'item': 'tuna sushi', 'amount': 1})
-    assert resp.status_code == 400
+    assert resp.status_code == INPUTERROR
 
     # invalid amount
     resp = client.post('/order/cart/add', json={'id': table_id_1, 'item': 'dorayaki', 'amount': -1})
-    assert resp.status_code == 400
+    assert resp.status_code == INPUTERROR
 
 def test_table_view_order_endpoint(client, table_id_1):
     # valid case
     resp = client.get('/order/cart/list', params={'table_id': table_id_1})
-    assert resp.status_code == 200
+    assert resp.status_code == VALID
 
     # invalid table id
     resp = client.get('/order/cart/list', params={'table_id': 23})
-    assert resp.status_code == 400
+    assert resp.status_code == INPUTERROR
 
 def test_table_view_all_order_endpoint(client):
     # valid case
     resp = client.get('/order/listall')
-    assert resp.status_code == 200
+    assert resp.status_code == VALID

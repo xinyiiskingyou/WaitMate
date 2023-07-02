@@ -5,6 +5,10 @@ from src.menu import MenuDB
 from fastapi.testclient import TestClient
 from app.api import app
 
+VALID = 200
+ACCESSERROR = 403
+INPUTERROR = 400
+
 table = TableDB()
 menu = MenuDB()
 
