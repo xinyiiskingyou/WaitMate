@@ -3,6 +3,7 @@ from src.error import InputError, AccessError
 from src.tracking import Tracking
 from src.table import TableDB
 from src.order import OrderDB
+from tests.conftest import VALID, INPUTERROR, ACCESSERROR
 
 track = Tracking()
 table = TableDB()
@@ -131,3 +132,107 @@ def test_waitstaff_mark_order_invalid_serve():
     # raise error if all the dorayaki is served
     with pytest.raises(AccessError):
         track.waitstaff_mark_order_completed(3, "dorayaki")
+        
+
+######################################
+########## endpoint tests ############
+######################################
+
+def test_request_assistance_endpoint(client):
+    # valid
+    resp = client.post("/track/customer/request", json={
+        "table_id": 1,
+        "status": "BILL"
+    })
+    assert resp.status_code == VALID
+    
+    # invalid id
+    resp = client.post("/track/customer/request", json={
+        "table_id": 100,
+        "status": "BILL"
+    })
+    assert resp.status_code == INPUTERROR
+    
+    # invalid status
+    resp = client.post("/track/customer/request", json={
+        "table_id": 100,
+        "status": "_"
+    })
+    assert resp.status_code == INPUTERROR
+    
+def test_view_dish_status(client):
+    # valid
+    resp = client.get("/track/customer/dish", params={"table_id": 1})
+    assert resp.status_code == VALID
+    
+    # invalid id
+    resp = client.get("/track/customer/dish", params={ "table_id": 100 })
+    assert resp.status_code == INPUTERROR
+
+def test_kitchen_mark_order(client):
+    # valid
+    resp = client.put("/track/kitchen/mark", json={
+        "order_req": {
+            "item": "dorayaki",
+        },
+        "table_req": {
+            "table_id": 1,
+        }
+    }) 
+    assert resp.status_code == VALID
+    
+    # invalid id
+    resp = client.put("/track/kitchen/mark", json={
+        "order_req": {
+            "item": "dorayaki",
+        },
+        "table_req": {
+            "table_id": 100,
+        }
+    }) 
+    assert resp.status_code == INPUTERROR
+    
+    # invalid item
+    resp = client.put("/track/kitchen/mark", json={
+        "order_req": {
+            "item": "_",
+        },
+        "table_req": {
+            "table_id": 1,
+        }
+    }) 
+    assert resp.status_code == INPUTERROR
+
+def test_waitstaff_mark_order(client):
+    # valid
+    resp = client.put("/track/waitstaff/mark", json={
+        "order_req": {
+            "item": "dorayaki",
+        },
+        "table_req": {
+            "table_id": 1,
+        }
+    }) 
+    assert resp.status_code == VALID
+    
+    # invalid id
+    resp = client.put("/track/waitstaff/mark", json={
+        "order_req": {
+            "item": "dorayaki",
+        },
+        "table_req": {
+            "table_id": 100,
+        }
+    }) 
+    assert resp.status_code == INPUTERROR
+    
+    # invalid item
+    resp = client.put("/track/waitstaff/mark", json={
+        "order_req": {
+            "item": "__",
+        },
+        "table_req": {
+            "table_id": 1,
+        }
+    }) 
+    assert resp.status_code == INPUTERROR

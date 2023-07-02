@@ -11,7 +11,7 @@ class Tracking:
     def __init__(self, table_db=TABLE_DB_PATH) -> None:
         self.table_db = table_db
     
-    def customer_request_assistance(self, table_id: int, status: str) -> str:
+    def customer_request_assistance(self, table_id: int, status: str):
         '''
         For customers to request assistance
         '''
@@ -29,7 +29,6 @@ class Tracking:
         # update table status
         cur.execute('UPDATE Tables SET status = ? WHERE table_id = ?', (status, table_id))
         con.commit()
-        return status
 
     def customer_view_dish_status(self, table_id: int):
         
