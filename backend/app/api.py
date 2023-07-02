@@ -4,6 +4,7 @@ from fastapi import FastAPI, Query, Body
 from src.order import OrderDB
 from src.table import TableDB
 from src.menu import MenuDB
+from src.notifications import Notifications
 from src.tracking import Tracking
 from src.model.category_req import Category
 from src.model.category_order_req import CategoryOrder
@@ -19,6 +20,7 @@ order = OrderDB()
 table = TableDB()
 menu = MenuDB()
 track = Tracking()
+notification = Notifications()
 
 origins = [
     'http://localhost:3000',
@@ -119,11 +121,6 @@ def table_status_update(reqbody: Table):
 
 ############ TRACKING #################
 
-@app.post('/track/customer/request')
-def request_assistance(reqbody: Table):
-    track.customer_request_assistance(reqbody.table_id, reqbody.status)
-    return {}
-
 @app.get('/track/customer/dish')
 def track_dish_status(table_id: int):
     return track.customer_view_dish_status(table_id)
@@ -137,3 +134,18 @@ def track_kitchen_order(order_req: Order, table_req: Table):
 def track_waitstaff_order(order_req: Order, table_req: Table):
     track.waitstaff_mark_order_completed(table_req.table_id, order_req.item)
     return {}
+
+############ NOTIFICATIONS #################
+
+@app.post('/notification/customer/send')
+def customer_request_assistance(reqbody: Table):
+    notification.customer_send_notification(reqbody.table_id, reqbody.status)
+    return {}
+
+@app.get('/notification/waitstaff/get/customer')
+def waitstaff_get_from_customer():
+    return notification.waitstaff_receives_from_customer()
+
+@app.get('/notification/waitstaff/get/kitchen')
+def waitstaff_get_from_customer():
+    return notification.waitstaff_receives_from_kitchen()
