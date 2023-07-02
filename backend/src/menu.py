@@ -12,7 +12,7 @@ class MenuDB:
     def __init__(self, database=MENU_DB_PATH) -> None:
         self.database = database
 
-    def create_category_table(self):
+    def create_category_table(self) -> None:
         con = sqlite3.connect(self.database)
         cur = con.cursor()
 
@@ -25,7 +25,7 @@ class MenuDB:
 
         con.close()
 
-    def create_item_table(self):
+    def create_item_table(self) -> None:
         con = sqlite3.connect(MENU_DB_PATH)
         cur = con.cursor()
         cur.execute('''CREATE TABLE IF NOT EXISTS Items (
@@ -40,7 +40,7 @@ class MenuDB:
         con.commit()
         con.close()
 
-    def create_menu_table(self):
+    def create_menu_table(self) -> None:
         con = sqlite3.connect(MENU_DB_PATH)
         cur = con.cursor()
         cur.execute('CREATE TABLE IF NOT EXISTS Menu(category, item, item_order)')
@@ -115,7 +115,7 @@ class MenuDB:
         con.commit()
         con.close()
 
-    def get_all_categories(self):
+    def get_all_categories(self) -> dict:
 
         self.create_category_table()
         
@@ -134,7 +134,7 @@ class MenuDB:
 
         return categories_dict
 
-    def get_items_in_category(self, category_id: str):
+    def get_items_in_category(self, category_id: str) -> list:
 
         self.create_category_table()
         self.create_item_table()
@@ -172,7 +172,7 @@ class MenuDB:
         return items
 
     def update_details_menu_items(self, item_id: int, new_name=None, cost=None, description=None,
-        ingredients=None, is_vegan=None):
+        ingredients=None, is_vegan=None) -> None:
         
         # check if item_id is valid
         if not get_item_info('item_id', int(item_id)):
@@ -214,7 +214,7 @@ class MenuDB:
         con.commit()
         con.close()
 
-    def update_details_category(self, old_name: str, new_name: str):
+    def update_details_category(self, old_name: str, new_name: str) -> None:
 
         # if the name does not change then do nothing
         if old_name.lower() == new_name.lower():
@@ -248,7 +248,7 @@ class MenuDB:
         con.commit()
         con.close()
 
-    def remove_menu_items(self, item_name: str):
+    def remove_menu_items(self, item_name: str) -> None:
 
         if not get_item_info('name', item_name):
             raise InputError('Invalid name')
@@ -270,7 +270,7 @@ class MenuDB:
         con.commit()
         con.close()
 
-    def update_order_menu_items(self, item_name: str, is_up: bool):
+    def update_order_menu_items(self, item_name: str, is_up: bool) -> None:
         # item name not exists
         if not get_item_info('name', item_name):
             raise InputError('Invalid name')
@@ -284,7 +284,7 @@ class MenuDB:
 
         update_order('Menu', 'item_order', is_up, prev_order) 
 
-    def update_order_menu_category(self, category_name: str, is_up: bool):
+    def update_order_menu_category(self, category_name: str, is_up: bool) -> None:
 
         # check if the category name exists
         if not check_categories_key_is_valid('name', category_name):

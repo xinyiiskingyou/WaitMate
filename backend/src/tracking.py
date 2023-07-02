@@ -9,7 +9,7 @@ class Tracking:
     def __init__(self, order_db=ORDER_DB_PATH) -> None:
         self.order_db = order_db
 
-    def customer_view_dish_status(self, table_id: int):
+    def customer_view_dish_status(self, table_id: int) -> list:
         
         order_list = get_order(table_id)
 
@@ -25,7 +25,7 @@ class Tracking:
     def waitstaff_mark_order_completed(self, table_id: int, item_name: str) -> None:
         self.mark_order_completed(table_id, item_name, "is_served")
     
-    def mark_order_completed(self, table_id: int, item_name: str, column_name: str):
+    def mark_order_completed(self, table_id: int, item_name: str, column_name: str) -> None:
     
         table_order = get_order(table_id)
         

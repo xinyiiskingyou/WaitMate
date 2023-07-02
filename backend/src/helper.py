@@ -1,7 +1,7 @@
 import sqlite3
 from typing import Any, List
 from constant import TABLE_DB_PATH, MENU_DB_PATH, ORDER_DB_PATH
-from src.error import NotFoundError, InputError, AccessError
+from src.error import NotFoundError, InputError
 
 def check_table_exists(table_id: int):
     

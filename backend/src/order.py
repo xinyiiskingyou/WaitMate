@@ -21,10 +21,10 @@ class OrderDB:
         database_path (str): The path to the SQLite database file.
     '''
 
-    def __init__(self, database=ORDER_DB_PATH):
+    def __init__(self, database=ORDER_DB_PATH) -> None:
         self.database = database
 
-    def create_order_table(self):
+    def create_order_table(self) -> None:
         '''
         Create a database for orders.
 
@@ -53,7 +53,7 @@ class OrderDB:
         con.commit()
         con.close()
 
-    def add_order(self, table_id: int, item_name: str, amount: int):
+    def add_order(self, table_id: int, item_name: str, amount: int) -> None:
         '''
         Adds an order for a specific table number.
 
@@ -105,7 +105,7 @@ class OrderDB:
         '''
         return get_order(table_id)
 
-    def get_all_orders(self):
+    def get_all_orders(self) -> List[Any]:
         '''
         Retrieves all orders that is sorted by timestamp from the database.
 
@@ -134,7 +134,7 @@ class OrderDB:
             con.close()
         return order_list
 
-    def clear_order_table(self):
+    def clear_order_table(self) -> None:
         '''
         Resets all the data of the order database.
 

@@ -2,6 +2,7 @@ import sqlite3
 from constant import TABLE_DB_PATH, ORDER_DB_PATH
 from src.helper import check_table_exists
 from src.error import InputError, AccessError
+from typing import Any, List
 
 class Notifications:
     
@@ -9,7 +10,7 @@ class Notifications:
         self.table_db = table_db
         self.order_db = order_db
         
-    def customer_send_notification(self, table_id: int, status: str):
+    def customer_send_notification(self, table_id: int, status: str) -> None:
         '''
         For customers to request assistance
         '''
@@ -33,7 +34,7 @@ class Notifications:
         finally:
             con.close()
     
-    def waitstaff_receives_from_customer(self):
+    def waitstaff_receives_from_customer(self) -> List[Any]:
         
         try:
             con = sqlite3.connect(self.table_db)
@@ -47,7 +48,7 @@ class Notifications:
             con.close()
         return res
     
-    def waitstaff_receives_from_kitchen(self):
+    def waitstaff_receives_from_kitchen(self) -> List[Any]:
         
         try:
             con = sqlite3.connect(self.order_db)
@@ -58,7 +59,6 @@ class Notifications:
                         FROM Orders 
                         WHERE is_prepared == 1 AND is_served == 0
                         ORDER BY timestamp ASC
-                        LIMIT 10
                         ''')
             res = cur.fetchall()
             con.close()
