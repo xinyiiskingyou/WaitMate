@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 import {Link} from 'react-router-dom';
 // import Menu from './Menu';
 
-const Staff = () => {
+const Manager = () => {
   const buttonStyle = {
     width: '200px',
     height: '100px',
@@ -25,26 +25,26 @@ const Staff = () => {
     >
       <Grid container spacing={2} alignItems="center">
         <Grid item xs={12}>
-          <h2 style={headingStyle}>Select Staff Type</h2>
+          <h2 style={headingStyle}>Manager Management Board</h2>
         </Grid>
         <Grid item xs={4} textAlign={'right'}>
-          <Link to="/manager">
+          <Link to="/menu">
             <Button variant='contained' color='primary' style={buttonStyle}>
-              Manager
+              Menu
             </Button>
             </Link>
         </Grid>
         <Grid item xs={4} textAlign={'center'}>
           <Link to="/Kitchenlist">
             <Button variant='contained' color='primary' style={buttonStyle}>
-              Kitchen Staff
+              Coupons
             </Button>
           </Link>
         </Grid>
         <Grid item xs={4} textAlign={'left'}>
           <Link to="/waitstaff">
           <Button variant='contained' color='primary' style={buttonStyle}>
-            Wait Staff
+            Meme
           </Button>
           </Link>
         </Grid>
@@ -53,4 +53,4 @@ const Staff = () => {
   );
 };
 
-export default Staff;
+export default Manager;

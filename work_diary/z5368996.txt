@@ -13,3 +13,7 @@ Week3
 Decided what technolgies/languages we use for the project. 
 Worked on the storyboard for the 4 different users.
 Migrated our proposal from google doc to latex. Finalising everything in the proposal.
+
+Week 4
+Set up our project and made some minor changes to our interface designs/user stories. 
+Created an endpoint API table and started some frontend components.
