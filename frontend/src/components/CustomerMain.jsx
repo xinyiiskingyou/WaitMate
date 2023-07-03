@@ -46,32 +46,31 @@ const CustomerMain = () => {
   const buttonStyle = { 
     background: 'transparent', 
     color: 'black',
-    marginLeft: '175px',
-    marginTop: '3px',
+    marginLeft: '18vh',
     fontWeight: 'bold',
-    fontSize: '32px',
+    fontSize: '1.8vw',
   }
 
   const borderStyle = { 
     border: '8px solid #FFA0A0', 
-    height: '300px', 
-    width: '500px',
+    height: '32vh', 
+    width: '25vw',
     alignItems: 'center', 
     justifyContent: 'center'
   }
 
   const headingStyle = {
     textAlign: 'center',
-    fontSize: '60px',
-    marginTop: '100px',
-    marginBottom: '70px'
+    fontSize: '50px',
+    marginTop: '5vh',
+    marginBottom: '5vh'
   };
 
   const imgStyle = {
-    width: '200px',
-    height: '200px',
+    width: '11vw',
+    height: '21vh',
     marginTop: '20px',
-    marginLeft: '130px'
+    marginLeft: '6.5vw'
   };
 
   return (
@@ -88,8 +87,8 @@ const CustomerMain = () => {
       <Box
         sx={{
           display: 'grid',
-          columnGap: 25,
-          rowGap: 9,
+          columnGap: 20,
+          rowGap: 8,
           gridTemplateColumns: 'repeat(2, 1fr)',
         }}
       >
@@ -108,23 +107,21 @@ const CustomerMain = () => {
             style={{
               background: 'transparent', 
               color: 'black',
-              marginLeft: '80px',
-              marginTop: '3px',
+              marginLeft: '4.6vh',
               fontWeight: 'bold',
-              fontSize: '30px',
-              fontWeight: 'bold',
+              fontSize: '1.7vw',
             }} 
           onClick={() => handle_require_assistance()}>
             Require Assistance
           </Button>
           <Dialog open={open} onClose={handleClose} fullWidth>
             <img src={thanks} alt="ThanksIcon" style={{
-              width: '200px',
-              height: '200px',
-              marginTop: '20px',
-              marginLeft: '185px'
+              width: '12vw',
+              height: '25vh',
+              marginTop: '1.5vh',
+              marginLeft: '13vw'
             }}/>
-            <DialogContent style={{ fontSize: '30px', textAlign: 'center', padding: '20px', letterSpacing: '1px' }}>
+            <DialogContent style={{ fontSize: '30px', textAlign: 'center', padding: '20px', letterSpacing: '0.6px' }}>
               Request received. <br />
               Our staff will be with you shortly.
             </DialogContent>
@@ -143,27 +140,26 @@ const CustomerMain = () => {
           <Button variant='text' color='primary' style={{
               background: 'transparent', 
               color: 'black',
-              marginLeft: '120px',
-              marginTop: '5px',
+              marginLeft: '12.5vh',
               fontWeight: 'bold',
-              fontSize: '30px',
+              fontSize: '1.7vw',
             }}>
             Too Bored?
           </Button> 
         </div>
         <div style={borderStyle}>
           <img src={meme} alt="MemeIcon" style={{
-            width: '230px',
-            height: '200px',
+            width: '12vw',
+            height: '21vh',
             marginTop: '20px',
-            marginLeft: '130px'
+            marginLeft: '7vw'
           }}/>
           <Button variant='text' color='primary' style={{
               background: 'transparent', 
               color: 'black',
-              marginLeft: '95px',
+              marginLeft: '3.6vw',
               fontWeight: 'bold',
-              fontSize: '30px',
+              fontSize: '1.7vw',
           }}>
             Meme of the Week
           </Button>

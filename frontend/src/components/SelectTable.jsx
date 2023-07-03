@@ -54,7 +54,7 @@ const SelectTable = () => {
     marginBottom: '20px'
   };
 
-  const nextLink = `/CustomerMain/${value}` 
+  const nextLink = `/Browse/${value}` 
 
   return (       
     <Box

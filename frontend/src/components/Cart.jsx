@@ -34,7 +34,7 @@ const Cart = () => {
       <Box
         sx={{ 
           margin: 2, 
-          mt: 4, 
+          mt: 2, 
           borderRadius: 2, 
           height: '100%',
           display:"flex",
@@ -50,7 +50,8 @@ const Cart = () => {
                   borderColor: '#FFA0A0',
                   borderRadius: 2,
                   color: 'black',
-                  marginTop: '90px',
+                  marginTop: '5vh',
+                  marginLeft: '2vw',
                   fontWeight: "bolder"
                 }}>
                 <WestIcon/>
@@ -58,12 +59,13 @@ const Cart = () => {
             </Link>
           </Grid>
           
-          <Grid item xs={8} style={{ marginTop: '90px', fontWeight: "bold" }}>
+          <Grid item xs={8} style={{ marginTop: '5vh', fontWeight: "bold" }}>
             <Typography 
-              variant="h3" 
+              variant="h4" 
               component="h1" 
               align="center"
               noWrap
+              fontWeight="bold"
               >
               View Order Summary 
             </Typography>
@@ -84,7 +86,7 @@ const Cart = () => {
         <Grid container direction="column">
           <Grid item>
             <TableContainer sx={{
-                height: 550,
+                height: 500,
                 pt: 4,  
               }}>
               <Table>
