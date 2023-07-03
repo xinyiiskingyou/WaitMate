@@ -219,7 +219,6 @@ const Menu = () => {
       const data = await response.json();
       const itemArray = Object.values(data);
       console.log(itemArray);
-
       setMenuItems(itemArray);
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -420,6 +419,7 @@ const Menu = () => {
                   <Grid item xs={7}>
                     <Box key={index} display="flex" flexDirection="row" mt={2}>
                       <MenuItem
+                        ItemCategory={categories[selectedCategory]}
                         ItemIndex={index}
                         ItemName={menuItem.name}
                         ItemDescription={menuItem.description}
