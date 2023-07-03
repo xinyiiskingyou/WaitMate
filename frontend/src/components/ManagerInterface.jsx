@@ -35,7 +35,7 @@ const Manager = () => {
             </Link>
         </Grid>
         <Grid item xs={4} textAlign={'center'}>
-          <Link to="/Kitchenlist">
+          <Link to="/coupon">
             <Button variant='contained' color='primary' style={buttonStyle}>
               Coupons
             </Button>

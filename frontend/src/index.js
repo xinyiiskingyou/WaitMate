@@ -14,6 +14,7 @@ import Kitchenlist from './components/Kitchenlist';
 import Cart from './components/Cart';
 import Browse from './components/Browse';
 import Manager from './components/ManagerInterface';
+import Coupon from './components/CouponPage';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Route path="/Cart/:id" element={<Cart />} />
         <Route path="/Browse/:id" element={<Browse />} />
         <Route path="/Manager" element={<Manager />} />
+        <Route path="/coupon" element={<Coupon />} />
       </Routes>
     </Router>
   );
