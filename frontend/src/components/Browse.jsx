@@ -111,6 +111,12 @@ const Browse = () => {
     });
   }
 
+  useEffect(() => {
+    window.addEventListener('popstate', (e) => {
+      window.history.go(1);
+    });
+  }, []);
+  
   const buttonStyle = { 
     border: '4px solid #FFA0A0', 
     height: '8vh', 
