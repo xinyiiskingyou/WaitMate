@@ -4,7 +4,6 @@ import { Card, CardActions, CardContent, Container, Drawer, Box, Button, Typogra
 import Item from './Item';
 import MenuItem from './Card';
 import { margin, width } from '@mui/system';
-
 const Coupon = () => {
   const [editing, setEditing] = useState(false);
   const [categoryEditingIndex, setCategoryEditingIndex] = useState(-1);

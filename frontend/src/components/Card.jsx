@@ -17,7 +17,7 @@ const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
     const [ingredient, setIngredient] = useState(ItemIngredient);
 
     const handleEdit = async () => {
-      
+      console.log(parseInt(ItemIndex, 10) + 1);
       const payload = {
         id: parseInt(ItemIndex, 10) + 1,
         name: name,
