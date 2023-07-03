@@ -48,6 +48,20 @@ def get_item_info(column_name: str, item: str):
 
     return result
 
+def get_item_in_category(item_order: int, category_name: str):
+
+    try:
+        con = sqlite3.connect(MENU_DB_PATH)
+        cur = con.cursor()
+        cur.execute('SELECT * FROM Items WHERE category_name = (?) AND item_order = (?)', (category_name, item_order, ))
+        result = cur.fetchone()
+    except Exception:
+        raise NotFoundError('Database not found.')
+    finally:
+        con.close()
+
+    return result
+
 def get_menu_item_order_by_name(item_name: str):
 
     conn = sqlite3.connect(MENU_DB_PATH)
