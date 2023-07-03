@@ -4,8 +4,9 @@ from fastapi import FastAPI, Query, Body
 from src.order import OrderDB
 from src.table import TableDB
 from src.menu import MenuDB
+from src.notifications import Notifications
+from src.tracking import Tracking
 from src.model.category_req import Category
-from src.model.category_req import Category_ID
 from src.model.category_order_req import CategoryOrder
 from src.model.category_update_req import CategoryUpdate
 from src.model.item_req import Item
@@ -18,6 +19,8 @@ app = FastAPI()
 order = OrderDB()
 table = TableDB()
 menu = MenuDB()
+track = Tracking()
+notification = Notifications()
 
 origins = [
     'http://localhost:3000',
@@ -116,3 +119,33 @@ def table_status_update(reqbody: Table):
     table.update_table_status(reqbody.table_id, reqbody.status)
     return {}
 
+############ TRACKING #################
+
+@app.get('/track/customer/dish')
+def track_dish_status(table_id: int):
+    return track.customer_view_dish_status(table_id)
+
+@app.put('/track/kitchen/mark')
+def track_kitchen_order(order_req: Order, table_req: Table):
+    track.kitchen_mark_order_completed(table_req.table_id, order_req.item)
+    return {}
+
+@app.put('/track/waitstaff/mark')
+def track_waitstaff_order(order_req: Order, table_req: Table):
+    track.waitstaff_mark_order_completed(table_req.table_id, order_req.item)
+    return {}
+
+############ NOTIFICATIONS #################
+
+@app.post('/notification/customer/send')
+def customer_request_assistance(reqbody: Table):
+    notification.customer_send_notification(reqbody.table_id, reqbody.status)
+    return {}
+
+@app.get('/notification/waitstaff/get/customer')
+def waitstaff_get_from_customer():
+    return notification.waitstaff_receives_from_customer()
+
+@app.get('/notification/waitstaff/get/kitchen')
+def waitstaff_get_from_customer():
+    return notification.waitstaff_receives_from_kitchen()

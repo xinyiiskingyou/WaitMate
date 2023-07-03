@@ -3,11 +3,12 @@ import { Link, useParams } from 'react-router-dom';
 import { 
   Box, Button, Typography, Container, Grid, Table, TableContainer, TableBody, TableRow, TableCell 
 } from '@mui/material';
+import WestIcon from '@mui/icons-material/West';
 
 const Cart = () => {
   let [orders, setOrder] = useState([])
   const id = useParams();
-  const backLink = `/CustomerMenuPage/${id.id}` 
+  const backLink = `/Browse/${id.id}` 
 
   
   let getCart = async () => {
@@ -46,23 +47,25 @@ const Cart = () => {
               <Button              
                 sx={{ 
                   border: 5,
-                  borderColor: '#F5BBCC',
+                  borderColor: '#FFA0A0',
                   borderRadius: 2,
-                  color: 'black' 
+                  color: 'black',
+                  marginTop: '90px',
+                  fontWeight: "bolder"
                 }}>
-                <Typography variant="h4">Back</Typography>
+                <WestIcon/>
               </Button>
             </Link>
           </Grid>
           
-          <Grid item xs={8}>
+          <Grid item xs={8} style={{ marginTop: '90px', fontWeight: "bold" }}>
             <Typography 
               variant="h3" 
               component="h1" 
               align="center"
               noWrap
               >
-              View Cart
+              View Order Summary 
             </Typography>
           </Grid>
         </Grid>
@@ -74,14 +77,14 @@ const Cart = () => {
         sx={{ 
           margin: 2, 
           border: 10,
-          borderColor: '#F5BBCC',
+          borderColor: '#FFA0A0',
           borderRadius: 2, 
           display:"flex",
         }}>
         <Grid container direction="column">
           <Grid item>
             <TableContainer sx={{
-                height: 500,
+                height: 550,
                 pt: 4,  
               }}>
               <Table>

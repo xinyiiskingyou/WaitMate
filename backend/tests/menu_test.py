@@ -1,9 +1,8 @@
-import requests
-import json
 import os
 import pytest
 from src.error import InputError, AccessError
 from src.menu import MenuDB
+from tests.conftest import VALID, INPUTERROR, ACCESSERROR
 
 menu = MenuDB()
 
@@ -147,31 +146,31 @@ def test_menu_remove():
 def test_category_add_endpoint(client):
     # valid case
     resp = client.post("/menu/category/add", json={'name': 'pizza'})
-    assert resp.status_code == 200
+    assert resp.status_code == VALID
 
     resp = client.post("/menu/category/add", json={'name': 'dessert'})
-    assert resp.status_code == 200
+    assert resp.status_code == VALID
 
     # duplicate name
     resp = client.post("/menu/category/add", json={'name': 'pizza'})
-    assert resp.status_code == 400
+    assert resp.status_code == INPUTERROR
 
     # invalid length name
     resp = client.post("/menu/category/add", json={'name': 'fakdsjkdkfhdskfh'})
-    assert resp.status_code == 400
+    assert resp.status_code == INPUTERROR
 
 def test_category_update_order_endpoint(client):
     # valid case
     resp = client.put("/menu/category/update/order", json={"name": "pizza"}, params={"is_up": False})
-    assert resp.status_code == 200
+    assert resp.status_code == VALID
 
     # invalid move
     resp = client.put("/menu/category/update/order", json={"name": "pizza"}, params={"is_up": False})
-    assert resp.status_code == 400
+    assert resp.status_code == INPUTERROR
 
     # invalid category name
     resp = client.put("/menu/category/update/order", json={"name": "random"}, params={"is_up": False})
-    assert resp.status_code == 400
+    assert resp.status_code == INPUTERROR
 
 def test_category_update_name_endpoint(client):
     # valid case
@@ -179,34 +178,34 @@ def test_category_update_name_endpoint(client):
         "name": "pizza",
         "new_name": "Pizzas"
     })
-    assert resp.status_code == 200
+    assert resp.status_code == VALID
 
     resp = client.put("/menu/category/update/details", json={
         "name": "Pizzas",
         "new_name": "pizza"
     })
-    assert resp.status_code == 200
+    assert resp.status_code == VALID
 
     # invalid name
     resp = client.put("/menu/category/update/details", json={
         "name": "Pizzas",
         "new_name": "pizza"
     })
-    assert resp.status_code == 400
+    assert resp.status_code == INPUTERROR
 
     # invalid name length
     resp = client.put("/menu/category/update/details", json={
         "name": "pizza",
         "new_name": ""
     })
-    assert resp.status_code == 400
+    assert resp.status_code == INPUTERROR
 
     # name already exists
     resp = client.put("/menu/category/update/details", json={
         "name": "pizza",
         "new_name": "dessert"
     })
-    assert resp.status_code == 400
+    assert resp.status_code == INPUTERROR
 
 def test_add_item_endpoint(client):
 
@@ -219,7 +218,7 @@ def test_add_item_endpoint(client):
         "ingredients": "pepperoni, cheese",
         "is_vegan": False
     })
-    assert resp.status_code == 200
+    assert resp.status_code == VALID
 
     resp = client.post("/menu/item/add", json={
         "category": "pizza",
@@ -229,7 +228,7 @@ def test_add_item_endpoint(client):
         "ingredients": "ham, pineapple, cheese",
         "is_vegan": False
     })
-    assert resp.status_code == 200
+    assert resp.status_code == VALID
 
     # duplicate name
     resp = client.post("/menu/item/add", json={
@@ -240,7 +239,7 @@ def test_add_item_endpoint(client):
         "ingredients": "pepperoni, cheese",
         "is_vegan": False
     })
-    assert resp.status_code == 403
+    assert resp.status_code == ACCESSERROR
 
     # invalid length name
     resp = client.post("/menu/item/add", json={
@@ -251,7 +250,7 @@ def test_add_item_endpoint(client):
         "ingredients": "pepperoni, cheese",
         "is_vegan": False
     })
-    assert resp.status_code == 400
+    assert resp.status_code == INPUTERROR
 
 def test_item_update_details(client):
 
@@ -261,7 +260,7 @@ def test_item_update_details(client):
         "name": "Haddock",
         "cost": 20,
     })
-    assert resp.status_code == 200
+    assert resp.status_code == VALID
 
     # invalid id
     resp = client.put("/menu/item/update/details", json={
@@ -269,12 +268,12 @@ def test_item_update_details(client):
         "name": "Haddock",
         "cost": 20,
     })
-    assert resp.status_code == 400
+    assert resp.status_code == INPUTERROR
 
 def test_item_update_order_endpoint(client):
 
     resp = client.put("/menu/item/update/order", json={"name": "hawaiian", "is_up": True})
-    assert resp.status_code == 200
+    assert resp.status_code == VALID
 
     resp = client.put("/menu/item/update/order", json={"name": "hawaiian", "is_up": True})
-    assert resp.status_code == 400
+    assert resp.status_code == INPUTERROR

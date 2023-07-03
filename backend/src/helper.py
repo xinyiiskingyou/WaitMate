@@ -1,5 +1,6 @@
 import sqlite3
-from constant import TABLE_DB_PATH, MENU_DB_PATH
+from typing import Any, List
+from constant import TABLE_DB_PATH, MENU_DB_PATH, ORDER_DB_PATH
 from src.error import NotFoundError, InputError
 
 def check_table_exists(table_id: int):
@@ -123,6 +124,12 @@ def update_order(table_name, column_name, is_up, prev_order):
 
     new_order = prev_order - 1 if is_up else prev_order + 1
 
+    update_order_in_db(table_name, column_name, prev_order, new_order)
+    
+    if table_name == "Menu":
+        update_order_in_db("Items", "item_order", prev_order, new_order)
+
+def update_order_in_db(table_name, column_name, prev_order, new_order):
     con = sqlite3.connect(MENU_DB_PATH)
     cur = con.cursor()
     cur.execute('''UPDATE {table}
@@ -135,19 +142,22 @@ def update_order(table_name, column_name, is_up, prev_order):
 
     con.commit()
     con.close()
+
+def get_order(table_id: int) -> List[Any]:
     
-    if table_name == "Menu":
-        update_menu_item_order(prev_order, new_order)
-    
-def update_menu_item_order(prev_order, new_order):
-    con = sqlite3.connect(MENU_DB_PATH)
-    cur = con.cursor()
-    cur.execute('''UPDATE Items
-        SET item_order = CASE
-            WHEN item_order = ? THEN ?
-            WHEN item_order = ? THEN ?
-            ELSE item_order
-        END''', 
-    (prev_order, new_order, new_order, prev_order))
-    con.commit()
-    con.close()
+    if not check_table_exists(table_id):
+        raise InputError('The table_id does not refer to a valid table')
+
+    try:
+        con = sqlite3.connect(ORDER_DB_PATH)
+        cur = con.cursor()
+
+        cur.execute('SELECT item_name, amount, is_prepared, is_served FROM Orders WHERE table_id = ?', (table_id,))
+        order_list = cur.fetchall()
+    except Exception:
+        raise NotFoundError('Order database not found.')
+    finally:
+        con.close()
+
+    return order_list
+

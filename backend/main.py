@@ -3,13 +3,38 @@ import uvicorn
 if __name__ == '__main__':
     uvicorn.run('app.api:app', host='0.0.0.0', port=8000, reload=True)
 
-# # from database import order_db
+# # # from database import order_db
 
-# # order = order_db.Orders_db()
-# # order.create_order_table()
-# # order.add_order(4, 'sushi', 1)
-# # print('order:')
-# # print(order.table_order_list(3))
-# # print('all orders:')
-# # order.get_all_orders()
+# # # order = order_db.Orders_db()
+# # # order.create_order_table()
+# # # order.add_order(4, 'sushi', 1)
+# # # print('order:')
+# # # print(order.table_order_list(3))
+# # # print('all orders:')
+# # # order.get_all_orders()
+
+# from src.tracking import Tracking
+# from src.table import TableDB
+# from src.order import OrderDB
+
+# table = TableDB()
+# # table.select_table_number(1)
+
+# order = OrderDB()
+# # order.add_order(1, "dorayaki",3)
+# # order.add_order(1, "dorayaki",3)
+# # order.add_order(1, "dorayaki",3)
+
+# # print(order.get_table_order(1))
+# # # print(order.get_all_orders())
+# track = Tracking()
+
+# track.kitchen_mark_order_completed(1, 'salmon sushi')
+# # track.waitstaff_mark_order_completed(1, 'dorayaki')
+# print(track.customer_view_dish_status(1))
+# # print("AFTER: ")
+# # print(order.get_table_order(1))
+
+# # print(order.get_all_orders())
+
 

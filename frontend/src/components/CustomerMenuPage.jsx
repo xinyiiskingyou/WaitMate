@@ -9,7 +9,6 @@ const CustomerMenuPage = () => {
   const orderLink = `/Cart/${id.id}` 
   const browseLink = `/Browse/${id.id}` 
 
-
   const buttonStyle = {
     width: '400px',
     height: '500px',

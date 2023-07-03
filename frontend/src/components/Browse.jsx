@@ -7,7 +7,8 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import ItemCard from './CardCust';
-
+import WestIcon from '@mui/icons-material/West';
+import cart from '../assets/cart.png'
 
 const Browse = () => {
     let [cats, setCategories] = useState([])
@@ -70,7 +71,7 @@ const Browse = () => {
           description: i.description,
           ingredient: i.ingredient,
           vegetarian: i.vegetarian,
-          price: i.price
+          cost: i.price
         })
       }
       setItems(items)
@@ -222,61 +223,62 @@ const Browse = () => {
 }
   return (
     <Container maxWidth="sm">
+      
         <Box sx={{ display: 'flex' }}>
             <Drawer variant="permanent">
+            
             <Box 
+              sx={{ 
+                margin: 2, 
+                borderRadius: 2, 
+                bgcolor: '#ECEBEB',
+                height: '100%',
+                display:"flex",
+                flexDirection:"column"
+              }}>
+            
+            <Link to={backLink}>
+              <Button              
                 sx={{ 
-                    margin: 2, 
-                    borderRadius: 2, 
-                    bgcolor: '#ECEBEB',
-                    height: '100%',
-                    display:"flex",
-                    flexDirection:"column"
+                  border: 5,
+                  borderColor: '#9e9e9e',
+                  borderRadius: 2,
+                  color: 'black',
+                  marginTop: '20px',
+                  marginLeft: "15px",
+                  fontWeight: "bolder",
                 }}>
-            <Typography variant="h5" align="center" style={{ margin: '20px' }}>
-                Menu Categories
+                <WestIcon/>
+              </Button>
+            </Link>
+            
+            <Typography variant="h4" align="center" style={{ margin: '20px' }}>
+              Menu Categories
             </Typography>
             {cats.map((category) => (
-
                 <List key={category.name}>
-                    <ListItem disablePadding value={category} onClick={()=>handleCatChange(category)}>
-                        <ListItemButton>
-                            <ListItemText 
-                            primary={category.name}/>
-                        </ListItemButton>
-                    </ListItem>
-                    {/* <ListItem disablePadding>
-                        <ListItemButton component="a"
-                            href="#simple-list">
-                            <ListItemText 
-                            primary="PHP" />
-                        </ListItemButton>
-                    </ListItem> */}
-
+                  <ListItem disablePadding value={category} onClick={()=>handleCatChange(category)}>
+                      <ListItemButton>
+                        <ListItemText primary={category.name} primaryTypographyProps={{ style: { fontSize: '26px' } }} />
+                      </ListItemButton>
+                  </ListItem>
                 </List>
             ))}
-
-            {/* <Button variant="contained"  style={buttonStyle}>  
-                Main Dish
-            </Button>
-            <Button variant="contained"  style={buttonStyle}>  
-                Side Dish
-            </Button>
-            <Button variant="contained" color="primary" style={buttonStyle}>  
-                Salad
-            </Button>
-            <Button variant="contained" color="primary" style={buttonStyle}>  
-                Beverages
-            </Button> 
-            <Button variant="contained" color="primary" style={buttonStyle}>  
-                Dessert
-            </Button>    */}
             </Box>
             <Grid container direction="column" spacing={2}>
                 <Link to={cartLink}>
-                    <Button variant="contained" color="primary" style={{margin: '17%', spacing: '-20', width: '70%', height: '45px'}}>  
-                        Order Summary
-                    </Button> 
+                  <Button variant="contained" color="primary" style={{
+                    margin: '17%', 
+                    spacing: '-20', 
+                    width: '70%', 
+                    height: '45px',
+                    border: "6px solid #FFA0A0",
+                    background: "#ffcfcf",
+                    color: 'black',
+                    fontSize: '16px'
+                  }}>  
+                    Order Summary  <img src={cart} alt="CartIcon" style={{ height: "30px", width: "30px", marginLeft: "5px" }} />
+                  </Button> 
                 </Link>
             </Grid>
             </Drawer>
