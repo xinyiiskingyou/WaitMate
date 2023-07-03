@@ -22,7 +22,7 @@ const Browse = () => {
     const [open, setOpen] = useState(false);
 
     const id = useParams();
-    const backLink = `/CustomerMain/${id.id}` 
+    const backLink = `/` 
     const cartLink = `/Cart/${id.id}` 
 
     let handleCatChange = (category) => {
@@ -31,29 +31,29 @@ const Browse = () => {
     }
 
     let getCategories = async () => {
-        let response = await fetch(`http://localhost:8000/menu/list/categories`)
-        let data = await response.json()
+      let response = await fetch(`http://localhost:8000/menu/list/categories`)
+      let data = await response.json()
 
-        let categories = []
-        for (const [key, value] of Object.entries(data)) {
-          console.log(key, value)
-          categories.push({
-            name: value,
-            id: key,
-          })
-        }
-        console.log(categories)
-        
-        setCategories(categories)    
-        if (categories.length > 0) {
-          getItems()
-          setCurrCat(categories[0].id)
-        }
+      let categories = []
+      for (const [key, value] of Object.entries(data)) {
+        console.log(key, value)
+        categories.push({
+          name: value,
+          id: key,
+        })
+      }
+      console.log(categories)
+      
+      setCategories(categories)    
+      if (categories.length > 0) {
+        getItems()
+        setCurrCat(categories[0].id)
+      }
     }
 
     useEffect(() => {
-        getCategories()
-      }, [])
+      getCategories()
+    }, [])
 
     let getItems = async () => {
       if (cat === -1) {
@@ -110,23 +110,6 @@ const Browse = () => {
       alert(error);
     });
   }
-  const theme = useTheme();
-  const styles = {
-    cardContainer: {
-      display: 'flex',
-      flexDirection:"row",
-      gap: '5%',
-    },
-    card: {
-      display:"flex", 
-      flexDirection:"row",
-    },
-  };
-
-  const cardStyle = {
-    width: '390px',
-    height: '390px',
-  }
 
   const buttonStyle = { 
     border: '4px solid #FFA0A0', 
@@ -140,11 +123,10 @@ const Browse = () => {
     borderRadius: 6,
   }
   return (
+
     <Container maxWidth="sm">
-      
         <Box sx={{ display: 'flex' }}>
-            <Drawer variant="permanent">
-            
+          <Drawer variant="permanent">
             <Box 
               sx={{ 
                 margin: 2, 
@@ -204,7 +186,7 @@ const Browse = () => {
                   </Button> 
                 </Link>
             </Grid>
-            </Drawer>
+          </Drawer>
 
       <Box flexGrow={1} p={2}>
         {cat !== -1 ? (
