@@ -28,7 +28,7 @@ const Staff = () => {
           <h2 style={headingStyle}>Select Staff Type</h2>
         </Grid>
         <Grid item xs={4} textAlign={'right'}>
-          <Link to="/menu">
+          <Link to="/ManagerLogin">
             <Button variant='contained' color='primary' style={buttonStyle}>
               Manager
             </Button>

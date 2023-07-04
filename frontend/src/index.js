@@ -13,6 +13,8 @@ import CustomerMenuPage from './components/CustomerMenuPage';
 import Kitchenlist from './components/Kitchenlist';
 import Cart from './components/Cart';
 import Browse from './components/Browse';
+import ManagerLogin from './components/ManagerLogin';
+
 
 function App() {
   return (
@@ -29,6 +31,8 @@ function App() {
         <Route path="/customerMenu" element={<customerMenu />} />
         <Route path="/Cart/:id" element={<Cart />} />
         <Route path="/Browse/:id" element={<Browse />} />
+        <Route path="/ManagerLogin" element={<ManagerLogin />} />
+
       </Routes>
     </Router>
   );
