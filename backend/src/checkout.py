@@ -1,6 +1,6 @@
 import sqlite3
 # from constant import ORDER_DB_PATH, MENU_DB_PATH, DB_PATH
-# from src.error import InputError, AccessError
+from src.error import InputError
 class Checkout:
     def __init__(self) -> None:
         self.DB_PATH = './src/database/restaurant.db'
@@ -61,8 +61,8 @@ class Checkout:
 
     def checkout_bill_tips(self, table_id: int, amount: int):
         if amount <= 0:
-            return
-        
+            raise InputError('Invalid tip amount')
+
         self.checkout_create()
         self.checkout_add(table_id)
 
@@ -79,7 +79,7 @@ class Checkout:
 
     def checkout_bill_coupon(self, table_id: int, coupon: str):
         if not self.checkout_coupon_find(coupon):
-            return
+            raise InputError('Invalid coupon')
         
         self.checkout_create()
         self.checkout_add(table_id)
@@ -97,7 +97,7 @@ class Checkout:
 
     def checkout_coupon_create(self, code: str, amount: int):
         if self.checkout_coupon_find(code):
-            return
+            raise InputError('Coupon code already in use')
         
         con = sqlite3.connect(self.DB_PATH)
         cur = con.cursor()
