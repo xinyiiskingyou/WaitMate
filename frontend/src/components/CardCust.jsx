@@ -60,15 +60,15 @@ const ItemCard = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
       <Card sx={{ border: '5px solid #FFA0A0', maxHeight: '34vh', borderRadius: 8 }}>
         <CardContent>
         <Box>
-          <Typography variant="h4" gutterBottom style={{ fontWeight: 'bold', textAlign: "center" }}>
+          <Typography variant="h5" gutterBottom style={{ fontWeight: 'bold', textAlign: "center" }}>
             {ItemName.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
             {ItemVegetarian===1 ? (
               <img 
                 src={veg} 
                 alt="Icon" 
                 style={{
-                  width: '3.1vw',
-                  height: '6vh',
+                  width: '2.6vw',
+                  height: '5vh',
                   marginLeft: '10px',
                   verticalAlign: 'middle',
                 }}/>
@@ -92,7 +92,7 @@ const ItemCard = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
               e.preventDefault(); 
               e.target.reset();
             }}>
-              <Grid container alignItems="center" justifyContent="center" columnSpacing={1}>
+              <Grid container alignItems="center" direction="column" justifyContent="center" columnSpacing={1}>
                 <Grid item>
                   <TextField 
                     type="number" 
@@ -112,24 +112,30 @@ const ItemCard = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
                 </Grid>
               </Grid>
 
-              <Dialog open={open} onClose={handleClose}>
+              <Dialog open={open} onClose={handleClose} sx={{
+                "& .MuiDialog-paper": {
+                  border: "8px solid #FFA0A0",
+                  borderRadius: 7,
+                },
+              }}>
                 <div style={{
                   display: 'flex',
                   justifyContent: 'center',
                   alignItems: 'center',
                   flexDirection: 'column',
                   width: '28vw',
-                  border: "6px solid #FFA0A0",
                 }}>
                   <img src={thanks} alt="ThanksIcon" style={{
                     maxWidth: '50%',
                     maxHeight: '10vh',
                     marginTop: '1.5vh',
                   }}/>
+
                   <DialogContent style={{ fontSize: '1.1vw', textAlign: 'center', padding: '1vh', letterSpacing: '0.01vw' }}>
                     <b>{ItemName.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')} </b>
                     (Qty: {amount}) has been added to the order. &#128512;
                   </DialogContent>
+
                   <DialogActions>
                     <Button variant="contained" color="primary" type='submit' onClick={handleClose}
                       style={{ 
@@ -143,6 +149,7 @@ const ItemCard = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
                       Confirm
                     </Button>
                   </DialogActions>
+
                 </div>
               </Dialog>
             </form>

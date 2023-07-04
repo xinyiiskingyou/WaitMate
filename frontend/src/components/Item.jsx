@@ -90,18 +90,19 @@ const Item = ({ onItemAdd, onItemCancel, category }) => {
 
     return (
       <Box>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>
-          <Typography variant="h6" style={{ fontWeight: 'bold' }}>
-            Add Item
-          </Typography>
-      </DialogTitle>
+        <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth sx={{
+          "& .MuiDialog-paper": {
+            border: "8px solid #FFA0A0",
+            borderRadius: 8,
+          },
+        }}>
+        <DialogTitle><b>Add Item</b></DialogTitle>
 
-      <form onSubmit={(e) => {
-        e.preventDefault(); // Prevent default form submission behavior
-      }}>
+        <form onSubmit={(e) => {
+          e.preventDefault(); // Prevent default form submission behavior
+        }}>
+        <Box sx={{m: 2}}>
         <TextField
-          autoFocus
           label="Name"
           id="standard-required"
           value={name}
@@ -179,13 +180,18 @@ const Item = ({ onItemAdd, onItemCancel, category }) => {
           }}
           variant="filled"
         />
+      </Box>
 
       <DialogActions>
-        <Button size="small" variant="contained" color="primary" type="submit" onClick={handleAdd}>
+        <Button size="small" variant="contained" color="primary" type="submit" onClick={handleAdd} style={{
+          background: "#81c784",
+        }}>
           Add
         </Button>
 
-        <Button size="small" variant="outlined" color="secondary" onClick={handleCancel}>
+        <Button size="small" variant="contained" color="secondary" onClick={handleCancel} style={{
+          background: "#ffc570",
+        }}>
           Cancel
         </Button>
       </DialogActions>

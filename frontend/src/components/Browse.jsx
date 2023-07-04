@@ -194,10 +194,10 @@ const Browse = () => {
           </Grid>
         </Drawer>
 
-      <Box flexGrow={1} p={2}>
+      <Box flexGrow={1} p={2} marginLeft="-22%">
         {cat !== -1 ? (
           <Box>
-          <Grid container columnGap={3} justifyContent="flex-end" marginLeft='25vw'>
+          <Grid container columnGap={3} justifyContent="flex-end">
             <Grid item>
               <Button 
                 variant="contained" 
@@ -207,7 +207,7 @@ const Browse = () => {
               >
                 <img src={bell} alt="BellIcon" style={{
                   width: '2.6vw',
-                  height: '4.8vh',
+                  height: '5vh',
                 }}/>
                 Require Assistance
               </Button>
@@ -261,21 +261,19 @@ const Browse = () => {
             </Grid>
           </Grid>
 
-          <Box display="flex" flexDirection="row" alignItems="flex-start" marginTop={5} style={{ gap: '1vh' }}>
-            <Grid container spacing={25}>
-              {Object.entries(menuItems).map(([name, menuItem]) => (
-                <Grid item key={name} xs={10} sm={8} md={6} sx={{ marginTop: '2vh', marginBottom: '1vh', borderRadius: 40 }}>
-                  <ItemCard
-                    ItemName={menuItem.name}
-                    ItemDescription={menuItem.description}
-                    ItemPrice={menuItem.cost}
-                    ItemIngredient={menuItem.ingredient}
-                    ItemVegetarian={menuItem.vegetarian}
-                    TableID={id.id}/>
-                </Grid>
-              ))}
-            </Grid>
-          </Box>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.1vw',  gridRowGap: '2vw' }}>
+            {Object.entries(menuItems).map(([name, menuItem]) => (
+              <div style={{ width: '20vw', height: '30vh', margin: '5%' }}>
+                <ItemCard
+                  ItemName={menuItem.name}
+                  ItemDescription={menuItem.description}
+                  ItemPrice={menuItem.cost}
+                  ItemIngredient={menuItem.ingredient}
+                  ItemVegetarian={menuItem.vegetarian}
+                  TableID={id.id}/>
+              </div>
+            ))}
+          </div>
         </Box>
         ) : (
           <Box 
