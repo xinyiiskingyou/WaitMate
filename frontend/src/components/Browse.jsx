@@ -1,5 +1,4 @@
 import React, { useState,useEffect } from 'react';
-import { useTheme } from '@mui/material/styles';
 import { Container, Grid, Drawer, Box, Button, Typography } from '@mui/material';
 import { Dialog, DialogContent, DialogActions } from '@mui/material';
 import { Link, useParams } from 'react-router-dom';
@@ -13,21 +12,22 @@ import cart from '../assets/cart.png'
 import boring from '../assets/boring.png'
 import meme from '../assets/meme.png'
 import bell from '../assets/bell.png'
-import thanks from '../assets/thank-you.png'
+import thanks from '../assets/thank.png'
 
 const Browse = () => {
     let [cats, setCategories] = useState([])
     let [menuItems, setItems] = useState([])
     let [cat, setCurrCat] = useState(-1)
     const [open, setOpen] = useState(false);
+    const [currentCategory, setCurrentCategory] = useState(null);
 
     const id = useParams();
-    const backLink = `/` 
     const cartLink = `/Cart/${id.id}` 
 
     let handleCatChange = (category) => {
-      cat = category.id
-      getItems()
+      cat = category.id;
+      setCurrentCategory(category.name);
+      getItems();
     }
 
     let getCategories = async () => {
@@ -131,68 +131,68 @@ const Browse = () => {
   return (
 
     <Container maxWidth="sm">
-        <Box sx={{ display: 'flex' }}>
-          <Drawer variant="permanent">
-            <Box 
-              sx={{ 
-                margin: 2, 
-                borderRadius: 8, 
-                bgcolor: '#ECEBEB',
-                width: '20vw',
-                height: '140vh',
-                flexDirection:"column"
-              }}>
-            
+      <Box sx={{ display: 'flex' }}>
+        <Drawer variant="permanent">
+          <Box 
+            sx={{ 
+              margin: 2, 
+              borderRadius: 8, 
+              bgcolor: '#ECEBEB',
+              width: '20vw',
+              height: '140vh',
+              flexDirection:"column"
+            }}>
+
             <Typography variant="h4" align="center" style={{ 
               fontSize: '1.5vw', 
               fontWeight: "bolder", 
-              marginTop: '3vh',
+              marginTop: '4vh',
             }}>
               Menu Categories
             </Typography>
 
             {cats.map((category) => (
-                <List key={category.name}>
-                  <ListItem disablePadding value={category} onClick={()=>handleCatChange(category)}>
-                      <ListItemButton>
-                        <ListItemText 
-                          primary={category.name.toUpperCase()}
-                          primaryTypographyProps={{ 
-                            style: { 
-                              fontSize: '1.05vw', 
-                              border: "5px solid #bdbdbd",
-                              borderRadius: 18, 
-                              padding: '6px',
-                              textAlign: "center",
-                              letterSpacing: "0.05vw",
-                              background:'#e0e0e0',
-                              marginBottom: '-1.5vh'
-                            } 
-                          }} 
-                        />
-                      </ListItemButton>
-                  </ListItem>
-                </List>
+              <List key={category.name}>
+                <ListItem disablePadding value={category} onClick={()=>handleCatChange(category)}>
+                  <ListItemButton>
+                    <ListItemText 
+                      primary={category.name.toUpperCase()}
+                      primaryTypographyProps={{ 
+                        style: { 
+                          fontSize: '1vw', 
+                          border: category.name === currentCategory ? "5px solid #FFA0A0" :"5px solid #bdbdbd",
+                          borderRadius: 18, 
+                          padding: '0.5vh',
+                          textAlign: "center",
+                          background: category.name === currentCategory ? "#FFCFCF" : "#E0E0E0",
+                          marginBottom: '-1.5vh'
+                        } 
+                      }} 
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </List>
             ))}
-            </Box>
-            <Grid container direction="column" spacing={2}>
-                <Link to={cartLink}>
-                  <Button variant="contained" color="primary" style={{
-                    margin: '17%', 
-                    spacing: '-20', 
-                    width: '70%', 
-                    height: '45px',
-                    border: "6px solid #FFA0A0",
-                    background: "#ffcfcf",
-                    color: 'black',
-                    fontSize: '0.8vw',
-                    borderRadius: 8,
-                  }}>  
-                    Order Summary  <img src={cart} alt="CartIcon" style={{ height: "30px", width: "30px", marginLeft: "5px" }} />
-                  </Button> 
-                </Link>
-            </Grid>
-          </Drawer>
+          </Box>
+
+          <Grid container direction="column" spacing={2}>
+            <Link to={cartLink}>
+              <Button variant="contained" color="primary" style={{
+                margin: '17%', 
+                spacing: '-20', 
+                width: '70%', 
+                height: '5vh',
+                border: "6px solid #FFA0A0",
+                background: "#FFCFCF",
+                color: 'black',
+                fontSize: '0.8vw',
+                borderRadius: 8,
+              }}>  
+                Order Summary  <img src={cart} alt="CartIcon" style={{ height: "2.7vh", width: "1.4vw", marginLeft: "0.4vw" }} />
+              </Button> 
+            </Link>
+          </Grid>
+        </Drawer>
 
       <Box flexGrow={1} p={2}>
         {cat !== -1 ? (
@@ -208,19 +208,25 @@ const Browse = () => {
                 <img src={bell} alt="BellIcon" style={{
                   width: '3vw',
                   height: '5vh',
-                  marginLeft: '0.2vw'
+                  marginRight: '0.5vw',
                 }}/>
                 Require Assistance
               </Button>
 
               <Dialog open={open} onClose={handleClose} fullWidth>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  flexDirection: 'column',
+                  border: "7px solid #FFA0A0",
+                }}>
                 <img src={thanks} alt="ThanksIcon" style={{
-                  width: '9.6vw',
-                  height: '21vh',
+                  maxWidth: '100%',
+                  maxHeight: '15vh',
                   marginTop: '1.5vh',
-                  marginLeft: '14vw'
                 }}/>
-                <DialogContent style={{ fontSize: '25px', textAlign: 'center', padding: '20px', letterSpacing: '0.4px' }}>
+                <DialogContent style={{ fontSize: '1.3vw', textAlign: 'center', padding: '1vh', letterSpacing: '0.02vw' }}>
                   Request received. <br />
                   Our staff will be with you shortly.
                 </DialogContent>
@@ -229,6 +235,7 @@ const Browse = () => {
                     Confirm
                   </Button>
                 </DialogActions>
+                </div>
               </Dialog>
 
             </Grid>
@@ -246,8 +253,8 @@ const Browse = () => {
             <Grid item>
               <Button variant="contained" color="primary" style={buttonStyle}>
                 <img src={meme} alt="MemeIcon" style={{
-                  width: '4.2vw',
-                  height: '6.2vh',
+                  maxWidth: '100%',
+                  maxHeight: '7vh',
                   marginRight: '1vw'
                 }}/>
                 Memes
@@ -255,26 +262,22 @@ const Browse = () => {
             </Grid>
           </Grid>
 
-            <Box display="flex" flexDirection="row" alignItems="flex-start" marginTop={5} 
-              style={{ 
-                gap: '10px',
-              }}>
-              
-              <Grid container spacing={25}>
-              { Object.entries(menuItems).map(([name, menuItem]) => (
-                  <Grid item key={name} xs={12} sm={8} md={6} sx={{ marginTop: '2px', marginBottom: '1px', borderRadius: 40 }}>
-                    <ItemCard
-                      ItemName={menuItem.name}
-                      ItemDescription={menuItem.description}
-                      ItemPrice={menuItem.cost}
-                      ItemIngredient={menuItem.ingredient}
-                      ItemVegetarian={menuItem.vegetarian}
-                      TableID={id.id}/>
-                  </Grid>
+          <Box display="flex" flexDirection="row" alignItems="flex-start" marginTop={5} style={{ gap: '1vh' }}>
+            <Grid container spacing={25}>
+              {Object.entries(menuItems).map(([name, menuItem]) => (
+                <Grid item key={name} xs={10} sm={8} md={6} sx={{ marginTop: '2vh', marginBottom: '1vh', borderRadius: 40 }}>
+                  <ItemCard
+                    ItemName={menuItem.name}
+                    ItemDescription={menuItem.description}
+                    ItemPrice={menuItem.cost}
+                    ItemIngredient={menuItem.ingredient}
+                    ItemVegetarian={menuItem.vegetarian}
+                    TableID={id.id}/>
+                </Grid>
               ))}
-              </Grid>
-            </Box>
+            </Grid>
           </Box>
+        </Box>
         ) : (
           <Box 
             display="flex"

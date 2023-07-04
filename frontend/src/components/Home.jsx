@@ -23,7 +23,7 @@ const Home = () => {
     setError(isNaN(inputValue));
   };
 
-  const handleSubmit = () => {
+  const handleSelectTable = () => {
 
     console.log('value:', value);
     const table = { table_id : value };
@@ -103,7 +103,7 @@ const Home = () => {
                   step: "1",
                   min: "1"
                 }}/>  
-              <Link onClick={handleSubmit}>
+              <Link onClick={handleSelectTable}>
                 <Button variant='contained' color='primary' type='submit' style={buttonStyle}>
                   Confirm
                 </Button>
