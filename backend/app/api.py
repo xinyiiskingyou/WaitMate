@@ -12,6 +12,9 @@ from src.model.category_update_req import CategoryUpdate
 from src.model.item_req import Item
 from src.model.table_req import Table
 from src.model.order_req import Order
+from src.model.coupon_req import Coupon, Coupon_Cust
+from src.model.bill_req import Tip
+
 
 sys.path.append('..')
 
@@ -146,3 +149,21 @@ def waitstaff_get_from_customer():
 @app.get('/notification/waitstaff/get/kitchen')
 def waitstaff_get_from_customer():
     return notification.waitstaff_receives_from_kitchen()
+
+############ CHECKOUT #################
+
+@app.get('/checkout/bill/{id}')
+def checkout_bill_api(id: int):
+    return {}
+
+@app.post('/checkout/bill/tips')
+def checkout_bill_tips_api(reqbody: Tip):
+    return {}
+
+@app.post('/checkout/bill/coupon')
+def checkout_bill_coupon_api(reqbody: Coupon_Cust):
+    return {}
+
+@app.post('/checkout/coupon/create')
+def checkout_coupon_create_api(reqbody: Coupon):
+    return {}
