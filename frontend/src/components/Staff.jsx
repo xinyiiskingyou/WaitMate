@@ -8,8 +8,8 @@ import manager from '../assets/manager.png'
 const Staff = () => {
 
   const buttonStyle = {
-    width: '15vw',
-    height: '45vh',
+    width: '18vw',
+    height: '50vh',
     fontSize: '18px',
     background: 'transparent',
     color: 'black',
@@ -39,7 +39,7 @@ const Staff = () => {
               <Grid container direction="column" alignItems="center" spacing={1}>
                 <Grid item>
                   <img src={manager} alt="managerIcon" style={{
-                    width: '11vw',
+                    width: '12vw',
                     height: '22vh',
                   }}/>
                 </Grid>
@@ -58,7 +58,7 @@ const Staff = () => {
             <Grid container direction="column" alignItems="center" spacing={1}>
               <Grid item>
                 <img src={chef} alt="ChefIcon" style={{
-                  width: '11vw',
+                  width: '12vw',
                   height: '22vh',
                 }}/>
               </Grid>

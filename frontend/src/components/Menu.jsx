@@ -194,7 +194,6 @@ const Menu = () => {
         // Handle the error if necessary
         console.error(error);
         alert('Failed to update the order. Please try again.');
-        window.location.reload();
       });
   };
   useEffect(() => {
