@@ -206,9 +206,8 @@ const Browse = () => {
                 onClick={() => handle_require_assistance()}
               >
                 <img src={bell} alt="BellIcon" style={{
-                  width: '3vw',
-                  height: '5vh',
-                  marginRight: '0.5vw',
+                  width: '2.6vw',
+                  height: '4.8vh',
                 }}/>
                 Require Assistance
               </Button>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Card, CardContent, Typography, Button, TextField } from '@mui/material';
+import { Box, Card, CardContent, Typography, Button, TextField, Grid } from '@mui/material';
 import veg from '../assets/vegan.png'
 import thanks from '../assets/thank.png'
 import Dialog from '@mui/material/Dialog';
@@ -48,16 +48,15 @@ const ItemCard = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
   const buttonStyle = { 
     background: '#eeeeee', 
     color: 'black',
-    marginTop: '2vh',
-    marginLeft: '22vh',
+    marginTop: '1vh',
     fontWeight: 'bold',
     fontSize: '0.9vw',
     width: '5vw',
-    height: '4vh'
+    height: '3.5vh'
   }
 
   return (
-    <Box margin='1%' width='19vw' sx={{ height: '12vh' }}>
+    <Box margin='1%' width='20vw' sx={{ height: '12vh' }}>
       <Card sx={{ border: '5px solid #FFA0A0', maxHeight: '35vh', borderRadius: 8 }}>
         <CardContent>
         <Box>
@@ -90,23 +89,28 @@ const ItemCard = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
 
           <Typography variant="subtitle1">
             <form onSubmit={(e) => {
-              e.preventDefault(); // Prevent default form submission behavior
+              e.preventDefault(); 
               e.target.reset();
             }}>
-              <TextField 
-                type="number" 
-                size="small"
-                id="outlined-size-small"
-                label="Enter quantity" 
-                onChange={handleTextfile} 
-                InputProps={{
-                  inputProps: { min: 1 }
-                }}
-              />
-              <Button variant="contained" color="primary" type='submit' onClick={handleSubmit}
-                style={buttonStyle}  xs={{pl: 20}}>
-                Confirm
-              </Button>
+              <Grid container alignItems="center" justifyContent="center" columnSpacing={1}>
+                <Grid item>
+                  <TextField 
+                    type="number" 
+                    size="small"
+                    id="outlined-size-small"
+                    label="Enter quantity" 
+                    onChange={handleTextfile} 
+                    InputProps={{
+                      inputProps: { min: 1 }
+                    }}
+                  />
+                </Grid>
+                <Grid item>
+                  <Button variant="contained" color="primary" type="submit" onClick={handleSubmit} style={buttonStyle}>
+                    Confirm
+                  </Button>
+                </Grid>
+              </Grid>
 
               <Dialog open={open} onClose={handleClose}>
                 <div style={{
