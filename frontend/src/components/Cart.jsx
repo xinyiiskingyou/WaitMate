@@ -10,11 +10,13 @@ const Cart = () => {
   const id = useParams();
   const backLink = `/Browse/${id.id}` 
 
-  
   let getCart = async () => {
     let response = await fetch(`http://localhost:8000/order/cart/list?table_id=${id.id}`)
     let data = await response.json()
     console.log(data)
+    if (data === null) {
+      return;
+    }
     let order_list = []
     for (var i of data) {
       console.log(i)
