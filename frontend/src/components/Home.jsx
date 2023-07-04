@@ -49,10 +49,11 @@ const Home = () => {
   };
 
   const buttonStyle = {
-    width: '8vw',
+    width: '7.5vw',
     height: '3.3vh',
     fontSize: '1vw',
     background: '#FFA0A0',
+    borderRadius: 5,
   };
 
   return (
