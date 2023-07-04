@@ -531,17 +531,17 @@ const Menu = () => {
             </Box>
         </Box>
         ) : (
-          <Box 
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            height="80vh"
-          >
-          <Typography variant="h4" align="center" alignItems="center" style={{ margin: '20px' }}>
-            The menu item is currently empty. Please add a menu category to get started.
+          <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="60vh"
+        >
+          <Typography variant="h5" style={{ margin: '20px' }}>
+            Edit menu here. <span role="img" aria-label="Smiley">&#128512;</span>
           </Typography>
-          </Box>
-        )}
+        </Box>
+          )}
       </Box>
 
     </Container>
