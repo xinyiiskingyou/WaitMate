@@ -49,11 +49,10 @@ const Home = () => {
   };
 
   const buttonStyle = {
-    width: '10vw',
-    height: '4vh',
+    width: '8vw',
+    height: '3.3vh',
     fontSize: '1vw',
     background: '#FFA0A0',
-    marginLeft: '1.5vw',
   };
 
   return (
@@ -87,27 +86,33 @@ const Home = () => {
             <form onSubmit={(e) => {
               e.preventDefault(); // Prevent default form submission behavior
             }}>
-              <TextField
-                required
-                id="standard-required"
-                label="Enter NUMBER Only"
-                value={value}
-                onChange={handleInputChange}
-                error={error !== ''}
-                helperText={error && 'Invalid input: must be a number'}
-                size="small"
-                margin= 'normal'
-                type="number" 
-                fullWidth
-                inputProps={{
-                  step: "1",
-                  min: "1"
-                }}/>  
-              <Link onClick={handleSelectTable}>
-                <Button variant='contained' color='primary' type='submit' style={buttonStyle}>
-                  Confirm
-                </Button>
-              </Link>
+            <Grid container alignItems="center" justifyContent="center" columnSpacing={1}>
+              <Grid item>
+                <TextField
+                  required
+                  id="standard-required"
+                  label="Enter NUMBER Only"
+                  value={value}
+                  onChange={handleInputChange}
+                  error={error !== ''}
+                  helperText={error && 'Invalid input: must be a number'}
+                  size="small"
+                  margin= 'normal'
+                  type="number" 
+                  fullWidth
+                  inputProps={{
+                    step: "1",
+                    min: "1"
+                  }}/>  
+              </Grid>
+              <Grid item>
+                <Link onClick={handleSelectTable}>
+                  <Button variant='contained' color='primary' type='submit' style={buttonStyle}>
+                    Confirm
+                  </Button>
+                </Link>
+              </Grid>
+            </Grid>
             </form>
             </Box> 
           </Grid>  

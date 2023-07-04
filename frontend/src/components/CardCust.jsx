@@ -56,8 +56,8 @@ const ItemCard = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
   }
 
   return (
-    <Box margin='1%' width='20vw' sx={{ height: '12vh' }}>
-      <Card sx={{ border: '5px solid #FFA0A0', maxHeight: '35vh', borderRadius: 8 }}>
+    <Box margin='1%' width='20vw' sx={{ height: '10vh' }}>
+      <Card sx={{ border: '5px solid #FFA0A0', maxHeight: '34vh', borderRadius: 8 }}>
         <CardContent>
         <Box>
           <Typography variant="h4" gutterBottom style={{ fontWeight: 'bold', textAlign: "center" }}>
