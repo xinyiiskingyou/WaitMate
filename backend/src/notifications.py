@@ -1,12 +1,12 @@
 import sqlite3
-from constant import TABLE_DB_PATH, ORDER_DB_PATH
+from constant import DB_PATH
 from src.helper import check_table_exists
 from src.error import InputError, AccessError
 from typing import Any, List
 
 class Notifications:
     
-    def __init__(self, table_db=TABLE_DB_PATH, order_db=ORDER_DB_PATH) -> None:
+    def __init__(self, table_db=DB_PATH, order_db=DB_PATH) -> None:
         self.table_db = table_db
         self.order_db = order_db
         

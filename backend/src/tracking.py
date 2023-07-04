@@ -1,12 +1,12 @@
 import sqlite3
 
-from constant import ORDER_DB_PATH
+from constant import DB_PATH
 from src.helper import get_order
 from src.error import AccessError, InputError
 
 class Tracking:
     
-    def __init__(self, order_db=ORDER_DB_PATH) -> None:
+    def __init__(self, order_db=DB_PATH) -> None:
         self.order_db = order_db
 
     def customer_view_dish_status(self, table_id: int) -> list:

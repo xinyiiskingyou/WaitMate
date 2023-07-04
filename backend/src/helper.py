@@ -1,6 +1,6 @@
 import sqlite3
 from typing import Any, List
-from constant import TABLE_DB_PATH, MENU_DB_PATH, ORDER_DB_PATH
+from constant import DB_PATH
 from src.error import NotFoundError, InputError
 
 def check_table_exists(table_id: int):
@@ -9,7 +9,7 @@ def check_table_exists(table_id: int):
         raise InputError('Table id is not available.')
 
     try:
-        con = sqlite3.connect(TABLE_DB_PATH)
+        con = sqlite3.connect(DB_PATH)
         cur = con.cursor()
         cur.execute('SELECT * FROM Tables WHERE table_id = ?', (table_id,))
         result = cur.fetchone()
@@ -23,7 +23,7 @@ def check_table_exists(table_id: int):
 def check_if_category_exists(category_name: str):
 
     try:
-        con = sqlite3.connect(MENU_DB_PATH)
+        con = sqlite3.connect(DB_PATH)
         cur = con.cursor()
         cur.execute('SELECT * FROM Categories c WHERE lower(c.name) = (?)',(category_name,))
         result = cur.fetchone()
@@ -37,7 +37,7 @@ def check_if_category_exists(category_name: str):
 def get_item_info(column_name: str, item: str):
 
     try:
-        con = sqlite3.connect(MENU_DB_PATH)
+        con = sqlite3.connect(DB_PATH)
         cur = con.cursor()
         cur.execute('SELECT * FROM Items i WHERE i.{} = (?)'.format(column_name),(item,))
         result = cur.fetchone()
@@ -51,7 +51,7 @@ def get_item_info(column_name: str, item: str):
 def get_item_in_category(item_order: int, category_name: str):
 
     try:
-        con = sqlite3.connect(MENU_DB_PATH)
+        con = sqlite3.connect(DB_PATH)
         cur = con.cursor()
         cur.execute('SELECT * FROM Items WHERE category_name = (?) AND item_order = (?)', (category_name, item_order, ))
         result = cur.fetchone()
@@ -64,7 +64,7 @@ def get_item_in_category(item_order: int, category_name: str):
 
 def get_menu_item_order_by_name(item_name: str):
 
-    conn = sqlite3.connect(MENU_DB_PATH)
+    conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
 
     cur.execute("SELECT item_order FROM Menu WHERE item = ?", (item_name,))
@@ -79,7 +79,7 @@ def get_menu_item_order_by_name(item_name: str):
 
 def check_categories_key_is_valid(column, value):
     try:
-        con = sqlite3.connect(MENU_DB_PATH)
+        con = sqlite3.connect(DB_PATH)
         cur = con.cursor()
         cur.execute('SELECT * FROM Categories c WHERE c.{} = ?'.format(column), (value,))
         result = cur.fetchone()
@@ -91,7 +91,7 @@ def check_categories_key_is_valid(column, value):
     return result
 
 def get_category_order_by_name(category_name: str):
-    con = sqlite3.connect(MENU_DB_PATH)
+    con = sqlite3.connect(DB_PATH)
     cur = con.cursor()
 
     cur.execute('SELECT cat_order FROM Categories c WHERE c.name = (?)',(category_name,))
@@ -101,7 +101,7 @@ def get_category_order_by_name(category_name: str):
     return items[0]
 
 def get_total_count(table_name):
-    con = sqlite3.connect(MENU_DB_PATH)
+    con = sqlite3.connect(DB_PATH)
     cur = con.cursor()
     cur.execute('SELECT COUNT(*) FROM {}'.format(table_name))
     count = cur.fetchone()[0]
@@ -110,7 +110,7 @@ def get_total_count(table_name):
     return count  
 
 def get_category_by_name(item_name: str):
-    con = sqlite3.connect(MENU_DB_PATH)
+    con = sqlite3.connect(DB_PATH)
     cur = con.cursor()
     
     cur.execute('SELECT category FROM Menu WHERE item = ?', (item_name, ))
@@ -120,7 +120,7 @@ def get_category_by_name(item_name: str):
     
 def get_order_in_category(category_name: str):
     
-    con = sqlite3.connect(MENU_DB_PATH)
+    con = sqlite3.connect(DB_PATH)
     cur = con.cursor()
 
     cur.execute("SELECT COUNT(*) FROM Menu WHERE category = ? AND item IS NOT NULL", (category_name,))
@@ -144,7 +144,7 @@ def update_order(table_name, column_name, is_up, prev_order):
         update_order_in_db("Items", "item_order", prev_order, new_order)
 
 def update_order_in_db(table_name, column_name, prev_order, new_order):
-    con = sqlite3.connect(MENU_DB_PATH)
+    con = sqlite3.connect(DB_PATH)
     cur = con.cursor()
     cur.execute('''UPDATE {table}
         SET {column} = CASE
@@ -163,7 +163,7 @@ def get_order(table_id: int) -> List[Any]:
         raise InputError('The table_id does not refer to a valid table')
 
     try:
-        con = sqlite3.connect(ORDER_DB_PATH)
+        con = sqlite3.connect(DB_PATH)
         cur = con.cursor()
 
         cur.execute('SELECT item_name, amount, is_prepared, is_served FROM Orders WHERE table_id = ?', (table_id,))

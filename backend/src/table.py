@@ -9,7 +9,7 @@ import sqlite3
 from src.error import InputError, NotFoundError
 from src.clear import clear_database
 from src.helper import check_table_exists
-from constant import TABLE_DB_PATH
+from constant import DB_PATH as TABLE_DB_PATH
 
 class TableDB():
     '''

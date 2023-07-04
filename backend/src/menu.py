@@ -1,5 +1,5 @@
 import sqlite3
-from constant import MENU_DB_PATH
+from constant import DB_PATH as MENU_DB_PATH
 from src.error import InputError, AccessError
 from src.helper import (
     check_if_category_exists, get_category_order_by_name, get_menu_item_order_by_name, 
