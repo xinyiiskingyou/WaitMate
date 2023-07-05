@@ -157,4 +157,4 @@ class TableDB():
         Return Value:
             N/A
         '''
-        clear_database(self.database, 'Tables')
+        clear_database('Tables')

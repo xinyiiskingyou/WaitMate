@@ -31,8 +31,8 @@ def table_id_3():
 
 @pytest.fixture
 def menu_japanese():
-    if os.path.exists("./src/database/menu.db"):
-        os.remove("./src/database/menu.db")
+    if os.path.exists("./src/database/restaurant.db"):
+        os.remove("./src/database/restaurant.db")
 
     menu.category_add('Japanese')
     menu.item_add('Japanese', 'salmon sushi', 10, '_', '_', False)

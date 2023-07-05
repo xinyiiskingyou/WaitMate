@@ -7,8 +7,8 @@ from tests.conftest import VALID, INPUTERROR, ACCESSERROR
 menu = MenuDB()
 
 def menu_1():
-    if os.path.exists("./src/database/menu.db"):
-        os.remove("./src/database/menu.db")
+    if os.path.exists("./src/database/restaurant.db"):
+        os.remove("./src/database/restaurant.db")
 
     menu.category_add('Fish')
     menu.category_add('Water')

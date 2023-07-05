@@ -145,4 +145,4 @@ class OrderDB:
         Return Value:
             N/A
         '''
-        clear_database(self.database, 'Orders')
+        clear_database('Orders')
