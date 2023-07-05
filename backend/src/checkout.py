@@ -1,5 +1,5 @@
 import sqlite3
-# from constant import ORDER_DB_PATH, MENU_DB_PATH, DB_PATH
+from constant import DB_PATH
 from src.error import InputError
 class Checkout:
     def __init__(self) -> None:
@@ -10,15 +10,20 @@ class Checkout:
 
         con = sqlite3.connect(self.DB_PATH)
         cur = con.cursor()
-        cur.execute('''SELECT name, cost, amount from Orders o 
-            JOIN Items i on i.name = o.item_name 
-            WHERE table_id = ?''', 
-            (table_id,)
-        )
-        bill = cur.fetchall()
+        try:
+            cur.execute('''SELECT name, cost, amount from Orders o 
+                JOIN Items i on i.name = o.item_name 
+                WHERE table_id = ?''', 
+                (table_id,)
+            )
+            bill = cur.fetchall()
+            ret = [{'name': i[0], 'cost': i[1] * i[2], 'amount': i[2]} for i in bill]
+
+        except:
+            pass
+
         con.close()
 
-        ret = [{'name': i[0], 'cost': i[1] * i[2], 'amount': i[2]} for i in bill]
         print(ret)
 
         return ret
@@ -61,7 +66,7 @@ class Checkout:
 
     def checkout_bill_tips(self, table_id: int, amount: int):
         if amount <= 0:
-            raise InputError('Invalid tip amount')
+            raise InputError('Invalid tip amount.')
 
         self.checkout_create()
         self.checkout_add(table_id)
@@ -79,7 +84,7 @@ class Checkout:
 
     def checkout_bill_coupon(self, table_id: int, coupon: str):
         if not self.checkout_coupon_find(coupon):
-            raise InputError('Invalid coupon')
+            raise InputError('Invalid coupon.')
         
         self.checkout_create()
         self.checkout_add(table_id)
