@@ -3,6 +3,7 @@ import os
 from src.table import TableDB
 from src.menu import MenuDB
 from fastapi.testclient import TestClient
+from src.clear import clear_database
 from app.api import app
 
 VALID = 200
@@ -31,8 +32,10 @@ def table_id_3():
 
 @pytest.fixture
 def menu_japanese():
-    if os.path.exists("./src/database/restaurant.db"):
-        os.remove("./src/database/restaurant.db")
+    clear_database('Menu')
+    clear_database('Categories')
+    clear_database('Items')
+
 
     menu.category_add('Japanese')
     menu.item_add('Japanese', 'salmon sushi', 10, '_', '_', False)

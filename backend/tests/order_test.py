@@ -2,6 +2,9 @@ import pytest
 from src.order import OrderDB
 from src.error import InputError
 from tests.conftest import VALID, INPUTERROR
+import sqlite3
+from constant import DB_PATH
+
 
 order = OrderDB()
 def test_add_order_invalid_table_number():
@@ -22,7 +25,7 @@ def test_add_order_invalid_amount(table_id_1):
     with pytest.raises(InputError):
         order.add_order(table_id_1, 'sushi', 0)
 
-def test_add_order_invalid_item_name(table_id_1, menu_japanese):
+def test_add_order_invalid_item_name(menu_japanese, table_id_1):
     order.clear_order_table()
 
     with pytest.raises(InputError):
@@ -30,73 +33,80 @@ def test_add_order_invalid_item_name(table_id_1, menu_japanese):
     with pytest.raises(InputError):
         order.add_order(table_id_1, 'tuna sushi', 1)
 
-# def test_list_order_invalid_table_id():
-#     order.clear_order_table()
+def test_list_order_invalid_table_id():
+    order.clear_order_table()
 
-#     with pytest.raises(InputError):
-#         order.get_table_order(-1)
-#     with pytest.raises(InputError):
-#         order.get_table_order(10)
-#     with pytest.raises(InputError):
-#         order.get_table_order(100)
+    with pytest.raises(InputError):
+        order.get_table_order(-1)
+    with pytest.raises(InputError):
+        order.get_table_order(10)
+    with pytest.raises(InputError):
+        order.get_table_order(100)
 
-# def test_valid_order_list(table_id_1, table_id_2, menu_japanese):
-#     order.clear_order_table()
-    
-#     order.add_order(table_id_1, 'salmon sushi', 1)
-#     order.add_order(table_id_1, 'dorayaki', 1)
+def test_valid_order_list(menu_japanese, table_id_1, table_id_2):
+    print('in')
+    con = sqlite3.connect(DB_PATH)
+    cur = con.cursor()
 
-#     table_order = order.get_table_order(table_id_1)
-#     assert len(table_order) == 2
+    cur.execute('SELECT * FROM Tables WHERE table_id = ?', (table_id_1,))
+    print(cur.fetchone())
+    print('hi')
+    con.close()
 
-#     order.add_order(table_id_2, 'salmon sushi', 1)
-#     table_order = order.get_table_order(table_id_2)
-#     assert len(table_order) == 1
+    order.add_order(table_id_1, 'salmon sushi', 1)
+    order.add_order(table_id_1, 'dorayaki', 1)
 
-# def test_get_all_orders(table_id_1, table_id_2, table_id_3, menu_japanese):
+    table_order = order.get_table_order(table_id_1)
+    assert len(table_order) == 2
 
-#     order.clear_order_table()
+    order.add_order(table_id_2, 'salmon sushi', 1)
+    table_order = order.get_table_order(table_id_2)
+    assert len(table_order) == 1
 
-#     order.add_order(table_id_1, 'salmon sushi', 2)
-#     order.add_order(table_id_2, 'dorayaki', 1)
-#     order.add_order(table_id_2, 'dorayaki', 2)
+def test_get_all_orders(table_id_1, table_id_2, table_id_3, menu_japanese):
 
-#     table_order = order.get_all_orders()
+    order.clear_order_table()
 
-#     assert len(table_order) == 3
+    order.add_order(table_id_1, 'salmon sushi', 2)
+    order.add_order(table_id_2, 'dorayaki', 1)
+    order.add_order(table_id_2, 'dorayaki', 2)
 
-# ######################################
-# ########## endpoint tests ############
-# ######################################
+    table_order = order.get_all_orders()
 
-# def test_add_order_endpoint(client, table_id_1, menu_japanese):
-#     # valid
-#     resp = client.post('/order/cart/add', json={'id': table_id_1, 'item': 'dorayaki', 'amount': 1})
+    assert len(table_order) == 3
 
-#     assert resp.status_code == VALID
+######################################
+########## endpoint tests ############
+######################################
 
-#     # invalid table id
-#     resp = client.post('/order/cart/add', json={'id': 23, 'item': 'dorayaki', 'amount': 1})
-#     assert resp.status_code == INPUTERROR
+def test_add_order_endpoint(client, table_id_1, menu_japanese):
+    # valid
+    resp = client.post('/order/cart/add', json={'id': table_id_1, 'item': 'dorayaki', 'amount': 1})
 
-#     # invalid item
-#     resp = client.post('/order/cart/add', json={'id': table_id_1, 'item': 'tuna sushi', 'amount': 1})
-#     assert resp.status_code == INPUTERROR
+    assert resp.status_code == VALID
 
-#     # invalid amount
-#     resp = client.post('/order/cart/add', json={'id': table_id_1, 'item': 'dorayaki', 'amount': -1})
-#     assert resp.status_code == INPUTERROR
+    # invalid table id
+    resp = client.post('/order/cart/add', json={'id': 23, 'item': 'dorayaki', 'amount': 1})
+    assert resp.status_code == INPUTERROR
 
-# def test_table_view_order_endpoint(client, table_id_1):
-#     # valid case
-#     resp = client.get('/order/cart/list', params={'table_id': table_id_1})
-#     assert resp.status_code == VALID
+    # invalid item
+    resp = client.post('/order/cart/add', json={'id': table_id_1, 'item': 'tuna sushi', 'amount': 1})
+    assert resp.status_code == INPUTERROR
 
-#     # invalid table id
-#     resp = client.get('/order/cart/list', params={'table_id': 23})
-#     assert resp.status_code == INPUTERROR
+    # invalid amount
+    resp = client.post('/order/cart/add', json={'id': table_id_1, 'item': 'dorayaki', 'amount': -1})
+    assert resp.status_code == INPUTERROR
 
-# def test_table_view_all_order_endpoint(client):
-#     # valid case
-#     resp = client.get('/order/listall')
-#     assert resp.status_code == VALID
+def test_table_view_order_endpoint(client, table_id_1):
+    # valid case
+    resp = client.get('/order/cart/list', params={'table_id': table_id_1})
+    assert resp.status_code == VALID
+
+    # invalid table id
+    resp = client.get('/order/cart/list', params={'table_id': 23})
+    assert resp.status_code == INPUTERROR
+
+def test_table_view_all_order_endpoint(client):
+    # valid case
+    resp = client.get('/order/listall')
+    assert resp.status_code == VALID
