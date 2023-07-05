@@ -280,44 +280,13 @@ const Coupon = () => {
           Coupons
         </Typography>
         
-        { Object.entries(categories).map(([index, category]) => (
-          <Box key={index}>
-            {categoryEditingIndex === index ? (
-              <Box display="flex" justifyContent="space-between">
-                <TextField 
-                  value={editedCategory || category} 
-                  size='small'
-                  variant='outlined'
-                  color='primary'
-                  style= {{margin: '5%', width: '80%'}}
-                  onChange={(e) => handleCategoryInputChange(e.target.value, index)}
-                  fullWidth
-                />
-                <Button
-                onClick={() => handleSaveCategoryName(index)}
-                variant="contained"
-                color="primary"
-                style={buttonStyle}>
-                Save
-                </Button>
-              </Box>
-
-            ) : (
-              <Box display="flex" justifyContent="space-between">
-                <Button 
-                  variant="outlined" 
-                  color="primary"
-                  style={buttonStyle}
-                  onClick={() => handleCategoryClick(index)}>
-                  {category}
-                </Button>
-
-              </Box>
-
-            )}
-          </Box>
-
-        ))}
+        <Card variant='outlined' style={{margin: "20px"}}>
+          <CardContent>
+            <Typography variant='h6'>SAVE20</Typography>
+            <p style={{marginTop: "-3px"}}>20% off</p>
+            <Typography variant='h8'>31/07/2023</Typography>
+          </CardContent>
+        </Card>
       </Box>
     </Drawer>
 

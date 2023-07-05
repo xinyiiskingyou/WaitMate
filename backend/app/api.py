@@ -61,9 +61,6 @@ def menu_category_update_details_api(reqbody: CategoryUpdate):
 def menu_view_categories():
     return menu.get_all_categories()
 
-# @app.get("/menu/list/items")
-# def menu_view_api(cat_id):
-#     return menu.get_items_in_category(cat_id)
 @app.get("/menu/list/items/{cat_id}")
 def menu_view_api(cat_id: str):
     return menu.get_items_in_category(int(cat_id))
@@ -75,7 +72,7 @@ def item_add_api(reqbody: Item):
 
 @app.put("/menu/item/update/details")
 def menu_item_update_details_api(reqbody: Item):
-    menu.update_details_menu_items(reqbody.item_id, reqbody.name, reqbody.cost, reqbody.description, reqbody.ingredients, reqbody.is_vegan)
+    menu.update_details_menu_items(reqbody.category, reqbody.item_id, reqbody.name, reqbody.cost, reqbody.description, reqbody.ingredients, reqbody.is_vegan)
     return {}
 
 @app.put("/menu/item/update/order")

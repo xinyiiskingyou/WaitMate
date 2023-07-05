@@ -4,7 +4,7 @@ from src.error import InputError, AccessError
 from src.helper import (
     check_if_category_exists, get_category_order_by_name, get_menu_item_order_by_name, 
     get_item_info, check_categories_key_is_valid, update_order, get_order_in_category,
-    get_total_count, get_category_by_name
+    get_total_count, get_category_by_name, get_item_in_category
 )
 
 class MenuDB:
@@ -35,7 +35,8 @@ class MenuDB:
                         description TEXT,
                         ingredients TEXT,
                         is_vegan,
-                        item_order INTEGER
+                        item_order INTEGER,
+                        category_name TEXT
                     )''')
         con.commit()
         con.close()
@@ -99,18 +100,19 @@ class MenuDB:
         # insert new item to the Items table
         con = sqlite3.connect(self.database)
         cur = con.cursor()
-        cur.execute('''INSERT INTO Items(name, cost, description, ingredients, is_vegan)
-            VALUES(?,?,?,?,?)''',
-            (name, cost, description, ingredients, is_vegan)
+        cur.execute('''INSERT INTO Items(name, cost, description, ingredients, is_vegan, category_name)
+            VALUES(?,?,?,?,?,?)''',
+            (name, cost, description, ingredients, is_vegan, category)
         )
         con.commit()
+        
+        order = get_order_in_category(category) + 1
 
-        cur.execute('UPDATE Items SET item_order = item_id WHERE name = ?', (name,))
+        cur.execute('UPDATE Items SET item_order = (?) WHERE name = (?)', (order, name))
         con.commit()
         
         # insert to the menu
         self.create_menu_table()
-        order = get_order_in_category(category) + 1
         cur.execute('INSERT INTO Menu values(?,?,?)',(category, name, order))
         con.commit()
         con.close()
@@ -171,19 +173,25 @@ class MenuDB:
 
         return items
 
-    def update_details_menu_items(self, item_id: int, new_name=None, cost=None, description=None,
-        ingredients=None, is_vegan=None) -> None:
+    def update_details_menu_items(self, category_name: str, index: int, new_name=None, cost=None, 
+        description=None, ingredients=None, is_vegan=None) -> None:
+
+        # check if category name is valid
+        if not check_categories_key_is_valid('name', category_name):
+            raise InputError('Invalid category')
         
+        check_result = get_item_in_category(index, category_name)
         # check if item_id is valid
-        if not get_item_info('item_id', int(item_id)):
+        if not check_result:
             raise InputError('Invalid ID')
 
         con = sqlite3.connect(self.database)
         cur = con.cursor()
-
-        # get the old name of the menu item
-        old_name = get_item_info('item_order', item_id)[1]
         
+        # get the old name of the menu item
+        old_name = check_result[1]
+        
+        print(old_name + " " + new_name)
         if new_name is not None:
             # invalid name length
             if len(new_name) < 1 or len(new_name) > 15:
@@ -195,8 +203,8 @@ class MenuDB:
             cur.execute(
                 '''UPDATE Menu  
                 SET item = (?)
-                WHERE item_order = (?)''',
-                (new_name, item_id)
+                WHERE item_order = (?) and category = (?)''',
+                (new_name, index, category_name)
             )
             con.commit()
 
@@ -208,8 +216,8 @@ class MenuDB:
                 description = COALESCE(?, description),
                 ingredients = COALESCE(?, ingredients),
                 is_vegan = COALESCE(?, is_vegan)
-            WHERE item_order = (?)''',
-            (new_name, cost, description, ingredients, is_vegan, item_id)
+            WHERE item_order = (?) and category_name = (?)''',
+            (new_name, cost, description, ingredients, is_vegan, index, category_name)
         )
         con.commit()
         con.close()

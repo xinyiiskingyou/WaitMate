@@ -47,24 +47,24 @@ def test_item_update_details_invalid_id():
     menu_1()
 
     with pytest.raises(InputError):
-        menu.update_details_menu_items(100)
+        menu.update_details_menu_items('Fish', 100)
     with pytest.raises(InputError):
-        menu.update_details_menu_items(3000, new_name='Big')
+        menu.update_details_menu_items('Fish', 3000, new_name='Big')
     with pytest.raises(InputError):
-        menu.update_details_menu_items(-1, new_name='fsd')
+        menu.update_details_menu_items('Fish', -1, new_name='fsd')
 
 def test_item_update_details_invalid_name():
 
     menu_1()
     with pytest.raises(InputError):
-        menu.update_details_menu_items(1, new_name='BigSeaBassTodayYum')
+        menu.update_details_menu_items('Fish', 1, new_name='BigSeaBassTodayYum')
     with pytest.raises(InputError):
-        menu.update_details_menu_items(1, new_name='')
+        menu.update_details_menu_items('Fish', 1, new_name='')
 
 def test_item_update_details_valid_name():
     menu_1()
     original = menu.get_items_in_category(1)
-    menu.update_details_menu_items(1, new_name='Haddock')
+    menu.update_details_menu_items('Fish', 1, new_name='Haddock')
     result = menu.get_items_in_category(1)
 
     assert result != original
@@ -256,6 +256,7 @@ def test_item_update_details(client):
 
     # valid case
     resp = client.put("/menu/item/update/details", json={
+        "category": 'Fish',
         "id": 1,
         "name": "Haddock",
         "cost": 20,
@@ -264,6 +265,7 @@ def test_item_update_details(client):
 
     # invalid id
     resp = client.put("/menu/item/update/details", json={
+        "category": 'Fish',
         "id": 100,
         "name": "Haddock",
         "cost": 20,
