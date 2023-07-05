@@ -1,7 +1,5 @@
 .pytest**/
 
-
 # Ignore mod
-node_modules/
 package.json
 package-lock.json
