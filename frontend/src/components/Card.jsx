@@ -3,129 +3,183 @@ import { Box, Card, FormControlLabel, CardActions, CardContent, Checkbox, Button
 import veg from '../assets/vegan.png'
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
 
 const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVegetarian, onItemRemove, ItemIndex, onItemsCategory, ItemCategory }) => {
 
-    const [isEditable, setIsEditable] = useState(false);
-    const [vegetarian, setVegetarian] = useState(ItemVegetarian);
-    const [name, setName] = useState(ItemName);
-    const [price, setPrice] = useState(ItemPrice);
-    const [description, setDescription] = useState(ItemDescription);
-    const [ingredient, setIngredient] = useState(ItemIngredient);
+  const [vegetarian, setVegetarian] = useState(ItemVegetarian);
+  const [name, setName] = useState(ItemName);
+  const [price, setPrice] = useState(ItemPrice);
+  const [description, setDescription] = useState(ItemDescription);
+  const [ingredient, setIngredient] = useState(ItemIngredient);
+  const [open, setOpen] = useState(false);
 
-    const handleEdit = async () => {
-      console.log('cat: ', ItemCategory);
-      const payload = {
-        category: ItemCategory,
-        id: parseInt(ItemIndex, 10) + 1,
-        name: name,
-        cost: parseFloat(price),
-        description: description,
-        ingredients: ingredient,
-        is_vegan: vegetarian
-     };
-
-      await fetch('http://localhost:8000/menu/item/update/details', {
-        method: 'PUT',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(payload),
-      })
-        .then(response => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            throw new Error('Failed to update item. Please try again.');
-          }
-        })
-        .then(data => {
-          console.log('data', data);
-          setIsEditable(!isEditable);
-        })
-        .catch(error => {
-          // Handle the error if necessary
-          console.error(error);
-          alert(error);
-        });
+  const handleEdit = () => {
+    console.log('cat: ', ItemCategory);
+    const payload = {
+      category: ItemCategory,
+      id: parseInt(ItemIndex, 10) + 1,
+      name: name,
+      cost: parseFloat(price),
+      description: description,
+      ingredients: ingredient,
+      is_vegan: vegetarian
     };
 
-    const handleUpdateOrder = async (is_up) => {
-
-      const payload = {
-        name: name,
-        is_up: is_up
-      };
-
-      await fetch('http://localhost:8000/menu/item/update/order', {
-        method: 'PUT',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(payload),
+    fetch('http://localhost:8000/menu/item/update/details', {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload),
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Failed to update item. Please try again.');
+        }
       })
-        .then(response => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            throw new Error('Failed to update order. Please try again.');
-          }
-        })
-        .then(data => {
-          onItemsCategory();
-        })
-        .catch(error => {
-          // Handle the error if necessary
-          console.error(error);
-          alert(error);
-        });
+      .then(data => {
+        console.log('data', data);
+        setOpen(false);
+      })
+      .catch(error => {
+        // Handle the error if necessary
+        console.error(error);
+        alert(error);
+      });
+  };
+
+  const handleUpdateOrder = async (is_up) => {
+
+    const payload = {
+      name: name,
+      is_up: is_up
     };
 
-    const smallbuttonStyle = {
-      color: 'white',
-      backgroundColor: '#7CBD96',
-    };
-
-    const handleRemove = () => {
-      const payload = {
-        name: name
-      };
-      fetch('http://localhost:8000/menu/item/remove', {
-        method: 'DELETE',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(payload),
+    await fetch('http://localhost:8000/menu/item/update/order', {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload),
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Failed to update order. Please try again.');
+        }
       })
-        .then(response => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            throw new Error('Failed to remove item. Please try again.');
-          }
-        })
-        .then(data => {
-          onItemRemove();
-        })
-        .catch(error => {
-          console.error('Error:', error);
-        });
-    }
+      .then(data => {
+        onItemsCategory();
+      })
+      .catch(error => {
+        // Handle the error if necessary
+        console.error(error);
+        alert(error);
+      });
+  };
 
-    useEffect(() => {
-      // Update the state values when the props change
-      setName(ItemName);
-      setPrice(ItemPrice);
-      setDescription(ItemDescription);
-      setIngredient(ItemIngredient);
-      setVegetarian(ItemVegetarian);
-    }, [ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVegetarian]);
+  const handleRemove = () => {
+    const payload = {
+      name: name
+    };
+    fetch('http://localhost:8000/menu/item/remove', {
+      method: 'DELETE',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload),
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Failed to remove item. Please try again.');
+        }
+      })
+      .then(() => {
+        onItemRemove();
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  // Close the dialog
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    // Update the state values when the props change
+    setName(ItemName);
+    setPrice(ItemPrice);
+    setDescription(ItemDescription);
+    setIngredient(ItemIngredient);
+    setVegetarian(ItemVegetarian);
+  }, [ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVegetarian]);
     
-    return (
-        <Box margin='2%'>
-          {isEditable ? (
-          <Card>
-          <CardContent>
+  const smallbuttonStyle = {
+    color: 'white',
+    backgroundColor: '#7CBD96',
+  };
+
+  return (
+    <Card sx={{ border: '5px solid #FFA0A0', maxHeight: '34vh', width: '100%', borderRadius: 8 }}>
+      <CardContent>
+        <Typography variant="h5" gutterBottom style={{ fontWeight: 'bold', textAlign: "center" }}>
+          {name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
+          {vegetarian===1 || vegetarian ? (
+            <img 
+              src={veg} 
+              alt="Icon" 
+              style={{
+                width: '2vw',
+                height: '4vh',
+                marginLeft: '10px',
+                verticalAlign: 'middle',
+              }}/>
+          ): null }
+        </Typography>
+
+        <Typography variant="subtitle1" gutterBottom>
+          Price: ${price}
+        </Typography>
+
+        <Typography variant="subtitle1" gutterBottom>
+          Descriptions: {description}
+        </Typography>
+
+        <Typography variant="subtitle1" gutterBottom>
+          Ingredients: {ingredient}
+        </Typography>
+      </CardContent>
+            
+      <CardActions sx={{ justifyContent: 'center' }}>
+        <Button 
+          size="small" 
+          onClick={handleOpen}
+          style={{ color: 'white', backgroundColor: '#7CBD96' }}>
+          Update
+        </Button>
+        
+        <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth sx={{
+          "& .MuiDialog-paper": {
+            border: "8px solid #FFA0A0",
+            borderRadius: 8
+          },
+        }}>
+          <DialogTitle><b>Edit Item</b></DialogTitle>
+          <DialogContent>
             <TextField
               label="Name"
-              disabled={!isEditable}
               value={name}
               size="small"
-              margin= 'normal'
+              margin="normal"
               fullWidth
               onChange={(e) => setName(e.target.value)}
             />
@@ -133,121 +187,91 @@ const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
             <Box display="flex" flexDirection="row" flexWrap="wrap">
               <TextField
                 label="Price"
-                disabled={!isEditable}
-                value={price} 
+                value={price}
                 size="small"
-                margin= 'normal'
+                margin="normal"
+                type="number"
                 InputProps={{
                   startAdornment: <InputAdornment position="start">$</InputAdornment>,
                 }}
-              onChange={(e) => setPrice(e.target.value)}
+                inputProps={{
+                  step: "0.01",
+                  min: "0"
+                }}
+                onChange={(e) => setPrice(e.target.value)}
               />
 
               <Box margin="3%">
-                <FormControlLabel 
-                  control={<Checkbox checked={vegetarian}/>}
-                  disabled={!isEditable}
-                  label="Vegetarian" 
+                <FormControlLabel
+                  control={<Checkbox checked={vegetarian} />}
+                  label="Vegetarian"
                   labelPlacement="start"
-                  onChange={(e) => setVegetarian(e.target.checked)}/>
+                  onChange={(e) => setVegetarian(e.target.checked)}
+                />
               </Box>
             </Box>
 
             <TextField
               label="Description"
-              disabled={!isEditable}
               value={description}
               size="small"
-              margin= 'normal'
+              margin="normal"
               fullWidth
               onChange={(e) => setDescription(e.target.value)}
             />
 
             <TextField
               label="Ingredients"
-              disabled={!isEditable}
               value={ingredient}
               size="small"
-              margin= 'normal'
+              margin="normal"
               fullWidth
               onChange={(e) => setIngredient(e.target.value)}
             />
-            </CardContent>
+          </DialogContent>
 
-            <CardActions>
-            {isEditable && (
-              <Button size="small" onClick={handleEdit}>
+          <DialogActions>
+            <Button size="small" onClick={handleEdit} 
+            style={{
+              background: '#81c784', 
+              color: 'black',
+              fontWeight: 'bold',
+              fontSize: '0.8vw',
+              width: '3.5vw',
+              height: '3vh',
+              borderRadius: 10,
+            }}>
               DONE
-              </Button>
-            )}
+            </Button>
+          </DialogActions>
+        </Dialog>
 
-            </CardActions>
-            </Card>
-            ): (
-              <Card>
-                <CardContent>
-                  <Typography variant="h4" gutterBottom style={{ display: 'flex'}}>
-                    {name}   
-                    {vegetarian && (
-                      <img 
-                        src={veg} 
-                        alt="Icon" 
-                        style={{
-                          width: '6vh',
-                          height: '6vh',
-                          marginLeft: '10px',
-                          borderRadius: '50%',
-                        }}/>
-                    )}                
-                  </Typography>
-                  <Typography variant="h6" gutterBottom style={{marginTop: '-10px'}}>${price}</Typography>
+        <Button 
+          variant="contained"
+          size="small" 
+          onClick={() => handleRemove()}
+          style={{ color: 'white', backgroundColor: '#FF7A7A' }}>
+          Remove
+        </Button>
 
-                  <Typography variant="h6" gutterBottom color={"grey"}>
-                    {description}
-                  </Typography>
+        <Button
+          color="primary"
+          style={{ ...smallbuttonStyle, padding: '4px 8px', fontSize: '10px' }}
+          onClick={() => handleUpdateOrder(true)}
+        >
+          <ArrowUpwardIcon/>
+        </Button>
 
-                  <Typography variant="h7" gutterBottom>
-                    Ingredients: {ingredient}
-                  </Typography>
-                </CardContent>
-                
-                <CardActions>
-                  <Button 
-                    size="small" 
-                    onClick={handleEdit}
-                    style={{ color: 'white', backgroundColor: '#7CBD96' }}>
-                    Update
-                  </Button>
-      
-                  <Button 
-                    variant="contained"
-                    size="small" 
-                    onClick={() => handleRemove()}
-                    style={{ color: 'white', backgroundColor: '#FF7A7A' }}>
-                    Remove
-                  </Button>
-
-                  <Button
-                    color="primary"
-                    style={{ ...smallbuttonStyle, padding: '4px 8px', fontSize: '10px' }}
-                    onClick={() => handleUpdateOrder(true)}
-                  >
-                    <ArrowUpwardIcon/>
-                  </Button>
-
-                <Button
-                  color="primary"
-                  style={{ ...smallbuttonStyle, padding: '4px 8px',fontSize: '10px' }}
-                  onClick={() => handleUpdateOrder(false)}
-                >
-                  <ArrowDownwardIcon/>
-                </Button>
-              </CardActions>
-              </Card>     
-            ) }
-
-            </Box>
-    ); 
+        <Button
+          color="primary"
+          style={{ ...smallbuttonStyle, padding: '4px 8px',fontSize: '10px' }}
+          onClick={() => handleUpdateOrder(false)}
+        >
+          <ArrowDownwardIcon/>
+        </Button>
+      </CardActions>
+  </Card>  
+  ); 
 };
 
 export default MenuItem;

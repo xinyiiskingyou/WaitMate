@@ -5,7 +5,7 @@ from src.error import NotFoundError, InputError
 
 def check_table_exists(table_id: int):
     
-    if table_id < 0:
+    if table_id is None or table_id < 0:
         raise InputError('Table id is not available.')
 
     try:
