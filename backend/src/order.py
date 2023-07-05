@@ -79,7 +79,7 @@ class OrderDB:
         if not get_item_info('name', item_name):
             raise InputError('The item_name does not refer to a valid item')
 
-        if amount < 1:
+        if amount is None or amount < 1:
             raise InputError('The amount must be more than 1')
 
         con = sqlite3.connect(self.database)

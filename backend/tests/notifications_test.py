@@ -13,7 +13,7 @@ track = Tracking()
  
 def test_customer_request_assistance_invalid_id():
     with pytest.raises(InputError):
-        notications.customer_send_notification(100, "BILL")
+        notications.customer_send_notification(1000, "BILL")
     with pytest.raises(InputError):
         notications.customer_send_notification(-1, "BILL")
     with pytest.raises(InputError):

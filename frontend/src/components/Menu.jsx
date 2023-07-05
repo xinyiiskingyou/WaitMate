@@ -2,16 +2,18 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useTheme } from '@mui/material/styles';
 import { Card, CardActions, CardContent, Container, Drawer, Box, Button, Typography, TextField, ButtonGroup, Grid } from '@mui/material';
+import { Link, useParams } from 'react-router-dom';
 import Item from './Item';
 import MenuItem from './Card';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import { margin, width } from '@mui/system';
+import DoneIcon from '@mui/icons-material/Done';
+import ClearIcon from '@mui/icons-material/Clear';
+import WestIcon from '@mui/icons-material/West';
 
 const Menu = () => {
   const [editing, setEditing] = useState(false);
   const [categoryEditingIndex, setCategoryEditingIndex] = useState(-1);
-  const [categoryediting, setCategoryEditing] = useState(false);
   const [editedCategory, setEditedCategory] = useState('');
   const [categoryText, setCategoryText] = useState('');
   const [categories, setCategories] = useState([]);
@@ -20,6 +22,8 @@ const Menu = () => {
   const [adding, setAdding] = useState(false);
   const [cardData, setCardData] = useState({ category: -1, name: '', price: '', description: '', ingredient: '', vegetarian: false, is_up: false });
   const [error, setError] = useState(null);
+
+  const backLink = `/staff`;
 
   const handleSaveCategory = () => {
     
@@ -49,11 +53,11 @@ const Menu = () => {
         .catch(error => {
           // Handle the error if necessary
           console.error(error);
-          alert('Failed to save category. Please try again.');
+          alert('Failed to add category. Please try again.');
           window.location.reload();
         });
     } else {
-      window.location.reload();
+      alert('Failed to add category. Please try again.');
     }
   };
 
@@ -70,13 +74,10 @@ const Menu = () => {
     fetchMenuItems(index);
   };
 
-  const handleCategoryEdit = () => {
-    setCategoryEditing(true);
+  const handleCategoryDone = () => {
+    setEditing(false);
   };
 
-  const handleCategoryDone = () => {
-    setCategoryEditing(false);
-  };
   const handleAddButtonClick = () => {
     setAdding(true);
   };
@@ -126,7 +127,8 @@ const Menu = () => {
     console.log(editedCategory);
     const payload = { 
       name: categories[index],
-      new_name: editedCategory};
+      new_name: editedCategory
+    };
 
     await fetch('http://localhost:8000/menu/category/update/details', {
       method: 'PUT',
@@ -192,7 +194,6 @@ const Menu = () => {
         // Handle the error if necessary
         console.error(error);
         alert('Failed to update the order. Please try again.');
-        window.location.reload();
       });
   };
   useEffect(() => {
@@ -240,15 +241,47 @@ const Menu = () => {
       /* Additional styling properties as needed */
     },
   };
+
+  const AddbuttonStyle = {
+    marginTop: '8%',
+    marginButton: '10%',
+    marginLeft: '10%',
+    width: '80%',
+    background: "#E0E0E0",
+    border: "4px solid #FFA0A0",
+    borderRadius: 15,
+    color: 'black',
+    fontWeight: 'bold'
+  }
+
+  const EditbuttonStyle = {
+    marginTop: '2.5vh',
+    marginLeft: '1vw',
+    width: '55%',
+    height: '80%',
+    borderRadius: 10,
+    color: 'black',
+    fontWeight: 'medium',
+    padding: '1%',
+  }
+
   const buttonStyle = {
     margin: '5%',
-    width: '80%'
+    width: '70%',
+    height: '80%',
+  }
+
+  const EditCatebuttonStyle = {
+    marginTop: '20%',
+    width: '10%',
+    height: '40%',
   }
 
   const smallbuttonStyle = {
-    marginTop: '15%',
-    marginBottom: '5%',
+    marginTop: '2.9vh',
     height: '50%',
+    border: '1px solid #bdbdbd',
+    color: 'black'
   }
 
   return (
@@ -260,29 +293,53 @@ const Menu = () => {
         </CardContent>
       </Card>
     )}
+    
     <Drawer 
       variant="permanent" 
       sx={{
-        width: '400px', // Adjust the width as needed
         flexShrink: 0,
         '& .MuiDrawer-paper': {
-          width: '400px', // Adjust the width as needed
+          width: '21.7vw', // Adjust the width as needed
           boxSizing: 'border-box',
         },
       }}>
       <Box 
         sx={{ 
           margin: 2, 
-          borderRadius: 2, 
+          borderRadius: 8, 
           bgcolor: '#ECEBEB',
-          height: '100%',
-          display:"flex",
-          flexDirection:"column",
-          width: '90%'
+          width: '20vw',
+          height: '140vh',
+          flexDirection:"column"
         }}>
-        <Typography variant="h5" align="center" style={{ margin: '20px' }}>
-          Menu Categories
+        <Typography variant="h4" align="center" style={{ 
+          fontSize: '1.5vw', 
+          fontWeight: "bolder", 
+          marginTop: '3vh',
+        }}>
+          <Grid container spacing={2}>
+            <Grid item xs={2}>
+              <Link to={backLink}>
+                <Button              
+                  sx={{ 
+                    border: 5,
+                    borderColor: '#FFA0A0',
+                    borderRadius: 2,
+                    color: 'black',
+                    marginTop: '-1vh',
+                    marginLeft: '0.5vw',
+                    fontWeight: "bolder"
+                  }}>
+                  <WestIcon sx={{ fontSize: 20, marginRight: '5px' }} />
+                </Button>
+              </Link>
+            </Grid>
+            <Grid item xs={8} style={{ marginTop: '5vh', fontWeight: "bold" }}>
+              Menu Categories
+            </Grid>
+          </Grid>
         </Typography>
+
         {editing ? (
           <Box display="flex" flexDirection="column" alignItems="center">
             <TextField
@@ -296,21 +353,31 @@ const Menu = () => {
               style= {{margin: '5%', width: '80%'}}
               fullWidth
             />
-            <Button 
-              onClick={handleSaveCategory} 
-              variant="contained" 
-              color="primary"
-              style={buttonStyle}
-            >
-              Save Category
-            </Button>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Button 
+                onClick={handleSaveCategory} 
+                variant="contained" 
+                color="primary"
+                style={{...buttonStyle, background: "#81c784"}}
+              >
+                Save
+              </Button>
+              <Button 
+                onClick={handleCategoryDone} 
+                variant="contained" 
+                color="primary"
+                style={{...buttonStyle, background: "#ffc570"}}
+              >
+                Cancel
+              </Button>
+            </div>
           </Box>
         ) : (
           <Button 
             onClick={handleNewButtonClick} 
             variant="contained" 
             color="primary"
-            style={buttonStyle}
+            style={AddbuttonStyle}
           >
             Add Category
           </Button>
@@ -329,53 +396,62 @@ const Menu = () => {
                   onChange={(e) => handleCategoryInputChange(e.target.value, index)}
                   fullWidth
                 />
-                <Button
-                onClick={() => handleSaveCategoryName(index)}
-                variant="contained"
-                color="primary"
-                style={buttonStyle}>
-                Save
-                </Button>
+                <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+                  <Button 
+                    onClick={() => handleSaveCategoryName(index)}
+                    variant="contained"
+                    color="primary"
+                    style={{...EditCatebuttonStyle, background: "#81c784", marginRight: '5px'}}>
+                    <DoneIcon />
+                  </Button>
+                  <Button 
+                    onClick={handleSaveCategory} 
+                    variant="contained" 
+                    color="primary"
+                    style={{...EditCatebuttonStyle, background: "#ffc570"}}
+                  >
+                    <ClearIcon />
+                  </Button>
+                </div>
               </Box>
-
             ) : (
-              <Box display="flex" justifyContent="space-between">
+              <Box display="flex" justifyContent="space-evenly">
                 <Button 
                   variant="outlined" 
                   color="primary"
-                  style={buttonStyle}
+                  style={{...EditbuttonStyle, 
+                    border: selectedCategory===index ? "3px solid #FFA0A0" :"3px solid #bdbdbd",
+                    background: selectedCategory===index ? "#FFCFCF" : "#E0E0E0"
+                  }}
                   onClick={() => handleCategoryClick(index)}>
                   {category}
                 </Button>
 
                 <ButtonGroup variant="outlined" style={{smallbuttonStyle}}>
-
-                <Button
-                  color="primary"
-                  style={{...smallbuttonStyle, padding: '4px 8px', fontSize: '10px'}}
-                  onClick={() => handleEditCategory(index)}
+                  <Button
+                    color="primary"
+                    style={{...smallbuttonStyle, padding: '4px', fontSize: '10px'}}
+                    onClick={() => handleEditCategory(index)}
                   >
-                  Edit
-                </Button>
-                <Button
-                  color="primary"
-                  style={{ ...smallbuttonStyle, padding: '4px 8px', fontSize: '10px' }}
-                  onClick={() => handleUpdateOrder(index, true)}
-                  >
-                  <ArrowUpwardIcon/>
-                </Button>
+                    Edit
+                  </Button>
+                  <Button
+                    color="primary"
+                    style={{ ...smallbuttonStyle, padding: '4px', fontSize: '10px' }}
+                    onClick={() => handleUpdateOrder(index, true)}
+                    >
+                    <ArrowUpwardIcon/>
+                  </Button>
 
-                <Button
-                  color="primary"
-                  style={{ ...smallbuttonStyle, padding: '4px 8px',fontSize: '10px' }}
-                  onClick={() => handleUpdateOrder(index, false)}
-                  >
-                  <ArrowDownwardIcon/>
-                </Button>
-
+                  <Button
+                    color="primary"
+                    style={{ ...smallbuttonStyle, padding: '4px',fontSize: '10px' }}
+                    onClick={() => handleUpdateOrder(index, false)}
+                    >
+                    <ArrowDownwardIcon/>
+                  </Button>
                 </ButtonGroup>
               </Box>
-
             )}
           </Box>
 
@@ -389,35 +465,42 @@ const Menu = () => {
         display="flex"
         height="80vh"
         width="350px"
+        marginLeft="-15vh"
         >
         {selectedCategory !== -1 ? (
           <Box>
             <Box display="flex">
             </Box>
-            <Typography variant="h5" gutterBottom>
-              Menu items
+            <Typography variant="h4" gutterBottom>
+              <b>Menu items</b>
             </Typography>
             <Button
               variant='contained'
-              onClick={handleAddButtonClick} >
+              onClick={handleAddButtonClick} 
+              style={{
+                background: "#eeeeee",
+                border: "4px solid #FFA0A0",
+                color: 'black',
+                fontWeight: 'bold',
+                borderRadius: 10,
+              }}
+            >
               Add menu item
             </Button>
 
             <Box display="flex" flexDirection="row" alignItems="flex-start" marginTop={5} style={{ gap: '10px' }}>
-            { adding && (
-              <Box display="flex" flexDirection="row" alignItems="flex-start">
-              <Item onItemAdd={handleCardDoneClick} onItemCancel={handleCardCancelClick} category={categories[selectedCategory]}/>
-              <div onBlur={handleCardBlur} tabIndex={-1} />
-              </Box>
-            ) 
-            }
+              { adding && (
+                <Box display="flex" flexDirection="row" alignItems="flex-start">
+                  <Item onItemAdd={handleCardDoneClick} onItemCancel={handleCardCancelClick} category={categories[selectedCategory]}/>
+                  <div onBlur={handleCardBlur} tabIndex={-1} />
+                </Box>
+              )}
 
-            <Grid container rowSpacing={1}>
-              {Object.entries(menuItems)
-                .filter(([index, menuItem]) => menuItem.name !== null)
-                .map(([index, menuItem]) => (
-                  <Grid item xs={7}>
-                    <Box key={index} display="flex" flexDirection="row" mt={2}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1vw' }}>
+                {Object.entries(menuItems)
+                  .filter(([index, menuItem]) => menuItem.name !== null)
+                  .map(([index, menuItem]) => (
+                    <div style={{ width: '20vw', height: '30vh', margin: '4%' }}>
                       <MenuItem
                         ItemCategory={categories[selectedCategory]}
                         ItemIndex={index}
@@ -429,14 +512,12 @@ const Menu = () => {
                         onItemRemove={() => handleRemoveItemClick(index)}
                         onItemsCategory={() => handleCategoryClick(selectedCategory)}
                       />
-                    </Box>
-                  </Grid>
-              ))}
-              {menuItems
-                .filter((menuItem) => menuItem.category === selectedCategory && menuItem.name !== null)
-                .map((menuItem, index) => (
-                  <Grid item xs={7}>
-                    <Box key={index} display="flex" flexDirection="row" mt={2}>
+                    </div>
+                ))}
+              </div>
+                {menuItems
+                  .filter((menuItem) => menuItem.category === selectedCategory && menuItem.name !== null)
+                  .map((menuItem, index) => (
                       <MenuItem
                         ItemName={menuItem.name}
                         ItemDescription={menuItem.description}
@@ -445,25 +526,21 @@ const Menu = () => {
                         ItemVegetarian={menuItem.vegetarian}
                         onItemRemove={() => handleRemoveItemClick(index)}
                       />
-                    </Box>
-                  </Grid>
-              ))}
-          </Grid>
-
-          </Box>
+                ))}
+            </Box>
         </Box>
         ) : (
-          <Box 
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            height="80vh"
-          >
-          <Typography variant="h4" align="center" alignItems="center" style={{ margin: '20px' }}>
-            The menu item is currently empty. Please add a menu category to get started.
+          <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="60vh"
+        >
+          <Typography variant="h5" style={{ margin: '20px' }}>
+            Edit menu here. <span role="img" aria-label="Smiley">&#128512;</span>
           </Typography>
-          </Box>
-        )}
+        </Box>
+          )}
       </Box>
 
     </Container>
