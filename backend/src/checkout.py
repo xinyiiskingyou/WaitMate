@@ -1,6 +1,10 @@
 import sqlite3
-from constant import DB_PATH
-from src.error import InputError
+import sys
+sys.path.insert(0, '/backend/src/')
+#from constant import DB_PATH
+from error import InputError
+
+
 class Checkout:
     def __init__(self) -> None:
         self.DB_PATH = './src/database/restaurant.db'
@@ -112,16 +116,36 @@ class Checkout:
         con.commit()
         con.close()
 
-    # PRIVATE
-    def checkout_coupon_find(self, code: str) -> int:
+    def checkout_coupon_delete(self, code: str):
+        if not self.checkout_coupon_find(code):
+            return
+        
         con = sqlite3.connect(self.DB_PATH)
         cur = con.cursor()
-        cur.execute('''CREATE TABLE IF NOT EXISTS Coupons (
-            code TEXT PRIMARY KEY,
-            amount INTEGER)'''
-        )
+        cur.execute('DELETE FROM Coupons WHERE code = (?)', (code,))
         con.commit()
+        con.close()
 
+    def checkout_coupon_view(self) -> list[dict]: 
+        self.coupon_create()
+
+        coupons = []
+
+        con = sqlite3.connect(self.DB_PATH)
+        cur = con.cursor()
+        cur.execute('SELECT * FROM Coupons')
+        print(cur.fetchall())
+        con.close()
+
+        return coupons
+
+    # PRIVATE
+    
+    def checkout_coupon_find(self, code: str) -> int:
+        self.coupon_create()
+
+        con = sqlite3.connect(self.DB_PATH)
+        cur = con.cursor()
         cur.execute('SELECT * FROM Coupons WHERE code = ?',
             (code,)
         )
@@ -132,7 +156,16 @@ class Checkout:
         if len(data) == 0:
             return None
         return data[0][1]
-
+    
+    def coupon_create(self):
+        con = sqlite3.connect(self.DB_PATH)
+        cur = con.cursor()
+        cur.execute('''CREATE TABLE IF NOT EXISTS Coupons (
+            code TEXT PRIMARY KEY,
+            amount INTEGER)'''
+        )
+        con.commit()
+        con.close()
 
     def checkout_create(self):
         con = sqlite3.connect(self.DB_PATH)
@@ -172,8 +205,13 @@ if __name__ == '__main__':
     # checkout.checkout_order(1)
     # checkout.checkout_coupon_create('Cats', 20)
     # checkout.checkout_coupon_create('Fish', 10)
+    checkout.checkout_coupon_view()
+    checkout.checkout_coupon_delete('Fish')
+    checkout.checkout_coupon_view()
+
+
     # checkout.checkout_bill_coupon(1, 'Fish')
     # checkout.checkout_bill_tips(1, 10)
-    checkout.checkout_bill(2)
+    # checkout.checkout_bill(2)
 
 
