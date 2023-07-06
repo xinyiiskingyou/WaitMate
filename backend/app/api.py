@@ -13,7 +13,7 @@ from src.model.category_update_req import CategoryUpdate
 from src.model.item_req import Item
 from src.model.table_req import Table
 from src.model.order_req import Order
-from src.model.coupon_req import Coupon, Coupon_Cust
+from src.model.coupon_req import Coupon, Coupon_Cust, Coupon_Code
 from src.model.bill_req import Tip
 
 
@@ -176,3 +176,12 @@ def checkout_bill_coupon_api(reqbody: Coupon_Cust):
 def checkout_coupon_create_api(reqbody: Coupon):
     checkout.checkout_coupon_create(reqbody.code, reqbody.int)
     return {}
+
+@app.delete('/checkout/coupon/delete')
+def checkout_coupon_delete_api(reqbody: Coupon_Code):
+    checkout.checkout_coupon_delete(reqbody.code)
+    return {}
+
+@app.get('/checkout/coupon/view')
+def checkout_coupon_view_api():
+    return checkout.checkout_coupon_view()
