@@ -9,6 +9,11 @@ class Coupon(BaseModel):
 
 Coupon.update_forward_refs()
 
+class Coupon_Code(BaseModel):
+    code: str = Field(alias="code", default=None)
+
+Coupon_Code.update_forward_refs()
+
 class Coupon_Cust(BaseModel):
     id: int = Field(alias="id", default=None)
     code: str = Field(alias="code", default=None)
