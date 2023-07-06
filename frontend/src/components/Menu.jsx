@@ -10,7 +10,8 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import DoneIcon from '@mui/icons-material/Done';
 import ClearIcon from '@mui/icons-material/Clear';
 import WestIcon from '@mui/icons-material/West';
-
+import meme from '../assets/meme.png';
+import coupon from '../assets/coupon.png';
 const Menu = () => {
   const [editing, setEditing] = useState(false);
   const [categoryEditingIndex, setCategoryEditingIndex] = useState(-1);
@@ -248,7 +249,7 @@ const Menu = () => {
     marginButton: '10%',
     marginLeft: '10%',
     width: '80%',
-    background: "#E0E0E0",
+    background: "transparent",
     border: "4px solid #FFA0A0",
     borderRadius: 15,
     color: 'black',
@@ -459,7 +460,28 @@ const Menu = () => {
         ))}
       </Box>
     </Drawer>
+      <div style={{display: 'flex', flexDirection: "row"}}>
+      <Button variant="contained" style={{...AddbuttonStyle, top: "5px", right: "0px"}}>
+                <img src={meme} alt="MemeIcon" style={{
+                  maxWidth: '100%',
+                  maxHeight: '7vh',
+                  marginRight: '1vw'
+                }}/>
+                Memes
+      </Button>
 
+      <Link to="/coupon" style={{...AddbuttonStyle}}>
+      <Button variant="outlined" >
+                      <img src={coupon} alt="MemeIcon" style={{
+                        maxWidth: '100%',
+                        maxHeight: '7vh',
+                        marginRight: '1vw'
+                      }}/>
+                      Coupons
+            </Button>
+      </Link>
+
+      </div>
       <Box 
         flexGrow={1} 
         p={2} 
@@ -531,16 +553,20 @@ const Menu = () => {
             </Box>
         </Box>
         ) : (
+
+
           <Box
           display="flex"
           justifyContent="center"
           alignItems="center"
           minHeight="60vh"
         >
+
+
           <Typography variant="h5" style={{ margin: '20px' }}>
             Edit menu here. <span role="img" aria-label="Smiley">&#128512;</span>
           </Typography>
-        </Box>
+          </Box>
           )}
       </Box>
 

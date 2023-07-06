@@ -9,7 +9,9 @@ const Manager = () => {
   const buttonStyle = {
     width: '200px',
     height: '100px',
-    fontSize: '18px'
+    fontSize: '18px',
+    border: "5px solid #FFA0A0",
+    color: "black"
   };
   const headingStyle = {
     textAlign: 'center',
@@ -29,21 +31,21 @@ const Manager = () => {
         </Grid>
         <Grid item xs={4} textAlign={'right'}>
           <Link to="/menu">
-            <Button variant='contained' color='primary' style={buttonStyle}>
+            <Button variant='outlined' style={buttonStyle}>
               Menu
             </Button>
             </Link>
         </Grid>
         <Grid item xs={4} textAlign={'center'}>
           <Link to="/coupon">
-            <Button variant='contained' color='primary' style={buttonStyle}>
+            <Button variant='outlined' style={buttonStyle}>
               Coupons
             </Button>
           </Link>
         </Grid>
         <Grid item xs={4} textAlign={'left'}>
           <Link to="/waitstaff">
-          <Button variant='contained' color='primary' style={buttonStyle}>
+          <Button variant='outlined' style={buttonStyle}>
             Meme
           </Button>
           </Link>
