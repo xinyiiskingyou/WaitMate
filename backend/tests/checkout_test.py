@@ -65,6 +65,14 @@ def test_checkout_coupon(empty, order_japanese):
     }
     assert checkout.checkout_bill(order_japanese) == exp
 
+def test_checkout_coupon_delete(empty):
+    checkout.checkout_coupon_create('catsz', 50)
+    assert checkout.checkout_coupon_view() == [{'code': 'catsz', 'int': 50}]
+
+    checkout.checkout_coupon_delete('catsz')
+    assert checkout.checkout_coupon_view() == []
+
+
 ######################################
 ########## endpoint tests ############
 ######################################
@@ -99,3 +107,7 @@ def test_checkout_coupon_create_endpoint(empty, client):
 
     resp = client.post('/checkout/coupon/create', json={'code': 'catsz', 'int': 10})
     assert resp.status_code == INPUTERROR
+
+def test_checkout_coupon_view_endpoint(empty, client):
+    resp = client.get('/checkout/coupon/view')
+    assert resp.status_code == VALID

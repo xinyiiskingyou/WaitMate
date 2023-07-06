@@ -1,8 +1,8 @@
 import sqlite3
-import sys
-sys.path.insert(0, '/backend/src/')
-#from constant import DB_PATH
-from error import InputError
+# import sys
+# sys.path.insert(0, '/backend/src/')
+from constant import DB_PATH
+from src.error import InputError
 
 
 class Checkout:
@@ -27,9 +27,6 @@ class Checkout:
             pass
 
         con.close()
-
-        print(ret)
-
         return ret
     
     def checkout_bill(self, table_id: int) -> dict:
@@ -65,7 +62,6 @@ class Checkout:
         if 'tip' in bill:
             bill['total'] += bill['tip']
 
-        print(bill)
         return bill
 
     def checkout_bill_tips(self, table_id: int, amount: int):
@@ -107,6 +103,8 @@ class Checkout:
     def checkout_coupon_create(self, code: str, amount: int):
         if self.checkout_coupon_find(code):
             raise InputError('Coupon code already in use')
+        if amount <= 0:
+            raise InputError('Invalid coupon amount')
         
         con = sqlite3.connect(self.DB_PATH)
         cur = con.cursor()
@@ -134,9 +132,10 @@ class Checkout:
         con = sqlite3.connect(self.DB_PATH)
         cur = con.cursor()
         cur.execute('SELECT * FROM Coupons')
-        print(cur.fetchall())
+        data: list = cur.fetchall()
         con.close()
 
+        coupons = [{'code': i[0], 'int': i[1]} for i in data]
         return coupons
 
     # PRIVATE
