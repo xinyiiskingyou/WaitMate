@@ -25,7 +25,8 @@ notification = Notifications()
 origins = [
     'http://localhost:3000',
     'localhost:3000',
-    'localhost:3000/menu'
+    'localhost:3000/menu',
+    'localhost:3001',
 ]
 
 app.add_middleware(

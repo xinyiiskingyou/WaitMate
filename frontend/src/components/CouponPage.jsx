@@ -56,6 +56,15 @@ const Coupon = () => {
     setDiscount("");
     setExpiryDate(null);
   };
+
+  const handleRemove = (index) => {
+    setCoupons((prevCoupons) => {
+      const updatedCoupons = [...prevCoupons];
+      updatedCoupons.splice(index, 1);
+      return updatedCoupons;
+    });
+  }
+
   return (
     <div>
     <div>
@@ -116,6 +125,7 @@ const Coupon = () => {
                                 <h3>{coupon.code}</h3>
                                 <p>{coupon.discount}% off</p>
                                 <p>{coupon.expiryDate && coupon.expiryDate.toDateString()}</p>
+                                <Button variant='contained' style={{fontSize: "10px"}} onClick={() => handleRemove(coupon.id)}>Remove</Button>
                               </CardContent>
                             </Card>
                           ))}

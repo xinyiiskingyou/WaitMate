@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useTheme } from '@mui/material/styles';
-import { Card, CardActions, CardContent, Container, Drawer, Box, Button, Typography, TextField, ButtonGroup, Grid } from '@mui/material';
+import { Card, CardActions, CardContent, Container, Drawer, Box, Button, Typography, TextField, ButtonGroup, Grid, IconButton } from '@mui/material';
 import { Link, useParams } from 'react-router-dom';
 import Item from './Item';
 import MenuItem from './Card';
@@ -470,15 +470,19 @@ const Menu = () => {
                 Memes
       </Button>
 
-      <Link to="/coupon" style={{...AddbuttonStyle}}>
-      <Button variant="outlined" >
-                      <img src={coupon} alt="MemeIcon" style={{
-                        maxWidth: '100%',
-                        maxHeight: '7vh',
-                        marginRight: '1vw'
-                      }}/>
-                      Coupons
-            </Button>
+      <Link to="/coupon" style={{
+            marginTop: '8%',
+            marginLeft: "10%",
+            width: '100%',
+      }}>
+        <IconButton style={{...AddbuttonStyle}}>
+          <img src={coupon} alt="MemeIcon" style={{
+            maxWidth: '100%',
+            maxHeight: '7vh',
+            marginRight: '1vw'
+          }}/>
+          Coupons
+        </IconButton>
       </Link>
 
       </div>
