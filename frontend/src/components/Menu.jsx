@@ -51,6 +51,8 @@ const Menu = () => {
         .catch(error => {
           console.error(error);
           alert('Failed to add category. Please try again.');
+          setCategoryText('');
+          setEditing(false);
         });
     } else {
       alert('Failed to add category. Please try again.');
