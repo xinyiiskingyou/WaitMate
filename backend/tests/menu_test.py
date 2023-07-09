@@ -12,18 +12,55 @@ def menu_1():
 
     menu.category_add('Fish')
     menu.category_add('Water')
-    menu.item_add('Fish', 'SeaBass', '10', '_', '_', False)
-    menu.item_add('Fish', 'FlatFish', '20', '_', '_', False)
+    
+    menu.item_add({
+        'category': 'Fish',
+        'name': 'SeaBass',
+        'cost': 10,
+        'description': '_',
+        'ingredients': '_',
+        'is_vegan': False
+    })
+    
+    menu.item_add({
+        'category': 'Fish',
+        'name': 'FlatFish',
+        'cost': 20,
+        'description': '_',
+        'ingredients': '_',
+        'is_vegan': False
+    })
 
 def test_item_add_invalid_name():
     menu_1()
 
     with pytest.raises(InputError):
-        menu.item_add('Fish', '', '1', '_', '_', False) 
+        menu.item_add({
+            'category': 'Fish',
+            'name': '',
+            'cost': 10,
+            'description': '_',
+            'ingredients': '_',
+            'is_vegan': False
+        })
     with pytest.raises(InputError):
-        menu.item_add('Fish', 'BigSeaBassTodayYum', '1', '_', '_', False) 
+        menu.item_add({
+            'category': 'Fish',
+            'name': 'BigSeaBassTodayYum',
+            'cost': 10,
+            'description': '_',
+            'ingredients': '_',
+            'is_vegan': False
+        })
     with pytest.raises(AccessError):
-        menu.item_add('Fish', 'SeaBass', '1', '_', '_', False) 
+        menu.item_add({
+            'category': 'Fish',
+            'name': 'SeaBass',
+            'cost': 10,
+            'description': '_',
+            'ingredients': '_',
+            'is_vegan': False
+        })
 
 def test_cat_add_invalid_name():
     menu_1()
@@ -57,14 +94,14 @@ def test_item_update_details_invalid_name():
 
     menu_1()
     with pytest.raises(InputError):
-        menu.update_details_menu_items('Fish', 1, new_name='BigSeaBassTodayYum')
+        menu.update_details_menu_items('Fish', 1, name='BigSeaBassTodayYum')
     with pytest.raises(InputError):
-        menu.update_details_menu_items('Fish', 1, new_name='')
+        menu.update_details_menu_items('Fish', 1, name='')
 
 def test_item_update_details_valid_name():
     menu_1()
     original = menu.get_items_in_category(1)
-    menu.update_details_menu_items('Fish', 1, new_name='Haddock')
+    menu.update_details_menu_items('Fish', 1, name='Haddock')
     result = menu.get_items_in_category(1)
 
     assert result != original
@@ -139,9 +176,9 @@ def test_menu_remove():
     menu.remove_menu_items('FlatFish')
     assert len(menu.get_items_in_category(1)) == 1
 
-######################################
-########## endpoint tests ############
-######################################
+# ######################################
+# ########## endpoint tests ############
+# ######################################
 
 def test_category_add_endpoint(client):
     # valid case
