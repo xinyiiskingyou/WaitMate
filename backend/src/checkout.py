@@ -1,8 +1,11 @@
 import sqlite3
-# import sys
-# sys.path.insert(0, '/backend/src/')
-from constant import DB_PATH
-from src.error import InputError
+import datetime
+
+import sys
+sys.path.insert(0, '/backend/src/')
+
+# from constant import DB_PATH
+from error import InputError
 
 
 class Checkout:
@@ -190,6 +193,20 @@ class Checkout:
         con.commit()
         con.close()
 
+    def coupon_expire(self):
+        currentDateTime = datetime.datetime.now()
+        if datetime.datetime.strptime('2023-07-07 14:01:02', '%Y-%d-%m %H:%M:%S') < currentDateTime:
+            print(currentDateTime)
+
+        # con = sqlite3.connect(self.DB_PATH)
+        # cur = con.cursor()
+        # cur.execute('SELECT datetime(now,localtime)')
+        # con.commit()
+
+        # cur.execute('DELETE FROM Coupons WHERE expiry < (?)')
+        # con.commit()
+        # con.close()
+
     def checkout_remove(self, table_id: int):
         con = sqlite3.connect(self.DB_PATH)
         cur = con.cursor()
@@ -200,13 +217,14 @@ class Checkout:
 
 if __name__ == '__main__':
     checkout = Checkout()
+    checkout.coupon_expire()
     # checkout.checkout_remove(1)
     # checkout.checkout_order(1)
     # checkout.checkout_coupon_create('Cats', 20)
     # checkout.checkout_coupon_create('Fish', 10)
-    checkout.checkout_coupon_view()
-    checkout.checkout_coupon_delete('Fish')
-    checkout.checkout_coupon_view()
+    # checkout.checkout_coupon_view()
+    # checkout.checkout_coupon_delete('Fish')
+    # checkout.checkout_coupon_view()
 
 
     # checkout.checkout_bill_coupon(1, 'Fish')
