@@ -54,6 +54,8 @@ const Menu = () => {
         });
     } else {
       alert('Failed to add category. Please try again.');
+      setCategoryText('');
+      setEditing(false);
     }
   };
 
