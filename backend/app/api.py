@@ -6,12 +6,16 @@ from src.table import TableDB
 from src.menu import MenuDB
 from src.notifications import Notifications
 from src.tracking import Tracking
+from src.checkout import Checkout
 from src.model.category_req import Category
 from src.model.category_order_req import CategoryOrder
 from src.model.category_update_req import CategoryUpdate
 from src.model.item_req import Item
 from src.model.table_req import Table
 from src.model.order_req import Order
+from src.model.coupon_req import Coupon, Coupon_Cust, Coupon_Code
+from src.model.bill_req import Tip
+
 
 sys.path.append('..')
 
@@ -21,6 +25,7 @@ table = TableDB()
 menu = MenuDB()
 track = Tracking()
 notification = Notifications()
+checkout = Checkout()
 
 origins = [
     'http://localhost:3000',
@@ -147,3 +152,37 @@ def waitstaff_get_from_customer():
 @app.get('/notification/waitstaff/get/kitchen')
 def waitstaff_get_from_customer():
     return notification.waitstaff_receives_from_kitchen()
+
+############ CHECKOUT #################
+
+@app.get('/checkout/order/{id}')
+def checkout_order_api(id: int):
+    return checkout.checkout_order(id)
+
+@app.get('/checkout/bill/{id}')
+def checkout_bill_api(id: int):
+    return checkout.checkout_bill(id)
+
+@app.post('/checkout/bill/tips')
+def checkout_bill_tips_api(reqbody: Tip):
+    checkout.checkout_bill_tips(reqbody.id, reqbody.amount)
+    return {}
+
+@app.post('/checkout/bill/coupon')
+def checkout_bill_coupon_api(reqbody: Coupon_Cust):
+    checkout.checkout_bill_coupon(reqbody.id, reqbody.code)
+    return {}
+
+@app.post('/checkout/coupon/create')
+def checkout_coupon_create_api(reqbody: Coupon):
+    checkout.checkout_coupon_create(reqbody.code, reqbody.int)
+    return {}
+
+@app.delete('/checkout/coupon/delete')
+def checkout_coupon_delete_api(reqbody: Coupon_Code):
+    checkout.checkout_coupon_delete(reqbody.code)
+    return {}
+
+@app.get('/checkout/coupon/view')
+def checkout_coupon_view_api():
+    return checkout.checkout_coupon_view()

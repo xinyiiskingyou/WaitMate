@@ -9,7 +9,7 @@ import sqlite3
 from src.error import InputError, NotFoundError
 from src.clear import clear_database
 from src.helper import check_table_exists
-from constant import TABLE_DB_PATH
+from constant import DB_PATH
 
 class TableDB():
     '''
@@ -19,7 +19,7 @@ class TableDB():
         database_path (str): The path to the SQLite database file.
     '''
 
-    def __init__(self, database=TABLE_DB_PATH) -> None:
+    def __init__(self, database=DB_PATH) -> None:
         self.database = database
 
     def create_tables_db(self) -> None:
@@ -157,4 +157,4 @@ class TableDB():
         Return Value:
             N/A
         '''
-        clear_database(self.database, 'Tables')
+        clear_database('Tables')

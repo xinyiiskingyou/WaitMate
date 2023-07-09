@@ -2,6 +2,9 @@ import pytest
 from src.order import OrderDB
 from src.error import InputError
 from tests.conftest import VALID, INPUTERROR
+import sqlite3
+from constant import DB_PATH
+
 
 order = OrderDB()
 def test_add_order_invalid_table_number():
@@ -22,7 +25,7 @@ def test_add_order_invalid_amount(table_id_1):
     with pytest.raises(InputError):
         order.add_order(table_id_1, 'sushi', 0)
 
-def test_add_order_invalid_item_name(table_id_1, menu_japanese):
+def test_add_order_invalid_item_name(menu_japanese, table_id_1):
     order.clear_order_table()
 
     with pytest.raises(InputError):
@@ -40,9 +43,16 @@ def test_list_order_invalid_table_id():
     with pytest.raises(InputError):
         order.get_table_order(100)
 
-def test_valid_order_list(table_id_1, table_id_2, menu_japanese):
-    order.clear_order_table()
-    
+def test_valid_order_list(menu_japanese, table_id_1, table_id_2):
+    print('in')
+    con = sqlite3.connect(DB_PATH)
+    cur = con.cursor()
+
+    cur.execute('SELECT * FROM Tables WHERE table_id = ?', (table_id_1,))
+    print(cur.fetchone())
+    print('hi')
+    con.close()
+
     order.add_order(table_id_1, 'salmon sushi', 1)
     order.add_order(table_id_1, 'dorayaki', 1)
 

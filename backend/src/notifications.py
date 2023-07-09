@@ -1,14 +1,13 @@
 import sqlite3
-from constant import TABLE_DB_PATH, ORDER_DB_PATH
+from constant import DB_PATH
 from src.helper import check_table_exists
 from src.error import InputError, AccessError
 from typing import Any, List
 
 class Notifications:
     
-    def __init__(self, table_db=TABLE_DB_PATH, order_db=ORDER_DB_PATH) -> None:
-        self.table_db = table_db
-        self.order_db = order_db
+    def __init__(self, database=DB_PATH) -> None:
+        self.database = database
         
     def customer_send_notification(self, table_id: int, status: str) -> None:
         '''
@@ -23,7 +22,7 @@ class Notifications:
             raise InputError('Unknown status')
         
         try:
-            con = sqlite3.connect(self.table_db)
+            con = sqlite3.connect(self.database)
             cur = con.cursor()
 
             # update table status
@@ -37,7 +36,7 @@ class Notifications:
     def waitstaff_receives_from_customer(self) -> List[Any]:
         
         try:
-            con = sqlite3.connect(self.table_db)
+            con = sqlite3.connect(self.database)
             cur = con.cursor()
             
             cur.execute("SELECT * FROM Tables WHERE status != 'OCCUPIED'")
@@ -51,7 +50,7 @@ class Notifications:
     def waitstaff_receives_from_kitchen(self) -> List[Any]:
         
         try:
-            con = sqlite3.connect(self.order_db)
+            con = sqlite3.connect(self.database)
             cur = con.cursor()
             
             cur.execute('''
