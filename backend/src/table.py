@@ -79,14 +79,14 @@ class TableDB():
 
     def get_all_tables_status(self) -> dict:
         '''
-        Returns the status of all tables from the Tables database.
+        Return Value the status of all tables from the Tables database.
 
         Arguments:
             N/A
         Exceptions:
             N/A
         Return Value:
-            Returns <table_dict> of table_id with respective table status.
+            Return Value <table_dict> of table_id with respective table status.
         '''
         try:
             con = sqlite3.connect(self.database)
@@ -119,7 +119,7 @@ class TableDB():
                         - Occurs when table_id is less than 0
                         - Occurs when status is not 'OCCUPIED', 'ASSIST', 'BILL', 'EMPTY'
         Return Value:
-            Returns <table_dict> of table_id with respective table status.
+            Return Value <table_dict> of table_id with respective table status.
         '''
 
         # check if table number exists

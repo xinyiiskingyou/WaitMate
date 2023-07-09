@@ -56,7 +56,7 @@
     <td>Dictionary containing table_id, status </td>
   </tr>
   <tr>
-    <td>(outputs only) name exactly <b>item</b></td>
+    <td>name exactly <b>item</b></td>
     <td>Dictionary containing name, description, price, ingredient, is_vegan </td>
   </tr>
   <tr>
@@ -117,7 +117,7 @@
   <tr>
     <td><code>menu/item/add</code><br /><br />Add new menu item with titles, descriptions, ingredients, category, and cost to the menu</td>
     <td style="font-weight: bold; color: blue;">POST</td>
-    <td><b>Parameters:</b><br /><code>{ category, name, cost, description, ingredient, is_vegan }</code><br /><br /><b>Return Type:</b><br /><code>{}</code></td>
+    <td><b>Parameters:</b><br /><code>{ category, item }</code><br /><br /><b>Return Type:</b><br /><code>{}</code></td>
     <td>
       <b>InputError</b> when:
       <ul>
@@ -151,7 +151,7 @@
   <tr>
     <td><code>menu/item/update/details</code><br /><br />Update the description, ingredient, category, or cost of a menu item to the menu.</td>
     <td style="font-weight: bold; color: orange;">PUT</td>
-    <td><b>Parameters:</b><br /><code>{ item_id, name, cost, description, ingredient, is_vegan }</code><br /><br /><b>Return Type:</b><br /><code>{}</code></td>
+    <td><b>Parameters:</b><br /><code>{ item_id, item }</code><br /><br /><b>Return Type:</b><br /><code>{}</code></td>
     <td>
       <b>InputError</b> when:
       <ul>
