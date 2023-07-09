@@ -146,7 +146,8 @@ class TableDB():
         finally:
             con.close()
 
-    def clear_tables_data(self) -> None:
+    @staticmethod
+    def clear_tables_data() -> None:
         '''
         Resets all the data of the table database.
 
