@@ -1,5 +1,5 @@
 import sqlite3
-from constant import DB_PATH as MENU_DB_PATH
+from constant import DB_PATH
 from src.error import InputError, AccessError
 from src.helper import (
     check_if_category_exists, get_category_order_by_name, get_menu_item_order_by_name, 
@@ -9,7 +9,7 @@ from src.helper import (
 
 class MenuDB:
 
-    def __init__(self, database=MENU_DB_PATH) -> None:
+    def __init__(self, database=DB_PATH) -> None:
         self.database = database
 
     def create_category_table(self) -> None:
@@ -26,7 +26,7 @@ class MenuDB:
         con.close()
 
     def create_item_table(self) -> None:
-        con = sqlite3.connect(MENU_DB_PATH)
+        con = sqlite3.connect(self.database)
         cur = con.cursor()
         cur.execute('''CREATE TABLE IF NOT EXISTS Items (
                         item_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -42,7 +42,7 @@ class MenuDB:
         con.close()
 
     def create_menu_table(self) -> None:
-        con = sqlite3.connect(MENU_DB_PATH)
+        con = sqlite3.connect(self.database)
         cur = con.cursor()
         cur.execute('CREATE TABLE IF NOT EXISTS Menu(category, item, item_order)')
         con.commit()
@@ -121,7 +121,7 @@ class MenuDB:
 
         self.create_category_table()
         
-        con = sqlite3.connect(MENU_DB_PATH)
+        con = sqlite3.connect(self.database)
         cursor = con.cursor()
 
         cursor.execute("SELECT cat_order, name FROM Categories ORDER BY cat_order")

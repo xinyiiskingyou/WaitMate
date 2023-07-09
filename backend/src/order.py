@@ -8,7 +8,7 @@ including adding orders, retrieving orders etc.
 import sqlite3
 import datetime
 from typing import Any, List
-from constant import DB_PATH as ORDER_DB_PATH
+from constant import DB_PATH
 from src.error import InputError, NotFoundError
 from src.clear import clear_database
 from src.helper import check_table_exists, get_item_info, get_order
@@ -21,7 +21,7 @@ class OrderDB:
         database_path (str): The path to the SQLite database file.
     '''
 
-    def __init__(self, database=ORDER_DB_PATH) -> None:
+    def __init__(self, database=DB_PATH) -> None:
         self.database = database
 
     def create_order_table(self) -> None:

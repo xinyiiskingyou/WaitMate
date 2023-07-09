@@ -1,18 +1,16 @@
 import sqlite3
-# import sys
-# sys.path.insert(0, '/backend/src/')
 from constant import DB_PATH
 from src.error import InputError
-
+from typing import List
 
 class Checkout:
-    def __init__(self) -> None:
-        self.DB_PATH = './src/database/restaurant.db'
+    def __init__(self, database=DB_PATH) -> None:
+        self.database = database
 
-    def checkout_order(self, table_id: int) -> list[dict]:
+    def checkout_order(self, table_id: int) -> List[dict]:
         ret: list = []
 
-        con = sqlite3.connect(self.DB_PATH)
+        con = sqlite3.connect(self.database)
         cur = con.cursor()
         try:
             cur.execute('''SELECT name, cost, amount from Orders o 
@@ -33,7 +31,7 @@ class Checkout:
         bill: dict = {
             'items': self.checkout_order(table_id),
         }
-        con = sqlite3.connect(self.DB_PATH)
+        con = sqlite3.connect(self.database)
         cur = con.cursor()
         try:
             cur.execute('''SELECT coupon, tip FROM Checkout 
@@ -71,7 +69,7 @@ class Checkout:
         self.checkout_create()
         self.checkout_add(table_id)
 
-        con = sqlite3.connect(self.DB_PATH)
+        con = sqlite3.connect(self.database)
         cur = con.cursor()
 
         cur.execute('''UPDATE Checkout 
@@ -89,7 +87,7 @@ class Checkout:
         self.checkout_create()
         self.checkout_add(table_id)
 
-        con = sqlite3.connect(self.DB_PATH)
+        con = sqlite3.connect(self.database)
         cur = con.cursor()
 
         cur.execute('''UPDATE Checkout 
@@ -106,7 +104,7 @@ class Checkout:
         if amount <= 0:
             raise InputError('Invalid coupon amount')
         
-        con = sqlite3.connect(self.DB_PATH)
+        con = sqlite3.connect(self.database)
         cur = con.cursor()
 
         cur.execute('INSERT INTO Coupons(code, amount) VALUES (?, ?)', (code, amount,))
@@ -118,18 +116,18 @@ class Checkout:
         if not self.checkout_coupon_find(code):
             return
         
-        con = sqlite3.connect(self.DB_PATH)
+        con = sqlite3.connect(self.database)
         cur = con.cursor()
         cur.execute('DELETE FROM Coupons WHERE code = (?)', (code,))
         con.commit()
         con.close()
 
-    def checkout_coupon_view(self) -> list[dict]: 
+    def checkout_coupon_view(self) -> List[dict]: 
         self.coupon_create()
 
         coupons = []
 
-        con = sqlite3.connect(self.DB_PATH)
+        con = sqlite3.connect(self.database)
         cur = con.cursor()
         cur.execute('SELECT * FROM Coupons')
         data: list = cur.fetchall()
@@ -143,7 +141,7 @@ class Checkout:
     def checkout_coupon_find(self, code: str) -> int:
         self.coupon_create()
 
-        con = sqlite3.connect(self.DB_PATH)
+        con = sqlite3.connect(self.database)
         cur = con.cursor()
         cur.execute('SELECT * FROM Coupons WHERE code = ?',
             (code,)
@@ -157,7 +155,7 @@ class Checkout:
         return data[0][1]
     
     def coupon_create(self):
-        con = sqlite3.connect(self.DB_PATH)
+        con = sqlite3.connect(self.database)
         cur = con.cursor()
         cur.execute('''CREATE TABLE IF NOT EXISTS Coupons (
             code TEXT PRIMARY KEY,
@@ -167,7 +165,7 @@ class Checkout:
         con.close()
 
     def checkout_create(self):
-        con = sqlite3.connect(self.DB_PATH)
+        con = sqlite3.connect(self.database)
         cur = con.cursor()
         cur.execute('''CREATE TABLE IF NOT EXISTS Checkout (
             table_id INTEGER PRIMARY KEY,
@@ -179,7 +177,7 @@ class Checkout:
         con.close()
 
     def checkout_add(self, table_id: int):
-        con = sqlite3.connect(self.DB_PATH)
+        con = sqlite3.connect(self.database)
         cur = con.cursor()
         cur.execute('SELECT * FROM Checkout WHERE table_id = ?', (table_id,))
         if len(cur.fetchall()) == 0:
@@ -191,7 +189,7 @@ class Checkout:
         con.close()
 
     def checkout_remove(self, table_id: int):
-        con = sqlite3.connect(self.DB_PATH)
+        con = sqlite3.connect(self.database)
         cur = con.cursor()
         cur.execute('DELETE FROM Checkout WHERE table_id = (?)', (table_id,))
         con.commit()
