@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useTheme } from '@mui/material/styles';
 import { Container, Drawer, Box, Button, Typography, TextField, ButtonGroup, Grid } from '@mui/material';
 import { Link } from 'react-router-dom';
 import Item from './Item';
@@ -42,22 +41,19 @@ const Menu = () => {
             throw new Error('Failed to save category');
           }
         })
-        .then(data => {
+        .then(() => {
           // Handle the response data if necessary
           setCategories([...categories, categoryText.trim()]);
-          setCategoryText('');
-          setEditing(false);
+          handleCategoryDone();
         })
         .catch(error => {
           console.error(error);
           alert('Failed to add category. Please try again.');
-          setCategoryText('');
-          setEditing(false);
+          handleCategoryDone();
         });
     } else {
       alert('Failed to add category. Please try again.');
-      setCategoryText('');
-      setEditing(false);
+      handleCategoryDone();
     }
   };
 
@@ -75,6 +71,7 @@ const Menu = () => {
   };
 
   const handleCategoryDone = () => {
+    setCategoryText('');
     setEditing(false);
   };
 
@@ -110,11 +107,6 @@ const Menu = () => {
     if (cardData.name || cardData.price || cardData.description) {
       setAdding(false);
     }
-  };
-  
-  const handleItemAdd = (name, price, description) => {
-    // Perform any necessary logic with the item details
-    console.log('Item details:', name, price, description);
   };
 
   const handleEditCategory = (index) => {
@@ -238,20 +230,6 @@ const Menu = () => {
       alert('Error fetching categories:', error);
       window.location.reload();
     }
-  };
-
-  const theme = useTheme();
-  const styles = {
-    cardContainer: {
-      display: 'flex',
-      flexDirection:"row",
-      gap: '5%',
-    },
-    card: {
-      display:"flex", 
-      flexDirection:"row",
-      /* Additional styling properties as needed */
-    },
   };
 
   const AddbuttonStyle = {
