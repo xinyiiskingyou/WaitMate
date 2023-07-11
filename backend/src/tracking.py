@@ -109,12 +109,16 @@ class Tracking:
                 if column_name == "is_served" and order[2] != 1:
                     raise AccessError("Dish is not ready!")
                 cur.execute(
-                    '''UPDATE Orders SET {column} = ?
-                    WHERE table_id = ? AND item_name = ? AND {column} != ?
+                    '''
+                    UPDATE Orders SET {column} = ?
+                    WHERE ROWID = (
+                        SELECT ROWID FROM Orders
+                        WHERE table_id = ? AND item_name = ? AND {column} != ?
+                        LIMIT 1
+                    )
                     '''.format(column=column_name),
                     (1, table_id, item_name, 1)
                 )
-
                 con.commit()
                 break
         con.close()

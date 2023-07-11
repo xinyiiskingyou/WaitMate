@@ -133,7 +133,7 @@ const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
       <CardContent>
         <Typography variant="h5" gutterBottom style={{ fontWeight: 'bold', textAlign: "center" }}>
           {name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
-          {vegetarian===1 || vegetarian ? (
+          {vegetarian ? (
             <img 
               src={veg} 
               alt="Icon" 
