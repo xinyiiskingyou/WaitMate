@@ -138,8 +138,13 @@ def get_order(table_id: int) -> List[Any]:
     try:
         con = sqlite3.connect(DB_PATH)
         cur = con.cursor()
-
-        cur.execute('SELECT item_name, amount, is_prepared, is_served FROM Orders WHERE table_id = ?', (table_id,))
+        cur.execute('''
+            SELECT o.item_name, o.amount, o.is_prepared, o.is_served, o.amount * i.cost
+            FROM Orders o
+            FULL OUTER JOIN Items i
+            on o.item_name = i.name
+            WHERE table_id = ?
+        ''', (table_id, ))
         order_list = cur.fetchall()
     except Exception:
         raise NotFoundError('Order database not found.')
