@@ -118,3 +118,15 @@ def table_status_update(reqbody: Table):
     table.update_table_status(reqbody.table_id, reqbody.status)
     return {}
 
+# User management
+@app.put("/auth/password")
+def auth_password_api():
+    return {}
+
+@app.put("/auth/waitstaff/password")
+def auth_waitstaff_password_api():
+    return {}
+
+@app.put("/auth/kitchen/password")
+def auth_kitchen_password_api():
+    return {}

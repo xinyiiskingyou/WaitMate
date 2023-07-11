@@ -1,11 +1,11 @@
 import React from 'react';
-// import { auth } from "./firebase-config";
-// import {
-//   createUserWithEmailAndPassword,
-//   signInWithEmailAndPassword,
-//   onAuthStateChanged,
-//   signOut,
-// } from "firebase/auth";
+import { auth } from "./firebase-config";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut,
+} from "firebase/auth";
 import { styled } from '@mui/material/styles';
 import {Link, useParams} from 'react-router-dom';
 import { Box, Button, Grid, Typography, TextField, Container, Popover } from '@mui/material';
@@ -95,7 +95,7 @@ const ManagerLogin = () => {
                 horizontal: 'left',
               }}
             >
-              <Typography sx={{ p: 2 }}>Email: @waitmate<br/>Password: waitmate1</Typography>
+              <Typography sx={{ p: 2 }}>Email: manager@waitmate.com <br/>Password: waitmate1</Typography>
             </Popover> 
           </Grid>
           <Grid item> 
