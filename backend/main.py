@@ -1,6 +1,9 @@
 import uvicorn
-
+from src.tracking import Tracking
 if __name__ == '__main__':
+
+    track = Tracking()
+    # track.kitchen_mark_order_completed(1, 'meat lover')
     uvicorn.run('app.api:app', host='0.0.0.0', port=8000, reload=True)
 
 # # # from database import order_db
@@ -13,7 +16,7 @@ if __name__ == '__main__':
 # # # print('all orders:')
 # # # order.get_all_orders()
 
-# from src.tracking import Tracking
+
 # from src.table import TableDB
 # from src.order import OrderDB
 
@@ -27,9 +30,7 @@ if __name__ == '__main__':
 
 # # print(order.get_table_order(1))
 # # # print(order.get_all_orders())
-# track = Tracking()
 
-# track.kitchen_mark_order_completed(1, 'salmon sushi')
 # # track.waitstaff_mark_order_completed(1, 'dorayaki')
 # print(track.customer_view_dish_status(1))
 # # print("AFTER: ")

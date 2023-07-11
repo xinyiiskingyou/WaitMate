@@ -111,7 +111,6 @@ class Tracking:
                 cur.execute(
                     '''UPDATE Orders SET {column} = ?
                     WHERE table_id = ? AND item_name = ? AND {column} != ?
-                    LIMIT 1
                     '''.format(column=column_name),
                     (1, table_id, item_name, 1)
                 )
