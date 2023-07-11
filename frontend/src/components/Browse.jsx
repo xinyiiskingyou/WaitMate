@@ -1,13 +1,11 @@
 import React, { useState,useEffect } from 'react';
-import { Container, Grid, Drawer, Box, Button, Typography } from '@mui/material';
-import { Dialog, DialogContent, DialogActions } from '@mui/material';
+import { Container, Grid, Drawer, Box, Button, Typography, Dialog, DialogContent, DialogActions } from '@mui/material';
 import { Link, useParams } from 'react-router-dom';
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import ItemCard from './CardCust';
-import WestIcon from '@mui/icons-material/West';
 import cart from '../assets/cart.png'
 import boring from '../assets/boring.png'
 import meme from '../assets/meme.png'
@@ -129,7 +127,6 @@ const Browse = () => {
     borderRadius: 6,
   }
   return (
-
     <Container maxWidth="sm">
       <Box sx={{ display: 'flex' }}>
         <Drawer variant="permanent">
@@ -194,9 +191,7 @@ const Browse = () => {
           </Grid>
         </Drawer>
 
-      <Box flexGrow={1} p={2} marginLeft="-22%">
-        {cat !== -1 ? (
-          <Box>
+        <Box flexGrow={1} p={2} marginLeft="-22%">
           <Grid container columnGap={3} justifyContent="flex-end">
             <Grid item>
               <Button 
@@ -236,8 +231,8 @@ const Browse = () => {
                 </DialogActions>
                 </div>
               </Dialog>
-
             </Grid>
+
             <Grid item>
               <Button variant="contained" color="primary" style={buttonStyle}>
                 <img src={boring} alt="BoringIcon" style={{
@@ -249,6 +244,7 @@ const Browse = () => {
                 Too Bored?
               </Button>
             </Grid>
+
             <Grid item>
               <Button variant="contained" color="primary" style={buttonStyle}>
                 <img src={meme} alt="MemeIcon" style={{
@@ -261,36 +257,37 @@ const Browse = () => {
             </Grid>
           </Grid>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.1vw',  gridRowGap: '2vw' }}>
-            {Object.entries(menuItems).map(([name, menuItem]) => (
-              <div style={{ width: '20vw', height: '30vh', margin: '5%' }}>
-                <ItemCard
-                  ItemName={menuItem.name}
-                  ItemDescription={menuItem.description}
-                  ItemPrice={menuItem.cost}
-                  ItemIngredient={menuItem.ingredient}
-                  ItemVegetarian={menuItem.vegetarian}
-                  TableID={id.id}/>
+          {cat !== -1 ? (
+            <Box>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.1vw',  gridRowGap: '2vw' }}>
+                {Object.entries(menuItems).map(([name, menuItem]) => (
+                  <div style={{ width: '20vw', height: '30vh', margin: '5%' }}>
+                    <ItemCard
+                      ItemName={menuItem.name}
+                      ItemDescription={menuItem.description}
+                      ItemPrice={menuItem.cost}
+                      ItemIngredient={menuItem.ingredient}
+                      ItemVegetarian={menuItem.vegetarian}
+                      TableID={id.id}/>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </Box>
+          ) : (
+            <Box 
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              height="80vh"
+            >
+              <Typography variant="h4" align="center" alignItems="center" style={{ margin: '20px' }}>
+                No Menu Item 
+              </Typography>
+            </Box>
+          )}
         </Box>
-        ) : (
-          <Box 
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            height="80vh"
-          >
-          <Typography variant="h4" align="center" alignItems="center" style={{ margin: '20px' }}>
-            No Menu Item 
-          </Typography>
-          </Box>
-        )}
-     </Box>
-    </Box>
+      </Box>
     </Container>
-    
   );
 };
 

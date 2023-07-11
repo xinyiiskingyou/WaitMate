@@ -18,7 +18,7 @@ const Menu = () => {
   const [selectedCategory, setSelectedCategory] = useState(-1);
   const [menuItems, setMenuItems] = useState([]);
   const [adding, setAdding] = useState(false);
-  const [cardData, setCardData] = useState({ category: -1, name: '', price: '', description: '', ingredient: '', vegetarian: false, is_up: false });
+  const [cardData, setCardData] = useState({ category: -1, name: '', cost: '', description: '', ingredient: '', is_vegan: false, is_up: false });
 
   const backLink = `/staff`;
 
@@ -79,13 +79,13 @@ const Menu = () => {
     setAdding(true);
   };
 
-  const handleCardDoneClick = (category, name, price, description, ingredient, vegetarian) => {
-    if (name && price && description && ingredient) {
-      const newMenuItem = { category, name: name, price: price, description: description, ingredient: ingredient, vegetarian: vegetarian };
+  const handleCardDoneClick = (category, name, cost, description, ingredient, is_vegan) => {
+    if (name && cost && description && ingredient) {
+      const newMenuItem = { category, name: name, cost: cost, description: description, ingredient: ingredient, is_vegan: is_vegan };
       setMenuItems((prevMenuItems) => [...prevMenuItems, newMenuItem]);
       console.log('Item details:', cardData);
       // Reset the form data
-      setCardData({ category: -1, name: '', price: '', description: '', ingredient: '', vegetarian: false, is_up: false });
+      setCardData({ category: -1, name: '', cost: '', description: '', ingredient: '', is_vegan: false, is_up: false });
       setAdding(false);
     }
   };
@@ -99,12 +99,12 @@ const Menu = () => {
   };
 
   const handleCardCancelClick = () => {
-    setCardData({ category: -1, name: '', price: '', description: '', ingredient: '', vegetarian: false, is_up: false });
+    setCardData({ category: -1, name: '', cost: '', description: '', ingredient: '', is_vegan: false, is_up: false });
     setAdding(false);
   };
   
   const handleCardBlur = () => {
-    if (cardData.name || cardData.price || cardData.description) {
+    if (cardData.name || cardData.cost || cardData.description) {
       setAdding(false);
     }
   };
@@ -479,7 +479,7 @@ const Menu = () => {
                 </Box>
               )}
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1vw' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1vw' }}>
                 {Object.entries(menuItems)
                   .filter(([index, menuItem]) => menuItem.name !== null)
                   .map(([index, menuItem]) => (
@@ -491,25 +491,13 @@ const Menu = () => {
                         ItemDescription={menuItem.description}
                         ItemPrice={menuItem.cost}
                         ItemIngredient={menuItem.ingredients}
-                        ItemVegetarian={menuItem.vegetarian}
+                        ItemVegetarian={menuItem.is_vegan}
                         onItemRemove={() => handleRemoveItemClick(index)}
                         onItemsCategory={() => handleCategoryClick(selectedCategory)}
                       />
                     </div>
                 ))}
               </div>
-                {menuItems
-                  .filter((menuItem) => menuItem.category === selectedCategory && menuItem.name !== null)
-                  .map((menuItem, index) => (
-                      <MenuItem
-                        ItemName={menuItem.name}
-                        ItemDescription={menuItem.description}
-                        ItemPrice={menuItem.cost}
-                        ItemIngredient={menuItem.ingredients}
-                        ItemVegetarian={menuItem.vegetarian}
-                        onItemRemove={() => handleRemoveItemClick(index)}
-                      />
-                ))}
             </Box>
         </Box>
         ) : (
