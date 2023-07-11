@@ -1,5 +1,5 @@
 '''
-The `order_db` module provides functionality for managing order information.
+The `order_db` module provides functionalites for managing order information.
 
 This module provides functionality to interact with an order database,
 including adding orders, retrieving orders etc.
@@ -92,16 +92,17 @@ class OrderDB:
         con.commit()
         con.close()
 
-    def get_table_order(self, table_id: int) -> List[Any]:
+    @staticmethod
+    def get_table_order(table_id: int) -> List[Any]:
         '''
-        Returns the order associated with the specified table ID.
+        Return Value the order associated with the specified table ID.
 
         Arguments:
             <table_id>  (<int>)    - unique id of a table to select
         Exceptions:
             InputError  - Occurs when table_id does not exist
         Return Value:
-            Returns <order_list> that contains all the orders are placed by a table
+            Return Value <order_list> that contains all the orders are placed by a table
         '''
         return get_order(table_id)
 
@@ -114,7 +115,7 @@ class OrderDB:
         Exceptions:
             N/A
         Return Value:
-            Returns <order_list> that containing all orders details
+            Return Value <order_list> that containing all orders details
         '''
 
         self.create_order_table()
@@ -123,7 +124,7 @@ class OrderDB:
             con = sqlite3.connect(self.database)
             cur = con.cursor()
 
-            cur.execute('''SELECT timestamp, table_id, item_name, amount 
+            cur.execute('''SELECT timestamp, table_id, item_name, amount
                 FROM Orders 
                 WHERE is_prepared == 0 AND is_served == 0
                 ORDER BY timestamp ASC''')
@@ -134,7 +135,8 @@ class OrderDB:
             con.close()
         return order_list
 
-    def clear_order_table(self) -> None:
+    @staticmethod
+    def clear_order_table() -> None:
         '''
         Resets all the data of the order database.
 

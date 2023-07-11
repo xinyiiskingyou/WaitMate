@@ -23,7 +23,6 @@ const Menu = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [adding, setAdding] = useState(false);
   const [cardData, setCardData] = useState({ category: -1, name: '', price: '', description: '', ingredient: '', vegetarian: false, is_up: false });
-  const [error, setError] = useState(null);
 
   const backLink = `/staff`;
 
@@ -46,20 +45,19 @@ const Menu = () => {
             throw new Error('Failed to save category');
           }
         })
-        .then(data => {
+        .then(() => {
           // Handle the response data if necessary
           setCategories([...categories, categoryText.trim()]);
-          setCategoryText('');
-          setEditing(false);
+          handleCategoryDone();
         })
         .catch(error => {
-          // Handle the error if necessary
           console.error(error);
           alert('Failed to add category. Please try again.');
-          window.location.reload();
+          handleCategoryDone();
         });
     } else {
       alert('Failed to add category. Please try again.');
+      handleCategoryDone();
     }
   };
 
@@ -78,6 +76,7 @@ const Menu = () => {
   };
 
   const handleCategoryDone = () => {
+    setCategoryText('');
     setEditing(false);
   };
 
@@ -114,23 +113,28 @@ const Menu = () => {
       setAdding(false);
     }
   };
-  
-  const handleItemAdd = (name, price, description) => {
-    // Perform any necessary logic with the item details
-    console.log('Item details:', name, price, description);
-  };
 
   const handleEditCategory = (index) => {
     setCategoryEditingIndex(index);
   };
   
-  const handleSaveCategoryName = (index) => {
+  const handleSaveCategoryName = async (index) => {
+
+    console.log(categories[index]);
+    console.log(editedCategory);
+
     const payload = { 
       name: categories[index],
       new_name: editedCategory
     };
 
-    fetch('http://localhost:8000/menu/category/update/details', {
+    if (editedCategory === null || !editedCategory) {
+      setCategoryEditingIndex(-1);
+      setEditedCategory("");
+      return;
+    }
+
+    await fetch('http://localhost:8000/menu/category/update/details', {
       method: 'PUT',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(payload),
@@ -153,9 +157,13 @@ const Menu = () => {
         // Handle the error if necessary
         console.error(error);
         alert('Failed to rename the category. Please try again.');
-        window.location.reload();
       });
   };
+
+  const handleCancelSaveCategory = () => {
+    setCategoryEditingIndex(-1);
+    setEditedCategory("");
+  }
 
   const handleCategoryInputChange = (value) => {
     setEditedCategory(value);
@@ -231,20 +239,6 @@ const Menu = () => {
     }
   };
 
-  const theme = useTheme();
-  const styles = {
-    cardContainer: {
-      display: 'flex',
-      flexDirection:"row",
-      gap: '5%',
-    },
-    card: {
-      display:"flex", 
-      flexDirection:"row",
-      /* Additional styling properties as needed */
-    },
-  };
-
   const AddbuttonStyle = {
     marginTop: '8%',
     marginButton: '10%',
@@ -289,14 +283,7 @@ const Menu = () => {
 
   return (
     <Container maxWidth="sm">
-    {error && (
-      <Card variant="outlined">
-        <CardContent>
-          <div className="error-alert">{error}</div>
-        </CardContent>
-      </Card>
-    )}
-    
+
     <Drawer 
       variant="permanent" 
       sx={{
@@ -408,7 +395,7 @@ const Menu = () => {
                     <DoneIcon />
                   </Button>
                   <Button 
-                    onClick={handleSaveCategory} 
+                    onClick={handleCancelSaveCategory} 
                     variant="contained" 
                     color="primary"
                     style={{...EditCatebuttonStyle, background: "#ffc570"}}
