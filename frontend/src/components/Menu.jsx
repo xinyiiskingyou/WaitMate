@@ -12,6 +12,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import WestIcon from '@mui/icons-material/West';
 import meme from '../assets/meme.png';
 import coupon from '../assets/coupon.png';
+
 const Menu = () => {
   const [editing, setEditing] = useState(false);
   const [categoryEditingIndex, setCategoryEditingIndex] = useState(-1);
