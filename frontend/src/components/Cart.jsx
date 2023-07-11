@@ -3,23 +3,37 @@ import { Link, useParams } from 'react-router-dom';
 import { 
   Box, Button, Typography, Container, Grid, Table, TableContainer, TableBody, TableRow, TableCell 
 } from '@mui/material';
+import WestIcon from '@mui/icons-material/West';
 
 const Cart = () => {
   let [orders, setOrder] = useState([])
   const id = useParams();
-  const backLink = `/CustomerMenuPage/${id.id}` 
+  const backLink = `/Browse/${id.id}` 
 
-  
   let getCart = async () => {
-    let response = await fetch(`http://localhost:8000/order/cart/list?table_id=${id.id}`)
-    let data = await response.json()
-    console.log(data)
-    let order_list = []
-    for (var i of data) {
-      console.log(i)
-      order_list.push({name: i[0], amount: i[1]})
-    }
-    setOrder(order_list)
+
+    await fetch(`http://localhost:8000/order/cart/list?table_id=${id.id}`, {
+    }).then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('Failed to view order summary. Please try again.');
+      }
+    }).then((data) => {
+      console.log(data)
+      if (data === null) {
+        return;
+      }
+      let order_list = []
+      for (var i of data) {
+        console.log(i)
+        order_list.push({name: i[0], amount: i[1]})
+      }
+      setOrder(order_list)
+    }).catch(error => {
+      console.log(error);
+      alert(error);
+    })    
   }
 
   useEffect(() => {
@@ -33,7 +47,7 @@ const Cart = () => {
       <Box
         sx={{ 
           margin: 2, 
-          mt: 4, 
+          mt: 2, 
           borderRadius: 2, 
           height: '100%',
           display:"flex",
@@ -46,23 +60,27 @@ const Cart = () => {
               <Button              
                 sx={{ 
                   border: 5,
-                  borderColor: '#F5BBCC',
+                  borderColor: '#FFA0A0',
                   borderRadius: 2,
-                  color: 'black' 
+                  color: 'black',
+                  marginTop: '5vh',
+                  marginLeft: '2vw',
+                  fontWeight: "bolder"
                 }}>
-                <Typography variant="h4">Back</Typography>
+                <WestIcon/>
               </Button>
             </Link>
           </Grid>
           
-          <Grid item xs={8}>
+          <Grid item xs={8} style={{ marginTop: '5vh', fontWeight: "bold" }}>
             <Typography 
-              variant="h3" 
+              variant="h4" 
               component="h1" 
               align="center"
               noWrap
+              fontWeight="bold"
               >
-              View Cart
+              View Order Summary 
             </Typography>
           </Grid>
         </Grid>
@@ -74,7 +92,7 @@ const Cart = () => {
         sx={{ 
           margin: 2, 
           border: 10,
-          borderColor: '#F5BBCC',
+          borderColor: '#FFA0A0',
           borderRadius: 2, 
           display:"flex",
         }}>

@@ -4,14 +4,18 @@ from fastapi import FastAPI, Query, Body
 from src.order import OrderDB
 from src.table import TableDB
 from src.menu import MenuDB
+from src.notifications import Notifications
+from src.tracking import Tracking
+from src.checkout import Checkout
 from src.model.category_req import Category
-from src.model.category_req import Category_ID
 from src.model.category_order_req import CategoryOrder
 from src.model.category_update_req import CategoryUpdate
 from src.model.item_req import Item
 from src.model.table_req import Table
-from src.model.table_req import Table_Cust
 from src.model.order_req import Order
+from src.model.coupon_req import Coupon, Coupon_Cust, Coupon_Code
+from src.model.bill_req import Tip
+
 
 sys.path.append('..')
 
@@ -19,6 +23,9 @@ app = FastAPI()
 order = OrderDB()
 table = TableDB()
 menu = MenuDB()
+track = Tracking()
+notification = Notifications()
+checkout = Checkout()
 
 origins = [
     'http://localhost:3000',
@@ -59,21 +66,33 @@ def menu_category_update_details_api(reqbody: CategoryUpdate):
 def menu_view_categories():
     return menu.get_all_categories()
 
-# @app.get("/menu/list/items")
-# def menu_view_api(cat_id):
-#     return menu.get_items_in_category(cat_id)
 @app.get("/menu/list/items/{cat_id}")
 def menu_view_api(cat_id: str):
     return menu.get_items_in_category(int(cat_id))
 
 @app.post("/menu/item/add")
-def item_add_api(reqbody: Item):    
-    menu.item_add(reqbody.category, reqbody.name, reqbody.cost, reqbody.description, reqbody.ingredients, reqbody.is_vegan)
+def item_add_api(reqbody: Item):
+    item_data = {
+        'category': reqbody.category,
+        'name': reqbody.name,
+        'cost': reqbody.cost,
+        'description': reqbody.description,
+        'ingredients': reqbody.ingredients,
+        'is_vegan': reqbody.is_vegan
+    }
+    menu.item_add(item_data)
     return {}
 
 @app.put("/menu/item/update/details")
 def menu_item_update_details_api(reqbody: Item):
-    menu.update_details_menu_items(reqbody.item_id, reqbody.name, reqbody.cost, reqbody.description, reqbody.ingredients, reqbody.is_vegan)
+    updates = {
+        'name': reqbody.name,
+        'cost': reqbody.cost,
+        'description': reqbody.description,
+        'ingredients': reqbody.ingredients,
+        'is_vegan': reqbody.is_vegan
+    }
+    menu.update_details_menu_items(reqbody.category, reqbody.item_id, **updates)
     return {}
 
 @app.put("/menu/item/update/order")
@@ -104,8 +123,7 @@ def order_listall():
 ############ TABLE #################
 
 @app.post('/table/select')
-def table_select(reqbody: Table_Cust):
-    print(reqbody)
+def table_select(reqbody: Table):
     table.select_table_number(reqbody.table_id)
     return {}
 
@@ -118,3 +136,67 @@ def table_status_update(reqbody: Table):
     table.update_table_status(reqbody.table_id, reqbody.status)
     return {}
 
+############ TRACKING #################
+
+@app.get('/track/customer/dish')
+def track_dish_status(table_id: int):
+    return track.customer_view_dish_status(table_id)
+
+@app.put('/track/kitchen/mark')
+def track_kitchen_order(order_req: Order, table_req: Table):
+    track.kitchen_mark_order_completed(table_req.table_id, order_req.item)
+    return {}
+
+@app.put('/track/waitstaff/mark')
+def track_waitstaff_order(order_req: Order, table_req: Table):
+    track.waitstaff_mark_order_completed(table_req.table_id, order_req.item)
+    return {}
+
+############ NOTIFICATIONS #################
+
+@app.post('/notification/customer/send')
+def customer_request_assistance(reqbody: Table):
+    notification.customer_send_notification(reqbody.table_id, reqbody.status)
+    return {}
+
+@app.get('/notification/waitstaff/get/customer')
+def waitstaff_get_from_customer():
+    return notification.waitstaff_receives_from_customer()
+
+@app.get('/notification/waitstaff/get/kitchen')
+def waitstaff_get_from_customer():
+    return notification.waitstaff_receives_from_kitchen()
+
+############ CHECKOUT #################
+
+@app.get('/checkout/order/{id}')
+def checkout_order_api(id: int):
+    return checkout.checkout_order(id)
+
+@app.get('/checkout/bill/{id}')
+def checkout_bill_api(id: int):
+    return checkout.checkout_bill(id)
+
+@app.post('/checkout/bill/tips')
+def checkout_bill_tips_api(reqbody: Tip):
+    checkout.checkout_bill_tips(reqbody.id, reqbody.amount)
+    return {}
+
+@app.post('/checkout/bill/coupon')
+def checkout_bill_coupon_api(reqbody: Coupon_Cust):
+    checkout.checkout_bill_coupon(reqbody.id, reqbody.code)
+    return {}
+
+@app.post('/checkout/coupon/create')
+def checkout_coupon_create_api(reqbody: Coupon):
+    checkout.checkout_coupon_create(reqbody.code, reqbody.int)
+    return {}
+
+@app.delete('/checkout/coupon/delete')
+def checkout_coupon_delete_api(reqbody: Coupon_Code):
+    checkout.checkout_coupon_delete(reqbody.code)
+    return {}
+
+@app.get('/checkout/coupon/view')
+def checkout_coupon_view_api():
+    return checkout.checkout_coupon_view()

@@ -11,3 +11,17 @@ We have roughly completed the background research, user stories, and defined bot
 and novel functionalities. We have then divided the remaining tasks. Leanna and Sunnie will 
 be working on the storyboard, while Trinh and I will be working on the rest of Part B.
 
+Week 3
+
+We finalised the proposal and decided on which language and what kind of libraries we would
+plan to use. We also finalised the storyboard so that it matched the user stories we discussed.
+We planned to set up an environment using fastAPI first, then we will be started coding.
+
+
+Week 4
+
+We have started coding for the project. Trinh and me will both be working on the backend. 
+We have decided on an interface specification so that we have a clear idea of which 
+endpoints to use and how do we need to implement the functionalities in the backend. We
+will continute to write more tests for each functionalities so that they would work as 
+expected. 

@@ -10,7 +10,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableBody from '@mui/material/TableBody';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
-
+import WestIcon from '@mui/icons-material/West';
 
 function createData(time, tablenum, name, amount) {
   return { time, tablenum, name, amount };
@@ -72,7 +72,7 @@ const Kitchenlist = () => {
                   borderRadius: 2,
                   color: 'black' 
                 }}>
-                <Typography variant="h4">Back</Typography>
+                <WestIcon/>
               </Button>
             </Link>
           </Grid>
