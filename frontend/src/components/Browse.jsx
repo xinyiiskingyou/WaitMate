@@ -175,17 +175,17 @@ const Browse = () => {
             ))}
           </Box>
 
-          <Grid container direction="column" spacing={2}>
+          <Grid container direction="column" spacing={0}>
             <Link to={cartLink}>
               <Button variant="contained" color="primary" style={{
-                margin: '17%', 
+                margin: '15%', 
                 spacing: '-20', 
                 width: '70%', 
-                height: '5vh',
+                height: '8vh',
                 border: "6px solid #FFA0A0",
                 background: "#FFCFCF",
                 color: 'black',
-                fontSize: '0.8vw',
+                fontSize: '1vw',
                 borderRadius: 8,
               }}>  
                 Order Summary  <img src={cart} alt="CartIcon" style={{ height: "2.7vh", width: "1.4vw", marginLeft: "0.4vw" }} />

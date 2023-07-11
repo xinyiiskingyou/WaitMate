@@ -5,6 +5,18 @@ import {
 } from '@mui/material';
 import WestIcon from '@mui/icons-material/West';
 
+const buttonStyle = { 
+  border: '4px solid #FFA0A0', 
+  height: '7vh', 
+  width: '12vw',
+  textAlign: 'center', 
+  justifyContent: 'center',
+  background: "#FFCFCF",
+  color: 'black',
+  fontWeight: "bolder",
+  borderRadius: 8,
+}
+
 const Cart = () => {
   let [orders, setOrder] = useState([])
   const id = useParams();
@@ -41,7 +53,7 @@ const Cart = () => {
   }, [])
 
   return (
-    <Container>
+  <Container>
     <Grid container direction="column" spacing={2}>
       <Grid item xs={2}>
       <Box
@@ -82,6 +94,12 @@ const Cart = () => {
               >
               View Order Summary 
             </Typography>
+          </Grid>
+
+          <Grid item>
+              <Button variant="contained" color="primary" style={buttonStyle}>
+                Request Bill
+              </Button>
           </Grid>
         </Grid>
       </Box>
@@ -128,13 +146,11 @@ const Cart = () => {
               </Table>
             </TableContainer>
           </Grid>
-
         </Grid>
       </Box>
       </Grid>
     </Grid>  
     </Container>
-
     )
 }
 
