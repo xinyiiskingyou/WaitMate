@@ -3,31 +3,7 @@ from typing import Any, List
 from constant import DB_PATH
 from src.error import NotFoundError, InputError
 
-def create_tables_db() -> None:
-    '''
-    Create a database for tables
-
-    Arguments:
-        N / A
-    Exceptions:
-        N /A
-    Return Value:
-        N/A
-    '''
-
-    con = sqlite3.connect(DB_PATH)
-    cur = con.cursor()
-
-    cur.execute('''CREATE TABLE IF NOT EXISTS Tables (
-                    table_id INTEGER PRIMARY KEY NOT NULL,
-                    status TEXT NOT NULL
-                )''')
-
-    con.commit()
-    con.close()
-
 def check_table_exists(table_id: int):
-    create_tables_db()
     if table_id is None or table_id < 0:
         raise InputError('Table id is not available.')
 
@@ -36,9 +12,8 @@ def check_table_exists(table_id: int):
         cur = con.cursor()
         cur.execute('SELECT * FROM Tables WHERE table_id = ?', (table_id,))
         result = cur.fetchone()
-
     except Exception:
-        raise NotFoundError('Database not found.')
+        return
     finally:
         con.close()
 
@@ -58,12 +33,12 @@ def check_if_category_exists(category_name: str):
 
     return result
 
-def get_item_info(column_name: str, item: str):
-
+def check_item_name_exists(item: str):
+    
     try:
         con = sqlite3.connect(DB_PATH)
         cur = con.cursor()
-        cur.execute('SELECT * FROM Items i WHERE i.{} = (?)'.format(column_name),(item,))
+        cur.execute('SELECT * FROM Items i WHERE lower(i.name) = (?)', (item,))
         result = cur.fetchone()
     except Exception:
         raise NotFoundError('Database not found.')

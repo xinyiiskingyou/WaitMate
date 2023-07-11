@@ -37,8 +37,6 @@ class TableDB():
         con = sqlite3.connect(self.database)
         cur = con.cursor()
 
-        cur.execute('PRAGMA foreign_keys = OFF')
-        con.commit()
         cur.execute('''CREATE TABLE IF NOT EXISTS Tables (
                         table_id INTEGER PRIMARY KEY NOT NULL,
                         status TEXT NOT NULL
