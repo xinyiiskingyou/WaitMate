@@ -27,7 +27,7 @@ const Cart = () => {
       let order_list = []
       for (var i of data) {
         console.log(i)
-        order_list.push({name: i[0], amount: i[1]})
+        order_list.push({name: i[0], amount: i[1], cost: i[4]})
       }
       setOrder(order_list)
     }).catch(error => {
@@ -121,6 +121,15 @@ const Cart = () => {
                           pr: 10
                           }}>
                         {row.amount}
+                      </TableCell>
+
+                      <TableCell style={{ width: 160 }} align='right'
+                        sx={{
+                          fontSize: 25,
+                          borderBottom: 'none',
+                          pr: 10
+                          }}>
+                        ${row.cost}
                       </TableCell>
                     </TableRow>
                   ))}
