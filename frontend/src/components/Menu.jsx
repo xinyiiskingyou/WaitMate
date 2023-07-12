@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Drawer, Box, Button, Typography, TextField, ButtonGroup, Grid } from '@mui/material';
-import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { useTheme } from '@mui/material/styles';
+import { Card, CardActions, CardContent, Container, Drawer, Box, Button, Typography, TextField, ButtonGroup, Grid, IconButton } from '@mui/material';
+import { Link, useParams } from 'react-router-dom';
 import Item from './Item';
 import MenuItem from './Card';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
@@ -8,6 +10,8 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import DoneIcon from '@mui/icons-material/Done';
 import ClearIcon from '@mui/icons-material/Clear';
 import WestIcon from '@mui/icons-material/West';
+import meme from '../assets/meme.png';
+import coupon from '../assets/coupon.png';
 
 const Menu = () => {
   const [editing, setEditing] = useState(false);
@@ -66,6 +70,7 @@ const Menu = () => {
   };
 
   const handleCategoryClick = (index) => {
+    setMenuItems([]);
     setSelectedCategory(index);
     fetchMenuItems(index);
   };
@@ -136,20 +141,17 @@ const Menu = () => {
     })
       .then(response => {
         if (response.ok) {
+          const updatedCategories = [...categories];
+          updatedCategories[index] = editedCategory;
+          setCategories(updatedCategories);
+        
+          // Reset the category editing index
+          setCategoryEditingIndex(-1);
+          setEditedCategory("");
           return response.json();
         } else {
           throw new Error('Failed to update category');
         }
-      })
-      .then(data => {
-        // Save the updated category name
-        const updatedCategories = [...categories];
-        updatedCategories[index] = editedCategory;
-        setCategories(updatedCategories);
-      
-        // Reset the category editing index
-        setCategoryEditingIndex(-1);
-        setEditedCategory("");
       })
       .catch(error => {
         // Handle the error if necessary
@@ -223,8 +225,13 @@ const Menu = () => {
       const response = await fetch('http://localhost:8000/menu/list/items/' + index);
       const data = await response.json();
       const itemArray = Object.values(data);
-      console.log(itemArray);
-      setMenuItems(itemArray);
+      if (itemArray.length === 1) {
+        if (itemArray[0].name !== null) {
+          setMenuItems(itemArray);
+        }
+      } else {
+        setMenuItems(itemArray);
+      }
     } catch (error) {
       console.error('Error fetching categories:', error);
       alert('Error fetching categories:', error);
@@ -237,7 +244,7 @@ const Menu = () => {
     marginButton: '10%',
     marginLeft: '10%',
     width: '80%',
-    background: "#E0E0E0",
+    background: "transparent",
     border: "4px solid #FFA0A0",
     borderRadius: 15,
     color: 'black',
@@ -441,7 +448,37 @@ const Menu = () => {
         ))}
       </Box>
     </Drawer>
+      <div style={{display: 'flex', flexDirection: "row"}}>
+      <Link to="/coupon" style={{
+            marginTop: '8%',
+            marginLeft: "10%",
+            width: '100%',
+      }}>
+      <Button variant="contained" style={{...AddbuttonStyle, top: "5px", right: "0px"}}>
+                <img src={meme} alt="MemeIcon" style={{
+                  maxWidth: '100%',
+                  maxHeight: '7vh',
+                  marginRight: '1vw'
+                }}/>
+                Memes
+      </Button>
+      </Link>
+      <Link to="/coupon" style={{
+            marginTop: '8%',
+            marginLeft: "10%",
+            width: '100%',
+      }}>
+        <Button style={{...AddbuttonStyle, top: "5px", right: "0px"}}>
+          <img src={coupon} alt="CouponIcon" style={{
+            maxWidth: '100%',
+            maxHeight: '7vh',
+            marginRight: '1vw'
+          }}/>
+          Coupons
+        </Button>
+      </Link>
 
+      </div>
       <Box 
         flexGrow={1} 
         p={2} 
@@ -501,16 +538,20 @@ const Menu = () => {
             </Box>
         </Box>
         ) : (
+
+
           <Box
           display="flex"
           justifyContent="center"
           alignItems="center"
           minHeight="60vh"
         >
+
+
           <Typography variant="h5" style={{ margin: '20px' }}>
             Edit menu here. <span role="img" aria-label="Smiley">&#128512;</span>
           </Typography>
-        </Box>
+          </Box>
           )}
       </Box>
 

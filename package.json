@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "@date-io/dayjs": "^2.16.0",
+    "@mui/lab": "^5.0.0-alpha.134",
+    "@mui/x-date-pickers": "^6.9.1",
+    "date-fns": "^2.30.0",
+    "dayjs": "^1.11.9",
+    "react-beautiful-dnd": "^13.1.1",
+    "react-hook-form": "^7.45.1"
+  }
+}
