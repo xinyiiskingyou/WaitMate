@@ -1,27 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Container, Button,Box, Typography, Checkbox, MenuItem, Menu, ListItem, ListItemText, List} from '@mui/material';
+import {Button,Typography} from '@mui/material';
 
-const TableOrder = ({amount, name, id}) => {
-    const options = [
-        'SERVED',
-      ];
+const TableOrder = ({amount, name, is_prepared, is_served, id}) => {
+
     const index = 0;
-    const [complete, SetComplete] = useState(false);
-    const [state, setState] = useState("waiting");
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const [selectedIndex, setSelectedIndex] = React.useState(index);
+    const [state, setState] = useState(is_prepared === 0 ? "preparing" : is_served === 1 ? "served" : "ready");
     const [textColor, setTextColor] = useState(index === 0 ? '#A1C935' : index === 1 ? '#FF7A7A' : index === 2 ? '#F59B0C' : '#FFFFFF');
-    const open = Boolean(anchorEl);
-    const handleClose = () => {
-        setAnchorEl(null);
-      };
-    const handleClickListItem = (event) => {
-        setAnchorEl(event.currentTarget);
-      };
-    console.log(complete);
+    let status = "preparing";
+    console.log("p", is_prepared);
+    console.log(is_served);    
+
     const handleComplete = async () => {
         console.log(id);
-        SetComplete(true);
         setState("Served");
         const table_payload = {
             table_id: parseInt(id, 10),
@@ -46,7 +36,6 @@ const TableOrder = ({amount, name, id}) => {
               }
             })
             .then(data => {
-                SetComplete(true);
                 setState("Served");
             })
             .catch(error => {
@@ -61,43 +50,8 @@ const TableOrder = ({amount, name, id}) => {
     <div style={{width: "100%"}}>
     <div style={{ marginTop: "20px", display:"flex", flexDirection: "row", justifyContent: "space-between"}}>
         <Typography variant="h5">{amount} x {name} </Typography>
-        <Checkbox onChange={handleComplete}/>
-        <Button onClick={handleComplete}>{state}</Button>
-        <List>
-          <ListItem
-            button
-            aria-expanded={open ? 'true' : undefined}
-            onClick={handleClickListItem}
-          >          
-          <ListItemText 
-          primary={options[0]}
-          style={{
-            textAlign: "center",
-            backgroundColor: textColor,
-          }}/>
-          </ListItem>
-        </List>
-        <Menu
-          id="lock-menu"
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleClose}
-          MenuListProps={{
-            'aria-labelledby': 'lock-button',
-            role: 'listbox',
-          }}
-        >
-          {options.map((option) => (
-            <MenuItem
-              key={option}
-              disabled={index === 0}
-              selected={index === 0}
-              onClick={handleComplete}
-            >
-              {option}
-            </MenuItem>
-          ))}
-        </Menu>
+        <Button onClick={handleComplete} disabled={state !== "ready"}>{state}</Button>
+
     </div>
 
     </div>

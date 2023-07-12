@@ -76,11 +76,10 @@ const WaitStaff = () => {
       const itemArray = Object.values(data);
       let order_list = []
       for (var i of data) {
-        order_list.push({ name: i[0], amount: i[1] })
+        order_list.push({ name: i[0], amount: i[1], is_prepared: i[2], is_served: i[3] })
       }
       setTableOrder(order_list);
       setSelectedTable(index);
-      console.log(tableOrder);
     } catch (error) {
       console.error('Error fetching categories:', error);
       alert('Error fetching categories:', error);
@@ -107,7 +106,7 @@ const WaitStaff = () => {
 
               {tableOrder.map((table) => (
                 <div key={table.id} style={{ marginTop: "20px", display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-                  <TableOrder amount={table.amount} name={table.name} id={selectedtable}></TableOrder>
+                  <TableOrder amount={table.amount} name={table.name} is_prepared={table.is_prepared} is_served={table.is_served} id={selectedtable}></TableOrder>
                 </div>
               ))}
             </div>

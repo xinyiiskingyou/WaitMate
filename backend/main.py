@@ -1,9 +1,14 @@
 import uvicorn
-from src.tracking import Tracking
+# from src.tracking import Tracking
+# from src.order import OrderDB
+
 if __name__ == '__main__':
 
-    track = Tracking()
-    # track.kitchen_mark_order_completed(1, 'meat lover')
+    # track = Tracking()
+    # order = OrderDB()
+    # # order.add_order(5, 'meat lover', 1)
+    # track.kitchen_mark_order_completed(22, 'dorayaki')
+    # print(order.get_table_order(5))
     uvicorn.run('app.api:app', host='0.0.0.0', port=8000, reload=True)
 
 # # # from database import order_db
