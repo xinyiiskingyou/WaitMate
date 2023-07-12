@@ -1,11 +1,11 @@
 import sqlite3
 import datetime
 
-import sys
-sys.path.insert(0, '/backend/src/')
+# import sys
+# sys.path.insert(0, '/backend/src/')
 
 # from constant import DB_PATH
-from error import InputError
+from src.error import InputError
 
 
 class Checkout:
@@ -33,6 +33,7 @@ class Checkout:
         return ret
     
     def checkout_bill(self, table_id: int) -> dict:
+        coupon: str = ''
         bill: dict = {
             'items': self.checkout_order(table_id),
         }
@@ -45,7 +46,7 @@ class Checkout:
             )
             data = cur.fetchone()
             if data[0]:
-                bill['coupon'] = data[0]
+                coupon = data[0]
             if data[1]:
                 bill['tip'] = data[1]
         except:
@@ -59,9 +60,12 @@ class Checkout:
         
         bill['total'] = total
 
-        if 'coupon' in bill:
-            bill['total'] = bill['total'] * (100 - self.checkout_coupon_find(bill['coupon']))/100
-            bill['total'] = round(bill['total'], 2)
+        if coupon:
+            bill['coupon'] = bill['total']
+            bill['total'] = bill['total'] * (100 - self.checkout_coupon_find(coupon))/100
+            bill['total'] = round(bill['total'], 2) 
+            bill['coupon'] -= bill['total']
+
         if 'tip' in bill:
             bill['total'] += bill['tip']
 
@@ -103,16 +107,18 @@ class Checkout:
         con.commit()
         con.close()
 
-    def checkout_coupon_create(self, code: str, amount: int):
+    def checkout_coupon_create(self, code: str, amount: int, expiry: str):
         if self.checkout_coupon_find(code):
             raise InputError('Coupon code already in use')
         if amount <= 0:
             raise InputError('Invalid coupon amount')
+        if expiry < str(datetime.date.today()):
+            raise InputError('Invalid date.')
         
         con = sqlite3.connect(self.DB_PATH)
         cur = con.cursor()
 
-        cur.execute('INSERT INTO Coupons(code, amount) VALUES (?, ?)', (code, amount,))
+        cur.execute('INSERT INTO Coupons(code, amount, expiry) VALUES (?, ?, ?)', (code, amount, expiry))
 
         con.commit()
         con.close()
@@ -129,6 +135,7 @@ class Checkout:
 
     def checkout_coupon_view(self) -> list[dict]: 
         self.coupon_create()
+        self.coupon_expire()
 
         coupons = []
 
@@ -138,13 +145,14 @@ class Checkout:
         data: list = cur.fetchall()
         con.close()
 
-        coupons = [{'code': i[0], 'int': i[1]} for i in data]
+        coupons = [{'code': i[0], 'int': i[1], 'expiry': i[2]} for i in data]
         return coupons
 
     # PRIVATE
     
     def checkout_coupon_find(self, code: str) -> int:
         self.coupon_create()
+        self.coupon_expire()
 
         con = sqlite3.connect(self.DB_PATH)
         cur = con.cursor()
@@ -164,7 +172,8 @@ class Checkout:
         cur = con.cursor()
         cur.execute('''CREATE TABLE IF NOT EXISTS Coupons (
             code TEXT PRIMARY KEY,
-            amount INTEGER)'''
+            amount INTEGER,
+            expiry TEXT)'''
         )
         con.commit()
         con.close()
@@ -194,18 +203,16 @@ class Checkout:
         con.close()
 
     def coupon_expire(self):
-        currentDateTime = datetime.datetime.now()
-        if datetime.datetime.strptime('2023-07-07 14:01:02', '%Y-%d-%m %H:%M:%S') < currentDateTime:
-            print(currentDateTime)
+        # currentDateTime = datetime.datetime.now()
+        # if datetime.datetime.strptime('2023-07-07', '%Y-%m-%d') < currentDateTime:
+        #     print(currentDateTime)
+        currentDateTime = str(datetime.date.today())
 
-        # con = sqlite3.connect(self.DB_PATH)
-        # cur = con.cursor()
-        # cur.execute('SELECT datetime(now,localtime)')
-        # con.commit()
-
-        # cur.execute('DELETE FROM Coupons WHERE expiry < (?)')
-        # con.commit()
-        # con.close()
+        con = sqlite3.connect(self.DB_PATH)
+        cur = con.cursor()
+        cur.execute('DELETE FROM Coupons WHERE expiry < (?)', (currentDateTime,))
+        con.commit()
+        con.close()
 
     def checkout_remove(self, table_id: int):
         con = sqlite3.connect(self.DB_PATH)
@@ -217,8 +224,7 @@ class Checkout:
 
 if __name__ == '__main__':
     checkout = Checkout()
-    checkout.coupon_expire()
-    # checkout.checkout_remove(1)
+    checkout.checkout_coupon_create('1221', 10, '2023-07-13')
     # checkout.checkout_order(1)
     # checkout.checkout_coupon_create('Cats', 20)
     # checkout.checkout_coupon_create('Fish', 10)
@@ -229,6 +235,6 @@ if __name__ == '__main__':
 
     # checkout.checkout_bill_coupon(1, 'Fish')
     # checkout.checkout_bill_tips(1, 10)
-    # checkout.checkout_bill(2)
+    print(checkout.checkout_bill(2))
 
 

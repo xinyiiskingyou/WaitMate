@@ -20,6 +20,11 @@ def test_checkout_invalid_coupon(empty, table_id_1):
         checkout.checkout_bill_coupon(table_id_1, 'Cats')
     assert str(error.value) == 'Invalid coupon.'
 
+def test_checkout_invalid_date_coupon(empty, table_id_1):
+    with pytest.raises(InputError) as error:
+        checkout.checkout_coupon_create('Cats', 10, '2020-01-01')
+    assert str(error.value) == 'Invalid date.'
+
 def test_checkout_order_empty(empty, table_id_1):
     assert checkout.checkout_order(table_id_1) == []
 
@@ -52,22 +57,22 @@ def test_checkout_bill_tip(empty, order_japanese):
     }
     assert checkout.checkout_bill(order_japanese) == exp
 
-def test_checkout_coupon(empty, order_japanese):
-    checkout.checkout_coupon_create('catsz', 50)
+def test_checkout_coupon(empty, order_japanese, valid_date):
+    checkout.checkout_coupon_create('catsz', 50, valid_date)
     checkout.checkout_bill_coupon(order_japanese, 'catsz')
     exp = {
         'items': [
             {'name': 'salmon sushi', 'cost': 10, 'amount': 1},
             {'name': 'dorayaki', 'cost': 12, 'amount': 2}
         ],
-        'coupon': 'catsz',
+        'coupon': 11,
         'total': 11
     }
     assert checkout.checkout_bill(order_japanese) == exp
 
-def test_checkout_coupon_delete(empty):
-    checkout.checkout_coupon_create('catsz', 50)
-    assert checkout.checkout_coupon_view() == [{'code': 'catsz', 'int': 50}]
+def test_checkout_coupon_delete(empty, valid_date):
+    checkout.checkout_coupon_create('catsz', 50, valid_date)
+    assert checkout.checkout_coupon_view() == [{'code': 'catsz', 'int': 50, 'expiry': valid_date}]
 
     checkout.checkout_coupon_delete('catsz')
     assert checkout.checkout_coupon_view() == []
@@ -92,20 +97,23 @@ def test_checkout_bill_tips_endpoint(client, table_id_1):
     resp = client.post('/checkout/bill/tips', json={'id': table_id_1, 'amount': 10})
     assert resp.status_code == VALID
 
-def test_checkout_bill_coupons_endpoint(client, table_id_1):
+def test_checkout_bill_coupons_endpoint(client, table_id_1, valid_date):
     resp = client.post('/checkout/bill/coupon', json={'id': table_id_1, 'code': 'catsz'})
     assert resp.status_code == INPUTERROR
 
-    checkout.checkout_coupon_create('catsz', 50)
+    checkout.checkout_coupon_create('catsz', 50, valid_date)
 
     resp = client.post('/checkout/bill/coupon', json={'id': table_id_1, 'code': 'catsz'})
     assert resp.status_code == VALID
 
-def test_checkout_coupon_create_endpoint(empty, client):
-    resp = client.post('/checkout/coupon/create', json={'code': 'catsz', 'int': 10})
+def test_checkout_coupon_create_endpoint(empty, client, valid_date):
+    resp = client.post('/checkout/coupon/create', json={'code': 'catsz', 'int': 10, 'expiry': valid_date})
     assert resp.status_code == VALID
 
-    resp = client.post('/checkout/coupon/create', json={'code': 'catsz', 'int': 10})
+    resp = client.post('/checkout/coupon/create', json={'code': 'catsz', 'int': 10, 'expiry': valid_date})
+    assert resp.status_code == INPUTERROR
+
+    resp = client.post('/checkout/coupon/create', json={'code': 'catsz', 'int': 10, 'expiry': '2020-01-01'})
     assert resp.status_code == INPUTERROR
 
 def test_checkout_coupon_view_endpoint(empty, client):

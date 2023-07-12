@@ -1,5 +1,6 @@
 import pytest
 import os
+import datetime
 from src.table import TableDB
 from src.menu import MenuDB
 from src.order import OrderDB
@@ -7,6 +8,7 @@ from src.order import OrderDB
 from fastapi.testclient import TestClient
 from src.clear import clear_database
 from app.api import app
+
 
 VALID = 200
 ACCESSERROR = 403
@@ -54,3 +56,7 @@ def order_japanese(menu_japanese, table_id_1):
 def empty():
     if os.path.exists("./src/database/restaurant.db"):
         os.remove("./src/database/restaurant.db")
+
+@pytest.fixture
+def valid_date():
+    return str(datetime.date.today() + datetime.timedelta(days=1))

@@ -6,6 +6,8 @@ from pydantic import BaseModel, Field
 class Coupon(BaseModel):
     code: str = Field(alias="code", default=None)
     int: int = Field(alias="int", default=None)
+    expiry: str = Field(alias="expiry", default=None)
+
 
 Coupon.update_forward_refs()
 
