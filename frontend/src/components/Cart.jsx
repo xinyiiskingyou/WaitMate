@@ -97,9 +97,11 @@ const Cart = () => {
           </Grid>
 
           <Grid item>
+            <Link to="/Bill">
               <Button variant="contained" color="primary" style={buttonStyle}>
                 Request Bill
               </Button>
+            </Link>
           </Grid>
         </Grid>
       </Box>
