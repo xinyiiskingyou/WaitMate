@@ -30,12 +30,13 @@ checkout = Checkout()
 origins = [
     'http://localhost:3000',
     'localhost:3000',
-    'localhost:3000/menu'
+    'localhost:3000/menu',
+    'localhost:3001',
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=['*'],
     allow_credentials=True,
     allow_methods=['*'],
     allow_headers=['*']
@@ -164,7 +165,7 @@ def waitstaff_get_from_customer():
     return notification.waitstaff_receives_from_customer()
 
 @app.get('/notification/waitstaff/get/kitchen')
-def waitstaff_get_from_customer():
+def waitstaff_get_from_kitchen():
     return notification.waitstaff_receives_from_kitchen()
 
 ############ CHECKOUT #################
