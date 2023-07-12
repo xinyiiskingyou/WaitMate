@@ -64,7 +64,7 @@ class Checkout:
             bill['coupon'] = bill['total']
             bill['total'] = bill['total'] * (100 - self.checkout_coupon_find(coupon))/100
             bill['total'] = round(bill['total'], 2) 
-            bill['coupon'] -= bill['total']
+            bill['coupon'] = round(bill['coupon'] - bill['total'], 2)
 
         if 'tip' in bill:
             bill['total'] += bill['tip']
@@ -224,7 +224,7 @@ class Checkout:
 
 if __name__ == '__main__':
     checkout = Checkout()
-    checkout.checkout_coupon_create('1221', 10, '2023-07-13')
+    # checkout.checkout_coupon_create('1221', 10, '2023-07-13')
     # checkout.checkout_order(1)
     # checkout.checkout_coupon_create('Cats', 20)
     # checkout.checkout_coupon_create('Fish', 10)
@@ -233,8 +233,10 @@ if __name__ == '__main__':
     # checkout.checkout_coupon_view()
 
 
-    # checkout.checkout_bill_coupon(1, 'Fish')
+    checkout.checkout_bill_coupon(11, '1221')
     # checkout.checkout_bill_tips(1, 10)
-    print(checkout.checkout_bill(2))
+    print(checkout.checkout_bill(11))
+    print(checkout.checkout_bill(14))
+
 
 
