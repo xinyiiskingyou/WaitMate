@@ -141,7 +141,7 @@ def get_order(table_id: int) -> List[Any]:
         cur.execute('''
             SELECT o.item_name, o.amount, o.is_prepared, o.is_served, o.amount * i.cost
             FROM Orders o
-            FULL OUTER JOIN Items i
+            JOIN Items i
             on o.item_name = i.name
             WHERE table_id = ?
         ''', (table_id, ))
