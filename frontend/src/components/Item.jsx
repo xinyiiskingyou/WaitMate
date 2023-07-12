@@ -1,107 +1,95 @@
 
 import React, { useState, useEffect } from "react";
-import { Box, Card, FormControlLabel, CardActions, CardContent, Checkbox, Button, Typography, TextField, InputAdornment } from '@mui/material';
+import { Box, FormControlLabel, Checkbox, Button, TextField, InputAdornment } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 
 const Item = ({ onItemAdd, onItemCancel, category }) => {
 
-    const [isEditable, setIsEditable] = useState(false);
-    const [Done, setDone] = useState(false);
-    const [vegetarian, setVegetarian] = useState(false);
-    const [name, setName] = useState("");
-    const [price, setPrice] = useState("");
-    const [description, setDescription] = useState("");
-    const [ingredient, setIngredient] = useState("");
-    const [isItemAdded, setIsItemAdded] = useState(false);
+  const [vegetarian, setVegetarian] = useState(false);
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
+  const [description, setDescription] = useState("");
+  const [ingredient, setIngredient] = useState("");
 
-    const [NameError, setNameError] = useState(false);
-    const [PriceError, setPriceError] = useState(false);
-    const [DescriptionError, setDescriptionError] = useState(false);
-    const [IngredientError, setIngredientError] = useState(false);
+  const [NameError, setNameError] = useState(false);
+  const [PriceError, setPriceError] = useState(false);
+  const [DescriptionError, setDescriptionError] = useState(false);
+  const [IngredientError, setIngredientError] = useState(false);
 
-    const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(true);
 
-    const handleClickOpen = () => {
-      setOpen(true);
-    };
-    
-    const handleClose = () => {
-      setOpen(false);
-    };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
-    const handleAdd = () => {
-      console.log('category', category);
-      const payload = {
-          category: category,
-          name: name,
-          cost: parseFloat(price),
-          description: description,
-          ingredients: ingredient,
-          is_vegan: vegetarian
-        };
+  const handleAdd = () => {
+    console.log('category', category);
+    const payload = {
+        category: category,
+        name: name,
+        cost: parseFloat(price),
+        description: description,
+        ingredients: ingredient,
+        is_vegan: vegetarian
+      };
 
-      fetch('http://localhost:8000/menu/item/add', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(payload),
-      })
-      .then(response => {
-          if (response.ok) {
-              return response.json();
-          } else {
-              throw new Error('Failed to add item. Please try again.');
-          }
-      })
-      .then(data => {
-          onItemAdd(category, name, price, description, ingredient, vegetarian);
-          setIsItemAdded(true);
-          setNameError(isNaN(name));
-          setPriceError(isNaN(price));
-          setDescriptionError(isNaN(description));
-          setIngredientError(isNaN(vegetarian));
-      })
-      .catch(error => {
-          // Handle the error if necessary
-          console.error(error);
-      });
-    }
-    
-    const handleCancel = () => {
-      onItemCancel();
-      setOpen(false);
-    }
+    fetch('http://localhost:8000/menu/item/add', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload),
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error('Failed to add item. Please try again.');
+        }
+    })
+    .then(data => {
+        onItemAdd(category, name, price, description, ingredient, vegetarian);
+        setNameError(isNaN(name));
+        setPriceError(isNaN(price));
+        setDescriptionError(isNaN(description));
+        setIngredientError(isNaN(vegetarian));
+    })
+    .catch(error => {
+        // Handle the error if necessary
+        console.error(error);
+        alert(error);
+    });
+  }
+  
+  const handleCancel = () => {
+    onItemCancel();
+    setOpen(false);
+  }
 
-    const handleDone = () => {
-        console.log("I am here");
-        setDone(true);
-        setIsEditable(!isEditable);
-    };
+  useEffect(() => {
+      // Update the state values when the props change
+      setName(name);
+      setPrice(price);
+      setDescription(description);
+      setIngredient(ingredient);
+      setVegetarian(vegetarian);
+    }, [name, price, description, ingredient, vegetarian]);
 
-    useEffect(() => {
-        // Update the state values when the props change
-        setName(name);
-        setPrice(price);
-        setDescription(description);
-        setIngredient(ingredient);
-        setVegetarian(vegetarian);
-      }, [name, price, description, ingredient, vegetarian]);
+  return (
+    <Box>
+      <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth sx={{
+        "& .MuiDialog-paper": {
+          border: "8px solid #FFA0A0",
+          borderRadius: 8,
+        },
+      }}>
 
-    return (
-      <Box>
-        <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth sx={{
-          "& .MuiDialog-paper": {
-            border: "8px solid #FFA0A0",
-            borderRadius: 8,
-          },
-        }}>
-        <DialogTitle><b>Add Item</b></DialogTitle>
+      <DialogTitle><b>Add Item</b></DialogTitle>
 
-        <form onSubmit={(e) => {
-          e.preventDefault(); // Prevent default form submission behavior
-        }}>
-        <Box sx={{m: 2}}>
+      <form onSubmit={(e) => {
+        e.preventDefault(); // Prevent default form submission behavior
+      }}>
+      <Box sx={{m: 2}}>
         <TextField
           label="Name"
           id="standard-required"

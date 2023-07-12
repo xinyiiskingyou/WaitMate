@@ -11,7 +11,7 @@ from typing import Any, List
 from constant import DB_PATH
 from src.error import InputError, NotFoundError
 from src.clear import clear_database
-from src.helper import check_table_exists, get_item_info, get_order
+from src.helper import check_table_exists, check_item_name_exists, get_order
 
 class OrderDB:
     '''
@@ -76,7 +76,7 @@ class OrderDB:
         if not result:
             raise InputError('The table_id does not refer to a valid table')
 
-        if not get_item_info('name', item_name):
+        if not check_item_name_exists(item_name.lower()):
             raise InputError('The item_name does not refer to a valid item')
 
         if amount is None or amount < 1:

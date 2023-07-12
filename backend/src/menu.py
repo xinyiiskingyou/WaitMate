@@ -11,7 +11,7 @@ from constant import DB_PATH
 from src.error import InputError, AccessError
 from src.helper import (
     check_if_category_exists, get_category_order_by_name, get_menu_item_order_by_name,
-    get_item_info, check_categories_key_is_valid, get_order_in_category,
+    check_item_name_exists, check_categories_key_is_valid, get_order_in_category,
     get_total_count, get_category_by_name, get_item_in_category
 )
 
@@ -156,7 +156,7 @@ class MenuDB:
             raise InputError('Invalid name length')
 
         # check if the item name exists in the same category
-        if get_item_info('name', name):
+        if check_item_name_exists(name.lower()):
             raise AccessError('Name already used')
 
         # insert new item to the Items table
@@ -275,6 +275,7 @@ class MenuDB:
             raise InputError('Invalid category')
 
         check_result = get_item_in_category(index, category_name)
+        
         # check if item_id is valid
         if not check_result:
             raise InputError('Invalid ID')
@@ -291,7 +292,7 @@ class MenuDB:
             if len(new_name) < 1 or len(new_name) > 15:
                 raise InputError('Invalid name length')
             # item name is used by another item
-            if get_item_info('name', new_name) and old_name != new_name:
+            if check_item_name_exists(new_name.lower()) and old_name.lower() != new_name.lower():
                 raise InputError('Name already used')
             # update the name in menu
             cur.execute(
@@ -386,7 +387,7 @@ class MenuDB:
             N/A
         '''
 
-        if not get_item_info('name', item_name):
+        if not check_item_name_exists(item_name.lower()):
             raise InputError('Invalid name')
 
         con = sqlite3.connect(self.database)
@@ -415,7 +416,7 @@ class MenuDB:
         '''
 
         # item name not exists
-        if not get_item_info('name', item_name):
+        if not check_item_name_exists(item_name.lower()):
             raise InputError('Invalid name')
 
         prev_order = get_menu_item_order_by_name(item_name)
