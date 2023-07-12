@@ -10,22 +10,76 @@ const WaitStaff = () => {
   const [table, setTable] = useState({});
   const [selectedtable, setSelectedTable] = useState(-1);
   const [tableOrder, setTableOrder] = useState([]);
+  const [notification, setNotification] = useState([]);
+  const [notificationKictehn, setNotificationKitchen] = useState([]);
   useEffect(() => {
     fetchTables();
+    fetchNotification();
+    fetchNotificationKitchen();
   }, []);
 
+  useEffect(() => {
+    const eventSource = new EventSource('http://localhost:8000/notification/waitstaff/get/customer'); // Replace with your SSE server endpoint
+    function getRealtimeData(data) {
+      console.log(data);
+    }
+    eventSource.onmessage = e => getRealtimeData(JSON.parse(e.data));
+    // Event listeners for incoming notifications
+    eventSource.addEventListener('notification', (event) => {
+      const notification = JSON.parse(event.data);
+      // Handle the received notification
+      console.log(notification);
+    });
+
+    return () => {
+      // Clean up the EventSource connection on unmounting the component
+      eventSource.close();
+    };
+  }, []);
   const fetchTables = async () => {
     try {
       const response = await fetch('http://localhost:8000/table/status');
       const data = await response.json();
-      console.log(data);
+      //console.log(data);
       setTable(data);
     } catch (error) {
       console.error('Error fetching categories:', error);
     }
   };
 
+  const fetchNotification = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/notification/waitstaff/get/customer');
+      const data = await response.json();
+      //console.log(data);
+      let notification_lst = []
+      for (var i of data) {
+        notification_lst.push({ table: i[0], status: i[1]})
+      }
+      //console.log(notification_lst);
+      //setTable(data);
+      setNotification(notification_lst);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
 
+  const fetchNotificationKitchen = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/notification/waitstaff/get/kitchen');
+      const data = await response.json();
+      //console.log(data);
+      let notification_lst = []
+      for (var i of data) {
+        notification_lst.push({ table: i[0], status: i[1]})
+      }
+      //console.log(notification_lst);
+      //setTable(data);
+      setNotificationKitchen(notification_lst);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
   const handleReturn = () => {
     setSelectedTable(-1);
   };
@@ -67,13 +121,12 @@ const WaitStaff = () => {
 
   const fetchOrder = async (index) => {
     //index = String(index);
-    console.log(index);
+    //console.log(index);
     const url = `http://localhost:8000/order/cart/list?table_id=${index}`;
-    console.log(url);
+    //console.log(url);
     try {
       const response = await fetch(url);
       const data = await response.json();
-      const itemArray = Object.values(data);
       let order_list = []
       for (var i of data) {
         order_list.push({ name: i[0], amount: i[1], is_prepared: i[2], is_served: i[3] })
@@ -96,7 +149,21 @@ const WaitStaff = () => {
 
         <Box sx={{ border: '2px solid #000', width: '50%', height: '80vh', m: 2, padding: "3%" }}>
           {selectedtable === -1 ? (
+            <div>
             <Typography variant="h4" align="center" margin={'15px'}>Notification Board</Typography>
+            <div>
+            {notification.map((item) => (
+              <div key={item.table}>
+                <p style={{color: item.status === 'ASSIST' ? "#FB0F0F" : item.status === 'BILL' ? "#F59B0C" : "inherit"}}>Table {item.table} requested {item.status}</p>
+              </div>
+            ))}
+            {notificationKictehn.map((order) => (
+              <div key={order.table}>
+              </div>
+            ))}
+          </div>
+            </div>
+
           ) : (
             <div>
               <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>

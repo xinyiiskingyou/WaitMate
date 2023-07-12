@@ -165,7 +165,7 @@ def waitstaff_get_from_customer():
     return notification.waitstaff_receives_from_customer()
 
 @app.get('/notification/waitstaff/get/kitchen')
-def waitstaff_get_from_customer():
+def waitstaff_get_from_kitchen():
     return notification.waitstaff_receives_from_kitchen()
 
 ############ CHECKOUT #################

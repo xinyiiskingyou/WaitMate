@@ -449,6 +449,11 @@ const Menu = () => {
       </Box>
     </Drawer>
       <div style={{display: 'flex', flexDirection: "row"}}>
+      <Link to="/coupon" style={{
+            marginTop: '8%',
+            marginLeft: "10%",
+            width: '100%',
+      }}>
       <Button variant="contained" style={{...AddbuttonStyle, top: "5px", right: "0px"}}>
                 <img src={meme} alt="MemeIcon" style={{
                   maxWidth: '100%',
@@ -457,20 +462,20 @@ const Menu = () => {
                 }}/>
                 Memes
       </Button>
-
+      </Link>
       <Link to="/coupon" style={{
             marginTop: '8%',
             marginLeft: "10%",
             width: '100%',
       }}>
-        <IconButton style={{...AddbuttonStyle}}>
-          <img src={coupon} alt="MemeIcon" style={{
+        <Button style={{...AddbuttonStyle, top: "5px", right: "0px"}}>
+          <img src={coupon} alt="CouponIcon" style={{
             maxWidth: '100%',
             maxHeight: '7vh',
             marginRight: '1vw'
           }}/>
           Coupons
-        </IconButton>
+        </Button>
       </Link>
 
       </div>
