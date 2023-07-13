@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Container, Box, Typography, Grid, Button, IconButton, Select, MenuItem, Menu, ListItem, ListItemText, List} from '@mui/material';
-import order from "../assets/order.png";
 
 const Table = ({index, table_id}) => {
     const options = [
       'OCCUPIED',
       'ASSIST',
       'BILL',
+      'EMPTY'
     ];
 
     const [anchorEl, setAnchorEl] = React.useState(null);
