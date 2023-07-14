@@ -1,9 +1,10 @@
 import sys
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi import FastAPI, Query, Body
+from fastapi import FastAPI, Query, Body, Response, Depends, Cookie
 from src.order import OrderDB
 from src.table import TableDB
 from src.menu import MenuDB
+from src.auth import Auth
 from src.model.category_req import Category
 from src.model.category_req import Category_ID
 from src.model.category_order_req import CategoryOrder
@@ -12,13 +13,22 @@ from src.model.item_req import Item
 from src.model.table_req import Table
 from src.model.table_req import Table_Cust
 from src.model.order_req import Order
+from backend.src.model.auth_req import LoginMan, Password, Email
+
 
 sys.path.append('..')
+
+# cred = credentials.Certificate('eeee_service_account_keys.json')
+# firebase = firebase_admin.initialize_app(cred)
+# pb = pyrebase.initialize_app(json.load(open('./src/waitmate-ba463-firebase-adminsdk-ea5im-72b77a7f6f.json')))
+
 
 app = FastAPI()
 order = OrderDB()
 table = TableDB()
 menu = MenuDB()
+auth = Auth()
+
 
 origins = [
     'http://localhost:3000',
@@ -41,7 +51,9 @@ async def read_root() -> dict:
 ############ MENU #################
 
 @app.post("/menu/category/add")
-def category_add_api(reqBody: Category):   
+def category_add_api(reqBody: Category): 
+    auth.is_authenticated()
+    auth.is_authorized(['manager'], )
     menu.category_add(reqBody.name)
     return {}
 
@@ -119,14 +131,48 @@ def table_status_update(reqbody: Table):
     return {}
 
 # User management
-@app.put("/auth/password")
+@app.post("/auth/manager/login")
+def auth_password_api(reqbody: LoginMan):
+    token = auth.login_mananger(reqbody.email, reqbody.password)
+    return token["token"]
+
+@app.post("/auth/waitstaff/login")
+def auth_waitstaff_password_api(reqbody: Password):
+    token = auth.login_staff(reqbody.password, True)
+    return token["token"]
+
+@app.post("/auth/kitchenstaff/login")
+def auth_kitchenstaff_password_api(reqbody: Password):
+    token = auth.login_staff(reqbody.password, False)
+    return token["token"]
+
+@app.post("/auth/logout")
 def auth_password_api():
+    token = auth.logout()
+    return {}
+
+@app.put("/auth/manager/update/email")
+def auth_manager_update_email_api(reqbody: Email):
+    user: dict = auth.is_authenticated('token')
+    auth.change_email_mananger(user, reqbody.email)
+    return {}
+    
+@app.put("/auth/manager/update/password")
+def auth_manager_update_password_api(reqbody: Password):
+    user: dict = auth.is_authenticated('token')
+    auth.change_password_mananger(user, reqbody.password)
     return {}
 
 @app.put("/auth/waitstaff/password")
-def auth_waitstaff_password_api():
+def auth_waitstaff_password_api(reqbody: Password):
+    auth.is_authenticated('token')
+    auth.change_password_staff(reqbody.password)
     return {}
 
 @app.put("/auth/kitchen/password")
+def auth_kitchen_password_api():
+    return {}
+
+@app.delete("/auth/delete")
 def auth_kitchen_password_api():
     return {}
