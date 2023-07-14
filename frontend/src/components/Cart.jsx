@@ -5,6 +5,18 @@ import {
 } from '@mui/material';
 import WestIcon from '@mui/icons-material/West';
 
+const buttonStyle = { 
+  border: '4px solid #FFA0A0', 
+  height: '7vh', 
+  width: '12vw',
+  textAlign: 'center', 
+  justifyContent: 'center',
+  background: "#FFCFCF",
+  color: 'black',
+  fontWeight: "bolder",
+  borderRadius: 8,
+}
+
 const Cart = () => {
   let [orders, setOrder] = useState([])
   const id = useParams();
@@ -27,7 +39,7 @@ const Cart = () => {
       let order_list = []
       for (var i of data) {
         console.log(i)
-        order_list.push({name: i[0], amount: i[1]})
+        order_list.push({name: i[0], amount: i[1], cost: i[4]})
       }
       setOrder(order_list)
     }).catch(error => {
@@ -41,7 +53,7 @@ const Cart = () => {
   }, [])
 
   return (
-    <Container>
+  <Container>
     <Grid container direction="column" spacing={2}>
       <Grid item xs={2}>
       <Box
@@ -83,6 +95,12 @@ const Cart = () => {
               View Order Summary 
             </Typography>
           </Grid>
+
+          <Grid item>
+              <Button variant="contained" color="primary" style={buttonStyle}>
+                Request Bill
+              </Button>
+          </Grid>
         </Grid>
       </Box>
     </Grid>
@@ -122,19 +140,26 @@ const Cart = () => {
                           }}>
                         {row.amount}
                       </TableCell>
+
+                      <TableCell style={{ width: 160 }} align='right'
+                        sx={{
+                          fontSize: 25,
+                          borderBottom: 'none',
+                          pr: 10
+                          }}>
+                        ${row.cost}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
             </TableContainer>
           </Grid>
-
         </Grid>
       </Box>
       </Grid>
     </Grid>  
     </Container>
-
     )
 }
 

@@ -1,5 +1,5 @@
 '''
-The `order_db` module provides functionality for managing order information.
+The `order_db` module provides functionalites for managing order information.
 
 This module provides functionality to interact with an order database,
 including adding orders, retrieving orders etc.
@@ -8,10 +8,10 @@ including adding orders, retrieving orders etc.
 import sqlite3
 import datetime
 from typing import Any, List
-from constant import DB_PATH as ORDER_DB_PATH
+from constant import DB_PATH
 from src.error import InputError, NotFoundError
 from src.clear import clear_database
-from src.helper import check_table_exists, get_item_info, get_order
+from src.helper import check_table_exists, check_item_name_exists, get_order
 
 class OrderDB:
     '''
@@ -21,7 +21,7 @@ class OrderDB:
         database_path (str): The path to the SQLite database file.
     '''
 
-    def __init__(self, database=ORDER_DB_PATH) -> None:
+    def __init__(self, database=DB_PATH) -> None:
         self.database = database
 
     def create_order_table(self) -> None:
@@ -76,7 +76,7 @@ class OrderDB:
         if not result:
             raise InputError('The table_id does not refer to a valid table')
 
-        if not get_item_info('name', item_name):
+        if not check_item_name_exists(item_name.lower()):
             raise InputError('The item_name does not refer to a valid item')
 
         if amount is None or amount < 1:
@@ -92,16 +92,17 @@ class OrderDB:
         con.commit()
         con.close()
 
-    def get_table_order(self, table_id: int) -> List[Any]:
+    @staticmethod
+    def get_table_order(table_id: int) -> List[Any]:
         '''
-        Returns the order associated with the specified table ID.
+        Return Value the order associated with the specified table ID.
 
         Arguments:
             <table_id>  (<int>)    - unique id of a table to select
         Exceptions:
             InputError  - Occurs when table_id does not exist
         Return Value:
-            Returns <order_list> that contains all the orders are placed by a table
+            Return Value <order_list> that contains all the orders are placed by a table
         '''
         return get_order(table_id)
 
@@ -114,7 +115,7 @@ class OrderDB:
         Exceptions:
             N/A
         Return Value:
-            Returns <order_list> that containing all orders details
+            Return Value <order_list> that containing all orders details
         '''
 
         self.create_order_table()
@@ -123,7 +124,7 @@ class OrderDB:
             con = sqlite3.connect(self.database)
             cur = con.cursor()
 
-            cur.execute('''SELECT timestamp, table_id, item_name, amount 
+            cur.execute('''SELECT timestamp, table_id, item_name, amount
                 FROM Orders 
                 WHERE is_prepared == 0 AND is_served == 0
                 ORDER BY timestamp ASC''')
@@ -134,7 +135,8 @@ class OrderDB:
             con.close()
         return order_list
 
-    def clear_order_table(self) -> None:
+    @staticmethod
+    def clear_order_table() -> None:
         '''
         Resets all the data of the order database.
 

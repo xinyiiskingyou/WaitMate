@@ -34,13 +34,13 @@ const Staff = () => {
           <h2 style={headingStyle}>Select Staff Type</h2>
         </Grid>
         <Grid item xs={4} textAlign={'right'}>
-          <Link to="/menu">
+          <Link to="/Menu">
             <Button variant='contained' color='primary' style={buttonStyle}>
               <Grid container direction="column" alignItems="center" spacing={1}>
                 <Grid item>
                   <img src={manager} alt="managerIcon" style={{
-                    width: '12vw',
-                    height: '22vh',
+                    width: '14vw',
+                    height: '25vh',
                   }}/>
                 </Grid>
                 <Grid item>
@@ -58,8 +58,8 @@ const Staff = () => {
             <Grid container direction="column" alignItems="center" spacing={1}>
               <Grid item>
                 <img src={chef} alt="ChefIcon" style={{
-                  width: '12vw',
-                  height: '22vh',
+                  width: '14vw',
+                  height: '25vh',
                 }}/>
               </Grid>
               <Grid item>
@@ -77,8 +77,8 @@ const Staff = () => {
             <Grid container direction="column" alignItems="center" spacing={1}>
               <Grid item>
                 <img src={worker} alt="WorkerIcon" style={{
-                  width: '12vw',
-                  height: '22vh',
+                  width: '14vw',
+                  height: '25vh',
                 }}/>
               </Grid>
               <Grid item>
@@ -96,3 +96,4 @@ const Staff = () => {
 };
 
 export default Staff;
+

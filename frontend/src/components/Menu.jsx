@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useTheme } from '@mui/material/styles';
-import { Card, CardActions, CardContent, Container, Drawer, Box, Button, Typography, TextField, ButtonGroup, Grid } from '@mui/material';
+import { Card, CardActions, CardContent, Container, Drawer, Box, Button, Typography, TextField, ButtonGroup, Grid, IconButton } from '@mui/material';
 import { Link, useParams } from 'react-router-dom';
 import Item from './Item';
 import MenuItem from './Card';
@@ -10,6 +10,8 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import DoneIcon from '@mui/icons-material/Done';
 import ClearIcon from '@mui/icons-material/Clear';
 import WestIcon from '@mui/icons-material/West';
+import meme from '../assets/meme.png';
+import coupon from '../assets/coupon.png';
 
 const Menu = () => {
   const [editing, setEditing] = useState(false);
@@ -20,8 +22,7 @@ const Menu = () => {
   const [selectedCategory, setSelectedCategory] = useState(-1);
   const [menuItems, setMenuItems] = useState([]);
   const [adding, setAdding] = useState(false);
-  const [cardData, setCardData] = useState({ category: -1, name: '', price: '', description: '', ingredient: '', vegetarian: false, is_up: false });
-  const [error, setError] = useState(null);
+  const [cardData, setCardData] = useState({ category: -1, name: '', cost: '', description: '', ingredient: '', is_vegan: false, is_up: false });
 
   const backLink = `/staff`;
 
@@ -44,20 +45,19 @@ const Menu = () => {
             throw new Error('Failed to save category');
           }
         })
-        .then(data => {
+        .then(() => {
           // Handle the response data if necessary
           setCategories([...categories, categoryText.trim()]);
-          setCategoryText('');
-          setEditing(false);
+          handleCategoryDone();
         })
         .catch(error => {
-          // Handle the error if necessary
           console.error(error);
           alert('Failed to add category. Please try again.');
-          window.location.reload();
+          handleCategoryDone();
         });
     } else {
       alert('Failed to add category. Please try again.');
+      handleCategoryDone();
     }
   };
 
@@ -70,11 +70,13 @@ const Menu = () => {
   };
 
   const handleCategoryClick = (index) => {
+    setMenuItems([]);
     setSelectedCategory(index);
     fetchMenuItems(index);
   };
 
   const handleCategoryDone = () => {
+    setCategoryText('');
     setEditing(false);
   };
 
@@ -82,13 +84,13 @@ const Menu = () => {
     setAdding(true);
   };
 
-  const handleCardDoneClick = (category, name, price, description, ingredient, vegetarian) => {
-    if (name && price && description && ingredient) {
-      const newMenuItem = { category, name: name, price: price, description: description, ingredient: ingredient, vegetarian: vegetarian };
+  const handleCardDoneClick = (category, name, cost, description, ingredient, is_vegan) => {
+    if (name && cost && description && ingredient) {
+      const newMenuItem = { category, name: name, cost: cost, description: description, ingredient: ingredient, is_vegan: is_vegan };
       setMenuItems((prevMenuItems) => [...prevMenuItems, newMenuItem]);
       console.log('Item details:', cardData);
       // Reset the form data
-      setCardData({ category: -1, name: '', price: '', description: '', ingredient: '', vegetarian: false, is_up: false });
+      setCardData({ category: -1, name: '', cost: '', description: '', ingredient: '', is_vegan: false, is_up: false });
       setAdding(false);
     }
   };
@@ -102,19 +104,14 @@ const Menu = () => {
   };
 
   const handleCardCancelClick = () => {
-    setCardData({ category: -1, name: '', price: '', description: '', ingredient: '', vegetarian: false, is_up: false });
+    setCardData({ category: -1, name: '', cost: '', description: '', ingredient: '', is_vegan: false, is_up: false });
     setAdding(false);
   };
   
   const handleCardBlur = () => {
-    if (cardData.name || cardData.price || cardData.description) {
+    if (cardData.name || cardData.cost || cardData.description) {
       setAdding(false);
     }
-  };
-  
-  const handleItemAdd = (name, price, description) => {
-    // Perform any necessary logic with the item details
-    console.log('Item details:', name, price, description);
   };
 
   const handleEditCategory = (index) => {
@@ -125,10 +122,17 @@ const Menu = () => {
 
     console.log(categories[index]);
     console.log(editedCategory);
+
     const payload = { 
       name: categories[index],
       new_name: editedCategory
     };
+
+    if (editedCategory === null || !editedCategory) {
+      setCategoryEditingIndex(-1);
+      setEditedCategory("");
+      return;
+    }
 
     await fetch('http://localhost:8000/menu/category/update/details', {
       method: 'PUT',
@@ -137,28 +141,30 @@ const Menu = () => {
     })
       .then(response => {
         if (response.ok) {
+          const updatedCategories = [...categories];
+          updatedCategories[index] = editedCategory;
+          setCategories(updatedCategories);
+        
+          // Reset the category editing index
+          setCategoryEditingIndex(-1);
+          setEditedCategory("");
           return response.json();
         } else {
           throw new Error('Failed to update category');
         }
       })
-      .then(data => {
-        // Save the updated category name
-        const updatedCategories = [...categories];
-        updatedCategories[index] = editedCategory;
-        setCategories(updatedCategories);
-      
-        // Reset the category editing index
-        setCategoryEditingIndex(-1);
-        setEditedCategory("");
-      })
       .catch(error => {
         // Handle the error if necessary
         console.error(error);
         alert('Failed to rename the category. Please try again.');
-        window.location.reload();
       });
   };
+
+  const handleCancelSaveCategory = () => {
+    setCategoryEditingIndex(-1);
+    setEditedCategory("");
+  }
+
   const handleCategoryInputChange = (value) => {
     setEditedCategory(value);
   };
@@ -219,8 +225,13 @@ const Menu = () => {
       const response = await fetch('http://localhost:8000/menu/list/items/' + index);
       const data = await response.json();
       const itemArray = Object.values(data);
-      console.log(itemArray);
-      setMenuItems(itemArray);
+      if (itemArray.length === 1) {
+        if (itemArray[0].name !== null) {
+          setMenuItems(itemArray);
+        }
+      } else {
+        setMenuItems(itemArray);
+      }
     } catch (error) {
       console.error('Error fetching categories:', error);
       alert('Error fetching categories:', error);
@@ -228,26 +239,12 @@ const Menu = () => {
     }
   };
 
-  const theme = useTheme();
-  const styles = {
-    cardContainer: {
-      display: 'flex',
-      flexDirection:"row",
-      gap: '5%',
-    },
-    card: {
-      display:"flex", 
-      flexDirection:"row",
-      /* Additional styling properties as needed */
-    },
-  };
-
   const AddbuttonStyle = {
     marginTop: '8%',
     marginButton: '10%',
     marginLeft: '10%',
     width: '80%',
-    background: "#E0E0E0",
+    background: "transparent",
     border: "4px solid #FFA0A0",
     borderRadius: 15,
     color: 'black',
@@ -286,14 +283,7 @@ const Menu = () => {
 
   return (
     <Container maxWidth="sm">
-    {error && (
-      <Card variant="outlined">
-        <CardContent>
-          <div className="error-alert">{error}</div>
-        </CardContent>
-      </Card>
-    )}
-    
+
     <Drawer 
       variant="permanent" 
       sx={{
@@ -405,7 +395,7 @@ const Menu = () => {
                     <DoneIcon />
                   </Button>
                   <Button 
-                    onClick={handleSaveCategory} 
+                    onClick={handleCancelSaveCategory} 
                     variant="contained" 
                     color="primary"
                     style={{...EditCatebuttonStyle, background: "#ffc570"}}
@@ -458,7 +448,37 @@ const Menu = () => {
         ))}
       </Box>
     </Drawer>
+      <div style={{display: 'flex', flexDirection: "row"}}>
+      <Link to="/coupon" style={{
+            marginTop: '8%',
+            marginLeft: "10%",
+            width: '100%',
+      }}>
+      <Button variant="contained" style={{...AddbuttonStyle, top: "5px", right: "0px"}}>
+                <img src={meme} alt="MemeIcon" style={{
+                  maxWidth: '100%',
+                  maxHeight: '7vh',
+                  marginRight: '1vw'
+                }}/>
+                Memes
+      </Button>
+      </Link>
+      <Link to="/coupon" style={{
+            marginTop: '8%',
+            marginLeft: "10%",
+            width: '100%',
+      }}>
+        <Button style={{...AddbuttonStyle, top: "5px", right: "0px"}}>
+          <img src={coupon} alt="CouponIcon" style={{
+            maxWidth: '100%',
+            maxHeight: '7vh',
+            marginRight: '1vw'
+          }}/>
+          Coupons
+        </Button>
+      </Link>
 
+      </div>
       <Box 
         flexGrow={1} 
         p={2} 
@@ -496,7 +516,7 @@ const Menu = () => {
                 </Box>
               )}
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1vw' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1vw' }}>
                 {Object.entries(menuItems)
                   .filter(([index, menuItem]) => menuItem.name !== null)
                   .map(([index, menuItem]) => (
@@ -508,38 +528,30 @@ const Menu = () => {
                         ItemDescription={menuItem.description}
                         ItemPrice={menuItem.cost}
                         ItemIngredient={menuItem.ingredients}
-                        ItemVegetarian={menuItem.vegetarian}
+                        ItemVegetarian={menuItem.is_vegan}
                         onItemRemove={() => handleRemoveItemClick(index)}
                         onItemsCategory={() => handleCategoryClick(selectedCategory)}
                       />
                     </div>
                 ))}
               </div>
-                {menuItems
-                  .filter((menuItem) => menuItem.category === selectedCategory && menuItem.name !== null)
-                  .map((menuItem, index) => (
-                      <MenuItem
-                        ItemName={menuItem.name}
-                        ItemDescription={menuItem.description}
-                        ItemPrice={menuItem.cost}
-                        ItemIngredient={menuItem.ingredients}
-                        ItemVegetarian={menuItem.vegetarian}
-                        onItemRemove={() => handleRemoveItemClick(index)}
-                      />
-                ))}
             </Box>
         </Box>
         ) : (
+
+
           <Box
           display="flex"
           justifyContent="center"
           alignItems="center"
           minHeight="60vh"
         >
+
+
           <Typography variant="h5" style={{ margin: '20px' }}>
             Edit menu here. <span role="img" aria-label="Smiley">&#128512;</span>
           </Typography>
-        </Box>
+          </Box>
           )}
       </Box>
 

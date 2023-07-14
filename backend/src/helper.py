@@ -3,31 +3,7 @@ from typing import Any, List
 from constant import DB_PATH
 from src.error import NotFoundError, InputError
 
-def create_tables_db() -> None:
-    '''
-    Create a database for tables
-
-    Arguments:
-        N / A
-    Exceptions:
-        N /A
-    Return Value:
-        N/A
-    '''
-
-    con = sqlite3.connect(DB_PATH)
-    cur = con.cursor()
-
-    cur.execute('''CREATE TABLE IF NOT EXISTS Tables (
-                    table_id INTEGER PRIMARY KEY NOT NULL,
-                    status TEXT NOT NULL
-                )''')
-
-    con.commit()
-    con.close()
-
 def check_table_exists(table_id: int):
-    create_tables_db()
     if table_id is None or table_id < 0:
         raise InputError('Table id is not available.')
 
@@ -36,9 +12,8 @@ def check_table_exists(table_id: int):
         cur = con.cursor()
         cur.execute('SELECT * FROM Tables WHERE table_id = ?', (table_id,))
         result = cur.fetchone()
-
     except Exception:
-        raise NotFoundError('Database not found.')
+        return
     finally:
         con.close()
 
@@ -58,12 +33,12 @@ def check_if_category_exists(category_name: str):
 
     return result
 
-def get_item_info(column_name: str, item: str):
-
+def check_item_name_exists(item: str):
+    
     try:
         con = sqlite3.connect(DB_PATH)
         cur = con.cursor()
-        cur.execute('SELECT * FROM Items i WHERE i.{} = (?)'.format(column_name),(item,))
+        cur.execute('SELECT * FROM Items i WHERE lower(i.name) = (?)', (item,))
         result = cur.fetchone()
     except Exception:
         raise NotFoundError('Database not found.')
@@ -155,32 +130,6 @@ def get_order_in_category(category_name: str):
 
     return int(result)
 
-def update_order(table_name, column_name, is_up, prev_order):
-
-    if prev_order == 1 and is_up:
-        raise InputError('Invalid order')
-
-    new_order = prev_order - 1 if is_up else prev_order + 1
-
-    update_order_in_db(table_name, column_name, prev_order, new_order)
-    
-    if table_name == "Menu":
-        update_order_in_db("Items", "item_order", prev_order, new_order)
-
-def update_order_in_db(table_name, column_name, prev_order, new_order):
-    con = sqlite3.connect(DB_PATH)
-    cur = con.cursor()
-    cur.execute('''UPDATE {table}
-        SET {column} = CASE
-            WHEN {column} = ? THEN ?
-            WHEN {column} = ? THEN ?
-            ELSE {column}
-        END'''.format(table=table_name, column=column_name), 
-    (prev_order, new_order, new_order, prev_order))
-
-    con.commit()
-    con.close()
-
 def get_order(table_id: int) -> List[Any]:
     
     if not check_table_exists(table_id):
@@ -189,8 +138,13 @@ def get_order(table_id: int) -> List[Any]:
     try:
         con = sqlite3.connect(DB_PATH)
         cur = con.cursor()
-
-        cur.execute('SELECT item_name, amount, is_prepared, is_served FROM Orders WHERE table_id = ?', (table_id,))
+        cur.execute('''
+            SELECT o.item_name, o.amount, o.is_prepared, o.is_served, o.amount * i.cost
+            FROM Orders o
+            JOIN Items i
+            on o.item_name = i.name
+            WHERE table_id = ?
+        ''', (table_id, ))
         order_list = cur.fetchall()
     except Exception:
         raise NotFoundError('Order database not found.')

@@ -2,8 +2,7 @@
 Clear the data that has been stored
 '''
 import sqlite3
-from constant import DB_PATH 
-
+from constant import DB_PATH
 
 def clear_database(database_name: str):
     '''

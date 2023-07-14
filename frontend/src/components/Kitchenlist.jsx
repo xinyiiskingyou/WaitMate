@@ -16,6 +16,18 @@ function createData(time, tablenum, name, amount) {
   return { time, tablenum, name, amount };
 }
 
+const buttonStyle = { 
+  border: '4px solid #A1C935', 
+  height: '7vh', 
+  width: '12vw',
+  textAlign: 'center', 
+  justifyContent: 'center',
+  background: "#A1C935",
+  color: 'black',
+  fontWeight: "bolder",
+  borderRadius: 8,
+}
+
 const rows = [
   createData("13:02", "Table 9", 'Frozen yoghurt', 1),
   createData("13:02", "Table 9", 'Ice cream sandwich', 2),
@@ -68,7 +80,7 @@ const Kitchenlist = () => {
               <Button              
                 sx={{ 
                   border: 5,
-                  borderColor: '#F5BBCC',
+                  borderColor: '#FFA0A0',
                   borderRadius: 2,
                   color: 'black' 
                 }}>
@@ -97,7 +109,7 @@ const Kitchenlist = () => {
         sx={{ 
           margin: 1, 
           border: 10,
-          borderColor: '#F5BBCC',
+          borderColor: '#FFA0A0',
           borderRadius: 2, 
           display:"flex",
         }}>
@@ -111,18 +123,22 @@ const Kitchenlist = () => {
                 <TableBody>
                   {orders.map((row) => (
                     <TableRow key={row.name}>
-                      <TableCell style={{ width: '25%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pl: 10}}>
+                      <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pl: 10}}>
                         {row.time}
                       </TableCell>
-                      <TableCell style={{ width: '25%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pl: -5}}>
+                      <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pl: -5}}>
                         Table {row.tablenum}
                       </TableCell>
-                      <TableCell style={{ width: '25%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -5}}>
+                      <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
                         {row.name}
                       </TableCell>
-                      {/* <TableCell style={{ width: 200 }} align='right' sx={{ fontSize: 25, borderBottom: 'none', pr: 10}}> */}
-                      <TableCell style={{ width: '25%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: 10}}>  
+                      <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -5}}>  
                         {row.amount}
+                      </TableCell>
+                      <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: 10}}>  
+                        <Button variant="contained" color="primary" style={buttonStyle}>
+                          Prepared
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}

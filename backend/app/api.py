@@ -30,12 +30,13 @@ checkout = Checkout()
 origins = [
     'http://localhost:3000',
     'localhost:3000',
-    'localhost:3000/menu'
+    'localhost:3000/menu',
+    'localhost:3001',
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=['*'],
     allow_credentials=True,
     allow_methods=['*'],
     allow_headers=['*']
@@ -71,13 +72,28 @@ def menu_view_api(cat_id: str):
     return menu.get_items_in_category(int(cat_id))
 
 @app.post("/menu/item/add")
-def item_add_api(reqbody: Item):    
-    menu.item_add(reqbody.category, reqbody.name, reqbody.cost, reqbody.description, reqbody.ingredients, reqbody.is_vegan)
+def item_add_api(reqbody: Item):
+    item_data = {
+        'category': reqbody.category,
+        'name': reqbody.name,
+        'cost': reqbody.cost,
+        'description': reqbody.description,
+        'ingredients': reqbody.ingredients,
+        'is_vegan': reqbody.is_vegan
+    }
+    menu.item_add(item_data)
     return {}
 
 @app.put("/menu/item/update/details")
 def menu_item_update_details_api(reqbody: Item):
-    menu.update_details_menu_items(reqbody.category, reqbody.item_id, reqbody.name, reqbody.cost, reqbody.description, reqbody.ingredients, reqbody.is_vegan)
+    updates = {
+        'name': reqbody.name,
+        'cost': reqbody.cost,
+        'description': reqbody.description,
+        'ingredients': reqbody.ingredients,
+        'is_vegan': reqbody.is_vegan
+    }
+    menu.update_details_menu_items(reqbody.category, reqbody.item_id, **updates)
     return {}
 
 @app.put("/menu/item/update/order")
@@ -149,7 +165,7 @@ def waitstaff_get_from_customer():
     return notification.waitstaff_receives_from_customer()
 
 @app.get('/notification/waitstaff/get/kitchen')
-def waitstaff_get_from_customer():
+def waitstaff_get_from_kitchen():
     return notification.waitstaff_receives_from_kitchen()
 
 ############ CHECKOUT #################

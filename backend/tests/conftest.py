@@ -42,8 +42,24 @@ def menu_japanese():
     clear_database('Items')
 
     menu.category_add('Japanese')
-    menu.item_add('Japanese', 'salmon sushi', 10, '_', '_', False)
-    menu.item_add('Japanese', 'dorayaki', 6, '_', '_', False)
+    menu.item_add({
+        'category': 'Japanese',
+        'name': 'salmon sushi',
+        'cost': 10,
+        'description': '_',
+        'ingredients': '_',
+        'is_vegan': False
+    })
+
+    menu.item_add({
+        'category': 'Japanese',
+        'name': 'dorayaki',
+        'cost': 6,
+        'description': '_',
+        'ingredients': '_',
+        'is_vegan': False
+    })
+
     return ['salmon sushi', 'dorayaki']
 
 @pytest.fixture
