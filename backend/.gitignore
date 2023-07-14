@@ -4,6 +4,8 @@
 # Ignore cache
 **/__pycache__
 venv/
+.pytest**/
+
 
 # Ignore mod
 node_modules/

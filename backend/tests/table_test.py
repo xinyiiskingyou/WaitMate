@@ -1,6 +1,7 @@
 import pytest
 from src.error import InputError
 from src.table import TableDB
+from tests.conftest import VALID, INPUTERROR
 
 table = TableDB()
 
@@ -99,28 +100,28 @@ def test_valid_update_reselect_table_id():
 ######################################
 
 def test_select_table(client):
-    resp = client.post("/table/select", json={'id': '5'})
-    assert resp.status_code == 200
+    resp = client.post("/table/select", json={'table_id': '5'})
+    assert resp.status_code == VALID
 
     # duplicate table id
-    resp = client.post("/table/select", json={'id': '5'})
-    assert resp.status_code == 400
+    resp = client.post("/table/select", json={'table_id': '5'})
+    assert resp.status_code == INPUTERROR
 
-    resp = client.post("/table/select", json={'id': '-1'})
-    assert resp.status_code == 400
+    resp = client.post("/table/select", json={'table_id': '-1'})
+    assert resp.status_code == INPUTERROR
 
 def test_check_table_status(client):
     resp = client.get("/table/status")
-    assert resp.status_code == 200
+    assert resp.status_code == VALID
 
 def test_update_table_status(client):
-    resp = client.put("/table/status/update", json={"id": 5, "status": "BILL"})
-    assert resp.status_code == 200
+    resp = client.put("/table/status/update", json={"table_id": 5, "status": "BILL"})
+    assert resp.status_code == VALID
 
     # invalid status
-    resp = client.put("/table/status/update", json={"id": 5, "status": "--"})
-    assert resp.status_code == 400
+    resp = client.put("/table/status/update", json={"table_id": 5, "status": "--"})
+    assert resp.status_code == INPUTERROR
 
     # invalid table id
-    resp = client.put("/table/status/update", json={"id": 100, "status": "BILL"})
-    assert resp.status_code == 400
+    resp = client.put("/table/status/update", json={"table_id": 100, "status": "BILL"})
+    assert resp.status_code == INPUTERROR

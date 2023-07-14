@@ -2,8 +2,9 @@
 Clear the data that has been stored
 '''
 import sqlite3
+from constant import DB_PATH
 
-def clear_database(database: str, database_name: str):
+def clear_database(database_name: str):
     '''
     Resets the internal data of the database.
 
@@ -14,11 +15,11 @@ def clear_database(database: str, database_name: str):
     Return Value:
         N/A
     '''
-    con = sqlite3.connect(database)
+    con = sqlite3.connect(DB_PATH)
     cur = con.cursor()
 
     # Execute the DELETE statement to clear the table
-    cur.execute(f'DELETE FROM {database_name}')
+    cur.execute(f'DROP TABLE IF EXISTS {database_name} ')
 
     # Commit the changes and close the connection
     con.commit()

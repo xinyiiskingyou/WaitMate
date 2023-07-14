@@ -9,7 +9,7 @@ import sqlite3
 from src.error import InputError, NotFoundError
 from src.clear import clear_database
 from src.helper import check_table_exists
-from constant import TABLE_DB_PATH
+from constant import DB_PATH
 
 class TableDB():
     '''
@@ -19,7 +19,7 @@ class TableDB():
         database_path (str): The path to the SQLite database file.
     '''
 
-    def __init__(self, database=TABLE_DB_PATH) -> None:
+    def __init__(self, database=DB_PATH) -> None:
         self.database = database
 
     def create_tables_db(self) -> None:
@@ -37,11 +37,10 @@ class TableDB():
         con = sqlite3.connect(self.database)
         cur = con.cursor()
 
-        cur.execute('PRAGMA foreign_keys = OFF')
-        con.commit()
         cur.execute('''CREATE TABLE IF NOT EXISTS Tables (
                         table_id INTEGER PRIMARY KEY NOT NULL,
-                        status TEXT NOT NULL
+                        status TEXT NOT NULL,
+                        req_time TIMESTAMP
                     )''')
 
         con.commit()
@@ -79,14 +78,14 @@ class TableDB():
 
     def get_all_tables_status(self) -> dict:
         '''
-        Returns the status of all tables from the Tables database.
+        Return Value the status of all tables from the Tables database.
 
         Arguments:
             N/A
         Exceptions:
             N/A
         Return Value:
-            Returns <table_dict> of table_id with respective table status.
+            Return Value <table_dict> of table_id with respective table status.
         '''
         try:
             con = sqlite3.connect(self.database)
@@ -119,7 +118,7 @@ class TableDB():
                         - Occurs when table_id is less than 0
                         - Occurs when status is not 'OCCUPIED', 'ASSIST', 'BILL', 'EMPTY'
         Return Value:
-            Returns <table_dict> of table_id with respective table status.
+            Return Value <table_dict> of table_id with respective table status.
         '''
 
         # check if table number exists
@@ -146,7 +145,8 @@ class TableDB():
         finally:
             con.close()
 
-    def clear_tables_data(self) -> None:
+    @staticmethod
+    def clear_tables_data() -> None:
         '''
         Resets all the data of the table database.
 
@@ -157,4 +157,4 @@ class TableDB():
         Return Value:
             N/A
         '''
-        clear_database(self.database, 'Tables')
+        clear_database('Tables')

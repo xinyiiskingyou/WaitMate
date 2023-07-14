@@ -3,23 +3,49 @@ import { Link, useParams } from 'react-router-dom';
 import { 
   Box, Button, Typography, Container, Grid, Table, TableContainer, TableBody, TableRow, TableCell 
 } from '@mui/material';
+import WestIcon from '@mui/icons-material/West';
+
+const buttonStyle = { 
+  border: '4px solid #FFA0A0', 
+  height: '7vh', 
+  width: '12vw',
+  textAlign: 'center', 
+  justifyContent: 'center',
+  background: "#FFCFCF",
+  color: 'black',
+  fontWeight: "bolder",
+  borderRadius: 8,
+}
 
 const Cart = () => {
   let [orders, setOrder] = useState([])
   const id = useParams();
-  const backLink = `/CustomerMenuPage/${id.id}` 
+  const backLink = `/Browse/${id.id}` 
 
-  
   let getCart = async () => {
-    let response = await fetch(`http://localhost:8000/order/cart/list?table_id=${id.id}`)
-    let data = await response.json()
-    console.log(data)
-    let order_list = []
-    for (var i of data) {
-      console.log(i)
-      order_list.push({name: i[0], amount: i[1]})
-    }
-    setOrder(order_list)
+
+    await fetch(`http://localhost:8000/order/cart/list?table_id=${id.id}`, {
+    }).then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('Failed to view order summary. Please try again.');
+      }
+    }).then((data) => {
+      console.log(data)
+      if (data === null) {
+        return;
+      }
+      let order_list = []
+      for (var i of data) {
+        console.log(i)
+        order_list.push({name: i[0], amount: i[1], cost: i[4]})
+      }
+      setOrder(order_list)
+    }).catch(error => {
+      console.log(error);
+      alert(error);
+    })    
   }
 
   useEffect(() => {
@@ -27,13 +53,13 @@ const Cart = () => {
   }, [])
 
   return (
-    <Container>
+  <Container>
     <Grid container direction="column" spacing={2}>
       <Grid item xs={2}>
       <Box
         sx={{ 
           margin: 2, 
-          mt: 4, 
+          mt: 2, 
           borderRadius: 2, 
           height: '100%',
           display:"flex",
@@ -46,24 +72,34 @@ const Cart = () => {
               <Button              
                 sx={{ 
                   border: 5,
-                  borderColor: '#F5BBCC',
+                  borderColor: '#FFA0A0',
                   borderRadius: 2,
-                  color: 'black' 
+                  color: 'black',
+                  marginTop: '5vh',
+                  marginLeft: '2vw',
+                  fontWeight: "bolder"
                 }}>
-                <Typography variant="h4">Back</Typography>
+                <WestIcon/>
               </Button>
             </Link>
           </Grid>
           
-          <Grid item xs={8}>
+          <Grid item xs={8} style={{ marginTop: '5vh', fontWeight: "bold" }}>
             <Typography 
-              variant="h3" 
+              variant="h4" 
               component="h1" 
               align="center"
               noWrap
+              fontWeight="bold"
               >
-              View Cart
+              View Order Summary 
             </Typography>
+          </Grid>
+
+          <Grid item>
+              <Button variant="contained" color="primary" style={buttonStyle}>
+                Request Bill
+              </Button>
           </Grid>
         </Grid>
       </Box>
@@ -74,7 +110,7 @@ const Cart = () => {
         sx={{ 
           margin: 2, 
           border: 10,
-          borderColor: '#F5BBCC',
+          borderColor: '#FFA0A0',
           borderRadius: 2, 
           display:"flex",
         }}>
@@ -104,19 +140,26 @@ const Cart = () => {
                           }}>
                         {row.amount}
                       </TableCell>
+
+                      <TableCell style={{ width: 160 }} align='right'
+                        sx={{
+                          fontSize: 25,
+                          borderBottom: 'none',
+                          pr: 10
+                          }}>
+                        ${row.cost}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
             </TableContainer>
           </Grid>
-
         </Grid>
       </Box>
       </Grid>
     </Grid>  
     </Container>
-
     )
 }
 

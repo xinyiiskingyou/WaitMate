@@ -1,0 +1,5 @@
+.pytest**/
+
+# Ignore mod
+package.json
+package-lock.json
