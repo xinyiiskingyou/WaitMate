@@ -13,7 +13,7 @@ from src.model.item_req import Item
 from src.model.table_req import Table
 from src.model.table_req import Table_Cust
 from src.model.order_req import Order
-from backend.src.model.auth_req import LoginMan, Password, Email
+from src.model.auth_req import LoginMan, Password, Email
 
 
 sys.path.append('..')
