@@ -1,15 +1,17 @@
 import React from 'react';
-import { auth } from "./firebase-config";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut,
-} from "firebase/auth";
+// import { auth } from "./firebase-config";
+// import {
+//   createUserWithEmailAndPassword,
+//   signInWithEmailAndPassword,
+//   onAuthStateChanged,
+//   signOut,
+// } from "firebase/auth";
 import { styled } from '@mui/material/styles';
-import {Link, useParams} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Box, Button, Grid, Typography, TextField, Container, Popover } from '@mui/material';
 import { pink } from '@mui/material/colors';
+import { useCookies } from 'react-cookie';
+
 
 const mainPink = pink[100];
 const secPink = pink[200];
@@ -55,6 +57,10 @@ const LoginButton = styled(Button)(({ theme }) => ({
 
 const ManagerLogin = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [cookies, setCookie] = useCookies(['token']);
+
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -62,6 +68,47 @@ const ManagerLogin = () => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
+
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
+
+  const handleLogin = async () => {
+    console.log({
+      email: email,
+      password: password,
+    });
+
+    const body = {
+      'email': email,
+      'password': password,
+    }
+    try { 
+      const response = await fetch('http://localhost:8000/auth/manager/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      })
+      if (!response.ok) {
+        throw new Error('Failed to login');
+      }
+      
+      const data = await response.json();
+      setCookie('token', data, { path: '/' });
+      // console.log(cookies.token)
+      window.location.href = '/Menu';
+    }
+    catch (error) {
+      console.log(error)
+      alert('Failed to login. Please try again.');
+    }
   };
 
   const open = Boolean(anchorEl);
@@ -76,11 +123,11 @@ const ManagerLogin = () => {
         flexDirection: 'column',
         alignItems: 'center',
       }}>
-      <Box container direction='column' justifyContent='center'>
+      <Box container direction='column' justifyContent='center' >
         <Typography variant="h5" sx={{ mb: 2 }}>Manager Login</Typography>
-        <CssTextField fullWidth required label="Email"
+        <CssTextField fullWidth required label="Email" onChange={handleEmailChange}
           sx={{ mb: 1 }}/>
-        <CssTextField  type="password" fullWidth required label="Password"
+        <CssTextField type="password" fullWidth required label="Password" onChange={handlePasswordChange}
           sx={{ mb: 2 }}/>
         <Grid container>
           <Grid item xs>
@@ -99,9 +146,7 @@ const ManagerLogin = () => {
             </Popover> 
           </Grid>
           <Grid item> 
-            <Link to='/Menu'>
-              <LoginButton variant="contained"> Login</LoginButton>
-            </Link>
+            <LoginButton disabled={!(email && password)} variant="contained" onClick={handleLogin}> Login</LoginButton>
           </Grid>
         </Grid>
       </Box>
