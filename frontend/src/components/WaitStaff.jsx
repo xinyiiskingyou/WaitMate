@@ -63,7 +63,6 @@ const WaitStaff = () => {
       for (var i of data) {
         notification_lst.push({ table: i[0], status: i[1]})
       }
-      //console.log(notification_lst);
       //setTable(data);
       setNotification(notification_lst);
     } catch (error) {
@@ -91,21 +90,6 @@ const WaitStaff = () => {
     setSelectedTable(-1);
   };
   const tableElements = Object.entries(table).map(([id, value]) => {
-    let index;
-    switch (value) {
-      case "OCCUPIED":
-        index = 0;
-        break;
-      case "ASSIST":
-        index = 1;
-        break;
-      case "BILL":
-        index = 2;
-        break;
-      default:
-        index = -1;
-    }
-
     return (
       <div key={id} style={{ display: "flex", flexDirection: "row" }}>
         <div
@@ -118,7 +102,7 @@ const WaitStaff = () => {
         >
           <div style={{ textAlign: "center" }}><b>Table {id}</b></div>
         </div>
-        <Table index={index} table_id={id} />
+        <Table table_id={id} value={value} />
         <IconButton onClick={() => fetchOrder(id)}>
           <img src={order} alt="MemeIcon" style={{ width: '1.8vw', height: '3.5vh' }}/>
         </IconButton>
