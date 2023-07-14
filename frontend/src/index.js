@@ -21,7 +21,7 @@ function App() {
         <Route path="/Kitchenlist" element={<Kitchenlist />} />
         <Route path="/Cart/:id" element={<Cart />} />
         <Route path="/Browse/:id" element={<Browse />} />
-        <Route path="/Bill" element={<Bill />} />
+        <Route path="/Bill/:id" element={<Bill />} />
       </Routes>
     </Router>
   );

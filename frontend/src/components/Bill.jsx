@@ -12,48 +12,25 @@ import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import WestIcon from '@mui/icons-material/West';
 
-function createData(time, tablenum, name, amount) {
-  return { time, tablenum, name, amount };
-}
-
-// function ccyFormat(num) {
-//   return `${num.toFixed(2)}`;
-// }
-
-// const invoiceSubtotal = subtotal(rows);
-// const invoiceTotal = invoiceTaxes + invoiceSubtotal;
-
-const buttonStyle = { 
-  border: '4px solid #A1C935', 
-  height: '7vh', 
-  width: '12vw',
-  textAlign: 'center', 
-  justifyContent: 'center',
-  background: "#A1C935",
-  color: 'black',
-  fontWeight: "bolder",
-  borderRadius: 8,
-}
-
 const Bill = () => {
-  let [orders, setKitchen] = useState([])
+  let [orders, setBill] = useState([])
+  const id = useParams();
   let amount = "$10"
-  let getKitchenList = async () => {
-    let response = await fetch('http://localhost:8000/order/listall')
+  let getBill = async () => {
+    let response = await fetch(`http://localhost:8000/order/cart/list?table_id=${id.id}`)
     let data = await response.json()
     let order_list = []
     for (var i of data) {
       console.log(i)
-      order_list.push({time: i[0], tablenum: i[1], name: i[2], amount: i[3]})
+      order_list.push({name: i[0], amount: i[1], cost: i[4]})
     }
-    setKitchen(order_list)
+    setBill(order_list)
   }
 
   useEffect(() => {
-    getKitchenList()
+    getBill()
   }, [])
   
-
   return (
     <Container >
     <Grid container direction="column" spacing={2}>
@@ -89,6 +66,7 @@ const Bill = () => {
             component="h1" 
             align="center"
             noWrap
+            fontWeight="bold"
             >
               Bill
             </Typography>
@@ -117,62 +95,75 @@ const Bill = () => {
                 <TableBody>
                   {orders.map((row) => (
                     <TableRow key={row.name}>
-                      <TableCell style={{ width: '33%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
+                      <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
                         {row.name}
                       </TableCell>
-                      <TableCell style={{ width: '33%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -5}}>  
+                      <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -5}}>  
                         {row.amount}
                       </TableCell>
-                      <TableCell style={{ width: '33%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pl: 10}}>
-                        {row.time}
+                      <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pl: 10}}>
+                        ${row.cost}
                       </TableCell>
                     </TableRow>
                   ))}
-                  <TableRow>
-            <TableCell rowSpan={4}/>
-            <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "left" sx={{ fontSize: 27, borderBottom: 'none'}}>
-              Subtotal
-            </TableCell>
-            <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "right" align= "right" sx={{ fontSize: 27, borderBottom: 'none'}}>
-              {amount}
-            </TableCell>         
-             </TableRow>
-          <TableRow>
-          <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "left" sx={{ fontSize: 27, borderBottom: 'none'}}>
-            Voucher
-          </TableCell>
-          <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "right" sx={{ fontSize: 27, borderBottom: 'none'}}>
-              {amount}
-            </TableCell>          
-            </TableRow>
-          <TableRow>
-          <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "left" sx={{ fontSize: 27, borderBottom: 'none'}}>
-            Tips
-          </TableCell>            
-          <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "right" sx={{ fontSize: 27, borderBottom: 'none'}}>
-              {amount}
-            </TableCell>          
-            </TableRow>
-          <TableRow>
-          <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "left" sx={{ fontSize: 27, borderBottom: 'none'}}>
-            Total
-          </TableCell>
-            <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "right" sx={{ fontSize: 27, borderBottom: 'none'}}>
-              {amount}
-            </TableCell>
-          </TableRow>
+                <TableRow>
+                  <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
+                    Subtotal
+                  </TableCell>
+                  <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -5}}>  
+                  </TableCell>
+                  <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pl: 10}}>
+                    {amount}
+                  </TableCell>         
+                </TableRow>
+                <TableRow>
+                  <TableCell style={{ width: '20%', textAlign: 'center', fontWeight: 'bold' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
+                    Voucher
+                  </TableCell>
+                  <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -5}}>  
+                  </TableCell>
+                  <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pl: 10}}>
+                    -{amount}
+                  </TableCell>         
+                </TableRow>
+                <TableRow>
+                  <TableCell style={{ width: '20%', textAlign: 'center', fontWeight: 'bold' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
+                    Tips
+                  </TableCell>
+                  <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -5}}>  
+                  </TableCell>
+                  <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pl: 10}}>
+                    {amount}
+                  </TableCell>         
+                </TableRow>
+                <TableRow>
+                  <TableCell style={{ width: '20%', textAlign: 'center', fontWeight: 'bold' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
+                    Total
+                  </TableCell>
+                  <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -5}}>  
+                  </TableCell>
+                  <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pl: 10}}>
+                    {amount}
+                  </TableCell>         
+                </TableRow>
+                <TableRow>
+                  <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
+                  </TableCell>
+                  <TableCell style={{ width: '20%', textAlign: 'center'}} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -5}}>  
+                    Please pay at the counter! Thank you!
+                  </TableCell>
+                  <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pl: 10}}>
+                  </TableCell>         
+                </TableRow>
                 </TableBody>
               </Table>
             </TableContainer>
-            
           </Grid>
-
         </Grid>
       </Box>
       </Grid>
     </Grid>  
     </Container>
-
     )
 }
 

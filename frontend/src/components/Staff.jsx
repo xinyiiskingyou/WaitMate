@@ -4,6 +4,8 @@ import {Link} from 'react-router-dom';
 import worker from '../assets/worker.png'
 import chef from '../assets/chef.png'
 import manager from '../assets/manager.png'
+import WestIcon from '@mui/icons-material/West';
+import Container from '@mui/material/Container';
 
 const Staff = () => {
 
@@ -24,19 +26,53 @@ const Staff = () => {
   };
 
   return (
-    <Box
-      display="flex"
-      height={"100vh"}
-      flexDirection="column"
-    >
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <h2 style={headingStyle}>Select Staff Type</h2>
+    <Container>
+    <Grid container direction="column" spacing={2}>
+      <Grid item xs={2}>
+      <Box
+        sx={{ 
+          margin: 2, 
+          mt: 4, 
+          borderRadius: 2, 
+          height: '100%',
+          display:"flex",
+          flexDirection:"column"
+        }}>
+
+        <Grid container spacing={2}>
+          <Grid item xs={2}>
+            <Link to="/">
+              <Button              
+                sx={{ 
+                  border: 5,
+                  borderColor: '#FFA0A0',
+                  borderRadius: 2,
+                  color: 'black' 
+                }}>
+                <WestIcon/>
+              </Button>
+            </Link>
+          </Grid>
+          
+          <Grid item xs={8}>
+            <Typography 
+            variant="h3" 
+            component="h1" 
+            align="center"
+            noWrap
+            fontWeight="bold"
+            >
+              Select Staff Type
+            </Typography>
+          </Grid>
+
         </Grid>
-        <Grid item xs={4} textAlign={'right'}>
+      </Box>
+    </Grid>
+        <Grid item xs={4} textAlign={'center'} justifycontent="center"  alignItems="center">
           <Link to="/menu">
             <Button variant='contained' color='primary' style={buttonStyle}>
-              <Grid container direction="column" alignItems="center" spacing={1}>
+              <Grid container direction="column" justifycontent="center" alignItems="center" spacing={1}>
                 <Grid item>
                   <img src={manager} alt="managerIcon" style={{
                     width: '12vw',
@@ -51,11 +87,11 @@ const Staff = () => {
               </Grid>
             </Button>
           </Link>
-        </Grid>
-        <Grid item xs={4} textAlign={'center'}>
+        {/* </Grid>
+        <Grid item xs={4} textAlign={'center'} justifycontent="center"  alignItems="center"> */}
           <Link to="/Kitchenlist">
           <Button variant='contained' color='primary' style={buttonStyle}>
-            <Grid container direction="column" alignItems="center" spacing={1}>
+            <Grid container direction="column" justifycontent="center" alignItems="center" spacing={1}>
               <Grid item>
                 <img src={chef} alt="ChefIcon" style={{
                   width: '12vw',
@@ -70,11 +106,11 @@ const Staff = () => {
             </Grid>
             </Button>
           </Link>
-        </Grid>
-        <Grid item xs={4} textAlign={'left'}>
+        {/* </Grid>
+        <Grid item xs={4} textAlign={'left'} justifycontent="center"  alignItems="center"> */}
           <Link to="/waitstaff">
           <Button variant='contained' color='primary' style={buttonStyle}>
-            <Grid container direction="column" alignItems="center" spacing={1}>
+            <Grid container direction="column" justifycontent="center" alignItems="center" spacing={1}>
               <Grid item>
                 <img src={worker} alt="WorkerIcon" style={{
                   width: '12vw',
@@ -91,8 +127,8 @@ const Staff = () => {
           </Link>
         </Grid>
       </Grid>
-    </Box>
-  );
-};
+  </Container>
+  )
+}
 
 export default Staff;
