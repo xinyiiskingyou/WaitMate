@@ -35,14 +35,14 @@ const Staff = () => {
             </Link>
         </Grid>
         <Grid item xs={4} textAlign={'center'}>
-          <Link to="/Kitchenlist">
+          <Link to="/KitchenstaffLogin">
             <Button variant='contained' color='primary' style={buttonStyle}>
               Kitchen Staff
             </Button>
           </Link>
         </Grid>
         <Grid item xs={4} textAlign={'left'}>
-          <Link to="/waitstaff">
+          <Link to="/WaitstaffLogin">
           <Button variant='contained' color='primary' style={buttonStyle}>
             Wait Staff
           </Button>

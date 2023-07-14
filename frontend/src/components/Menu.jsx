@@ -7,6 +7,8 @@ import MenuItem from './Card';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { margin, width } from '@mui/system';
+import { Cookies, useCookies } from 'react-cookie';
+
 
 const Menu = () => {
   const [editing, setEditing] = useState(false);
@@ -20,11 +22,14 @@ const Menu = () => {
   const [adding, setAdding] = useState(false);
   const [cardData, setCardData] = useState({ category: -1, name: '', price: '', description: '', ingredient: '', vegetarian: false, is_up: false });
   const [error, setError] = useState(null);
+  const [cookies, setCookie] = useCookies(['token']);
+
 
   const handleSaveCategory = () => {
     
     if (categoryText.trim() !== '') {
       const payload = { name: categoryText.trim() };
+      console.log(cookies.token)
 
       fetch('http://localhost:8000/menu/category/add', {
         method: 'POST',

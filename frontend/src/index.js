@@ -14,6 +14,8 @@ import Kitchenlist from './components/Kitchenlist';
 import Cart from './components/Cart';
 import Browse from './components/Browse';
 import ManagerLogin from './components/ManagerLogin';
+import KitchenstaffLogin from './components/KitchenstaffLogin';
+import WaitstaffLogin from './components/WaitstaffLogin';
 
 
 function App() {
@@ -32,6 +34,9 @@ function App() {
         <Route path="/Cart/:id" element={<Cart />} />
         <Route path="/Browse/:id" element={<Browse />} />
         <Route path="/ManagerLogin" element={<ManagerLogin />} />
+        <Route path="/WaitstaffLogin" element={<WaitstaffLogin />} />
+        <Route path="/KitchenstaffLogin" element={<KitchenstaffLogin />} />
+
 
       </Routes>
     </Router>
