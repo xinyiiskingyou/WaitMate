@@ -1,4 +1,4 @@
-import firebase_admin
+import pyrebase
 
 firebaseConfig = {
     "apiKey": "AIzaSyDNdgqTGOb5nrj1-0EMr4bNcoaGpcpxk98",
@@ -10,5 +10,5 @@ firebaseConfig = {
     "measurementId": "G-NR03X95M2H"
 }
 
-app = firebase_admin.initialize_app(firebaseConfig)
-# auth = app.auth()
+app = pyrebase.initialize_app(firebaseConfig)
+auth = app.auth()
