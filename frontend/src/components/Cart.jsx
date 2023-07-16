@@ -18,6 +18,20 @@ const buttonStyle = {
   borderRadius: 8,
 }
 
+const SmallbuttonStyle = { 
+  border: '4px solid #FFA0A0', 
+  height: '5vh', 
+  width: '10vw',
+  textAlign: 'center', 
+  justifyContent: 'center',
+  background: "#FFCFCF",
+  color: 'black',
+  fontWeight: "bold",
+  borderRadius: 8,
+  marginLeft: '1vw',
+  marginTop: '0.6vh',
+}
+
 const Cart = () => {
   const id = useParams();
   const backLink = `/Browse/${id.id}` 
@@ -27,6 +41,7 @@ const Cart = () => {
   let [error, setError] = useState(false);
   let [orders, setOrder] = useState([])
   let [tips, setTips] = useState('')
+  let [tipsSubmitted, setTipsSubmitted] = useState('')
   
   const billLink = `/Bill/${id.id}?tips=${tips}`
 
@@ -88,11 +103,11 @@ const Cart = () => {
       if (data === null) {
         return;
       }
+      setTipsSubmitted(true);
      } ).catch(e => {
       alert(e);
     })
   }
-
 
   useEffect(() => {
     getCart()
@@ -148,7 +163,7 @@ const Cart = () => {
         </Grid>
       </Box>
     </Grid>
-
+    
     <Grid item xs={2}>
       <Box
         sx={{ 
@@ -200,31 +215,40 @@ const Cart = () => {
                           min: "1"
                         }}/>  
                   </TableRow>
+                  
                   <TableRow>
                     <TableCell style={{ width: '20%', textAlign: 'center', fontWeight: 'bold' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
                       Tips?
                     </TableCell>
-                    <TextField
-                      required
-                      id='standard-required'
-                      label='Enter NUMBERS Only'
-                      value={tips}
-                      onChange={handleInputChange}
-                      helperText={error && 'Invalid input: must be a number'}
-                      size='small'
-                      margin='normal'
-                      type='number'
-                      fullWidth
-                      inputProps={{
-                        step: '1',
-                        min: '1',
-                      }}
-                    />
-
-                    <Button variant='contained' color='primary' onClick={handleTipsSubmit}>
-                      Submit Tips
-                    </Button>
-                    </TableRow>
+              
+                    <TableCell style={{ width: '20%', textAlign: 'center' }}>
+                      {tipsSubmitted ? (
+                        <Typography variant="body1">${tips}</Typography>
+                      ) : (
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                          <TextField
+                            required
+                            id='standard-required'
+                            label='Enter NUMBERS Only'
+                            value={tips}
+                            onChange={handleInputChange}
+                            helperText={error && 'Invalid input: must be a number'}
+                            size='small'
+                            margin='normal'
+                            type='number'
+                            fullWidth
+                            inputProps={{
+                              step: '1',
+                              min: '1',
+                            }}
+                          />
+                          <Button variant='contained' color='primary' onClick={handleTipsSubmit} style={SmallbuttonStyle}>
+                            Submit
+                          </Button>
+                        </div>
+                      )}
+                    </TableCell>
+                  </TableRow>
                 </TableBody>
               </Table>
             </TableContainer>
