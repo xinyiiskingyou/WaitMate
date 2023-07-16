@@ -37,46 +37,64 @@ const logoutbuttonStyle = {
 }
 
 const Kitchenlist = () => {
-  const [notification, setNotification] = useState([]);
-  useEffect(() => {
-    setNotification();
-  }, []);
 
-  useEffect(() => {
-    const eventSource = new EventSource('http://localhost:8000//track/kitchen/mark'); // Replace with your SSE server endpoint
-    function getRealtimeData(data) {
-      console.log(data);
-    }
-    eventSource.onmessage = e => getRealtimeData(JSON.parse(e.data));
-    // Event listeners for incoming notifications
-    eventSource.addEventListener('notification', (event) => {
-      const notification = JSON.parse(event.data);
-      // Handle the received notification
-      console.log(notification);
-    });
-
-    return () => {
-      // Clean up the EventSource connection on unmounting the component
-      eventSource.close();
-    };
-  }, []);
   let [orders, setKitchen] = useState([])
-  
+
   let getKitchenList = async () => {
     let response = await fetch('http://localhost:8000/order/listall')
     let data = await response.json()
     let order_list = []
+
     for (var i of data) {
       console.log(i)
-      order_list.push({time: i[0], tablenum: i[1], name: i[2], amount: i[3]})
+      order_list.push({time: i[0], tablenum: i[1], name: i[2], amount: i[3], state: i[4] === 0 ? "preparing" : "ready"})
     }
     setKitchen(order_list)
   }
 
+  let markOrderCompleted = async (table_id, item_name, amount) => {
+    const table_payload = {
+      table_id: parseInt(table_id, 10),
+    };
+
+    const order_payload = {
+      item: item_name,
+      amount: amount,
+      table_id: parseInt(table_id, 10),
+    };
+
+    await fetch('http://localhost:8000/track/kitchen/mark', {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({"order_req": order_payload, "table_req": table_payload}),
+    }).then(response => {
+      if (response.ok) {
+        setKitchen((prevKitchen) =>
+        prevKitchen.map((order) =>
+          order.tablenum === table_id && order.name === item_name
+            ? { ...order, state: 'Ready' }
+            : order
+        ));
+        return response.json();
+      } else {
+        throw new Error('Failed to update status');
+      }
+    }).catch(error => {
+      // Handle the error if necessary
+      console.error(error);
+      alert('Failed to update the status.');
+    });
+  }
+
   useEffect(() => {
-    getKitchenList()
-  }, [])
-  
+    const interval = setInterval(() => {
+      getKitchenList()
+    }, 1500);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
 
   return (
     <Container >
@@ -160,9 +178,20 @@ const Kitchenlist = () => {
                         {row.amount}
                       </TableCell>
                       <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: 10}}>  
-                        <Button variant="contained" color="primary" style={buttonStyle}>
-                          Prepared
-                        </Button>
+                        {row.is_prepared===1 ? (
+                          <Button variant="contained" color="primary" disabled>
+                            {row.state}
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            style={buttonStyle}
+                            onClick={() => markOrderCompleted(row.tablenum, row.name, row.amount)}
+                          >
+                            {row.state}
+                          </Button>
+                        )}
                       </TableCell>
                     </TableRow>
                   ))}

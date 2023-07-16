@@ -110,7 +110,7 @@ class Notifications:
                         SELECT table_id, item_name 
                         FROM Orders 
                         WHERE is_prepared == 1 AND is_served == 0
-                        ORDER BY timestamp ASC
+                        ORDER BY table_id ASC
                         ''')
             res = cur.fetchall()
             con.close()

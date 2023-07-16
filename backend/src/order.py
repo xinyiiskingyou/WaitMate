@@ -124,7 +124,7 @@ class OrderDB:
             con = sqlite3.connect(self.database)
             cur = con.cursor()
 
-            cur.execute('''SELECT timestamp, table_id, item_name, amount
+            cur.execute('''SELECT timestamp, table_id, item_name, amount, is_prepared
                 FROM Orders 
                 WHERE is_prepared == 0 AND is_served == 0
                 ORDER BY timestamp ASC''')

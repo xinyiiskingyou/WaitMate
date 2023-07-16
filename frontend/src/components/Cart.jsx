@@ -1,9 +1,10 @@
 import React, { useEffect, useState }  from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { 
   Box, Button, TextField, Typography, Container, Grid, Table, TableContainer, TableBody, TableRow, TableCell 
 } from '@mui/material';
 import WestIcon from '@mui/icons-material/West';
+import Bill from "./Bill";
 
 const buttonStyle = { 
   border: '4px solid #FFA0A0', 
@@ -18,17 +19,29 @@ const buttonStyle = {
 }
 
 const Cart = () => {
-  let [orders, setOrder] = useState([])
   const id = useParams();
   const backLink = `/Browse/${id.id}` 
-  const billLink = `/Bill/${id.id}`
-  const [value, setValue] = useState(null);
+  const navigate = useNavigate();
+
+  let [value, setValue] = useState(null);
   let [error, setError] = useState(false);
+  let [orders, setOrder] = useState([])
+  let [tips, setTips] = useState('')
+  
+  const billLink = `/Bill/${id.id}?tips=${tips}`
+
+  const handleRequestBill = () => {
+    navigate(billLink);
+  };
 
   const handleInputChange = (event) => {
-    const inputValue = event.target.value;
-    setValue(inputValue);
-    setError(isNaN(inputValue));
+    const inputTips = event.target.value;
+    if (!isNaN(inputTips)) {
+      setTips(inputTips);
+      setError(false);
+    } else {
+      setError(true);
+    }
   };
   
   let getCart = async () => {
@@ -56,6 +69,30 @@ const Cart = () => {
       alert(error);
     })    
   }
+    
+  let handleTipsSubmit = async () => {
+    const payload = {
+      id: parseInt(id.id, 10),
+      amount: parseInt(tips, 10)
+    };
+
+    await fetch(`http://localhost:8000/checkout/bill/tips`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+    .then((data) => {
+      console.log(data)
+      if (data === null) {
+        return;
+      }
+     } ).catch(e => {
+      alert(e);
+    })
+  }
+
 
   useEffect(() => {
     getCart()
@@ -64,6 +101,7 @@ const Cart = () => {
   return (
   <Container>
     <Grid container direction="column" spacing={2}>
+
       <Grid item xs={2}>
       <Box
         sx={{ 
@@ -103,11 +141,9 @@ const Cart = () => {
           </Grid>
 
           <Grid item xs={2}>
-          <Link to={billLink}>
-              <Button variant="contained" color="primary" style={buttonStyle}>
-                Request Bill
-              </Button>
-            </Link>
+            <Button variant="contained" color="primary" style={buttonStyle} onClick={handleRequestBill}>
+              Request Bill
+            </Button>
           </Grid>
         </Grid>
       </Box>
@@ -143,6 +179,7 @@ const Cart = () => {
                       </TableCell>
                     </TableRow> 
                   ))}
+
                   <TableRow>
                       <TableCell style={{ width: '20%', textAlign: 'center', fontWeight: 'bold' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
                         Voucher Code?
@@ -164,24 +201,29 @@ const Cart = () => {
                         }}/>  
                   </TableRow>
                   <TableRow>
-                      <TableCell style={{ width: '20%', textAlign: 'center', fontWeight: 'bold' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
-                        Tips?
-                      </TableCell>
-                      <TextField
-                        required
-                        id="standard-required"
-                        label="Enter NUMBERS Only"
-                        value={value}
-                        // onChange={handleInputChange}
-                        helperText={error && 'Invalid input: must be a number'}
-                        size="small"
-                        margin= 'normal'
-                        type="number" 
-                        fullWidth
-                        inputProps={{
-                          step: "1",
-                          min: "1"
-                        }}/>  
+                    <TableCell style={{ width: '20%', textAlign: 'center', fontWeight: 'bold' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
+                      Tips?
+                    </TableCell>
+                    <TextField
+                      required
+                      id='standard-required'
+                      label='Enter NUMBERS Only'
+                      value={tips}
+                      onChange={handleInputChange}
+                      helperText={error && 'Invalid input: must be a number'}
+                      size='small'
+                      margin='normal'
+                      type='number'
+                      fullWidth
+                      inputProps={{
+                        step: '1',
+                        min: '1',
+                      }}
+                    />
+
+                    <Button variant='contained' color='primary' onClick={handleTipsSubmit}>
+                      Submit Tips
+                    </Button>
                     </TableRow>
                 </TableBody>
               </Table>
