@@ -5,7 +5,6 @@ import {DatePicker} from '@mui/x-date-pickers';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import enGB from 'date-fns/locale/en-GB';
-
 import { v4 as uuidv4 } from "uuid";
 
 const Coupon = () => {
@@ -41,23 +40,82 @@ const Coupon = () => {
   const [expiryDate, setExpiryDate] = useState(null);
   const [coupons, setCoupons] = useState([]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e) => {
+    const date = expiryDate.toDateString();
+    const payload = {
+      code: code,
+      int: discount,
+      expiry: date,
+    }
+    fetch('http://localhost:8000/checkout/coupon/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+      .then(response => {
+        if (response.ok) {
+          e.preventDefault();
 
-    const newCoupon = {
-      id: uuidv4(),
-      code: code.toUpperCase(),
-      discount,
-      expiryDate,
-    };
+          const newCoupon = {
+            id: uuidv4(),
+            code: code.toUpperCase(),
+            discount,
+            expiryDate,
+          };
+      
+          setCoupons([...coupons, newCoupon]);
+          setCode("");
+          setDiscount("");
+          setExpiryDate(null);
+          return response.json();
+        } else {
+          throw new Error('Failed to save category');
+        }
+      });
+  };
 
-    setCoupons([...coupons, newCoupon]);
-    setCode("");
-    setDiscount("");
-    setExpiryDate(null);
+  useEffect(() => {
+    fetchCoupons();
+
+  }, []);
+
+  const fetchCoupons = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/checkout/coupon/view');
+      const data = await response.json();
+      console.log(data);
+      //let coupon_lst = []
+      //for (var i of data) {
+      //  coupon_lst.push({ table: i[0], status: i[1]})
+      //}
+      //setTable(data);
+      setCoupons(data);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
   };
 
   const handleRemove = (index) => {
+    const payload = {
+      code: index
+    };
+    fetch('http://localhost:8000/checkout/coupon/delete', {
+      method: 'DELETE',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload),
+    })
+      .then(response => {
+        if (response.ok) {
+          handleRemoveCoupon(index);
+          return response.json();
+        } else {
+          throw new Error('Failed to remove item. Please try again.');
+        }
+      });
+  }
+  const handleRemoveCoupon = (index) => {
     setCoupons((prevCoupons) => {
       const updatedCoupons = [...prevCoupons];
       updatedCoupons.splice(index, 1);
@@ -120,11 +178,11 @@ const Coupon = () => {
                     </Typography>
                     <div style={{margin: "5%"}}>
                           {coupons.map((coupon) => (
-                            <Card key={coupon.id} style={{ marginTop: "20px" }}>
+                            <Card key={coupon.code} style={{ marginTop: "20px" }}>
                               <CardContent>
                                 <h3>{coupon.code}</h3>
-                                <p>{coupon.discount}% off</p>
-                                <p>{coupon.expiryDate && coupon.expiryDate.toDateString()}</p>
+                                <p>{coupon.int}% off</p>
+                                <p>{coupon.expiry}</p>
                                 <Button variant='contained' style={{fontSize: "10px"}} onClick={() => handleRemove(coupon.id)}>Remove</Button>
                               </CardContent>
                             </Card>
@@ -170,7 +228,6 @@ const Coupon = () => {
                   value={expiryDate}
                   onChange={(date) => setExpiryDate(date)}
                   renderInput={(params) => <TextField {...params} variant="outlined" />}
-
                   required
                   margin="normal"
                 />
