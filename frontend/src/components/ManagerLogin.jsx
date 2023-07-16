@@ -1,17 +1,9 @@
 import React from 'react';
-// import { auth } from "./firebase-config";
-// import {
-//   createUserWithEmailAndPassword,
-//   signInWithEmailAndPassword,
-//   onAuthStateChanged,
-//   signOut,
-// } from "firebase/auth";
 import { styled } from '@mui/material/styles';
-import { Link } from 'react-router-dom';
 import { Box, Button, Grid, Typography, TextField, Container, Popover } from '@mui/material';
 import { pink } from '@mui/material/colors';
 import { useCookies } from 'react-cookie';
-
+import { handleLogin } from '../auth.js';
 
 const mainPink = pink[100];
 const secPink = pink[200];
@@ -78,39 +70,14 @@ const ManagerLogin = () => {
     setPassword(event.target.value);
   };
 
-  const handleLogin = async () => {
-    console.log({
-      email: email,
-      password: password,
-    });
-
-    const body = {
-      'email': email,
-      'password': password,
-    }
-    try { 
-      const response = await fetch('http://localhost:8000/auth/manager/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body),
-      })
-      if (!response.ok) {
-        throw new Error('Failed to login');
-      }
-      
-      const data = await response.json();
-      setCookie('token', data, { path: '/' });
-      // console.log(cookies.token)
-      window.location.href = '/Menu';
-    }
-    catch (error) {
-      console.log(error)
-      alert('Failed to login. Please try again.');
-    }
+  const handleLoginSubmit = () => {
+    handleLogin(email, password).then( data => {
+      setCookie('token', data, { path: '/' })
+      console.log(data)
+      window.location.href = '/Menu'
+    })
   };
-
+  
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
 
@@ -146,7 +113,7 @@ const ManagerLogin = () => {
             </Popover> 
           </Grid>
           <Grid item> 
-            <LoginButton disabled={!(email && password)} variant="contained" onClick={handleLogin}> Login</LoginButton>
+            <LoginButton disabled={!(email && password)} variant="contained" onClick={handleLoginSubmit}> Login</LoginButton>
           </Grid>
         </Grid>
       </Box>
