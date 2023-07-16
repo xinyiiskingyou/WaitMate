@@ -11,15 +11,48 @@ import Browse from './components/Browse';
 import ManagerLogin from './components/ManagerLogin';
 import KitchenstaffLogin from './components/KitchenstaffLogin';
 import WaitstaffLogin from './components/WaitstaffLogin';
+import Settings from './components/Settings';
 import Manager from './components/ManagerInterface';
 import Coupon from './components/CouponPage';
+import { Navigate } from 'react-router-dom';
+import { getToken } from './auth.js';
 
 function App() {
+  const [manager, setManager] = React.useState("false");
+  async function isAuth () {
+    const body = {
+      'stafftype': ['manager']
+    }
+  
+    fetch('http://localhost:8000/auth/user', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${getToken()}`
+      },
+      body: JSON.stringify(body),
+    }).then(response => {
+      if (response.ok) {
+        setManager(true);
+      } else {
+        setManager(false);
+      }
+    })
+  }
+
+  React.useEffect(() => {
+    isAuth();
+  }, []);
+
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/menu" element={<Menu />} />
+        <Route path="menu" element={ manager ? (<Menu />) : (<Navigate to='/ManagerLogin'/>)} />
+        <Route path="/Settings" element={ manager ? (<Settings />) : (<Navigate to='/ManagerLogin'/> )} />
+        <Route path="/Manager" element={manager ? (<Manager />) : (<Navigate to='/ManagerLogin'/>)} />
+        <Route path="/coupon" element={manager ? (<Coupon />) : (<Navigate to='/ManagerLogin'/>)} />
+
         <Route path="/staff" element={<Staff />} />
         <Route path="/waitstaff" element={<WaitStaff />} />
         <Route path="/Kitchenlist" element={<Kitchenlist />} />
@@ -28,10 +61,6 @@ function App() {
         <Route path="/ManagerLogin" element={<ManagerLogin />} />
         <Route path="/WaitstaffLogin" element={<WaitstaffLogin />} />
         <Route path="/KitchenstaffLogin" element={<KitchenstaffLogin />} />
-
-
-        <Route path="/Manager" element={<Manager />} />
-        <Route path="/coupon" element={<Coupon />} />
       </Routes>
     </Router>
   );
