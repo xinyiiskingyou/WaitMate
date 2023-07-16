@@ -39,7 +39,8 @@ class TableDB():
 
         cur.execute('''CREATE TABLE IF NOT EXISTS Tables (
                         table_id INTEGER PRIMARY KEY NOT NULL,
-                        status TEXT NOT NULL
+                        status TEXT NOT NULL,
+                        req_time TIMESTAMP
                     )''')
 
         con.commit()

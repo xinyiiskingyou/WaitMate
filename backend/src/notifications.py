@@ -7,6 +7,7 @@ from the kitchen.
 '''
 
 import sqlite3
+import datetime
 from typing import Any, List
 from constant import DB_PATH
 from src.helper import check_table_exists
@@ -48,8 +49,17 @@ class Notifications:
             con = sqlite3.connect(self.database)
             cur = con.cursor()
 
+            curr_time = datetime.datetime.now()
+            timestamp = curr_time.strftime('%H:%M:%S')
+
             # update table status
-            cur.execute('UPDATE Tables SET status = ? WHERE table_id = ?', (status, table_id))
+            cur.execute('''
+                UPDATE Tables
+                SET status = ?,
+                    req_time = ?
+                WHERE table_id = ?
+            ''', (status, timestamp, table_id))
+
             con.commit()
         except Exception:
             raise NotFoundError("Details not found")
@@ -72,7 +82,7 @@ class Notifications:
             con = sqlite3.connect(self.database)
             cur = con.cursor()
 
-            cur.execute("SELECT * FROM Tables WHERE status != 'OCCUPIED'")
+            cur.execute("SELECT * FROM Tables WHERE status != 'OCCUPIED' ORDER BY req_time")
             res = cur.fetchall()
         except sqlite3.Error:
             return []

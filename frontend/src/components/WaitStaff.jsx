@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { Container, Box, Typography, Grid, Button, IconButton, Checkbox, Icon } from '@mui/material';
+import { Container, Box, Typography, IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import order from "../assets/order.png";
 import Table from "./Table";
@@ -11,12 +11,7 @@ const WaitStaff = () => {
   const [selectedtable, setSelectedTable] = useState(-1);
   const [tableOrder, setTableOrder] = useState([]);
   const [notification, setNotification] = useState([]);
-  const [notificationKictehn, setNotificationKitchen] = useState([]);
-  useEffect(() => {
-    fetchTables();
-    fetchNotification();
-    fetchNotificationKitchen();
-  }, []);
+  const [notificationKitchen, setNotificationKitchen] = useState([]);
 
   useEffect(() => {
     const eventSource = new EventSource('http://localhost:8000/notification/waitstaff/get/customer'); // Replace with your SSE server endpoint
@@ -40,12 +35,24 @@ const WaitStaff = () => {
     try {
       const response = await fetch('http://localhost:8000/table/status');
       const data = await response.json();
-      //console.log(data);
+      console.log(data);
       setTable(data);
     } catch (error) {
       console.error('Error fetching categories:', error);
     }
   };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchTables();
+      fetchNotification();
+      fetchNotificationKitchen();
+    }, 1500);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
 
   const fetchNotification = async () => {
     try {
@@ -56,7 +63,6 @@ const WaitStaff = () => {
       for (var i of data) {
         notification_lst.push({ table: i[0], status: i[1]})
       }
-      //console.log(notification_lst);
       //setTable(data);
       setNotification(notification_lst);
     } catch (error) {
@@ -84,21 +90,6 @@ const WaitStaff = () => {
     setSelectedTable(-1);
   };
   const tableElements = Object.entries(table).map(([id, value]) => {
-    let index;
-    switch (value) {
-      case "OCCUPIED":
-        index = 0;
-        break;
-      case "ASSIST":
-        index = 1;
-        break;
-      case "BILL":
-        index = 2;
-        break;
-      default:
-        index = -1;
-    }
-
     return (
       <div key={id} style={{ display: "flex", flexDirection: "row" }}>
         <div
@@ -109,11 +100,11 @@ const WaitStaff = () => {
             justifyContent: "center",
           }}
         >
-          <div style={{ textAlign: "center" }}>Table {id}</div>
+          <div style={{ textAlign: "center" }}><b>Table {id}</b></div>
         </div>
-        <Table index={index} table_id={id} />
+        <Table table_id={id} value={value} />
         <IconButton onClick={() => fetchOrder(id)}>
-          <img src={order} alt="MemeIcon" />
+          <img src={order} alt="MemeIcon" style={{ width: '1.8vw', height: '3.5vh' }}/>
         </IconButton>
       </div>
     );
@@ -134,8 +125,8 @@ const WaitStaff = () => {
       setTableOrder(order_list);
       setSelectedTable(index);
     } catch (error) {
-      console.error('Error fetching categories:', error);
-      alert('Error fetching categories:', error);
+      console.error('Error fetching table order:', error);
+      alert('Error fetching table order:', error);
       window.location.reload();
     }
   };
@@ -157,7 +148,7 @@ const WaitStaff = () => {
                 <p style={{color: item.status === 'ASSIST' ? "#FB0F0F" : item.status === 'BILL' ? "#F59B0C" : "inherit"}}>Table {item.table} requested {item.status}</p>
               </div>
             ))}
-            {notificationKictehn.map((order) => (
+            {notificationKitchen.map((order) => (
               <div key={order.table}>
               </div>
             ))}
