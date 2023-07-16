@@ -7,6 +7,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
+import { useCookies } from 'react-cookie';
 
 const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVegetarian, onItemRemove, ItemIndex, onItemsCategory, ItemCategory }) => {
 
@@ -16,6 +17,7 @@ const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
   const [description, setDescription] = useState(ItemDescription);
   const [ingredient, setIngredient] = useState(ItemIngredient);
   const [open, setOpen] = useState(false);
+  const [cookies] = useCookies(['token']);
 
   const handleEdit = () => {
     console.log('cat: ', ItemCategory);
@@ -31,7 +33,10 @@ const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
 
     fetch('http://localhost:8000/menu/item/update/details', {
       method: 'PUT',
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cookies.token}`
+      },
       body: JSON.stringify(payload),
     })
       .then(response => {
@@ -61,7 +66,10 @@ const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
 
     await fetch('http://localhost:8000/menu/item/update/order', {
       method: 'PUT',
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cookies.token}`
+      },
       body: JSON.stringify(payload),
     })
       .then(response => {
@@ -87,7 +95,10 @@ const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
     };
     fetch('http://localhost:8000/menu/item/remove', {
       method: 'DELETE',
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cookies.token}`
+      },
       body: JSON.stringify(payload),
     })
       .then(response => {

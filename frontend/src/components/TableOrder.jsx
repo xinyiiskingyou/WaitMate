@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import {Button,Typography} from '@mui/material';
+import { useCookies } from 'react-cookie';
 
 const TableOrder = ({amount, name, is_prepared, is_served, id}) => {
-
+    const [cookies] = useCookies(['token']);
     const index = 0;
     const [state, setState] = useState(is_prepared === 0 ? "preparing" : is_served === 1 ? "served" : "ready");
     const [textColor, setTextColor] = useState(index === 0 ? '#A1C935' : index === 1 ? '#FF7A7A' : index === 2 ? '#F59B0C' : '#FFFFFF');
@@ -25,7 +26,10 @@ const TableOrder = ({amount, name, is_prepared, is_served, id}) => {
           //console.log(payload);
           await fetch('http://localhost:8000/track/waitstaff/mark', {
             method: 'PUT',
-            headers: {'Content-Type': 'application/json'},
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${cookies.token}`
+            },
             body: JSON.stringify({"order_req": order_payload, "table_req": table_payload}),
           })
             .then(response => {

@@ -1,10 +1,11 @@
-
 import React, { useState, useEffect } from "react";
 import { Container, Box, Typography, IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import order from "../assets/order.png";
 import Table from "./Table";
 import TableOrder from "./TableOrder";
+import { useCookies } from 'react-cookie';
+
 const WaitStaff = () => {
 
   const [table, setTable] = useState({});
@@ -12,6 +13,7 @@ const WaitStaff = () => {
   const [tableOrder, setTableOrder] = useState([]);
   const [notification, setNotification] = useState([]);
   const [notificationKitchen, setNotificationKitchen] = useState([]);
+  const [cookies] = useCookies(['token']);
 
   useEffect(() => {
     const eventSource = new EventSource('http://localhost:8000/notification/waitstaff/get/customer'); // Replace with your SSE server endpoint
@@ -33,7 +35,13 @@ const WaitStaff = () => {
   }, []);
   const fetchTables = async () => {
     try {
-      const response = await fetch('http://localhost:8000/table/status');
+      const response = await fetch('http://localhost:8000/table/status', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${cookies.token}`
+        },
+      });
       const data = await response.json();
       console.log(data);
       setTable(data);
@@ -56,7 +64,13 @@ const WaitStaff = () => {
 
   const fetchNotification = async () => {
     try {
-      const response = await fetch('http://localhost:8000/notification/waitstaff/get/customer');
+      const response = await fetch('http://localhost:8000/notification/waitstaff/get/customer', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${cookies.token}`
+        },
+      })
       const data = await response.json();
       //console.log(data);
       let notification_lst = []
@@ -72,7 +86,13 @@ const WaitStaff = () => {
 
   const fetchNotificationKitchen = async () => {
     try {
-      const response = await fetch('http://localhost:8000/notification/waitstaff/get/kitchen');
+      const response = await fetch('http://localhost:8000/notification/waitstaff/get/kitchen', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${cookies.token}`
+        },
+      })
       const data = await response.json();
       //console.log(data);
       let notification_lst = []

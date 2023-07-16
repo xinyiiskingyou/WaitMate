@@ -11,6 +11,7 @@ import TableBody from '@mui/material/TableBody';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import WestIcon from '@mui/icons-material/West';
+import { useCookies } from 'react-cookie';
 
 function createData(time, tablenum, name, amount) {
   return { time, tablenum, name, amount };
@@ -43,9 +44,17 @@ const rows = [
 
 const Kitchenlist = () => {
   let [orders, setKitchen] = useState([])
+  const [cookies] = useCookies(['token']);
   
   let getKitchenList = async () => {
-    let response = await fetch('http://localhost:8000/order/listall')
+    let response = await fetch('http://localhost:8000/order/listall', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cookies.token}`
+      },      
+    })
+
     let data = await response.json()
     let order_list = []
     for (var i of data) {

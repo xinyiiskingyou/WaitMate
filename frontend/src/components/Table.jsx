@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { List, ListItem, ListItemText, Menu, MenuItem } from '@mui/material';
+import { useCookies } from 'react-cookie';
 
 const Table = ({ table_id, value }) => {
   const options = [
@@ -9,6 +10,7 @@ const Table = ({ table_id, value }) => {
     'EMPTY'
   ];
 
+  const [cookies] = useCookies(['token']);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
@@ -25,7 +27,10 @@ const Table = ({ table_id, value }) => {
     try {
       const response = await fetch('http://localhost:8000/table/status/update', {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${cookies.token}`
+        },
         body: JSON.stringify(payload),
       });
 

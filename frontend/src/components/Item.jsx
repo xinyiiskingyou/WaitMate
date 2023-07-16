@@ -4,6 +4,7 @@ import { Box, FormControlLabel, Checkbox, Button, TextField, InputAdornment } fr
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
+import { useCookies } from 'react-cookie';
 
 const Item = ({ onItemAdd, onItemCancel, category }) => {
 
@@ -19,6 +20,7 @@ const Item = ({ onItemAdd, onItemCancel, category }) => {
   const [IngredientError, setIngredientError] = useState(false);
 
   const [open, setOpen] = useState(true);
+  const [cookies] = useCookies(['token']);
 
   const handleClose = () => {
     setOpen(false);
@@ -37,7 +39,10 @@ const Item = ({ onItemAdd, onItemCancel, category }) => {
 
     fetch('http://localhost:8000/menu/item/add', {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cookies.token}`
+      },
       body: JSON.stringify(payload),
     })
     .then(response => {

@@ -8,7 +8,7 @@ import MenuItem from './Card';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { margin, width } from '@mui/system';
-import { Cookies, useCookies } from 'react-cookie';
+import { useCookies } from 'react-cookie';
 
 import DoneIcon from '@mui/icons-material/Done';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -27,9 +27,8 @@ const Menu = () => {
   const [adding, setAdding] = useState(false);
   const [cardData, setCardData] = useState({ category: -1, name: '', price: '', description: '', ingredient: '', vegetarian: false, is_up: false });
   const [error, setError] = useState(null);
-  const [cookies, setCookie] = useCookies(['token']);
+  const [cookies] = useCookies(['token']);
 
-  const [cardData, setCardData] = useState({ category: -1, name: '', cost: '', description: '', ingredient: '', is_vegan: false, is_up: false });
 
   const backLink = `/staff`;
 
@@ -37,12 +36,11 @@ const Menu = () => {
     
     if (categoryText.trim() !== '') {
       const payload = { name: categoryText.trim() };
-      console.log(cookies.token)
-
       fetch('http://localhost:8000/menu/category/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${cookies.token}`
         },
         body: JSON.stringify(payload),
       })
@@ -144,7 +142,10 @@ const Menu = () => {
 
     await fetch('http://localhost:8000/menu/category/update/details', {
       method: 'PUT',
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cookies.token}`
+      },
       body: JSON.stringify(payload),
     })
       .then(response => {
@@ -186,7 +187,10 @@ const Menu = () => {
     console.log(payload);
     await fetch('http://localhost:8000/menu/category/update/order', {
       method: 'PUT',
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cookies.token}`
+      },
       body: JSON.stringify(payload),
     })
       .then(response => {
@@ -483,6 +487,15 @@ const Menu = () => {
             marginRight: '1vw'
           }}/>
           Coupons
+        </Button>
+      </Link>
+      <Link to="/Settings" style={{
+            marginTop: '8%',
+            marginLeft: "10%",
+            width: '100%',
+      }}>
+        <Button style={{...AddbuttonStyle, top: "5px", right: "0px"}}>
+          Settings
         </Button>
       </Link>
 
