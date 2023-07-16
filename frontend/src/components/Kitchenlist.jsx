@@ -12,10 +12,6 @@ import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import WestIcon from '@mui/icons-material/West';
 
-function createData(time, tablenum, name, amount) {
-  return { time, tablenum, name, amount };
-}
-
 const buttonStyle = { 
   border: '4px solid #A1C935', 
   height: '7vh', 
@@ -28,20 +24,42 @@ const buttonStyle = {
   borderRadius: 8,
 }
 
-const rows = [
-  createData("13:02", "Table 9", 'Frozen yoghurt', 1),
-  createData("13:02", "Table 9", 'Ice cream sandwich', 2),
-  createData("13:02", "Table 9", 'Eclair', 1),
-  createData("13:02", "Table 9", 'Cupcake', 3),
-  createData("13:05", "Table 3", 'Meat Pizza', 1),
-  createData("13:08", "Table 2", 'Lemon Tea', 2),
-  createData("13:10", "Table 8", 'Salad', 1),
-  createData("13:12", "Table 1", 'Cheesecake', 2),
-  createData("13:15", "Table 5", 'Cocktail', 2),
-  createData("13:15", "Table 5", 'Meat Pizza', 1),
-];
+const logoutbuttonStyle = { 
+  border: '4px solid #FFA0A0', 
+  height: '7vh', 
+  width: '12vw',
+  textAlign: 'center', 
+  justifyContent: 'center',
+  background: "#FFCFCF",
+  color: 'black',
+  fontWeight: "bold",
+  borderRadius: 8,
+}
 
 const Kitchenlist = () => {
+  const [notification, setNotification] = useState([]);
+  useEffect(() => {
+    setNotification();
+  }, []);
+
+  useEffect(() => {
+    const eventSource = new EventSource('http://localhost:8000//track/kitchen/mark'); // Replace with your SSE server endpoint
+    function getRealtimeData(data) {
+      console.log(data);
+    }
+    eventSource.onmessage = e => getRealtimeData(JSON.parse(e.data));
+    // Event listeners for incoming notifications
+    eventSource.addEventListener('notification', (event) => {
+      const notification = JSON.parse(event.data);
+      // Handle the received notification
+      console.log(notification);
+    });
+
+    return () => {
+      // Clean up the EventSource connection on unmounting the component
+      eventSource.close();
+    };
+  }, []);
   let [orders, setKitchen] = useState([])
   
   let getKitchenList = async () => {
@@ -95,11 +113,17 @@ const Kitchenlist = () => {
             component="h1" 
             align="center"
             noWrap
+            fontWeight="bold"
             >
               Order List
             </Typography>
           </Grid>
-
+          
+          <Grid item xs={2}>
+              <Button variant="contained" color="primary" style={logoutbuttonStyle}>
+                Logout
+              </Button>
+          </Grid>
         </Grid>
       </Box>
     </Grid>
