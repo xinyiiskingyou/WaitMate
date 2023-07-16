@@ -10,6 +10,7 @@ import Cart from './components/Cart';
 import Browse from './components/Browse';
 import Manager from './components/ManagerInterface';
 import Coupon from './components/CouponPage';
+import Bill from './components/Bill';
 
 function App() {
   return (
@@ -22,8 +23,12 @@ function App() {
         <Route path="/Kitchenlist" element={<Kitchenlist />} />
         <Route path="/Cart/:id" element={<Cart />} />
         <Route path="/Browse/:id" element={<Browse />} />
+<<<<<<< HEAD
         <Route path="/Manager" element={<Manager />} />
         <Route path="/coupon" element={<Coupon />} />
+=======
+        <Route path="/Bill/:id" element={<Bill />} />
+>>>>>>> 7a23990480246c9f790666eca2db7ee1a1eec403
       </Routes>
     </Router>
   );
