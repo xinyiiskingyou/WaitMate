@@ -4,6 +4,8 @@ import datetime
 from src.table import TableDB
 from src.menu import MenuDB
 from src.order import OrderDB
+from src.auth import auth
+
 
 from fastapi.testclient import TestClient
 from src.clear import clear_database
@@ -18,9 +20,25 @@ table = TableDB()
 menu = MenuDB()
 order = OrderDB()
 
+
 @pytest.fixture
 def client():
     return TestClient(app, raise_server_exceptions=False)
+
+@pytest.fixture
+def manager_token():
+    token = auth.login_mananger(auth.MANAGER_EMAIL, auth.PASSWORD)['token']
+    return {"Authorization": f"Bearer {token}"}
+
+@pytest.fixture
+def waitstaff_token():
+    token = auth.login_staff(auth.PASSWORD, True)['token']
+    return {"Authorization": f"Bearer {token}"}
+
+@pytest.fixture
+def kitchen_staff():
+    token = auth.login_staff(auth.PASSWORD, False)['token']
+    return {"Authorization": f"Bearer {token}"}
 
 @pytest.fixture
 def table_id_1():
