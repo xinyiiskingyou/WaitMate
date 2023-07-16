@@ -17,3 +17,8 @@ class Email(BaseModel):
     email: str = Field(alias='email', default=None)
 
 Email.update_forward_refs()
+
+class StaffType(BaseModel):
+    stafftype: list = Field(alias='stafftype', default=None)
+
+StaffType.update_forward_refs()
