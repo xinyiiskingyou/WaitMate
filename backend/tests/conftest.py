@@ -5,12 +5,9 @@ from src.table import TableDB
 from src.menu import MenuDB
 from src.order import OrderDB
 from src.auth import auth
-
-
 from fastapi.testclient import TestClient
 from src.clear import clear_database
 from app.api import app
-
 
 VALID = 200
 ACCESSERROR = 403
@@ -19,7 +16,6 @@ INPUTERROR = 400
 table = TableDB()
 menu = MenuDB()
 order = OrderDB()
-
 
 @pytest.fixture
 def client():
@@ -90,6 +86,10 @@ def order_japanese(menu_japanese, table_id_1):
 def empty():
     if os.path.exists("./src/database/restaurant.db"):
         os.remove("./src/database/restaurant.db")
+
+@pytest.fixture
+def restart_auth():
+    auth.delete_all()
 
 @pytest.fixture
 def valid_date():
