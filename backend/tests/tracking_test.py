@@ -17,7 +17,7 @@ def test_customer_track_dish_invalid_id():
     with pytest.raises(InputError):
         track.customer_view_dish_status(25)
 
-def test_customer_track_dish_valid(table_id_3):
+def test_customer_track_dish_valid(empty, menu_japanese, table_id_3):
     
     # add the item with the same name 3 times
     order.add_order(table_id_3, "dorayaki", 2)
@@ -110,9 +110,9 @@ def test_waitstaff_mark_order_invalid_serve():
         track.waitstaff_mark_order_completed(3, "dorayaki")
         
 
-######################################
-########## endpoint tests ############
-######################################
+# ######################################
+# ########## endpoint tests ############
+# ######################################
     
 def test_view_dish_status(client):
     # valid
@@ -123,70 +123,90 @@ def test_view_dish_status(client):
     resp = client.get("/track/customer/dish", params={ "table_id": 100 })
     assert resp.status_code == INPUTERROR
 
-def test_kitchen_mark_order(client):
+def test_kitchen_mark_order(client, kitchen_staff):
     # valid
-    resp = client.put("/track/kitchen/mark", json={
-        "order_req": {
-            "item": "dorayaki",
+    order.add_order(3, "salmon sushi", 2)
+
+    resp = client.put("/track/kitchen/mark", 
+        json={
+            "order_req": {
+                "item": "salmon sushi",
+            },
+            "table_req": {
+                "table_id": 3,
+            }
         },
-        "table_req": {
-            "table_id": 1,
-        }
-    }) 
+        headers=kitchen_staff
+    ) 
     assert resp.status_code == VALID
     
     # invalid id
-    resp = client.put("/track/kitchen/mark", json={
-        "order_req": {
-            "item": "dorayaki",
+    resp = client.put("/track/kitchen/mark", 
+        json={
+            "order_req": {
+                "item": "dorayaki",
+            },
+            "table_req": {
+                "table_id": 100,
+            }
         },
-        "table_req": {
-            "table_id": 100,
-        }
-    }) 
+        headers=kitchen_staff
+    ) 
     assert resp.status_code == INPUTERROR
     
     # invalid item
-    resp = client.put("/track/kitchen/mark", json={
-        "order_req": {
-            "item": "_",
+    resp = client.put("/track/kitchen/mark", 
+        json={
+            "order_req": {
+                "item": "_",
+            },
+            "table_req": {
+                "table_id": 3,
+            }
         },
-        "table_req": {
-            "table_id": 1,
-        }
-    }) 
+        headers=kitchen_staff
+    ) 
     assert resp.status_code == INPUTERROR
 
-def test_waitstaff_mark_order(client):
+def test_waitstaff_mark_order(client, waitstaff_token):
     # valid
-    resp = client.put("/track/waitstaff/mark", json={
-        "order_req": {
-            "item": "dorayaki",
+    resp = client.put("/track/waitstaff/mark", 
+        json={
+            "order_req": {
+                "item": "salmon sushi",
+            },
+            "table_req": {
+                "table_id": 3,
+            }
         },
-        "table_req": {
-            "table_id": 1,
-        }
-    }) 
+        headers=waitstaff_token
+    ) 
     assert resp.status_code == VALID
     
     # invalid id
-    resp = client.put("/track/waitstaff/mark", json={
-        "order_req": {
-            "item": "dorayaki",
+    resp = client.put("/track/waitstaff/mark", 
+        json={
+            "order_req": {
+                "item": "dorayaki",
+            },
+            "table_req": {
+                "table_id": 100,
+            }
         },
-        "table_req": {
-            "table_id": 100,
-        }
-    }) 
+        headers=waitstaff_token
+    ) 
     assert resp.status_code == INPUTERROR
     
     # invalid item
-    resp = client.put("/track/waitstaff/mark", json={
-        "order_req": {
-            "item": "__",
+    resp = client.put("/track/waitstaff/mark", 
+        json={
+            "order_req": {
+                "item": "__",
+            },
+            "table_req": {
+                "table_id": 3,
+            }
         },
-        "table_req": {
-            "table_id": 1,
-        }
-    }) 
+        headers=waitstaff_token
+    ) 
     assert resp.status_code == INPUTERROR

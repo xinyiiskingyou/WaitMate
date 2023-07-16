@@ -106,7 +106,7 @@ def test_table_view_order_endpoint(client, table_id_1):
     resp = client.get('/order/cart/list', params={'table_id': 23})
     assert resp.status_code == INPUTERROR
 
-def test_table_view_all_order_endpoint(client):
+def test_table_view_all_order_endpoint(client, waitstaff_token):
     # valid case
-    resp = client.get('/order/listall')
+    resp = client.get('/order/listall', headers=waitstaff_token)
     assert resp.status_code == VALID

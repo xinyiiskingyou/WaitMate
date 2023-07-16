@@ -110,18 +110,27 @@ def test_select_table(client):
     resp = client.post("/table/select", json={'table_id': '-1'})
     assert resp.status_code == INPUTERROR
 
-def test_check_table_status(client):
-    resp = client.get("/table/status")
+def test_check_table_status(client, waitstaff_token):
+    resp = client.get("/table/status", headers=waitstaff_token)
     assert resp.status_code == VALID
 
-def test_update_table_status(client):
-    resp = client.put("/table/status/update", json={"table_id": 5, "status": "BILL"})
+def test_update_table_status(client, waitstaff_token):
+    resp = client.put("/table/status/update", 
+        json={"table_id": 5, "status": "BILL"},
+        headers=waitstaff_token
+    )
     assert resp.status_code == VALID
 
     # invalid status
-    resp = client.put("/table/status/update", json={"table_id": 5, "status": "--"})
+    resp = client.put("/table/status/update", 
+        json={"table_id": 5, "status": "--"},
+        headers=waitstaff_token
+    )
     assert resp.status_code == INPUTERROR
 
     # invalid table id
-    resp = client.put("/table/status/update", json={"table_id": 100, "status": "BILL"})
+    resp = client.put("/table/status/update", 
+        json={"table_id": 100, "status": "BILL"},
+         headers=waitstaff_token
+    )
     assert resp.status_code == INPUTERROR

@@ -106,16 +106,19 @@ def test_checkout_bill_coupons_endpoint(client, table_id_1, valid_date):
     resp = client.post('/checkout/bill/coupon', json={'id': table_id_1, 'code': 'catsz'})
     assert resp.status_code == VALID
 
-def test_checkout_coupon_create_endpoint(empty, client, valid_date):
-    resp = client.post('/checkout/coupon/create', json={'code': 'catsz', 'int': 10, 'expiry': valid_date})
+def test_checkout_coupon_create_endpoint(empty, client, manager_token, valid_date):
+    resp = client.post('/checkout/coupon/create', json={'code': 'catsz', 'int': 10, 'expiry': valid_date},
+        headers=manager_token)    
     assert resp.status_code == VALID
 
-    resp = client.post('/checkout/coupon/create', json={'code': 'catsz', 'int': 10, 'expiry': valid_date})
+    resp = client.post('/checkout/coupon/create', json={'code': 'catsz', 'int': 10, 'expiry': valid_date},
+        headers=manager_token)         
     assert resp.status_code == INPUTERROR
 
-    resp = client.post('/checkout/coupon/create', json={'code': 'catsz', 'int': 10, 'expiry': '2020-01-01'})
+    resp = client.post('/checkout/coupon/create', json={'code': 'catsz', 'int': 10, 'expiry': '2020-01-01'},
+        headers=manager_token)    
     assert resp.status_code == INPUTERROR
 
-def test_checkout_coupon_view_endpoint(empty, client):
-    resp = client.get('/checkout/coupon/view')
+def test_checkout_coupon_view_endpoint(empty, client, manager_token):
+    resp = client.get('/checkout/coupon/view', headers=manager_token)
     assert resp.status_code == VALID

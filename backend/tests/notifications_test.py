@@ -77,14 +77,10 @@ def test_send_notification_endpoint(client):
     })
     assert resp.status_code == INPUTERROR
     
-def test_waitstaff_receive_customer_endpoint(client):
-    resp = client.get('/notification/waitstaff/get/customer')
+def test_waitstaff_receive_customer_endpoint(client, waitstaff_token):
+    resp = client.get('/notification/waitstaff/get/customer', headers=waitstaff_token)
     assert resp.status_code == VALID
     
-def test_waitstaff_receive_customer_endpoint(client):
-    resp = client.get('/notification/waitstaff/get/customer')
-    assert resp.status_code == VALID
-
-def test_waitstaff_receive_kitchen_endpoint(client):
-    resp = client.get('/notification/waitstaff/get/kitchen')
+def test_waitstaff_receive_kitchen_endpoint(client, waitstaff_token):
+    resp = client.get('/notification/waitstaff/get/kitchen', headers=waitstaff_token)
     assert resp.status_code == VALID

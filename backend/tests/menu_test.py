@@ -180,139 +180,178 @@ def test_menu_remove():
 # ########## endpoint tests ############
 # ######################################
 
-def test_category_add_endpoint(client):
+def test_category_add_endpoint(client, manager_token):
     # valid case
-    resp = client.post("/menu/category/add", json={'name': 'pizza'})
+    resp = client.post("/menu/category/add", json={'name': 'pizza'}, headers=manager_token)
     assert resp.status_code == VALID
 
-    resp = client.post("/menu/category/add", json={'name': 'dessert'})
+    resp = client.post("/menu/category/add", json={'name': 'dessert'}, headers=manager_token)
     assert resp.status_code == VALID
 
     # duplicate name
-    resp = client.post("/menu/category/add", json={'name': 'pizza'})
+    resp = client.post("/menu/category/add", json={'name': 'pizza'}, headers=manager_token)
     assert resp.status_code == INPUTERROR
 
     # invalid length name
-    resp = client.post("/menu/category/add", json={'name': 'fakdsjkdkfhdskfh'})
+    resp = client.post("/menu/category/add", json={'name': 'fakdsjkdkfhdskfh'}, headers=manager_token)
     assert resp.status_code == INPUTERROR
 
-def test_category_update_order_endpoint(client):
+def test_category_update_order_endpoint(client, manager_token):
     # valid case
-    resp = client.put("/menu/category/update/order", json={"name": "pizza"}, params={"is_up": False})
+    resp = client.put("/menu/category/update/order", json={"name": "pizza"}, params={"is_up": False}, headers=manager_token)
     assert resp.status_code == VALID
 
     # invalid move
-    resp = client.put("/menu/category/update/order", json={"name": "pizza"}, params={"is_up": False})
+    resp = client.put("/menu/category/update/order", json={"name": "pizza"}, params={"is_up": False}, headers=manager_token)
     assert resp.status_code == INPUTERROR
 
     # invalid category name
-    resp = client.put("/menu/category/update/order", json={"name": "random"}, params={"is_up": False})
+    resp = client.put("/menu/category/update/order", json={"name": "random"}, params={"is_up": False}, headers=manager_token)
     assert resp.status_code == INPUTERROR
 
-def test_category_update_name_endpoint(client):
+def test_category_update_name_endpoint(client, manager_token):
     # valid case
-    resp = client.put("/menu/category/update/details", json={
-        "name": "pizza",
-        "new_name": "Pizzas"
-    })
+    resp = client.put("/menu/category/update/details", 
+        json={
+            "name": "pizza",
+            "new_name": "Pizzas"
+        },
+        headers=manager_token
+    )
     assert resp.status_code == VALID
 
-    resp = client.put("/menu/category/update/details", json={
-        "name": "Pizzas",
-        "new_name": "pizza"
-    })
+    resp = client.put("/menu/category/update/details", 
+        json={
+            "name": "Pizzas",
+            "new_name": "pizza"
+        },
+        headers=manager_token
+    )
     assert resp.status_code == VALID
 
     # invalid name
-    resp = client.put("/menu/category/update/details", json={
-        "name": "Pizzas",
-        "new_name": "pizza"
-    })
+    resp = client.put("/menu/category/update/details", 
+        json={
+            "name": "Pizzas",
+            "new_name": "pizza"
+        },
+        headers=manager_token
+    )
     assert resp.status_code == INPUTERROR
 
     # invalid name length
-    resp = client.put("/menu/category/update/details", json={
-        "name": "pizza",
-        "new_name": ""
-    })
+    resp = client.put("/menu/category/update/details", 
+        json={
+            "name": "pizza",
+            "new_name": ""
+        },
+        headers=manager_token
+    )
     assert resp.status_code == INPUTERROR
 
     # name already exists
-    resp = client.put("/menu/category/update/details", json={
-        "name": "pizza",
-        "new_name": "dessert"
-    })
+    resp = client.put("/menu/category/update/details", 
+        json={
+            "name": "pizza",
+            "new_name": "dessert"
+        },
+        headers=manager_token
+    )
     assert resp.status_code == INPUTERROR
 
-def test_add_item_endpoint(client):
+def test_add_item_endpoint(client, manager_token):
 
     # valid case
-    resp = client.post("/menu/item/add", json={
-        "category": "pizza",
-        "name": "pepperoni",
-        "cost": 10,
-        "description": "N/A",
-        "ingredients": "pepperoni, cheese",
-        "is_vegan": False
-    })
+    resp = client.post("/menu/item/add", 
+        json={
+            "category": "pizza",
+            "name": "pepperoni",
+            "cost": 10,
+            "description": "N/A",
+            "ingredients": "pepperoni, cheese",
+            "is_vegan": False
+        },
+        headers=manager_token
+    )
     assert resp.status_code == VALID
 
-    resp = client.post("/menu/item/add", json={
-        "category": "pizza",
-        "name": "hawaiian",
-        "cost": 10,
-        "description": "N/A",
-        "ingredients": "ham, pineapple, cheese",
-        "is_vegan": False
-    })
+    resp = client.post("/menu/item/add", 
+        json={
+            "category": "pizza",
+            "name": "hawaiian",
+            "cost": 10,
+            "description": "N/A",
+            "ingredients": "ham, pineapple, cheese",
+            "is_vegan": False
+        },
+        headers=manager_token
+    )
     assert resp.status_code == VALID
 
     # duplicate name
-    resp = client.post("/menu/item/add", json={
-        "category": "pizza",
-        "name": "pepperoni",
-        "cost": 10,
-        "description": "N/A",
-        "ingredients": "pepperoni, cheese",
-        "is_vegan": False
-    })
+    resp = client.post("/menu/item/add", 
+        json={
+            "category": "pizza",
+            "name": "pepperoni",
+            "cost": 10,
+            "description": "N/A",
+            "ingredients": "pepperoni, cheese",
+            "is_vegan": False
+        },
+        headers=manager_token
+    )
     assert resp.status_code == ACCESSERROR
 
     # invalid length name
-    resp = client.post("/menu/item/add", json={
-        "category": "pizza",
-        "name": "gaskdlfjdsfldsfkldsjfls",
-        "cost": 10,
-        "description": "N/A",
-        "ingredients": "pepperoni, cheese",
-        "is_vegan": False
-    })
+    resp = client.post("/menu/item/add", 
+        json={
+            "category": "pizza",
+            "name": "gaskdlfjdsfldsfkldsjfls",
+            "cost": 10,
+            "description": "N/A",
+            "ingredients": "pepperoni, cheese",
+            "is_vegan": False
+        },
+        headers=manager_token
+    )
     assert resp.status_code == INPUTERROR
 
-def test_item_update_details(client):
+def test_item_update_details(client, manager_token):
 
     # valid case
-    resp = client.put("/menu/item/update/details", json={
-        "category": 'Fish',
-        "id": 1,
-        "name": "Haddock",
-        "cost": 20,
-    })
+    resp = client.put("/menu/item/update/details", 
+        json={
+            "category": 'Fish',
+            "id": 1,
+            "name": "Haddock",
+            "cost": 20,
+        },
+        headers=manager_token
+    )
     assert resp.status_code == VALID
 
     # invalid id
-    resp = client.put("/menu/item/update/details", json={
-        "category": 'Fish',
-        "id": 100,
-        "name": "Haddock",
-        "cost": 20,
-    })
+    resp = client.put("/menu/item/update/details", 
+        json={
+            "category": 'Fish',
+            "id": 100,
+            "name": "Haddock",
+            "cost": 20,
+        }, 
+        headers=manager_token
+    )
     assert resp.status_code == INPUTERROR
 
-def test_item_update_order_endpoint(client):
+def test_item_update_order_endpoint(client, manager_token):
 
-    resp = client.put("/menu/item/update/order", json={"name": "hawaiian", "is_up": True})
+    resp = client.put("/menu/item/update/order", 
+        json={"name": "hawaiian", "is_up": True},
+        headers=manager_token
+    )
     assert resp.status_code == VALID
 
-    resp = client.put("/menu/item/update/order", json={"name": "hawaiian", "is_up": True})
+    resp = client.put("/menu/item/update/order", 
+        json={"name": "hawaiian", "is_up": True},
+        headers=manager_token
+    )
     assert resp.status_code == INPUTERROR
