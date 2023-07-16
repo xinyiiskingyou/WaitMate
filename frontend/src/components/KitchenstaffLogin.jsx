@@ -77,7 +77,7 @@ const KitchenstaffLogin = () => {
       const data = await response.json();
       setCookie('token', data, { path: '/' });
       console.log(cookies.token)
-      window.location.href = '/waitstaff';
+      window.location.href = '/Kitchenlist';
     }
     catch (error) {
       console.log(error)
