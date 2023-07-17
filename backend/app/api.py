@@ -200,7 +200,7 @@ def auth_kitchenstaff_password_api(reqbody: Password):
 @app.post("/auth/manager/update/email")
 def auth_manager_update_email_api(reqbody: Email, user: dict = Depends(get_current_user)):
     auth.is_authorized(['manager'], user['user'])
-    auth.change_email_mananger(user['user'], user['token'], reqbody.email)
+    auth.change_email_mananger(user['user'], reqbody.email)
     return {}
     
 @app.post("/auth/manager/update/password")
