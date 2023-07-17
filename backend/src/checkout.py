@@ -147,7 +147,7 @@ class Checkout:
         try:
             coupons = self.session.query(Coupons).all()
 
-            coupon_list = [{'code': coupon.code, 'int': coupon.amount} for coupon in coupons]
+            coupon_list = [{'code': coupon.code, 'amount': coupon.amount} for coupon in coupons]
             return coupon_list
         except Exception as e:
             print(f"Error occurred: {str(e)}")

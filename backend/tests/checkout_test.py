@@ -64,10 +64,10 @@ def test_checkout_coupon(order_japanese):
 def test_checkout_coupon_delete():
     checkout.clear_data()
 
-    checkout.checkout_coupon_create('catsz', 50)
-    assert checkout.checkout_coupon_view() == [{'code': 'catsz', 'int': 50}]
+    checkout.checkout_coupon_create('catsz1', 50)
+    assert checkout.checkout_coupon_view() == [{'code': 'catsz1', 'amount': 50}]
 
-    checkout.checkout_coupon_delete('catsz')
+    checkout.checkout_coupon_delete('catsz1')
     assert checkout.checkout_coupon_view() == []
 
 
@@ -101,10 +101,10 @@ def test_checkout_bill_coupons_endpoint(client, table_id_1):
 
 def test_checkout_coupon_create_endpoint(client):
     checkout.clear_data()
-    resp = client.post('/checkout/coupon/create', json={'code': 'catsz', 'int': 10})
+    resp = client.post('/checkout/coupon/create', json={'code': 'catsz', 'amount': 10})
     assert resp.status_code == VALID
 
-    resp = client.post('/checkout/coupon/create', json={'code': 'catsz', 'int': 10})
+    resp = client.post('/checkout/coupon/create', json={'code': 'catsz', 'amount': 10})
     assert resp.status_code == INPUTERROR
 
 def test_checkout_coupon_view_endpoint(client):

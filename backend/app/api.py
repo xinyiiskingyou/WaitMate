@@ -190,7 +190,7 @@ def checkout_bill_coupon_api(reqbody: Coupon_Cust):
 
 @app.post('/checkout/coupon/create')
 def checkout_coupon_create_api(reqbody: Coupon):
-    checkout.checkout_coupon_create(reqbody.code, reqbody.int)
+    checkout.checkout_coupon_create(reqbody.code, reqbody.amount)
     return {}
 
 @app.delete('/checkout/coupon/delete')
