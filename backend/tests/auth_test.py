@@ -96,16 +96,6 @@ def test_auth_user_endpoint(restart_auth, client, waitstaff_token):
         headers=waitstaff_token)
     assert resp.status_code == VALID
 
-def test_staff_login(client):
-    resp = client.post('/auth/kitchenstaff/login', json={'password': ':L'})
-    assert resp.status_code == ACCESSERROR
-
-    resp = client.post('/auth/kitchenstaff/login', json={'password': auth.PASSWORD})
-    assert resp.status_code == VALID
-
-    resp = client.post('/auth/waitstaff/login', json={'password': auth.PASSWORD})
-    assert resp.status_code == VALID
-
 def test_auth_update_password_endpoint(client, manager_token, waitstaff_token):
     resp = client.post('/auth/manager/update/password',
         headers=waitstaff_token)
@@ -122,6 +112,16 @@ def test_auth_update_email_endpoint(client, manager_token):
 
     resp = client.post('/auth/manager/update/email', json={'email': 'waitmatebycc@gmail.com'}, 
         headers=manager_token)
+    assert resp.status_code == VALID
+
+def test_staff_login(restart_auth, client):
+    resp = client.post('/auth/kitchenstaff/login', json={'password': ':L'})
+    assert resp.status_code == ACCESSERROR
+
+    resp = client.post('/auth/kitchenstaff/login', json={'password': auth.PASSWORD})
+    assert resp.status_code == VALID
+
+    resp = client.post('/auth/waitstaff/login', json={'password': auth.PASSWORD})
     assert resp.status_code == VALID
 
     
