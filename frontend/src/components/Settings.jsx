@@ -1,45 +1,18 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
-import { Box, Button, Typography, TextField, Dialog, DialogTitle} from '@mui/material';
+import { 
+  Box, Button, Typography, Dialog, DialogTitle, Alert,
+  Container, Grid, Divider, Snackbar, Backdrop, CircularProgress} from '@mui/material';
 import { pink } from '@mui/material/colors';
+import WestIcon from '@mui/icons-material/West';
 import { useCookies } from 'react-cookie';
 import { handleLogin, handleLogoutSubmit } from '../auth.js';
+import CssTextField from './CssTextField.jsx'
 
 const mainPink = pink[100];
 const secPink = pink[200];
 
-const CssTextField = styled(TextField)({
-  '& label.Mui-focused': {
-    color: mainPink,
-  },
-  '& label': {
-    color: mainPink,
-  },
-  '& border': {
-    border: 10,
-  },
-  '& .MuiInput-underline:after': {
-    borderBottomColor: secPink,
-  },
-  '& .MuiOutlinedInput-root': {
-    '& fieldset': {
-      borderColor: mainPink,
-      borderWidth: "5px"
-
-    },
-    '&:hover fieldset': {
-      borderColor: secPink,
-      borderWidth: "5px"
-    },
-    '&.Mui-focused fieldset': {
-      borderColor: secPink,
-      borderWidth: "5px"
-
-    },
-  },
-});
-
-const LoginButton = styled(Button)(({ theme }) => ({
+const LoginButton = styled(Button)(({ }) => ({
   color: "#FFFFFF",
   backgroundColor: mainPink,
   '&:hover': {
@@ -49,7 +22,6 @@ const LoginButton = styled(Button)(({ theme }) => ({
 
 function SimpleDialog(props) {
   const { onClose, open } = props;
-
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [cookies, setCookie] = useCookies(['token']);
@@ -66,24 +38,32 @@ function SimpleDialog(props) {
     const token = await handleLogin(email, password);
     if (token) {
       setCookie('token', token, { path: '/' });
-      console.log(token)
-
-      console.log(cookies.token)
-
       onClose()
-
     }
   }
 
   return (
     <Dialog open={open}>
+      <Box sx={{    
+        px: 2,            
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'column',
+        border: `7px solid ${mainPink}`,}}>
       <DialogTitle>Login with new email</DialogTitle>
-      <CssTextField fullWidth required label="Email" onChange={handleEmailChange}
+      <CssTextField fullWidth required label="Email" 
+        onChange={handleEmailChange}
         sx={{ mb: 1 }}/>
-      <CssTextField type="password" fullWidth required label="Password" onChange={handlePasswordChange}
+      <CssTextField type="password" fullWidth required label="Password" 
+        onChange={handlePasswordChange}
         sx={{ mb: 2 }}/>
-      <LoginButton sx={{ mb : 2 }} disabled={!(email && password)} onClick={handleLoginClick}>Login</LoginButton>
-      
+      <LoginButton disabled={!(email && password)} onClick={handleLoginClick}
+        sx={{ mb : 2 }}
+      >
+        Login
+      </LoginButton>
+      </Box>
     </Dialog>
   );
 }
@@ -93,12 +73,14 @@ const Settings = () => {
   const [kitchenstaffPassword, setKitchenstaffPassword] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [open, setOpen] = React.useState(false);
+  const [openSB, setOpenSB] = React.useState(false);
+  const [msgSB, setMsgSB] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
+  const [cookies] = useCookies(['token']);
 
   const handleClose = () => {
     setOpen(false);
   };
-
-  const [cookies] = useCookies(['token']);
 
   const handlewaitstaffPasswordChange = (event) => {
     setWaitstaffPassword(event.target.value);
@@ -125,7 +107,8 @@ const Settings = () => {
       if (!response.ok) {
         throw new Error('Failed to send reset');
       }
-      alert('Successfully sent email.');
+      setMsgSB('Successfully sent email.')
+      setOpenSB(true)
     }
     catch (error) {
       console.log(error)
@@ -183,8 +166,8 @@ const Settings = () => {
       if (!response.ok) {
         throw new Error('Failed change password');
       }
-      alert('Successfully changed staff password');
-
+      setMsgSB('Successfully saved password.')
+      setOpenSB(true)
     }
     catch (error) {
       console.log(error)
@@ -193,6 +176,7 @@ const Settings = () => {
   };
 
   const handleResetSubmit = async () => {
+    setLoading(true)
     try { 
       const response = await fetch('http://localhost:8000/auth/delete', {
         method: 'DELETE',
@@ -208,42 +192,145 @@ const Settings = () => {
     }
     catch (error) {
       console.log(error)
+      setLoading(false)
       alert('Failed to delete. Please try again.');
     }
   }
 
+  const handleBack = () => {
+    window.location.href = '/menu';
+  }
+
+  const handleCloseSB = (reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    console.log('hi')
+    setOpenSB(false);
+  };
+
   return (
+    <Container >
+    <Grid container direction="column" spacing={2}>
+      <Grid item xs={2}>
+        <Box
+          sx={{ 
+            margin: 2, 
+            mt: 4, 
+            borderRadius: 2, 
+            height: '100%',
+            display:'flex',
+            flexDirection:"column",
+          }}>
+          <Grid container spacing={2}>
+            <Grid item xs={2}>
+              <Button onClick={handleBack}        
+                sx={{ 
+                  border: 5,
+                  borderColor: mainPink,
+                  borderRadius: 2,
+                  color: 'black' 
+                }}>
+                <WestIcon/>
+              </Button>
+            </Grid>
+
+            <Grid item xs={8}>
+              <Typography 
+              variant="h3" 
+              component="h1" 
+              align="center"
+              noWrap
+              fontWeight="bold"
+              >
+                Settings
+              </Typography>
+            </Grid>
+
+            <Grid item xs={2}>
+              <Box display='flex' justifyContent='flex-end'>
+                <LoginButton sx={{height: '6vh'}} onClick={handleLogoutSubmit}>
+                  Logout
+                </LoginButton>
+              </Box>
+            </Grid>
+
+          </Grid>
+        </Box>
+      </Grid>   
+
     <Box
-      display="grid"
-      gridTemplateRows="repeat(1, 1fr)"
       justifyContent="center"
-      alignItems="center"
-      py={[0, 0, 8]}
+      sx={{ 
+        px: 5,
+        minWidth: 40,
+        display: 'flex',
+        flexDirection: 'column', }}
     >
-      <Typography variant="h5" sx={{ mb: 2 }}>Settings</Typography>
-      <LoginButton sx={{ mb: 2 }} onClick={handlePasswordSubmit}>Send password reset </LoginButton>
+      <Divider textAlign="left" sx={{ mb: 2 }}>
+        <Typography variant="h5">User Managerment</Typography>
+      </Divider>
+      <CssTextField type="password" label="Set waitstaff password" 
+        onChange={handlewaitstaffPasswordChange}
+        sx={{ mb: 2 }}/>
+      <LoginButton disabled={!(waitstaffPassword.length > 5)} 
+        onClick={handleWaitstaffPasswordSubmit} 
+        sx={{ mb: 2 }}
+      >
+        Save
+      </LoginButton>
+    
+      <CssTextField type="password" label="Set kitchenstaff password" 
+        onChange={handlekitchenstaffPasswordChange}
+        sx={{ mb: 2 }}/>
+      <LoginButton disabled={!(kitchenstaffPassword.length > 5)} 
+        onClick={handleKitchenstaffPasswordSubmit} 
+        sx={{ mb: 2 }}>
+          Save
+      </LoginButton>
+
+      <Divider textAlign="left" sx={{ mt: 2, mb: 2 }}>
+        <Typography variant="h5">Manage Account</Typography>
+      </Divider>
+
       <CssTextField label="Set new email" onChange={handlEmailChange}
         sx={{ mb: 2 }}/>
-      <LoginButton disabled={!email} sx={{ mb: 2 }} onClick={handleEmailSubmit}>Save</LoginButton>
+      <LoginButton disabled={!email} sx={{ mb: 2 }} onClick={handleEmailSubmit}>
+        Save
+      </LoginButton>
+      <LoginButton sx={{ mb: 2 }} onClick={handlePasswordSubmit}>
+        Send password reset 
+      </LoginButton>
       <SimpleDialog
         open={open}
         onClose={handleClose}
       />
+      <LoginButton sx={{ mt: 4, mb: 2 }} onClick={handleResetSubmit}>
+        Reset management
+      </LoginButton>
 
-      <CssTextField type="password" label="Add new waitstaff password" onChange={handlewaitstaffPasswordChange}
-        sx={{ mt: 8, mb: 2 }}/>
-      <LoginButton disabled={!waitstaffPassword} onClick={handleWaitstaffPasswordSubmit} sx={{ mb: 2 }}>Save</LoginButton>
+      <Snackbar
+        open={openSB}
+        autoHideDuration={2000}
+        onClose={handleCloseSB}
+      >
+        <Alert onClose={handleCloseSB} severity="success">
+          {msgSB}
+        </Alert>
+      </Snackbar>
 
-      <CssTextField type="password" label="Add new kitchenstaff password" onChange={handlekitchenstaffPasswordChange}
-          sx={{ mb: 2 }}/>
-      <LoginButton disabled={!kitchenstaffPassword} onClick={handleKitchenstaffPasswordSubmit} sx={{ mb: 2 }}>Save</LoginButton>
-
-      <LoginButton sx={{ mt: 8, mb: 2 }} onClick={handleResetSubmit} >Reset management</LoginButton>
-      <LoginButton sx={{ mb : 2 }} onClick={handleLogoutSubmit}>Logout</LoginButton>
+      <Backdrop
+        sx={{ color: secPink, zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
 
     </Box>
+    </Grid>
+    </Container>
   
   )
-
 }
+
 export default Settings;
