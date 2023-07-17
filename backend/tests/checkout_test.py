@@ -6,10 +6,6 @@ from tests.conftest import VALID, INPUTERROR
 
 checkout = Checkout()
 
-def checkout_pa():
-    if os.path.exists("./src/database/restaurant.db"):
-        os.remove("./src/database/restaurant.db")
-
 def test_checkout_invalid_tip(empty, table_id_1):
     with pytest.raises(InputError) as error:
         checkout.checkout_bill_tips(table_id_1, -1)
