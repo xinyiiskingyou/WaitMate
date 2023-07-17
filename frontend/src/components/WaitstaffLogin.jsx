@@ -94,10 +94,15 @@ const WaitstaffLogin = () => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        minWidth: 450,
       }}>
-      <Box container direction='column' justifyContent='center'>
+      <Box container direction='column' justifyContent='center'
+        sx={{
+          minWidth: 450,
+        }}
+      >
         <Typography variant="h5" sx={{ mb: 2 }}>Waitstaff Login</Typography>
-        <CssTextField  type="password" required label="Password" onChange={handlePasswordChange}
+        <CssTextField fullWidth type="password" required label="Password" onChange={handlePasswordChange}
           sx={{ mb: 2 }}/>
           
         <Grid container>

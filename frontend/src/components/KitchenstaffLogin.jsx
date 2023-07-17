@@ -94,12 +94,25 @@ const KitchenstaffLogin = () => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        minWidth: 450,
+
+
       }}>
-      <Box container direction='column' justifyContent='center'>
+      <Box container direction='column' justifyContent='center' 
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignContent: 'stretch',
+          minWidth: 450,
+        }}
+        
+      >
         <Typography variant="h5" sx={{ mb: 2 }}>Kitchenstaff Login</Typography>
-        <CssTextField  type="password" required label="Password" onChange={handlePasswordChange}
-          sx={{ mb: 2 }}/>
-          
+        <CssTextField fullWidth type="password" required label="Password" onChange={handlePasswordChange}
+          sx={{ 
+            mb: 2,
+            length: 10
+          }}/>
         <Grid container>
           <Grid item xs> 
             <Box display="flex" justifyContent="flex-end">
