@@ -12,10 +12,6 @@ import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import WestIcon from '@mui/icons-material/West';
 
-function createData(time, tablenum, name, amount) {
-  return { time, tablenum, name, amount };
-}
-
 const buttonStyle = { 
   border: '4px solid #A1C935', 
   height: '7vh', 
@@ -28,37 +24,77 @@ const buttonStyle = {
   borderRadius: 8,
 }
 
-const rows = [
-  createData("13:02", "Table 9", 'Frozen yoghurt', 1),
-  createData("13:02", "Table 9", 'Ice cream sandwich', 2),
-  createData("13:02", "Table 9", 'Eclair', 1),
-  createData("13:02", "Table 9", 'Cupcake', 3),
-  createData("13:05", "Table 3", 'Meat Pizza', 1),
-  createData("13:08", "Table 2", 'Lemon Tea', 2),
-  createData("13:10", "Table 8", 'Salad', 1),
-  createData("13:12", "Table 1", 'Cheesecake', 2),
-  createData("13:15", "Table 5", 'Cocktail', 2),
-  createData("13:15", "Table 5", 'Meat Pizza', 1),
-];
+const logoutbuttonStyle = { 
+  border: '4px solid #FFA0A0', 
+  height: '7vh', 
+  width: '12vw',
+  textAlign: 'center', 
+  justifyContent: 'center',
+  background: "#FFCFCF",
+  color: 'black',
+  fontWeight: "bold",
+  borderRadius: 8,
+}
 
 const Kitchenlist = () => {
+
   let [orders, setKitchen] = useState([])
-  
+
   let getKitchenList = async () => {
     let response = await fetch('http://localhost:8000/order/listall')
     let data = await response.json()
     let order_list = []
+
     for (var i of data) {
       console.log(i)
-      order_list.push({time: i[0], tablenum: i[1], name: i[2], amount: i[3]})
+      order_list.push({time: i[0], tablenum: i[1], name: i[2], amount: i[3], state: i[4] === 0 ? "preparing" : "ready"})
     }
     setKitchen(order_list)
   }
 
+  let markOrderCompleted = async (table_id, item_name, amount) => {
+    const table_payload = {
+      table_id: parseInt(table_id, 10),
+    };
+
+    const order_payload = {
+      item: item_name,
+      amount: amount,
+      table_id: parseInt(table_id, 10),
+    };
+
+    await fetch('http://localhost:8000/track/kitchen/mark', {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({"order_req": order_payload, "table_req": table_payload}),
+    }).then(response => {
+      if (response.ok) {
+        setKitchen((prevKitchen) =>
+        prevKitchen.map((order) =>
+          order.tablenum === table_id && order.name === item_name
+            ? { ...order, state: 'Ready' }
+            : order
+        ));
+        return response.json();
+      } else {
+        throw new Error('Failed to update status');
+      }
+    }).catch(error => {
+      // Handle the error if necessary
+      console.error(error);
+      alert('Failed to update the status.');
+    });
+  }
+
   useEffect(() => {
-    getKitchenList()
-  }, [])
-  
+    const interval = setInterval(() => {
+      getKitchenList()
+    }, 1500);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
 
   return (
     <Container >
@@ -95,11 +131,17 @@ const Kitchenlist = () => {
             component="h1" 
             align="center"
             noWrap
+            fontWeight="bold"
             >
               Order List
             </Typography>
           </Grid>
-
+          
+          <Grid item xs={2}>
+              <Button variant="contained" color="primary" style={logoutbuttonStyle}>
+                Logout
+              </Button>
+          </Grid>
         </Grid>
       </Box>
     </Grid>
@@ -136,9 +178,20 @@ const Kitchenlist = () => {
                         {row.amount}
                       </TableCell>
                       <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: 10}}>  
-                        <Button variant="contained" color="primary" style={buttonStyle}>
-                          Prepared
-                        </Button>
+                        {row.is_prepared===1 ? (
+                          <Button variant="contained" color="primary" disabled>
+                            {row.state}
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            style={buttonStyle}
+                            onClick={() => markOrderCompleted(row.tablenum, row.name, row.amount)}
+                          >
+                            {row.state}
+                          </Button>
+                        )}
                       </TableCell>
                     </TableRow>
                   ))}

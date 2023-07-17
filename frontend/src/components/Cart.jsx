@@ -1,9 +1,10 @@
 import React, { useEffect, useState }  from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { 
-  Box, Button, Typography, Container, Grid, Table, TableContainer, TableBody, TableRow, TableCell 
+  Box, Button, TextField, Typography, Container, Grid, Table, TableContainer, TableBody, TableRow, TableCell 
 } from '@mui/material';
 import WestIcon from '@mui/icons-material/West';
+import Bill from "./Bill";
 
 const buttonStyle = { 
   border: '4px solid #FFA0A0', 
@@ -13,15 +14,51 @@ const buttonStyle = {
   justifyContent: 'center',
   background: "#FFCFCF",
   color: 'black',
-  fontWeight: "bolder",
+  fontWeight: "bold",
   borderRadius: 8,
 }
 
+const SmallbuttonStyle = { 
+  border: '4px solid #FFA0A0', 
+  height: '5vh', 
+  width: '10vw',
+  textAlign: 'center', 
+  justifyContent: 'center',
+  background: "#FFCFCF",
+  color: 'black',
+  fontWeight: "bold",
+  borderRadius: 8,
+  marginLeft: '1vw',
+  marginTop: '0.6vh',
+}
+
 const Cart = () => {
-  let [orders, setOrder] = useState([])
   const id = useParams();
   const backLink = `/Browse/${id.id}` 
+  const navigate = useNavigate();
 
+  let [value, setValue] = useState(null);
+  let [error, setError] = useState(false);
+  let [orders, setOrder] = useState([])
+  let [tips, setTips] = useState('')
+  let [tipsSubmitted, setTipsSubmitted] = useState('')
+  
+  const billLink = `/Bill/${id.id}?tips=${tips}`
+
+  const handleRequestBill = () => {
+    navigate(billLink);
+  };
+
+  const handleInputChange = (event) => {
+    const inputTips = event.target.value;
+    if (!isNaN(inputTips)) {
+      setTips(inputTips);
+      setError(false);
+    } else {
+      setError(true);
+    }
+  };
+  
   let getCart = async () => {
 
     await fetch(`http://localhost:8000/order/cart/list?table_id=${id.id}`, {
@@ -47,6 +84,30 @@ const Cart = () => {
       alert(error);
     })    
   }
+    
+  let handleTipsSubmit = async () => {
+    const payload = {
+      id: parseInt(id.id, 10),
+      amount: parseInt(tips, 10)
+    };
+
+    await fetch(`http://localhost:8000/checkout/bill/tips`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+    .then((data) => {
+      console.log(data)
+      if (data === null) {
+        return;
+      }
+      setTipsSubmitted(true);
+     } ).catch(e => {
+      alert(e);
+    })
+  }
 
   useEffect(() => {
     getCart()
@@ -55,11 +116,12 @@ const Cart = () => {
   return (
   <Container>
     <Grid container direction="column" spacing={2}>
+
       <Grid item xs={2}>
       <Box
         sx={{ 
           margin: 2, 
-          mt: 2, 
+          mt: 4, 
           borderRadius: 2, 
           height: '100%',
           display:"flex",
@@ -75,18 +137,15 @@ const Cart = () => {
                   borderColor: '#FFA0A0',
                   borderRadius: 2,
                   color: 'black',
-                  marginTop: '5vh',
-                  marginLeft: '2vw',
-                  fontWeight: "bolder"
                 }}>
                 <WestIcon/>
               </Button>
             </Link>
           </Grid>
           
-          <Grid item xs={8} style={{ marginTop: '5vh', fontWeight: "bold" }}>
+          <Grid item xs={8}>
             <Typography 
-              variant="h4" 
+              variant="h3" 
               component="h1" 
               align="center"
               noWrap
@@ -96,19 +155,19 @@ const Cart = () => {
             </Typography>
           </Grid>
 
-          <Grid item>
-              <Button variant="contained" color="primary" style={buttonStyle}>
-                Request Bill
-              </Button>
+          <Grid item xs={2}>
+            <Button variant="contained" color="primary" style={buttonStyle} onClick={handleRequestBill}>
+              Request Bill
+            </Button>
           </Grid>
         </Grid>
       </Box>
     </Grid>
-
+    
     <Grid item xs={2}>
       <Box
         sx={{ 
-          margin: 2, 
+          margin: 1, 
           border: 10,
           borderColor: '#FFA0A0',
           borderRadius: 2, 
@@ -120,37 +179,76 @@ const Cart = () => {
                 height: 500,
                 pt: 4,  
               }}>
-              <Table>
+              <Table aria-label='custom pagination table' >
                 <TableBody>
                   {orders.map((row) => (
                     <TableRow key={row.name}>
-                      <TableCell component='th' scope='row' 
-                        sx={{ 
-                          fontSize: 30,
-                          borderBottom: 'none',
-                          pl: 10
-                          }}>
+                       <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
                         {row.name}
                       </TableCell>
-                      <TableCell style={{ width: 160 }} align='right'
-                        sx={{
-                          fontSize: 25,
-                          borderBottom: 'none',
-                          pr: 10
-                          }}>
+                      <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -5}}>  
                         {row.amount}
                       </TableCell>
-
-                      <TableCell style={{ width: 160 }} align='right'
-                        sx={{
-                          fontSize: 25,
-                          borderBottom: 'none',
-                          pr: 10
-                          }}>
+                      <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pl: 10}}>
                         ${row.cost}
                       </TableCell>
-                    </TableRow>
+                    </TableRow> 
                   ))}
+
+                  <TableRow>
+                      <TableCell style={{ width: '20%', textAlign: 'center', fontWeight: 'bold' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
+                        Voucher Code?
+                      </TableCell>
+                      <TextField
+                        required
+                        id="standard-required"
+                        label="Enter NUMBERS Only"
+                        value={value}
+                        // onChange={handleInputChange}
+                        helperText={error && 'Invalid input: must be a number'}
+                        size="small"
+                        margin= 'normal'
+                        type="number" 
+                        fullWidth
+                        inputProps={{
+                          step: "1",
+                          min: "1"
+                        }}/>  
+                  </TableRow>
+                  
+                  <TableRow>
+                    <TableCell style={{ width: '20%', textAlign: 'center', fontWeight: 'bold' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
+                      Tips?
+                    </TableCell>
+              
+                    <TableCell style={{ width: '20%', textAlign: 'center' }}>
+                      {tipsSubmitted ? (
+                        <Typography variant="body1">${tips}</Typography>
+                      ) : (
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                          <TextField
+                            required
+                            id='standard-required'
+                            label='Enter NUMBERS Only'
+                            value={tips}
+                            onChange={handleInputChange}
+                            helperText={error && 'Invalid input: must be a number'}
+                            size='small'
+                            margin='normal'
+                            type='number'
+                            fullWidth
+                            inputProps={{
+                              step: '1',
+                              min: '1',
+                            }}
+                          />
+                          <Button variant='contained' color='primary' onClick={handleTipsSubmit} style={SmallbuttonStyle}>
+                            Submit
+                          </Button>
+                        </div>
+                      )}
+                    </TableCell>
+                  </TableRow>
                 </TableBody>
               </Table>
             </TableContainer>

@@ -26,10 +26,10 @@ class Checkout:
         return ret
 
     def checkout_bill(self, table_id: int) -> dict:
-        try:
-            if not check_table_exists(table_id, self.session):
-                raise InputError('The table_id does not refer to a valid table')
+        if not check_table_exists(table_id, self.session):
+            raise InputError('The table_id does not refer to a valid table')
 
+        try:
             # Get the items for the checkout order
             items = self.checkout_order(table_id)
 
@@ -70,6 +70,9 @@ class Checkout:
 
         if amount <= 0:
             raise InputError('Invalid tip amount.')
+        
+        if not check_table_exists(table_id):
+            raise InputError('The table_id does not refer to a valid table')
 
         self._checkout_add(table_id)
 
