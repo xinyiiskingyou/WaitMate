@@ -1,42 +1,12 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
-import { Box, Button, Grid, Typography, TextField, Container } from '@mui/material';
+import { Box, Button, Grid, Typography, Container } from '@mui/material';
 import { pink } from '@mui/material/colors';
 import { useCookies } from 'react-cookie';
+import CssTextField from './CssTextField.jsx'
 
 const mainPink = pink[100];
 const secPink = pink[200];
-
-const CssTextField = styled(TextField)({
-  '& label.Mui-focused': {
-    color: mainPink,
-  },
-  '& label': {
-    color: mainPink,
-  },
-  '& border': {
-    border: 10,
-  },
-  '& .MuiInput-underline:after': {
-    borderBottomColor: secPink,
-  },
-  '& .MuiOutlinedInput-root': {
-    '& fieldset': {
-      borderColor: mainPink,
-      borderWidth: "5px"
-
-    },
-    '&:hover fieldset': {
-      borderColor: secPink,
-      borderWidth: "5px"
-    },
-    '&.Mui-focused fieldset': {
-      borderColor: secPink,
-      borderWidth: "5px"
-
-    },
-  },
-});
 
 const LoginButton = styled(Button)(({ theme }) => ({
   color: "#FFFFFF",
