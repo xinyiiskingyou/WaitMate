@@ -92,7 +92,7 @@ const Home = () => {
                 <TextField
                   required
                   id="standard-required"
-                  label="Enter NUMBER Only"
+                  label="Enter NUMBERS Only"
                   value={value}
                   onChange={handleInputChange}
                   error={error !== ''}

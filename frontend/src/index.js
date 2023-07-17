@@ -10,6 +10,7 @@ import Cart from './components/Cart';
 import Browse from './components/Browse';
 import Manager from './components/ManagerInterface';
 import Coupon from './components/CouponPage';
+import Bill from './components/Bill';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/Browse/:id" element={<Browse />} />
         <Route path="/Manager" element={<Manager />} />
         <Route path="/coupon" element={<Coupon />} />
+        <Route path="/Bill/:id" element={<Bill />} />
       </Routes>
     </Router>
   );

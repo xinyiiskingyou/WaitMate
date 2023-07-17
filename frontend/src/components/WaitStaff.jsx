@@ -69,7 +69,7 @@ const WaitStaff = () => {
       console.error('Error fetching categories:', error);
     }
   };
-
+  
   const fetchNotificationKitchen = async () => {
     try {
       const response = await fetch('http://localhost:8000/notification/waitstaff/get/kitchen');
@@ -86,6 +86,25 @@ const WaitStaff = () => {
       console.error('Error fetching categories:', error);
     }
   };
+  useEffect(() => {
+    const eventSource = new EventSource('http://localhost:8000/notification/waitstaff/get/kitchen'); // Replace with your SSE server endpoint
+    function getRealtimeData(data) {
+      console.log(data);
+    }
+    eventSource.onmessage = e => getRealtimeData(JSON.parse(e.data));
+    // Event listeners for incoming notifications
+    eventSource.addEventListener('notification', (event) => {
+      const notification = JSON.parse(event.data);
+      // Handle the received notification
+      console.log(notification);
+    });
+
+    return () => {
+      // Clean up the EventSource connection on unmounting the component
+      eventSource.close();
+    };
+  }, []);
+
   const handleReturn = () => {
     setSelectedTable(-1);
   };
@@ -111,10 +130,7 @@ const WaitStaff = () => {
   });
 
   const fetchOrder = async (index) => {
-    //index = String(index);
-    //console.log(index);
     const url = `http://localhost:8000/order/cart/list?table_id=${index}`;
-    //console.log(url);
     try {
       const response = await fetch(url);
       const data = await response.json();
@@ -145,11 +161,13 @@ const WaitStaff = () => {
             <div>
             {notification.map((item) => (
               <div key={item.table}>
-                <p style={{color: item.status === 'ASSIST' ? "#FB0F0F" : item.status === 'BILL' ? "#F59B0C" : "inherit"}}>Table {item.table} requested {item.status}</p>
+                <p style={{color: item.status === 'ASSIST' ? "#FB0F0F" : item.status === 'BILL' ? "#F59B0C" : "inherit"}}><b>Table {item.table}</b> requested {item.status}</p>
               </div>
             ))}
+
             {notificationKitchen.map((order) => (
               <div key={order.table}>
+                <p style={{color: '#3f50b5'}}><b>Table {order.table}</b> {order.status} is ready to be served</p>
               </div>
             ))}
           </div>
