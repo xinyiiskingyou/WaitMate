@@ -27,9 +27,19 @@ def manager_token():
     return {"Authorization": f"Bearer {token}"}
 
 @pytest.fixture
+def manager_token_plain():
+    token = auth.login_mananger(auth.MANAGER_EMAIL, auth.PASSWORD)['token']
+    return token
+
+@pytest.fixture
 def waitstaff_token():
     token = auth.login_staff(auth.PASSWORD, True)['token']
     return {"Authorization": f"Bearer {token}"}
+
+@pytest.fixture
+def waitstaff_token_plain():
+    token = auth.login_staff(auth.PASSWORD, True)['token']
+    return token
 
 @pytest.fixture
 def kitchen_staff():
