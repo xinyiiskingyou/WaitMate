@@ -82,7 +82,7 @@ class Notifications:
             con = sqlite3.connect(self.database)
             cur = con.cursor()
 
-            cur.execute("SELECT * FROM Tables WHERE status != 'OCCUPIED' ORDER BY req_time")
+            cur.execute("SELECT * FROM Tables WHERE status != 'OCCUPIED' ORDER BY req_time ASC")
             res = cur.fetchall()
         except sqlite3.Error:
             return []
