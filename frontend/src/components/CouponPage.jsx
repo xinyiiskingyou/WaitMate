@@ -98,6 +98,7 @@ const Coupon = () => {
   };
 
   const handleRemove = (index) => {
+    console.log(index);
     const payload = {
       code: index
     };
@@ -183,7 +184,7 @@ const Coupon = () => {
                                 <h3>{coupon.code}</h3>
                                 <p>{coupon.int}% off</p>
                                 <p>{coupon.expiry}</p>
-                                <Button variant='contained' style={{fontSize: "10px"}} onClick={() => handleRemove(coupon.id)}>Remove</Button>
+                                <Button variant='contained' style={{fontSize: "10px"}} onClick={() => handleRemove(coupon.code)}>Remove</Button>
                               </CardContent>
                             </Card>
                           ))}

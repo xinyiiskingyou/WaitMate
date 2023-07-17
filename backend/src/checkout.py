@@ -6,9 +6,11 @@ and tips. It also includes the coupons in relation to the manager
 '''
 import sqlite3
 import datetime
+from typing import List
 from constant import DB_PATH
 from src.error import InputError
-from typing import List
+from src.helper import check_table_exists
+
 
 class Checkout:
     def __init__(self, database=DB_PATH) -> None:
@@ -22,20 +24,23 @@ class Checkout:
         try:
             cur.execute('''SELECT name, cost, amount from Orders o 
                 JOIN Items i on i.name = o.item_name 
-                WHERE table_id = ?''', 
-                (table_id,)
-            )
+                WHERE table_id = ?''',
+                        (table_id,)
+                        )
             bill = cur.fetchall()
-            ret = [{'name': i[0], 'cost': i[1] * i[2], 'amount': i[2]} for i in bill]
+            ret = [{'name': i[0], 'cost': i[1] * i[2], 'amount': i[2]}
+                   for i in bill]
 
         except:
             ret = []
 
         con.close()
         return ret
-    
+
     def checkout_bill(self, table_id: int) -> dict:
-        coupon: str = ''
+        if not check_table_exists(table_id):
+            raise InputError('The table_id does not refer to a valid table')
+
         bill: dict = {
             'items': self.checkout_order(table_id),
         }
@@ -44,8 +49,8 @@ class Checkout:
         try:
             cur.execute('''SELECT coupon, tip FROM Checkout 
                 WHERE table_id = ?''',
-                (table_id,)
-            )
+                        (table_id,)
+                        )
             data = cur.fetchone()
             if data[0]:
                 coupon = data[0]
@@ -59,13 +64,13 @@ class Checkout:
         for i in bill['items']:
             total += i['cost']
 
-        
         bill['total'] = total
 
         if coupon:
             bill['coupon'] = bill['total']
-            bill['total'] = bill['total'] * (100 - self.checkout_coupon_find(coupon))/100
-            bill['total'] = round(bill['total'], 2) 
+            bill['total'] = bill['total'] * \
+                (100 - self.checkout_coupon_find(coupon))/100
+            bill['total'] = round(bill['total'], 2)
             bill['coupon'] = round(bill['coupon'] - bill['total'], 2)
 
         if 'tip' in bill:
@@ -77,6 +82,9 @@ class Checkout:
         if amount <= 0:
             raise InputError('Invalid tip amount.')
 
+        if not check_table_exists(table_id):
+            raise InputError('The table_id does not refer to a valid table')
+
         self.checkout_create()
         self.checkout_add(table_id)
 
@@ -86,15 +94,18 @@ class Checkout:
         cur.execute('''UPDATE Checkout 
             SET tip = (?) 
             WHERE table_id = (?)''',
-            (amount, table_id)
-        )
+                    (amount, table_id)
+                    )
         con.commit()
         con.close()
 
     def checkout_bill_coupon(self, table_id: int, coupon: str):
+        if not check_table_exists(table_id):
+            raise InputError('The table_id does not refer to a valid table')
+
         if not self.checkout_coupon_find(coupon):
             raise InputError('Invalid coupon.')
-        
+
         self.checkout_create()
         self.checkout_add(table_id)
 
@@ -104,8 +115,8 @@ class Checkout:
         cur.execute('''UPDATE Checkout 
             SET coupon = (?) 
             WHERE table_id = (?)''',
-            (coupon, table_id)
-        )
+                    (coupon, table_id)
+                    )
         con.commit()
         con.close()
 
@@ -116,11 +127,12 @@ class Checkout:
             raise InputError('Invalid coupon amount')
         if expiry < str(datetime.date.today()):
             raise InputError('Invalid date.')
-        
+
         con = sqlite3.connect(self.database)
         cur = con.cursor()
 
-        cur.execute('INSERT INTO Coupons(code, amount, expiry) VALUES (?, ?, ?)', (code, amount, expiry))
+        cur.execute(
+            'INSERT INTO Coupons(code, amount, expiry) VALUES (?, ?, ?)', (code, amount, expiry))
 
         con.commit()
         con.close()
@@ -128,14 +140,14 @@ class Checkout:
     def checkout_coupon_delete(self, code: str):
         if not self.checkout_coupon_find(code):
             return
-        
+
         con = sqlite3.connect(self.database)
         cur = con.cursor()
         cur.execute('DELETE FROM Coupons WHERE code = (?)', (code,))
         con.commit()
         con.close()
 
-    def checkout_coupon_view(self) -> List[dict]: 
+    def checkout_coupon_view(self) -> List[dict]:
         self.coupon_create()
         self.coupon_expire()
 
@@ -151,7 +163,7 @@ class Checkout:
         return coupons
 
     # PRIVATE
-    
+
     def checkout_coupon_find(self, code: str) -> int:
         self.coupon_create()
         self.coupon_expire()
@@ -159,8 +171,8 @@ class Checkout:
         con = sqlite3.connect(self.database)
         cur = con.cursor()
         cur.execute('SELECT * FROM Coupons WHERE code = ?',
-            (code,)
-        )
+                    (code,)
+                    )
 
         data = cur.fetchall()
         con.close()
@@ -168,7 +180,7 @@ class Checkout:
         if len(data) == 0:
             return None
         return data[0][1]
-    
+
     def coupon_create(self):
         con = sqlite3.connect(self.database)
         cur = con.cursor()
@@ -176,7 +188,7 @@ class Checkout:
             code TEXT PRIMARY KEY,
             amount INTEGER,
             expiry TEXT)'''
-        )
+                    )
         con.commit()
         con.close()
 
@@ -187,7 +199,7 @@ class Checkout:
             table_id INTEGER PRIMARY KEY,
             coupon TEXT,
             tip INTEGER)'''
-        )
+                    )
 
         con.commit()
         con.close()
@@ -197,9 +209,9 @@ class Checkout:
         cur = con.cursor()
         cur.execute('SELECT * FROM Checkout WHERE table_id = ?', (table_id,))
         if len(cur.fetchall()) == 0:
-            cur.execute('INSERT INTO Checkout(table_id, coupon, tip) VALUES (?,?,?)', 
-                (table_id, None, None)
-            )
+            cur.execute('INSERT INTO Checkout(table_id, coupon, tip) VALUES (?,?,?)',
+                        (table_id, None, None)
+                        )
 
         con.commit()
         con.close()
@@ -209,7 +221,8 @@ class Checkout:
 
         con = sqlite3.connect(self.database)
         cur = con.cursor()
-        cur.execute('DELETE FROM Coupons WHERE expiry < (?)', (currentDateTime,))
+        cur.execute('DELETE FROM Coupons WHERE expiry < (?)',
+                    (currentDateTime,))
         con.commit()
         con.close()
 
