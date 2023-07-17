@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, TIMESTAMP, Boolean, PrimaryKeyConstraint
+from sqlalchemy import Column, Integer, String, TIMESTAMP, Boolean
 from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
@@ -29,13 +29,26 @@ class Items(Base):
     item_order = Column(Integer)
     category_name = Column(String)
 
-class Menu(Base):
-    __tablename__ = 'Menu'
+class Orders(Base):
+    __tablename__ = 'Orders'
 
-    category = Column(String)
-    item = Column(String)
-    item_order = Column(Integer, default=0)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    timestamp = Column(String, nullable=False)
+    table_id = Column(Integer, nullable=False)
+    item_name = Column(String, nullable=False)
+    amount = Column(Integer, nullable=False)
+    is_prepared = Column(Integer, default=0)
+    is_served = Column(Integer, default=0)
 
-    __table_args__ = (
-        PrimaryKeyConstraint(category, item),
-    )
+class CheckoutDB(Base):
+    __tablename__ = 'Checkout'
+
+    table_id = Column(Integer, primary_key=True)
+    coupon = Column(String)
+    tip = Column(Integer)
+
+class Coupons(Base):
+    __tablename__ = 'Coupons'
+
+    code = Column(String, primary_key=True)
+    amount = Column(Integer)

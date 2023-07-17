@@ -17,14 +17,16 @@ def test_customer_track_dish_invalid_id():
     with pytest.raises(InputError):
         track.customer_view_dish_status(25)
 
-def test_customer_track_dish_valid(table_id_3):
-    
+def test_customer_track_dish_valid(table_id_3, menu_japanese):
+
+    order.clear_order_table()
+
     # add the item with the same name 3 times
-    order.add_order(table_id_3, "dorayaki", 2)
-    order.add_order(table_id_3, "dorayaki", 1)
-    order.add_order(table_id_3, "dorayaki", 3)
-    
-    res = track.customer_view_dish_status(table_id_3)
+    order.add_order(table_id_3, menu_japanese[1], 2)
+    order.add_order(table_id_3, menu_japanese[1], 1)
+    order.add_order(table_id_3, menu_japanese[1], 2)
+
+    res = track.customer_view_dish_status(3)
     assert len(res) == 3
     assert res[0][0] == "dorayaki"
     assert res[0][1] == 0
@@ -124,6 +126,10 @@ def test_view_dish_status(client):
     assert resp.status_code == INPUTERROR
 
 def test_kitchen_mark_order(client):
+
+    resp = client.post('/order/cart/add', json={'id': 1, 'item': 'dorayaki', 'amount': 1})
+    assert resp.status_code == VALID
+
     # valid
     resp = client.put("/track/kitchen/mark", json={
         "order_req": {

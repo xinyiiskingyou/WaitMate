@@ -1,4 +1,2 @@
-DB_PATH = './src/database/restaurant.db'
-
-TEST_PATH = 'sqlite:///./src/database/test.db'
+DB_PATH = 'sqlite:///./src/database/restaurant.db'
 DEFAULT_TABLE_STATUS = 'OCCUPIED'

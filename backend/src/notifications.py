@@ -6,22 +6,23 @@ and provides functionality for waitstaff to receive notifications from customers
 from the kitchen.
 '''
 
-import sqlite3
 import datetime
+from sqlalchemy import create_engine, update, and_
+from sqlalchemy.orm import sessionmaker
 from typing import Any, List
-from constant import DB_PATH
+from constant import DB_PATH, DB_PATH
+from src.db_model import Tables, Orders
 from src.helper import check_table_exists
 from src.error import InputError, NotFoundError
 
 class Notifications:
     '''
     Notifications class for sending and receiving notifications.
-
-    Args:
-        database_path (str): The path to the SQLite database file.
     '''
-    def __init__(self, database=DB_PATH) -> None:
-        self.database = database
+    def __init__(self) -> None:
+        self.engine = create_engine(DB_PATH)
+        Session = sessionmaker(bind=self.engine)
+        self.session = Session()
 
     def customer_send_notification(self, table_id: int, status: str) -> None:
         '''
@@ -39,32 +40,26 @@ class Notifications:
         '''
 
         # check if table id exists
-        if not check_table_exists(table_id):
+        if not check_table_exists(table_id, self.session):
             raise InputError('Table id is not valid.')
 
         if status not in ['ASSIST', 'BILL']:
             raise InputError('Unknown status')
 
         try:
-            con = sqlite3.connect(self.database)
-            cur = con.cursor()
-
             curr_time = datetime.datetime.now()
-            timestamp = curr_time.strftime('%H:%M:%S')
 
-            # update table status
-            cur.execute('''
-                UPDATE Tables
-                SET status = ?,
-                    req_time = ?
-                WHERE table_id = ?
-            ''', (status, timestamp, table_id))
-
-            con.commit()
+            stmt = (
+                update(Tables)
+                .where(Tables.table_id == table_id)
+                .values(status=status, req_time=curr_time)
+            )
+            self.session.execute(stmt)
+            self.session.commit()
         except Exception:
             raise NotFoundError("Details not found")
         finally:
-            con.close()
+            self.session.close()
 
     def waitstaff_receives_from_customer(self) -> List[Any]:
         '''
@@ -74,21 +69,24 @@ class Notifications:
         Arguments:
             N/A
         Exceptions:
-            sqlite3.Error: If there is an issue executing the database query.
+            Exception: If there is an issue executing the database query.
         Return Value:
             List[Any]: A list of tuples containing the table details.
         '''
         try:
-            con = sqlite3.connect(self.database)
-            cur = con.cursor()
-
-            cur.execute("SELECT * FROM Tables WHERE status != 'OCCUPIED' ORDER BY req_time")
-            res = cur.fetchall()
-        except sqlite3.Error:
+            query = (
+                self.session.query(Tables.table_id, Tables.status, Tables.req_time)
+                .where(Tables.status != 'OCCUPIED')
+                .order_by(Tables.req_time)
+                .all()
+            )
+            order_list = [(table_id, status, req_time) for table_id, status, req_time in query]
+            return order_list
+        except Exception as e:
+            print(f"Error occurred: {str(e)}")
             return []
         finally:
-            con.close()
-        return res
+            self.session.close()
 
     def waitstaff_receives_from_kitchen(self) -> List[Any]:
         '''
@@ -98,24 +96,22 @@ class Notifications:
         Arguments:
             N/A
         Exceptions:
-            sqlite3.Error: If there is an issue executing the database query.
+            Exception: If there is an issue executing the database query.
         Return Value:
             List[Any]: A list of tuples containing the table details.
         '''
         try:
-            con = sqlite3.connect(self.database)
-            cur = con.cursor()
-
-            cur.execute('''
-                        SELECT table_id, item_name 
-                        FROM Orders 
-                        WHERE is_prepared == 1 AND is_served == 0
-                        ORDER BY timestamp ASC
-                        ''')
-            res = cur.fetchall()
-            con.close()
-        except sqlite3.Error:
+            query = (
+                self.session.query(Orders.table_id, Orders.item_name)
+                .where(and_(Orders.is_prepared == 1, Orders.is_served == 0))
+                .order_by(Orders.table_id)
+                .all()
+            )
+            order_list = [(table_id, item_name) for table_id, item_name in query]
+            return order_list
+        except Exception as e:
+            print(f"Error occurred: {str(e)}")
             return []
         finally:
-            con.close()
-        return res
+            self.session.close()
+

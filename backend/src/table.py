@@ -10,19 +10,16 @@ from sqlalchemy.orm import sessionmaker
 from src.db_model import Tables
 from src.error import InputError
 from src.helper import check_table_exists
-from constant import TEST_PATH, DEFAULT_TABLE_STATUS
+from constant import DB_PATH, DEFAULT_TABLE_STATUS
 from src.helper import check_table_exists
 
 class TableDB():
     '''
     The TableDB class implements operations related to tables.
-
-    Args:
-        database_path (str): The path to the SQLite database file.
     '''
 
     def __init__(self) -> None:
-        self.engine = create_engine(TEST_PATH)
+        self.engine = create_engine(DB_PATH)
         # create table
         Tables.__table__.create(bind=self.engine, checkfirst=True)
 
@@ -45,11 +42,15 @@ class TableDB():
         if check_table_exists(table_id, self.session):
             raise InputError('Table id is not available.')
 
-        new_table = Tables(table_id=table_id, status=DEFAULT_TABLE_STATUS)
-        self.session.add(new_table)
-        self.session.commit()
-        
-        self.session.close()
+        try:
+            new_table = Tables(table_id=table_id, status=DEFAULT_TABLE_STATUS)
+            self.session.add(new_table)
+            self.session.commit()
+        except Exception as e:
+            self.session.rollback()
+            raise InputError(f"Error occurred: {str(e)}")
+        finally:
+            self.session.close()
         return table_id
 
     def get_all_tables_status(self) -> dict:
@@ -65,14 +66,19 @@ class TableDB():
         '''
         table_dict = {}
 
-        statement = select(Tables.table_id, Tables.status)
-        rows = self.session.execute(statement).all()
-        self.session.close()
+        try:
+            statement = select(Tables.table_id, Tables.status)
+            rows = self.session.execute(statement).all()
+            self.session.close()
 
-        for item in rows:
-            table_dict[item[0]] = item[1]
-
-        return table_dict
+            for item in rows:
+                table_dict[item[0]] = item[1]
+            return table_dict
+        except Exception as e:
+            self.session.rollback()
+            raise InputError(f"Error occurred: {str(e)}")
+        finally:
+            self.session.close()
 
     def update_table_status(self, table_id: int, status: str) -> None:
         '''
@@ -96,17 +102,22 @@ class TableDB():
         if status not in ['OCCUPIED', 'ASSIST', 'BILL', 'EMPTY']:
             raise InputError('Unknown status')
 
-        stmt = (
-            update(Tables)
-            .where(Tables.table_id == table_id)
-            .values(status=status)
-        )
-        self.session.execute(stmt)
-        self.session.commit()
-        
-        self.session.execute(delete(Tables).where(Tables.status == 'EMPTY'))
-        self.session.commit()
-        self.session.close()
+        try:
+            stmt = (
+                update(Tables)
+                .where(Tables.table_id == table_id)
+                .values(status=status)
+            )
+            self.session.execute(stmt)
+            self.session.commit()
+            
+            self.session.execute(delete(Tables).where(Tables.status == 'EMPTY'))
+            self.session.commit()
+        except Exception as e:
+            self.session.rollback()
+            raise InputError(f"Error occurred: {str(e)}")
+        finally:
+            self.session.close()
 
     def clear_tables_data(self):
         metadata = MetaData()
