@@ -99,7 +99,7 @@ const Kitchenlist = () => {
           borderRadius: 2, 
           height: '100%',
           display:"flex",
-          flexDirection:"column"
+          flexDirection:"column",
         }}>
 
         <Grid container spacing={2}>
@@ -130,9 +130,9 @@ const Kitchenlist = () => {
           </Grid>
           
           <Grid item xs={2}>
-              <Button variant="contained" color="primary" style={logoutbuttonStyle} onClick={handleLogoutSubmit}>
-                Logout
-              </Button>
+            <Button variant="contained" color="primary" style={logoutbuttonStyle} onClick={handleLogoutSubmit}>
+              Logout
+            </Button>
           </Grid>
         </Grid>
       </Box>
