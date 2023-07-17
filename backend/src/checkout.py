@@ -149,6 +149,13 @@ class Checkout:
 
         coupons = [{'code': i[0], 'int': i[1], 'expiry': i[2]} for i in data]
         return coupons
+    
+    def checkout_remove(self, table_id: int):
+        con = sqlite3.connect(self.database)
+        cur = con.cursor()
+        cur.execute('DELETE FROM Checkout WHERE table_id = (?)', (table_id,))
+        con.commit()
+        con.close()
 
     # PRIVATE
     
@@ -210,12 +217,5 @@ class Checkout:
         con = sqlite3.connect(self.database)
         cur = con.cursor()
         cur.execute('DELETE FROM Coupons WHERE expiry < (?)', (currentDateTime,))
-        con.commit()
-        con.close()
-
-    def checkout_remove(self, table_id: int):
-        con = sqlite3.connect(self.database)
-        cur = con.cursor()
-        cur.execute('DELETE FROM Checkout WHERE table_id = (?)', (table_id,))
         con.commit()
         con.close()
