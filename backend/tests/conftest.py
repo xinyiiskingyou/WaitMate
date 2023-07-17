@@ -1,12 +1,11 @@
 import pytest
 import os
+from app.api import app
+from fastapi.testclient import TestClient
 from src.table import TableDB
 from src.menu import MenuDB
 from src.order import OrderDB
-
-from fastapi.testclient import TestClient
 from src.clear import clear_database
-from app.api import app
 
 VALID = 200
 ACCESSERROR = 403
