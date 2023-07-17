@@ -8,10 +8,8 @@ from email.mime.multipart import MIMEMultipart
 from firebase_admin import auth as fb_auth, credentials, initialize_app
 from src.error import InputError, AccessError
 
-
 WAITSTAFF_EMAIL = 'waitstaff@waitmate.com'
 KITCHENSTAFF_EMAIL = 'kitchenstaff@waitmate.com'
-
 
 class Auth:
     WAITSTAFF_EMAIL = 'waitstaff@waitmate.com'
@@ -112,73 +110,19 @@ class Auth:
         print('User is authorized')
 
     def change_password_mananger(self, user: dict):
-        # if len(new_password) == 0:
-        #     raise InputError('Invalid password size')
-        
         print(user)
         self.auth.send_password_reset_email(user['user']['email'])
-
-        # auth.update_user(
-        #     uid,
-        #     password=new_password)
-
         print('Sucessfully updated manager password')
-
-    def send_password_reset_email(self, email: str):
-        msg = MIMEMultipart()  # instance of MIMEMultipart
-        msg['From'] = 'waitmatebycc@gmail.com'
-        msg['To'] = email
-        msg["Subject"] = "Hello from Python!"
-
-        session = smtplib.SMTP('smtp.gmail.com', 587)
-        session.starttls()
-        session.login('waitmatebycc@gmail.com', 'waitmate1')
-        session.sendmail(
-                'waitmatebycc@gmail.com', email, msg.as_string()
-            )
-        # html = """\
-        # <html>
-        # <body>
-        #     <p>Hello,<br> I'm sending you a test email because I'm learning how to send email with Python!
-        #     </p>
-        # </body>
-        # </html>
-        # """        
-        # part2 = MIMEText(html, "html")
-        # msg.attach(part2)
-
-        # context = ssl.create_default_context()
-        # with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
-        #     server.login('waitmatebycc@gmail.com', 'waitmate1')
-        #     server.sendmail(
-        #         'waitmatebycc@gmail', email, msg.as_string()
-        #     )
 
     def change_email_mananger(self, user: dict, token: str, new_email: str):
         if len(new_email) == 0:
             raise InputError('Invalid email size')
 
         print(user['uid'], new_email)
-        new_user = fb_auth.update_user(
+        _ = fb_auth.update_user(
             user['uid'],
             email=new_email)
         
-        sender = 'waitmatebycc@gmail.com'
-        receivers = [new_email]
-        message = """Hey,
-        Thank you for using our system, you have recently
-        changed your email address and this is an email to
-        confirm your changes.
-        """
-        # self.send_password_reset_email(new_email)
-        # self.auth.send_email_verification(token)
-
-        print("Successfully sent email")
-        # except:
-        #     raise AccessError('Failed to send verification email')
-
-        # self.auth.send_email_verification(new_user['token'])
-
         print('Sucessfully updated manager email')
 
     def change_password_staff(self, new_password: str, is_waitstaff: bool):
@@ -215,8 +159,6 @@ auth = Auth()
 if __name__ == '__main__':  
     auth_system = Auth()
 
-    # Iterate through all users. This will still retrieve users in batches,
-    # buffering no more than 1000 users in memory at a time.
     # auth_system.print_all()
 
     token = auth_system.login_mananger('manager@waitmate.com', 'waitmate1')['token']
