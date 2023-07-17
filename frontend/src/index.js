@@ -49,7 +49,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="menu" element={ manager ? (<Menu />) : (<Navigate to='/ManagerLogin'/>)} />
+        <Route path="/menu" element={ manager ? (<Menu />) : (<Navigate to='/ManagerLogin'/>)} />
         <Route path="/Settings" element={ manager ? (<Settings />) : (<Navigate to='/ManagerLogin'/> )} />
         <Route path="/Manager" element={manager ? (<Manager />) : (<Navigate to='/ManagerLogin'/>)} />
         <Route path="/coupon" element={manager ? (<Coupon />) : (<Navigate to='/ManagerLogin'/>)} />
