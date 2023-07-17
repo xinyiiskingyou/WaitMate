@@ -1,7 +1,8 @@
 import sqlite3
+from typing import List
 from constant import DB_PATH
 from src.error import InputError
-from typing import List
+from src.helper import check_table_exists
 
 class Checkout:
     def __init__(self, database=DB_PATH) -> None:
@@ -28,6 +29,9 @@ class Checkout:
         return ret
     
     def checkout_bill(self, table_id: int) -> dict:
+        if not check_table_exists(table_id):
+            raise InputError('The table_id does not refer to a valid table')
+    
         bill: dict = {
             'items': self.checkout_order(table_id),
         }
@@ -65,6 +69,9 @@ class Checkout:
     def checkout_bill_tips(self, table_id: int, amount: int):
         if amount <= 0:
             raise InputError('Invalid tip amount.')
+        
+        if not check_table_exists(table_id):
+            raise InputError('The table_id does not refer to a valid table')
 
         self.checkout_create()
         self.checkout_add(table_id)
@@ -81,6 +88,9 @@ class Checkout:
         con.close()
 
     def checkout_bill_coupon(self, table_id: int, coupon: str):
+        if not check_table_exists(table_id):
+            raise InputError('The table_id does not refer to a valid table')
+
         if not self.checkout_coupon_find(coupon):
             raise InputError('Invalid coupon.')
         
@@ -194,21 +204,3 @@ class Checkout:
         cur.execute('DELETE FROM Checkout WHERE table_id = (?)', (table_id,))
         con.commit()
         con.close()
-
-
-if __name__ == '__main__':
-    checkout = Checkout()
-    # checkout.checkout_remove(1)
-    # checkout.checkout_order(1)
-    # checkout.checkout_coupon_create('Cats', 20)
-    # checkout.checkout_coupon_create('Fish', 10)
-    checkout.checkout_coupon_view()
-    checkout.checkout_coupon_delete('Fish')
-    checkout.checkout_coupon_view()
-
-
-    # checkout.checkout_bill_coupon(1, 'Fish')
-    # checkout.checkout_bill_tips(1, 10)
-    # checkout.checkout_bill(2)
-
-
