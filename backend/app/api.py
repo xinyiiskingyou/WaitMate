@@ -1,7 +1,7 @@
 import sys
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi import FastAPI, Query, Body, Response, Depends, Cookie
-from fastapi.security import HTTPBasic, OAuth2PasswordRequestForm, HTTPBearer, OAuth2PasswordBearer
+from fastapi import FastAPI, Depends
+from fastapi.security import OAuth2PasswordRequestForm, HTTPBearer, OAuth2PasswordBearer
 from src.order import OrderDB
 from src.table import TableDB
 from src.menu import MenuDB
@@ -15,21 +15,14 @@ from src.model.category_update_req import CategoryUpdate
 from src.model.item_req import Item
 from src.model.table_req import Table
 from src.model.order_req import Order
-from src.model.auth_req import LoginMan, Password, Email, StaffType
+from src.model.auth_req import Password, Email, StaffType
 from src.model.coupon_req import Coupon, Coupon_Cust, Coupon_Code
 from src.model.bill_req import Tip
-import jwt
-from src.error import AccessError
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='http://localhost:8000/auth/manager/login')
 
 sys.path.append('..')
-
-# cred = credentials.Certificate('eeee_service_account_keys.json')
-# firebase = firebase_admin.initialize_app(cred)
-# pb = pyrebase.initialize_app(json.load(open('./src/waitmate-ba463-firebase-adminsdk-ea5im-72b77a7f6f.json')))
-
 
 app = FastAPI()
 security = HTTPBearer()
@@ -37,7 +30,6 @@ security = HTTPBearer()
 order = OrderDB()
 table = TableDB()
 menu = MenuDB()
-# auth = Auth()
 track = Tracking()
 notification = Notifications()
 checkout = Checkout()
@@ -58,16 +50,7 @@ app.add_middleware(
 )
 
 async def get_current_user(token: str = Depends(oauth2_scheme)):
-    user: dict = {}
-
-    try:
-        user = auth.is_authenticated(token)
-    except:
-        raise AccessError("Unauth")
-
-    if user == {}:
-        raise AccessError("Unauth")
-
+    user: dict = auth.is_authenticated(token)
     return {'user' : user, 'token': token}
 
 @app.get('/', tags=['root'])
@@ -210,19 +193,19 @@ def auth_manager_update_password_api(user: dict = Depends(get_current_user)):
     return {}
 
 @app.post("/auth/waitstaff/update/password")
-def auth_waitstaff_password_api(form_data: OAuth2PasswordRequestForm = Depends(), user: dict = Depends(get_current_user)):
+def auth_waitstaff_update_password_api(form_data: OAuth2PasswordRequestForm = Depends(), user: dict = Depends(get_current_user)):
     auth.is_authorized(['manager'], user['user'])
     auth.change_password_staff(form_data.password, True)
     return {}
 
 @app.post("/auth/kitchenstaff/update/password")
-def auth_kitchen_password_api(form_data: OAuth2PasswordRequestForm = Depends(), user: dict = Depends(get_current_user)):
+def auth_kitchenstaff_update_password_api(form_data: OAuth2PasswordRequestForm = Depends(), user: dict = Depends(get_current_user)):
     auth.is_authorized(['manager'], user['user'])
     auth.change_password_staff(form_data.password, False)
     return {}
 
 @app.delete("/auth/delete")
-def auth_kitchen_password_api(user: dict = Depends(get_current_user)):
+def auth_restart_api(user: dict = Depends(get_current_user)):
     auth.is_authorized(['manager'], user['user'])
     auth.delete_all()
     return {}
@@ -264,13 +247,13 @@ def waitstaff_get_from_kitchen(user: dict = Depends(get_current_user)):
 
 ############ CHECKOUT #################
 
-@app.get('/checkout/order/{id}')
-def checkout_order_api(id: int):
-    return checkout.checkout_order(id)
+@app.get('/checkout/order/{table_id}')
+def checkout_order_api(table_id: int):
+    return checkout.checkout_order(table_id)
 
-@app.get('/checkout/bill/{id}')
-def checkout_bill_api(id: int):
-    return checkout.checkout_bill(id)
+@app.get('/checkout/bill/{table_id}')
+def checkout_bill_api(table_id: int):
+    return checkout.checkout_bill(table_id)
 
 @app.post('/checkout/bill/tips')
 def checkout_bill_tips_api(reqbody: Tip):

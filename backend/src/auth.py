@@ -4,8 +4,8 @@ The `auth` module provides functionalites for authentication and authorisation r
 These features includes login and tokenised access, as well as user
 management for the manager
 '''
+import re
 import firebase
-import re   
 from firebase_admin import auth as fb_auth, credentials, initialize_app
 from src.error import InputError, AccessError
 
@@ -17,12 +17,12 @@ class Auth:
     KITCHENSTAFF_EMAIL = 'kitchenstaff@waitmate.com'
     MANAGER_EMAIL= 'manager@waitmate.com'
     PASSWORD = 'waitmate1'
-    EMAIL_CHECK = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'  
+    EMAIL_CHECK = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 
     def __init__(self):
         cred = credentials.Certificate("./src/waitmate-ba463-firebase-adminsdk-ea5im-72b77a7f6f.json")
         self.fb = initialize_app(cred)
-        firebaseConfig = { 
+        firebase_config = {
             'apiKey': 'AIzaSyDNdgqTGOb5nrj1-0EMr4bNcoaGpcpxk98',
             'authDomain': 'waitmate-ba463.firebaseapp.com',
             'projectId': 'waitmate-ba463',
@@ -32,8 +32,8 @@ class Auth:
             'measurementId': 'G-NR03X95M2H',
             'databaseURL': ''
         }
-        pb = firebase.initialize_app(firebaseConfig)
-        self.auth = pb.auth()
+        firebase_app = firebase.initialize_app(firebase_config)
+        self.auth = firebase_app.auth()
 
     def create_restaurant(self):
         user = fb_auth.create_user(
@@ -71,8 +71,8 @@ class Auth:
         if not email or not password:
             raise InputError('Enter your email and password')
         try:
-            user = self.auth.sign_in_with_email_and_password(email, password)            
-            print('Successfully logged in: manager')    
+            user = self.auth.sign_in_with_email_and_password(email, password)
+            print('Successfully logged in: manager')
 
             return {'token': user['idToken']}
         except:
@@ -85,14 +85,14 @@ class Auth:
         email: str = WAITSTAFF_EMAIL if is_waitstaff else KITCHENSTAFF_EMAIL
         print(email)
         try:
-            user = self.auth.sign_in_with_email_and_password(email, password)            
-            print('Successfully logged in: waitstaff')    
+            user = self.auth.sign_in_with_email_and_password(email, password)
+            print('Successfully logged in: waitstaff')
 
             return {'token': user['idToken']}
         except:
             raise AccessError('Invalid password')
 
-    def is_authenticated(self, token):
+    def is_authenticated(self, token: str):
         try:
             user = fb_auth.verify_id_token(token)
             print('User is authenticated')
@@ -141,7 +141,7 @@ class Auth:
         print("Printing users:")
 
         for user in fb_auth.list_users().iterate_all():
-            print('User: ' + user.uid + ' ' + user.email)    
+            print('User: ' + user.uid + ' ' + user.email)
 
 
 auth = Auth()
