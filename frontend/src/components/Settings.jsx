@@ -249,7 +249,7 @@ const Settings = () => {
 
             <Grid item xs={2}>
               <Box display='flex' justifyContent='flex-end'>
-                <LoginButton sx={{height: '6vh'}} onClick={handleLogoutSubmit}>
+                <LoginButton sx={{}} onClick={handleLogoutSubmit}>
                   Logout
                 </LoginButton>
               </Box>
@@ -262,42 +262,65 @@ const Settings = () => {
     <Box
       justifyContent="center"
       sx={{ 
-        px: 5,
+        pt: 6,
+        pr: 2,
+        pl: 4,
         minWidth: 40,
         display: 'flex',
-        flexDirection: 'column', }}
-    >
+        flexDirection: 'column', 
+      }}>
       <Divider textAlign="left" sx={{ mb: 2 }}>
         <Typography variant="h5">User Managerment</Typography>
       </Divider>
-      <CssTextField type="password" label="Set waitstaff password" 
-        onChange={handlewaitstaffPasswordChange}
-        sx={{ mb: 2 }}/>
-      <LoginButton disabled={!(waitstaffPassword.length > 5)} 
-        onClick={handleWaitstaffPasswordSubmit} 
-        sx={{ mb: 2 }}
-      >
-        Save
-      </LoginButton>
-    
-      <CssTextField type="password" label="Set kitchenstaff password" 
-        onChange={handlekitchenstaffPasswordChange}
-        sx={{ mb: 2 }}/>
-      <LoginButton disabled={!(kitchenstaffPassword.length > 5)} 
-        onClick={handleKitchenstaffPasswordSubmit} 
-        sx={{ mb: 2 }}>
-          Save
-      </LoginButton>
 
-      <Divider textAlign="left" sx={{ mt: 2, mb: 2 }}>
+      <Grid container direction="row" spacing={2}>
+        <Grid item xs={10} sx={{mb: 2}}>
+          <CssTextField fullWidth type="password" label="Set waitstaff password" 
+            onChange={handlewaitstaffPasswordChange} sx={{pt: 0.2}}
+            />
+        </Grid>
+        <Grid item xs={2}>
+          <LoginButton disabled={!(waitstaffPassword.length > 5)} 
+            onClick={handleWaitstaffPasswordSubmit} 
+            sx={{  height: '7.5vh', width: 1 }}
+          >
+            Save
+          </LoginButton>
+        </Grid>
+      </Grid>
+
+      <Grid container direction="row" spacing={2}>
+        <Grid item xs={10}>
+          <CssTextField fullWidth type="password" label="Set kitchenstaff password"  
+            onChange={handlekitchenstaffPasswordChange}
+            sx={{ mb: 2, pt: 0.2 }}/>
+        </Grid>
+        <Grid item xs={2}>
+          <LoginButton disabled={!(kitchenstaffPassword.length > 5)}  
+            onClick={handleKitchenstaffPasswordSubmit} 
+            sx={{ height: '7.5vh', width: 1 }}>
+              Save
+          </LoginButton>
+        </Grid>
+      </Grid>
+
+
+      <Divider textAlign="left" sx={{ mt: 6, mb: 2 }}>
         <Typography variant="h5">Manage Account</Typography>
       </Divider>
+      <Grid container direction="row" spacing={2}>
+        <Grid item xs={10}>
+          <CssTextField fullWidth label="Set new email" onChange={handlEmailChange}
+            sx={{ mb: 2, pt: 0.2 }}/>
+        </Grid>
+        <Grid item xs={2}>
+          <LoginButton disabled={!email} sx={{ height: '7.5vh', width: 1 }} onClick={handleEmailSubmit}>
+            Save
+          </LoginButton>
+        </Grid>
+      </Grid>
 
-      <CssTextField label="Set new email" onChange={handlEmailChange}
-        sx={{ mb: 2 }}/>
-      <LoginButton disabled={!email} sx={{ mb: 2 }} onClick={handleEmailSubmit}>
-        Save
-      </LoginButton>
+
       <LoginButton sx={{ mb: 2 }} onClick={handlePasswordSubmit}>
         Send password reset 
       </LoginButton>
