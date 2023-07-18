@@ -25,7 +25,7 @@ class Checkout:
 
         return ret
 
-    def checkout_bill(self, table_id: int) -> dict:
+    def checkout_bill(self, table_id: int) -> int:
         if not check_table_exists(table_id, self.session):
             raise InputError('The table_id does not refer to a valid table')
 
@@ -55,11 +55,10 @@ class Checkout:
             if 'tip' in bill:
                 bill['total'] += bill['tip']
 
-            return bill
+            return bill['total']
         except Exception as e:
             print(f"Error occurred: {str(e)}")
             return {}
-        
         finally:
             self.session.close()
 

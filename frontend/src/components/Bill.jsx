@@ -13,14 +13,14 @@ import TableCell from '@mui/material/TableCell';
 import WestIcon from '@mui/icons-material/West';
 
 const Bill = () => {
-  let [orders, setBill] = useState([])
+  let [orders, setOrders] = useState([])
   let [total, setTotal] = useState([])
+
   const id = useParams();
   const coupon = new URLSearchParams(window.location.search).get('coupon');
   const tips = new URLSearchParams(window.location.search).get('tips');
-  let amount = "$10"
 
-  let getBill = async () => {
+  let getItems = async () => {
     let response = await fetch(`http://localhost:8000/order/cart/list?table_id=${id.id}`)
     let data = await response.json()
     let order_list = []
@@ -28,17 +28,35 @@ const Bill = () => {
       console.log(i)
       order_list.push({name: i[0], amount: i[1], cost: i[4]})
     }
-    setBill(order_list)
+    setOrders(order_list)
   }
 
   let getTotal = async () => {
-    let response = await fetch(`http://localhost:8000/checkout/bill/${id.id}`)
-    let data = await response.json()
-    setTotal(data)
+    if (orders.length === 0) {
+      return;
+    }
+
+    await fetch(`http://localhost:8000/checkout/bill/${id.id}`, {
+    }).then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('Failed to view bill. Please try again.');
+      }
+    }).then((data) => {
+      if (data === null) {
+        return;
+      }
+      console.log(data)
+      setTotal(data);
+    }).catch(error => {
+      console.log(error);
+      alert(error);
+    })    
   }
 
   useEffect(() => {
-    getBill()
+    getItems()
     getTotal()
   }, [])
 

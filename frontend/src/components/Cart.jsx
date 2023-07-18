@@ -117,6 +117,7 @@ const Cart = () => {
       }
       setCouponSubmitted(true);
      } ).catch(e => {
+      console.log(error);
       alert(e);
     })
   }
@@ -246,15 +247,9 @@ const Cart = () => {
                             label='Enter NUMBERS Only'
                             value={coupon}
                             onChange={handleCouponInput}
-                            helperText={error && 'Invalid input: must be a number'}
                             size='small'
                             margin='normal'
-                            type='number'
                             fullWidth
-                            inputProps={{
-                              step: '1',
-                              min: '1',
-                            }}
                           />
                           <Button variant='contained' color='primary' onClick={handleCouponSubmit} style={SmallbuttonStyle}>
                             Submit
