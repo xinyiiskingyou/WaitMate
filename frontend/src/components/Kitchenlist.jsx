@@ -74,7 +74,10 @@ const Kitchenlist = () => {
 
     await fetch('http://localhost:8000/track/kitchen/mark', {
       method: 'PUT',
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cookies.token}`
+      },  
       body: JSON.stringify({"order_req": order_payload, "table_req": table_payload}),
     }).then(response => {
       if (response.ok) {
