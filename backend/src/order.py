@@ -6,10 +6,10 @@ including adding orders, retrieving orders etc.
 '''
 
 import datetime
+from typing import Any, List
 from sqlalchemy import MetaData, Table, create_engine, and_
 from sqlalchemy.orm import sessionmaker
-from typing import Any, List
-from constant import DB_PATH, DB_PATH
+from constant import DB_PATH, INVALID_TABLE_MSG
 from src.db_model import Orders
 from src.error import InputError
 from src.helper import check_table_exists, check_item_exists, get_order
@@ -25,8 +25,8 @@ class OrderDB:
         # create orders table
         Orders.__table__.create(bind=self.engine, checkfirst=True)
 
-        Session = sessionmaker(bind=self.engine)
-        self.session = Session()
+        session_maker = sessionmaker(bind=self.engine)
+        self.session = session_maker()
 
     def add_order(self, table_id: int, item_name: str, amount: int) -> None:
         '''
@@ -46,7 +46,7 @@ class OrderDB:
 
         # check if the table_id is valid
         if not check_table_exists(table_id, self.session):
-            raise InputError('The table_id does not refer to a valid table')
+            raise InputError(INVALID_TABLE_MSG)
 
         # check if item name is valid
         if not check_item_exists(item_name.lower(), self.session):
@@ -69,9 +69,9 @@ class OrderDB:
             )
             self.session.add(new_order)
             self.session.commit()
-        except Exception as e:
+        except Exception as error:
             self.session.rollback()
-            raise InputError(f"Error occurred: {str(e)}")
+            raise InputError(f'Error occurred: {str(error)}') from error
         finally:
             self.session.close()
 
@@ -102,22 +102,22 @@ class OrderDB:
 
         try:
             query = (
-                self.session.query(Orders.timestamp, Orders.table_id, Orders.item_name, Orders.amount)
+                self.session.query(Orders.timestamp, Orders.table_id,
+                                   Orders.item_name, Orders.amount, Orders.is_prepared)
                 .filter(and_(Orders.is_prepared == 0, Orders.is_served == 0))
                 .order_by(Orders.timestamp)
                 .all()
             )
-            order_list = [(timestamp, table_id, item_name, amount) for timestamp, table_id, item_name, amount in query]
-            return order_list
-        except Exception as e:
+            return [tuple(row) for row in query]
+        except Exception as error:
             self.session.rollback()
-            raise InputError(f"Error occurred: {str(e)}")
+            raise InputError(f'Error occurred: {str(error)}') from error
         finally:
             self.session.close()
 
     def clear_order_table(self) -> None:
         '''
-        Resets all the data of the order database.
+        Resets all the data of the order table.
 
         Arguments:
             N/A

@@ -56,7 +56,6 @@ const Kitchenlist = () => {
     let order_list = []
 
     for (var i of data) {
-      console.log(i)
       order_list.push({time: i[0], tablenum: i[1], name: i[2], amount: i[3], state: i[4] === 0 ? "preparing" : "ready"})
     }
     setKitchen(order_list)

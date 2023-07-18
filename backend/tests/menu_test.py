@@ -7,7 +7,7 @@ from tests.conftest import VALID, INPUTERROR, ACCESSERROR
 menu = MenuDB()
 
 def menu_1():
-    menu.clear_tables_data()
+    menu.clear_data()
 
     menu.category_add('Fish')
     menu.category_add('Water')

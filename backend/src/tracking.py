@@ -4,7 +4,7 @@ The `Tracking` module provides functionalites to tracking orders and managing th
 This module provides the Tracking class, which allows tracking orders and marking them as
 completed by different roles (such as kitchen and waitstaff).
 '''
-
+import sqlalchemy.exc
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from constant import DB_PATH
@@ -18,8 +18,8 @@ class Tracking:
     '''
     def __init__(self) -> None:
         self.engine = create_engine(DB_PATH)
-        Session = sessionmaker(bind=self.engine)
-        self.session = Session()
+        session_maker = sessionmaker(bind=self.engine)
+        self.session = session_maker()
 
     def customer_view_dish_status(self, table_id: int) -> list:
         '''
@@ -50,7 +50,7 @@ class Tracking:
         Return Value:
             N/A
         '''
-        self.mark_order_completed(table_id, item_name, "is_prepared")
+        self._mark_order_completed(table_id, item_name, "is_prepared")
 
     def waitstaff_mark_order_completed(self, table_id: int, item_name: str) -> None:
         '''
@@ -64,9 +64,9 @@ class Tracking:
         Return Value:
             N/A
         '''
-        self.mark_order_completed(table_id, item_name, "is_served")
+        self._mark_order_completed(table_id, item_name, "is_served")
 
-    def mark_order_completed(self, table_id: int, item_name: str, column_name: str) -> None:
+    def _mark_order_completed(self, table_id: int, item_name: str, column_name: str) -> None:
         '''
         Helper function to mark the order as completed.
 
@@ -97,28 +97,34 @@ class Tracking:
             raise AccessError("Nothing to mark")
 
         # mark item to be served
-        for order in table_order:
-            value = order[2] if column_name == "is_prepared" else order[3]
-            if order[0] == item_name and value != 1:
-                # waitstaff cannot update the dish status unless it's ready to be served
-                if column_name == "is_served" and order[2] != 1:
-                    raise AccessError("Dish is not ready!")
-                try:
-                    # Use a subquery to get the specific row that needs to be updated
-                    subquery = (
-                        self.session.query(Orders.id)
-                        .filter(Orders.table_id == table_id, Orders.item_name == item_name, getattr(Orders, column_name) != 1)
-                        .limit(1)
-                        .scalar_subquery()
-                    )
+        try:
+            self._update_item_status(table_order, table_id, item_name, column_name)
+            self.session.commit()
+        except sqlalchemy.exc.SQLAlchemyError as err:
+            self.session.rollback()
+            raise InputError(f"Database error occurred: {str(err)}") from err
+        finally:
+            self.session.close()
 
-                    self.session.query(Orders) \
-                        .filter(Orders.id == subquery) \
-                        .update({getattr(Orders, column_name): 1}, synchronize_session=False)
-                    self.session.commit()
-                except Exception as e:
-                    self.session.rollback()
-                    print(f"Error occurred: {str(e)}")
-                finally:
-                    self.session.close()
-                    break
+    def _update_item_status(self, orders: list, table_id: int, item_name: str, column: str) -> None:
+        '''
+        Helper function to update status
+        '''
+        for order in orders:
+            value = order[2] if column == "is_prepared" else order[3]
+            if order[0] == item_name and value != 1:
+                if column == "is_served" and order[2] != 1:
+                    raise AccessError("Dish is not ready!")
+
+                subquery = (
+                    self.session.query(Orders.id)
+                    .filter(Orders.table_id == table_id, Orders.item_name == item_name,
+                            getattr(Orders, column) != 1)
+                    .limit(1)
+                    .scalar_subquery()
+                )
+
+                self.session.query(Orders) \
+                    .filter(Orders.id == subquery) \
+                    .update({getattr(Orders, column): 1}, synchronize_session=False)
+                break

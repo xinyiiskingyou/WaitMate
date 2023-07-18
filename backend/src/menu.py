@@ -6,11 +6,9 @@ updating item details and order, retrieving categories and items, and
 removing menu items.
 '''
 
-from sqlalchemy import (
-    MetaData, Table, create_engine, select, update, delete, func
-)
+from sqlalchemy import MetaData, Table, create_engine, select, update, delete
 from sqlalchemy.orm import sessionmaker
-from constant import DB_PATH
+from constant import DB_PATH, INVALID_LENGTH_MSG, INVALID_NAME_MSG, INVALID_ORDER_MSG
 from src.db_model import Categories, Items
 from src.error import InputError, AccessError, NotFoundError
 from src.helper import check_category_exists, check_item_exists, check_categories_key_is_valid
@@ -27,8 +25,8 @@ class MenuDB:
         Categories.__table__.create(bind=self.engine, checkfirst=True)
         Items.__table__.create(bind=self.engine, checkfirst=True)
 
-        Session = sessionmaker(bind=self.engine)
-        self.session = Session()
+        session_maker = sessionmaker(bind=self.engine)
+        self.session = session_maker()
 
     def category_add(self, name: str) -> None:
         '''
@@ -45,7 +43,7 @@ class MenuDB:
 
         # check if the name length is valid
         if len(name) < 1 or len(name) > 15:
-            raise InputError('Invalid name length')
+            raise InputError(INVALID_LENGTH_MSG)
 
         # check if the name exists
         if check_category_exists(name, self.session):
@@ -60,9 +58,9 @@ class MenuDB:
             # update order
             new_cat.cat_order = new_cat.cat_id
             self.session.commit()
-        except Exception as e:
+        except Exception as error:
             self.session.rollback()
-            raise InputError(f"Error occurred: {str(e)}")
+            raise InputError(f'Error occurred: {str(error)}') from error
         finally:
             self.session.close()
 
@@ -91,21 +89,21 @@ class MenuDB:
             ingredients = item_data['ingredients']
             is_vegan = item_data['is_vegan']
         except KeyError as err:
-            raise InputError(f"Missing field in item_data: {err.args[0]}")
+            raise InputError(f"Missing field in item_data: {err.args[0]}") from err
 
         # check if the category exists
         if not check_category_exists(category.lower(), self.session):
             raise InputError('Invalid category')
-        
+
         # check if the name length is valid
         if len(name) < 1 or len(name) > 15:
-            raise InputError('Invalid name length')
-        
+            raise InputError(INVALID_LENGTH_MSG)
+
         # check if the item name exists in the same category
         if check_item_exists(name.lower(), self.session):
-            raise AccessError('Name already used')
+            raise AccessError(INVALID_NAME_MSG)
 
-        try: 
+        try:
             # insert new item to the Items table
             new_item = Items(
                 name=name,
@@ -119,20 +117,20 @@ class MenuDB:
             self.session.commit()
 
             order = (
-                self.session.query(func.count())
+                self.session.query(Items)
                 .filter(Items.category_name == category, Items.name.isnot(None))
-                .scalar()
+                .count()
             )
             stmt = (
                 update(Items)
                 .where(Items.name == name)
                 .values(item_order = order)
-            ) 
+            )
             self.session.execute(stmt)
             self.session.commit()
-        except Exception as e:
+        except Exception as error:
             self.session.rollback()
-            raise InputError(f"Error occurred: {str(e)}")
+            raise InputError(f'Error occurred: {str(error)}') from error
         finally:
             self.session.close()
 
@@ -151,11 +149,10 @@ class MenuDB:
         try:
             query = select(Categories.cat_order, Categories.name).order_by(Categories.cat_order)
             results = self.session.execute(query).fetchall()
-            categories_dict = {cat_order: name for cat_order, name in results}
-            return categories_dict
-        except Exception as e:
+            return dict(results)
+        except Exception as error:
             self.session.rollback()
-            raise InputError(f"Error occurred: {str(e)}")
+            raise InputError(f'Error occurred: {str(error)}') from error
         finally:
             self.session.close()
 
@@ -190,9 +187,9 @@ class MenuDB:
                 item_dict = {column: getattr(data, column) for column in columns}
                 items.append(item_dict)
             return items
-        except Exception as e:
+        except Exception as error:
             self.session.rollback()
-            raise InputError(f"Error occurred: {str(e)}")
+            raise InputError(f'Error occurred: {str(error)}') from error
         finally:
             self.session.close()
 
@@ -229,10 +226,10 @@ class MenuDB:
         if new_name is not None:
             # invalid name length
             if len(new_name) < 1 or len(new_name) > 15:
-                raise InputError('Invalid name length')
+                raise InputError(INVALID_LENGTH_MSG)
             # item name is used by another item
             if check_item_exists(new_name, self.session) and old_name.lower() != new_name.lower():
-                raise InputError('Name already used')
+                raise InputError(INVALID_NAME_MSG)
 
         try:
             # update detail in Items table
@@ -250,9 +247,9 @@ class MenuDB:
             )
             self.session.execute(update_query)
             self.session.commit()
-        except Exception as e:
+        except Exception as error:
             self.session.rollback()
-            raise InputError(f"Error occurred: {str(e)}")
+            raise InputError(f'Error occurred: {str(error)}') from error
         finally:
             self.session.close()
 
@@ -276,25 +273,25 @@ class MenuDB:
             return
         # length is not between 1 to 15
         if len(new_name) < 1 or len(new_name) > 15:
-            raise InputError('Invalid name length')
+            raise InputError(INVALID_LENGTH_MSG)
         # old category name not exists
         if not check_category_exists(old_name.lower(), self.session):
             raise InputError('Name not found')
         # new category name exists
         if old_name != new_name and check_category_exists(new_name.lower(), self.session):
-            raise InputError('Name already used')
+            raise InputError(INVALID_NAME_MSG)
 
         try:
             stmt = (
                 update(Categories)
                 .where(Categories.name == old_name)
                 .values(name = new_name)
-            ) 
+            )
             self.session.execute(stmt)
             self.session.commit()
-        except Exception as e:
+        except Exception as error:
             self.session.rollback()
-            raise InputError(f"Error occurred: {str(e)}")
+            raise InputError(f'Error occurred: {str(error)}') from error
         finally:
             self.session.close()
 
@@ -313,13 +310,13 @@ class MenuDB:
         # check if an item exists
         if not check_item_exists(item_name.lower(), self.session):
             raise InputError('Invalid name')
-        
+
         try:
             self.session.execute(delete(Items).where(Items.name==item_name))
             self.session.commit()
-        except Exception as e:
+        except Exception as error:
             self.session.rollback()
-            raise InputError(f"Error occurred: {str(e)}")
+            raise InputError(f'Error occurred: {str(error)}') from error
         finally:
             self.session.close()
 
@@ -339,7 +336,7 @@ class MenuDB:
         # check if item exists
         if not check_item_exists(item_name.lower(), self.session):
             raise InputError('Invalid name')
-        
+
         prev_order = self.session.query(Items.item_order).filter_by(name=item_name).scalar()
 
         # get item count in a category
@@ -348,23 +345,33 @@ class MenuDB:
 
         # if item is the last one in the category
         if prev_order + 1 > total_count and not is_up:
-            raise InputError('Invalid order')
+            raise InputError(INVALID_ORDER_MSG)
 
         # the first item of the table cannot move up
         if prev_order == 1 and is_up:
-            raise InputError('Invalid order')
+            raise InputError(INVALID_ORDER_MSG)
 
         new_order = prev_order - 1 if is_up else prev_order + 1
 
         try:
-            row1 = self.session.query(Items).where(Items.category_name==cat_name).filter_by(item_order=prev_order).one()
-            row2 = self.session.query(Items).where(Items.category_name==cat_name).filter_by(item_order=new_order).one()
+            row1 = (
+                self.session.query(Items)
+                .where(Items.category_name == cat_name)
+                .filter_by(item_order=prev_order)
+                .one()
+            )
+
+            row2 = (
+                self.session.query(Items)
+                .where(Items.category_name==cat_name)
+                .filter_by(item_order=new_order).one()
+            )
             row1.item_order, row2.item_order = row2.item_order, row1.item_order
 
             self.session.commit()
-        except Exception as e:
+        except Exception as error:
             self.session.rollback()
-            raise InputError(f"Error occurred: {str(e)}")
+            raise InputError(f'Error occurred: {str(error)}') from error
         finally:
             self.session.close()
 
@@ -392,11 +399,11 @@ class MenuDB:
 
         # the last item of the database cannot move down
         if prev_order + 1 > total_count and not is_up:
-            raise InputError('Invalid order')
+            raise InputError(INVALID_ORDER_MSG)
 
          # the first item of the table cannot move up
         if prev_order == 1 and is_up:
-            raise InputError('Invalid order')
+            raise InputError(INVALID_ORDER_MSG)
 
         new_order = prev_order - 1 if is_up else prev_order + 1
 
@@ -405,15 +412,17 @@ class MenuDB:
             row1 = self.session.query(Categories).filter_by(cat_order=prev_order).one()
             row2 = self.session.query(Categories).filter_by(cat_order=new_order).one()
             row1.cat_order, row2.cat_order = row2.cat_order, row1.cat_order
-
             self.session.commit()
-        except Exception as e:
+        except Exception as error:
             self.session.rollback()
-            raise InputError(f"Error occurred: {str(e)}")
+            raise InputError(f'Error occurred: {str(error)}') from error
         finally:
             self.session.close()
 
-    def clear_tables_data(self):
+    def clear_data(self):
+        '''
+        Helper function to clear table data.
+        '''
         metadata = MetaData()
         items_table = Table('Items', metadata, autoload_with=self.engine)
         cat_table = Table('Categories', metadata, autoload_with=self.engine)
@@ -426,12 +435,18 @@ class MenuDB:
             conn.execute(delete_query)
 
     def _get_item_in_category(self, item_order: int, category_name: str):
-
+        '''
+        Helper function to get item by index in a category.
+        '''
         try:
-            query = select(Items.name).where(Items.category_name.ilike(category_name)).where(Items.item_order==item_order)
+            query = (
+                select(Items.name)
+                .where(Items.category_name.ilike(category_name))
+                .where(Items.item_order==item_order)
+            )
             result = self.session.execute(query).fetchone()
-        except Exception:
-            raise NotFoundError('Database not found.')
+        except Exception as error:
+            raise NotFoundError('Database not found.') from error
         finally:
             self.session.close()
 

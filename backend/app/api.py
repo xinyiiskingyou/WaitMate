@@ -209,7 +209,7 @@ def auth_restart_api(user: dict = Depends(get_current_user)):
     auth.is_authorized(['manager'], user['user'])
     auth.delete_all()
     checkout.clear_data()
-    menu.clear_tables_data()
+    menu.clear_data()
     order.clear_order_table()
     return {}
 

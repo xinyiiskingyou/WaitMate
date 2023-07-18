@@ -13,12 +13,14 @@ import TableCell from '@mui/material/TableCell';
 import WestIcon from '@mui/icons-material/West';
 
 const Bill = () => {
-  let [orders, setBill] = useState([])
-  const id = useParams();
-  const tips = new URLSearchParams(window.location.search).get('tips');
-  let amount = "$10"
+  let [orders, setOrders] = useState([])
+  let [total, setTotal] = useState(0)
 
-  let getBill = async () => {
+  const id = useParams();
+  const coupon = new URLSearchParams(window.location.search).get('coupon');
+  const tips = new URLSearchParams(window.location.search).get('tips');
+
+  let getItems = async () => {
     let response = await fetch(`http://localhost:8000/order/cart/list?table_id=${id.id}`)
     let data = await response.json()
     let order_list = []
@@ -26,11 +28,35 @@ const Bill = () => {
       console.log(i)
       order_list.push({name: i[0], amount: i[1], cost: i[4]})
     }
-    setBill(order_list)
+    setOrders(order_list)
+  }
+
+  let getTotal = async () => {
+    console.log('Fetching total...')
+
+    if (!orders) {
+      return;
+    }
+
+    await fetch(`http://localhost:8000/checkout/bill/${id.id}`, {
+    }).then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('Failed to view bill. Please try again.');
+      }
+    }).then((data) => {
+      console.log('total', data)
+      setTotal(data);
+    }).catch(error => {
+      console.log(error);
+      alert(error);
+    })    
   }
 
   useEffect(() => {
-    getBill()
+    getItems()
+    getTotal()
   }, [])
 
   return (
@@ -109,7 +135,7 @@ const Bill = () => {
                     </TableRow>
                   ))}
                 <TableRow>
-                  <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
+                  {/* <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
                     Subtotal
                   </TableCell>
                   <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -5}}>  
@@ -118,14 +144,14 @@ const Bill = () => {
                     {amount}
                   </TableCell>         
                 </TableRow>
-                <TableRow>
+                <TableRow> */}
                   <TableCell style={{ width: '20%', textAlign: 'center', fontWeight: 'bold' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
-                    Voucher
+                    Coupon
                   </TableCell>
                   <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -5}}>  
                   </TableCell>
                   <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pl: 10}}>
-                    -{amount}
+                    -${coupon}
                   </TableCell>         
                 </TableRow>
                 <TableRow>
@@ -145,7 +171,7 @@ const Bill = () => {
                   <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -5}}>  
                   </TableCell>
                   <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pl: 10}}>
-                    {amount}
+                    ${total}
                   </TableCell>         
                 </TableRow>
                 <TableRow>
