@@ -58,7 +58,7 @@ class Checkout:
             return bill['total']
         except Exception as e:
             print(f"Error occurred: {str(e)}")
-            return {}
+            return 0
         finally:
             self.session.close()
 

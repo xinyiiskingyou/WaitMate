@@ -14,7 +14,7 @@ import WestIcon from '@mui/icons-material/West';
 
 const Bill = () => {
   let [orders, setOrders] = useState([])
-  let [total, setTotal] = useState([])
+  let [total, setTotal] = useState(0)
 
   const id = useParams();
   const coupon = new URLSearchParams(window.location.search).get('coupon');
@@ -32,7 +32,9 @@ const Bill = () => {
   }
 
   let getTotal = async () => {
-    if (orders.length === 0) {
+    console.log('Fetching total...')
+
+    if (!orders) {
       return;
     }
 
@@ -44,10 +46,7 @@ const Bill = () => {
         throw new Error('Failed to view bill. Please try again.');
       }
     }).then((data) => {
-      if (data === null) {
-        return;
-      }
-      console.log(data)
+      console.log('total', data)
       setTotal(data);
     }).catch(error => {
       console.log(error);

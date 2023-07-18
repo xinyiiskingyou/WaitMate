@@ -40,7 +40,7 @@ const Cart = () => {
   let [value, setValue] = useState(null);
   let [error, setError] = useState(false);
   let [orders, setOrder] = useState([])
-  let [tips, setTips] = useState('')
+  let [tips, setTips] = useState(0)
   let [tipsSubmitted, setTipsSubmitted] = useState('')
   let [coupon, setCoupon] = useState('')
   let [couponSubmitted, setCouponSubmitted] = useState('')
