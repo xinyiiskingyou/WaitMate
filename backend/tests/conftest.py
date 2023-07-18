@@ -81,8 +81,17 @@ def menu_japanese():
         'ingredients': '_',
         'is_vegan': False
     })
+    
+    menu.item_add({
+        'category': 'Japanese',
+        'name': 'tempura',
+        'cost': 7,
+        'description': '_',
+        'ingredients': '_',
+        'is_vegan': False
+    })
 
-    return ['salmon sushi', 'dorayaki']
+    return ['salmon sushi', 'dorayaki', 'tempura']
 
 @pytest.fixture
 def order_japanese(menu_japanese, table_id_1):
@@ -94,9 +103,8 @@ def order_japanese(menu_japanese, table_id_1):
 @pytest.fixture
 def empty():
     order.clear_order_table()
-    menu.clear_tables_data()
+    menu.clear_data()
     table.clear_tables_data()
-
 
 @pytest.fixture
 def restart_auth():

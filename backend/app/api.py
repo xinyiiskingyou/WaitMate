@@ -215,10 +215,6 @@ def auth_restart_api(user: dict = Depends(get_current_user)):
 
 ############ TRACKING #################
 
-@app.get('/track/customer/dish')
-def track_dish_status(table_id: int):
-    return track.customer_view_dish_status(table_id)
-
 @app.put('/track/kitchen/mark')
 def track_kitchen_order(order_req: Order, table_req: Table, user: dict = Depends(get_current_user)):
     auth.is_authorized(['kitchenstaff'], user['user'])

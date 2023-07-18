@@ -21,23 +21,6 @@ class Tracking:
         session_maker = sessionmaker(bind=self.engine)
         self.session = session_maker()
 
-    def customer_view_dish_status(self, table_id: int) -> list:
-        '''
-        Retrieves the status of dishes for a given table.
-
-        Arguments:
-            <table_id>  (<int>)    - unique id of a table
-        Exceptions:
-            N/A
-        Return Value:
-           Return Value <list>: A list of tuples containing (item_name, is_prepared, is_served).
-        '''
-        order_list = get_order(table_id, self.session)
-        order_status = []
-        for order in order_list:
-            order_status.append((order[0], order[2], order[3]))
-        return order_status
-
     def kitchen_mark_order_completed(self, table_id: int, item_name: str) -> None:
         '''
         Marks a kitchen order as completed.

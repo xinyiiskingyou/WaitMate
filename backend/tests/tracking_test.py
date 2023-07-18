@@ -8,27 +8,20 @@ from tests.conftest import VALID, INPUTERROR
 track = Tracking()
 table = TableDB()
 order = OrderDB()
-    
-def test_customer_track_dish_invalid_id():
-    with pytest.raises(InputError):
-        track.customer_view_dish_status(100)
-    with pytest.raises(InputError):
-        track.customer_view_dish_status(-1)
-    with pytest.raises(InputError):
-        track.customer_view_dish_status(25)
 
 def test_customer_track_dish_valid(empty, menu_japanese, table_id_3):
     # add the item with the same name 3 times
-    
-    order.add_order(table_id_3, menu_japanese[1], 2)
-    order.add_order(table_id_3, menu_japanese[1], 1)
-    order.add_order(table_id_3, menu_japanese[1], 2)
+    order.clear_order_table()
 
-    res = track.customer_view_dish_status(3)
+    order.add_order(table_id_3, menu_japanese[2], 1)
+    order.add_order(table_id_3, menu_japanese[2], 1)
+    order.add_order(table_id_3, menu_japanese[2], 1)
+
+    res = order.get_table_order(3)
     assert len(res) == 3
-    assert res[0][0] == "dorayaki"
-    assert res[0][1] == 0
+    assert res[0][0] == "tempura"
     assert res[0][2] == 0
+    assert res[0][3] == 0
     
 def test_kitchen_mark_order_invalid_table_id():
     with pytest.raises(InputError):
@@ -46,15 +39,15 @@ def test_kitchen_mark_order_invalid_item(table_id_1):
     with pytest.raises(InputError):
         track.kitchen_mark_order_completed(table_id_1, "tuna sushi")
         
-def test_kitchen_mark_order_valid(table_id_3):
-    
-    track.kitchen_mark_order_completed(table_id_3, "dorayaki")
-    res = track.customer_view_dish_status(table_id_3)
+def test_kitchen_mark_order_valid(table_id_3, menu_japanese):
+
+    track.kitchen_mark_order_completed(table_id_3, menu_japanese[2])
+    res = order.get_table_order(table_id_3)
     assert len(res) == 3
-    assert res[0][1] == 1
+    assert res[0][2] == 1
     # the other item with the same name will not be marked
-    assert res[1][1] == 0
-    assert res[2][1] == 0
+    assert res[1][2] == 0
+    assert res[2][2] == 0
 
 def test_waitstaff_mark_order_invalid_item(table_id_1):
     with pytest.raises(InputError):
@@ -63,66 +56,49 @@ def test_waitstaff_mark_order_invalid_item(table_id_1):
         track.waitstaff_mark_order_completed(table_id_1, "")
     with pytest.raises(InputError):
         track.waitstaff_mark_order_completed(table_id_1, "tuna sushi")
-        
-def test_waitstaff_mark_order_valid(table_id_3):
-    
-    track.waitstaff_mark_order_completed(table_id_3, "dorayaki")
-    res = track.customer_view_dish_status(table_id_3)
-    assert res[0][0] == "dorayaki"
-    assert res[0][1] == 1
-    assert res[0][2] == 1
 
-def test_waitstaff_mark_order_invalid_status():
+def test_waitstaff_mark_order_invalid_status(table_id_3, menu_japanese):
+
+    track.waitstaff_mark_order_completed(table_id_3, menu_japanese[2])
     
     # if the waitstaff tries to mark an item that is not ready
     with pytest.raises(AccessError):
-        track.waitstaff_mark_order_completed(3, "dorayaki")
-        
-    res = track.customer_view_dish_status(3)
-    assert res[1][0] == "dorayaki"
-    assert res[1][1] == 0
-    assert res[1][2] == 0
-    
-def test_kitchen_mark_order_invalid_status():
-    
-    track.kitchen_mark_order_completed(3, "dorayaki")
-    track.kitchen_mark_order_completed(3, "dorayaki")
-    
-    res = track.customer_view_dish_status(3)
-    assert res[1][1] == 1
-    assert res[2][1] == 1
-    
-    # raise error if all the dorayaki is served
-    with pytest.raises(AccessError):
-        track.kitchen_mark_order_completed(3, "dorayaki")
+        track.waitstaff_mark_order_completed(table_id_3, menu_japanese[2])
 
-def test_waitstaff_mark_order_invalid_serve():
+def test_kitchen_mark_order_invalid_status(menu_japanese):
     
-    track.waitstaff_mark_order_completed(3, "dorayaki")
-    track.waitstaff_mark_order_completed(3, "dorayaki")
+    item = menu_japanese[2]
+    track.kitchen_mark_order_completed(3, item)
+    track.kitchen_mark_order_completed(3, item)
     
-    res = track.customer_view_dish_status(3)
+    res = order.get_table_order(3)
+
     assert res[1][2] == 1
     assert res[2][2] == 1
     
     # raise error if all the dorayaki is served
     with pytest.raises(AccessError):
-        track.waitstaff_mark_order_completed(3, "dorayaki")
+        track.kitchen_mark_order_completed(3, item)
+
+def test_waitstaff_mark_order_invalid_serve(menu_japanese):
+    
+    item = menu_japanese[2]
+    
+    track.waitstaff_mark_order_completed(3, item)
+    track.waitstaff_mark_order_completed(3, item)
+    
+    res = order.get_table_order(3)
+    assert res[1][3] == 1
+    assert res[2][3] == 1
+    
+    # raise error if all the dorayaki is served
+    with pytest.raises(AccessError):
+        track.waitstaff_mark_order_completed(3, item)
         
-
-# ######################################
-# ########## endpoint tests ############
-# ######################################
+######################################
+########## endpoint tests ############
+######################################
     
-def test_view_dish_status(client):
-    # valid
-    resp = client.get("/track/customer/dish", params={"table_id": 1})
-    assert resp.status_code == VALID
-    
-    # invalid id
-    resp = client.get("/track/customer/dish", params={ "table_id": 100 })
-    assert resp.status_code == INPUTERROR
-
 def test_kitchen_mark_order(client, kitchen_staff):
     # valid
     order.add_order(3, "salmon sushi", 2)
