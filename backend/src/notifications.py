@@ -7,10 +7,11 @@ from the kitchen.
 '''
 
 import datetime
+from typing import Any, List
+import sqlalchemy.exc
 from sqlalchemy import create_engine, update, and_
 from sqlalchemy.orm import sessionmaker
-from typing import Any, List
-from constant import DB_PATH, DB_PATH
+from constant import DB_PATH
 from src.db_model import Tables, Orders
 from src.helper import check_table_exists
 from src.error import InputError, NotFoundError
@@ -21,8 +22,8 @@ class Notifications:
     '''
     def __init__(self) -> None:
         self.engine = create_engine(DB_PATH)
-        Session = sessionmaker(bind=self.engine)
-        self.session = Session()
+        session_maker = sessionmaker(bind=self.engine)
+        self.session = session_maker()
 
     def customer_send_notification(self, table_id: int, status: str) -> None:
         '''
@@ -56,8 +57,8 @@ class Notifications:
             )
             self.session.execute(stmt)
             self.session.commit()
-        except Exception:
-            raise NotFoundError("Details not found")
+        except Exception as exc:
+            raise NotFoundError("Details not found") from exc
         finally:
             self.session.close()
 
@@ -80,10 +81,9 @@ class Notifications:
                 .order_by(Tables.req_time)
                 .all()
             )
-            order_list = [(table_id, status, req_time) for table_id, status, req_time in query]
-            return order_list
-        except Exception as e:
-            print(f"Error occurred: {str(e)}")
+            return [tuple(row) for row in query]
+        except sqlalchemy.exc.SQLAlchemyError as err:
+            print(f"Database error occurred: {str(err)}")
             return []
         finally:
             self.session.close()
@@ -107,11 +107,9 @@ class Notifications:
                 .order_by(Orders.table_id)
                 .all()
             )
-            order_list = [(table_id, item_name) for table_id, item_name in query]
-            return order_list
-        except Exception as e:
-            print(f"Error occurred: {str(e)}")
+            return [tuple(row) for row in query]
+        except sqlalchemy.exc.SQLAlchemyError as err:
+            print(f"Database error occurred: {str(err)}")
             return []
         finally:
             self.session.close()
-

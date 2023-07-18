@@ -33,7 +33,7 @@ def table_id_3():
 
 @pytest.fixture
 def menu_japanese():
-    menu.clear_tables_data()
+    menu.clear_data()
     menu.category_add('Japanese')
     menu.item_add({
         'category': 'Japanese',
