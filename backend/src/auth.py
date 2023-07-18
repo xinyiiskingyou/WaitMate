@@ -39,7 +39,7 @@ class Auth:
         user = fb_auth.create_user(
             email='manager@waitmate.com',
             email_verified=False,
-            password='waitmate1',
+            password=self.PASSWORD,
             display_name='Manager',
             disabled=False)
         fb_auth.set_custom_user_claims(user.uid, {'hasRole': 'manager'})
@@ -48,7 +48,7 @@ class Auth:
         user = fb_auth.create_user(
             email=self.WAITSTAFF_EMAIL,
             email_verified=False,
-            password='waitmate1',
+            password=self.PASSWORD,
             display_name='Waitstaff',
             disabled=False)
         fb_auth.set_custom_user_claims(user.uid, {'hasRole': 'waitstaff'})
@@ -57,7 +57,7 @@ class Auth:
         user = fb_auth.create_user(
             email=self.KITCHENSTAFF_EMAIL,
             email_verified=False,
-            password='waitmate1',
+            password=self.PASSWORD',
             display_name='Kitchenstaff',
             disabled=False)
         fb_auth.set_custom_user_claims(user.uid, {'hasRole': 'kitchenstaff'})
@@ -148,13 +148,6 @@ auth = Auth()
 
 if __name__ == '__main__':  
     auth_system = Auth()
-
-    # auth_system.print_all()
-
     token = auth_system.login_mananger('manager@waitmate.com', 'waitmate1')['token']
     auth_user = auth_system.is_authenticated(token)
     auth_system.is_authorized(['manager'], auth_user)
-
-    # auth_system.delete_all()
-
-    # auth_system.create_restaurant()
