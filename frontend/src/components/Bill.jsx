@@ -14,7 +14,9 @@ import WestIcon from '@mui/icons-material/West';
 
 const Bill = () => {
   let [orders, setBill] = useState([])
+  let [total, setTotal] = useState([])
   const id = useParams();
+  const coupon = new URLSearchParams(window.location.search).get('coupon');
   const tips = new URLSearchParams(window.location.search).get('tips');
   let amount = "$10"
 
@@ -29,8 +31,15 @@ const Bill = () => {
     setBill(order_list)
   }
 
+  let getTotal = async () => {
+    let response = await fetch(`http://localhost:8000/checkout/bill/${id.id}`)
+    let data = await response.json()
+    setTotal(data)
+  }
+
   useEffect(() => {
     getBill()
+    getTotal()
   }, [])
 
   return (
@@ -109,7 +118,7 @@ const Bill = () => {
                     </TableRow>
                   ))}
                 <TableRow>
-                  <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
+                  {/* <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
                     Subtotal
                   </TableCell>
                   <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -5}}>  
@@ -118,14 +127,14 @@ const Bill = () => {
                     {amount}
                   </TableCell>         
                 </TableRow>
-                <TableRow>
+                <TableRow> */}
                   <TableCell style={{ width: '20%', textAlign: 'center', fontWeight: 'bold' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
-                    Voucher
+                    Coupon
                   </TableCell>
                   <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -5}}>  
                   </TableCell>
                   <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pl: 10}}>
-                    -{amount}
+                    -${coupon}
                   </TableCell>         
                 </TableRow>
                 <TableRow>
@@ -145,7 +154,7 @@ const Bill = () => {
                   <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -5}}>  
                   </TableCell>
                   <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pl: 10}}>
-                    {amount}
+                    ${total}
                   </TableCell>         
                 </TableRow>
                 <TableRow>

@@ -42,11 +42,23 @@ const Cart = () => {
   let [orders, setOrder] = useState([])
   let [tips, setTips] = useState('')
   let [tipsSubmitted, setTipsSubmitted] = useState('')
+  let [coupon, setCoupon] = useState('')
+  let [couponSubmitted, setCouponSubmitted] = useState('')
   
   const billLink = `/Bill/${id.id}?tips=${tips}`
 
   const handleRequestBill = () => {
     navigate(billLink);
+  };
+
+  const handleCouponInput = (event) => {
+    const inputCoupon = event.target.value;
+    if (!isNaN(inputCoupon)) {
+      setCoupon(inputCoupon);
+      setError(false);
+    } else {
+      setError(true);
+    }
   };
 
   const handleInputChange = (event) => {
@@ -83,6 +95,30 @@ const Cart = () => {
       console.log(error);
       alert(error);
     })    
+  }
+
+  let handleCouponSubmit = async () => {
+    const payload = {
+      id: parseInt(id.id, 10),
+      amount: parseInt(tips, 10)
+    };
+
+    await fetch(`http://localhost:8000/checkout/bill/coupon`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+    .then((data) => {
+      console.log(data)
+      if (data === null) {
+        return;
+      }
+      setCouponSubmitted(true);
+     } ).catch(e => {
+      alert(e);
+    })
   }
     
   let handleTipsSubmit = async () => {
@@ -197,23 +233,35 @@ const Cart = () => {
 
                   <TableRow>
                       <TableCell style={{ width: '20%', textAlign: 'center', fontWeight: 'bold' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
-                        Voucher Code?
+                        Coupon Code?
                       </TableCell>
-                      <TextField
-                        required
-                        id="standard-required"
-                        label="Enter NUMBERS Only"
-                        value={value}
-                        // onChange={handleInputChange}
-                        helperText={error && 'Invalid input: must be a number'}
-                        size="small"
-                        margin= 'normal'
-                        type="number" 
-                        fullWidth
-                        inputProps={{
-                          step: "1",
-                          min: "1"
-                        }}/>  
+                      <TableCell style={{ width: '20%', textAlign: 'center' }}>
+                      {couponSubmitted ? (
+                        <Typography variant="body1">${coupon}</Typography>
+                      ) : (
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                          <TextField
+                            required
+                            id='standard-required'
+                            label='Enter NUMBERS Only'
+                            value={coupon}
+                            onChange={handleCouponInput}
+                            helperText={error && 'Invalid input: must be a number'}
+                            size='small'
+                            margin='normal'
+                            type='number'
+                            fullWidth
+                            inputProps={{
+                              step: '1',
+                              min: '1',
+                            }}
+                          />
+                          <Button variant='contained' color='primary' onClick={handleCouponSubmit} style={SmallbuttonStyle}>
+                            Submit
+                          </Button>
+                        </div>
+                      )}
+                    </TableCell>
                   </TableRow>
                   
                   <TableRow>
