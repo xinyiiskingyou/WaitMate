@@ -6,11 +6,13 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import enGB from 'date-fns/locale/en-GB';
 import { v4 as uuidv4 } from "uuid";
+import { useCookies } from 'react-cookie';
 
 const Coupon = () => {
   const drawWidth = 220;
   const [mobileViewOpen, setMobileViewOpen] = useState(false);
-  
+  const [cookies] = useCookies(['token']);
+
   const handleToggle = () => {
       setMobileViewOpen(!mobileViewOpen);
   };
@@ -44,13 +46,14 @@ const Coupon = () => {
     const date = expiryDate.toDateString();
     const payload = {
       code: code,
-      int: discount,
+      amount: discount,
       expiry: date,
     }
     fetch('http://localhost:8000/checkout/coupon/create', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cookies.token}`
       },
       body: JSON.stringify(payload),
     })
@@ -78,22 +81,22 @@ const Coupon = () => {
 
   useEffect(() => {
     fetchCoupons();
-
   }, []);
 
   const fetchCoupons = async () => {
     try {
-      const response = await fetch('http://localhost:8000/checkout/coupon/view');
+      const response = await fetch('http://localhost:8000/checkout/coupon/view', {
+        headers: {
+          'Content-Type': 'application/json', 
+          'Authorization': `Bearer ${cookies.token}`
+        },
+      });
       const data = await response.json();
-      console.log(data);
-      //let coupon_lst = []
-      //for (var i of data) {
-      //  coupon_lst.push({ table: i[0], status: i[1]})
-      //}
-      //setTable(data);
+      console.log('co', data);
       setCoupons(data);
     } catch (error) {
-      console.error('Error fetching categories:', error);
+      console.error('Error fetching coupons:', error);
+      alert(error)
     }
   };
 
@@ -104,7 +107,10 @@ const Coupon = () => {
     };
     fetch('http://localhost:8000/checkout/coupon/delete', {
       method: 'DELETE',
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json', 
+        'Authorization': `Bearer ${cookies.token}`
+      },
       body: JSON.stringify(payload),
     })
       .then(response => {
@@ -182,7 +188,7 @@ const Coupon = () => {
                             <Card key={coupon.code} style={{ marginTop: "20px" }}>
                               <CardContent>
                                 <h3>{coupon.code}</h3>
-                                <p>{coupon.int}% off</p>
+                                <p>${coupon.amount} off</p>
                                 <p>{coupon.expiry}</p>
                                 <Button variant='contained' style={{fontSize: "10px"}} onClick={() => handleRemove(coupon.code)}>Remove</Button>
                               </CardContent>
@@ -217,11 +223,16 @@ const Coupon = () => {
 
                 <TextField
                   label="Discount"
+                  type='number'
                   variant="outlined"
                   value={discount}
                   onChange={(e) => setDiscount(e.target.value)}
                   required
                   margin="normal"
+                  inputProps={{
+                    step: '0.05',
+                    min: '1',
+                  }}
                 />
                 <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enGB}>
                 <DatePicker
