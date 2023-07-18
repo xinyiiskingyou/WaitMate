@@ -53,12 +53,7 @@ const Cart = () => {
 
   const handleCouponInput = (event) => {
     const inputCoupon = event.target.value;
-    if (!isNaN(inputCoupon)) {
-      setCoupon(inputCoupon);
-      setError(false);
-    } else {
-      setError(true);
-    }
+    setCoupon(inputCoupon);
   };
 
   const handleInputChange = (event) => {
@@ -236,15 +231,15 @@ const Cart = () => {
                       <TableCell style={{ width: '20%', textAlign: 'center', fontWeight: 'bold' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
                         Coupon Code?
                       </TableCell>
-                      <TableCell style={{ width: '20%', textAlign: 'center' }}>
+                      <TableCell style={{ width: '20%', textAlign: 'center' }} sx={{borderBottom: 'none', pr: -10}}>
                       {couponSubmitted ? (
-                        <Typography variant="body1">${coupon}</Typography>
+                        <Typography variant="body1">{coupon}</Typography>
                       ) : (
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                           <TextField
                             required
                             id='standard-required'
-                            label='Enter NUMBERS Only'
+                            label='Enter your coupon code'
                             value={coupon}
                             onChange={handleCouponInput}
                             size='small'
@@ -264,7 +259,7 @@ const Cart = () => {
                       Tips?
                     </TableCell>
               
-                    <TableCell style={{ width: '20%', textAlign: 'center' }}>
+                    <TableCell style={{ width: '20%', textAlign: 'center' }} sx={{borderBottom: 'none', pr: -10}}>
                       {tipsSubmitted ? (
                         <Typography variant="body1">${tips}</Typography>
                       ) : (
