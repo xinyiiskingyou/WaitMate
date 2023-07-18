@@ -20,7 +20,7 @@ class Auth:
     EMAIL_CHECK = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 
     def __init__(self):
-        cred = credentials.Certificate("./src/waitmate-ba463-firebase-adminsdk-ea5im-72b77a7f6f.json")
+        cred = credentials.Certificate("./firebase/waitmate-ba463-firebase-adminsdk-ea5im-72b77a7f6f.json")
         self.fb = initialize_app(cred)
         firebase_config = {
             'apiKey': 'AIzaSyDNdgqTGOb5nrj1-0EMr4bNcoaGpcpxk98',
