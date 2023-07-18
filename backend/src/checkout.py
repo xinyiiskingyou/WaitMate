@@ -13,6 +13,7 @@ from src.error import InputError
 from src.db_model import Coupons, CheckoutDB
 from src.helper import get_order, check_table_exists
 
+
 class Checkout:
 
     def __init__(self) -> None:
