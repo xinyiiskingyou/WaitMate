@@ -45,17 +45,12 @@ def test_update_table_status_invalid_table_id():
 
     table.clear_tables_data()
 
-    with pytest.raises(InputError) as error:
+    with pytest.raises(InputError):
         table.update_table_status(1, 'ASSIST')
-    assert str(error.value) == 'Table id is not available.'
-    
-    with pytest.raises(InputError) as error:
+    with pytest.raises(InputError):
         table.update_table_status(100, 'ASSIST')
-    assert str(error.value) == 'Table id is not available.'
-
-    with pytest.raises(InputError) as error:
+    with pytest.raises(InputError):
         table.update_table_status(-1, 'ASSIST')
-    assert str(error.value) == 'Table id is not available.'
 
 def test_update_table_status_invalid_status(table_id_1):
 

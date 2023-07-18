@@ -11,7 +11,6 @@ from src.db_model import Tables
 from src.error import InputError
 from src.helper import check_table_exists
 from constant import DB_PATH, DEFAULT_TABLE_STATUS
-from src.helper import check_table_exists
 
 class TableDB():
     '''
@@ -23,8 +22,8 @@ class TableDB():
         # create table
         Tables.__table__.create(bind=self.engine, checkfirst=True)
 
-        Session = sessionmaker(bind=self.engine)
-        self.session = Session()
+        session_maker = sessionmaker(bind=self.engine)
+        self.session = session_maker()
 
     def select_table_number(self, table_id: int) -> int:
         '''
@@ -46,9 +45,9 @@ class TableDB():
             new_table = Tables(table_id=table_id, status=DEFAULT_TABLE_STATUS)
             self.session.add(new_table)
             self.session.commit()
-        except Exception as e:
+        except Exception as error:
             self.session.rollback()
-            raise InputError(f"Error occurred: {str(e)}")
+            raise InputError(f'Error occurred: {str(error)}') from error
         finally:
             self.session.close()
         return table_id
@@ -74,9 +73,9 @@ class TableDB():
             for item in rows:
                 table_dict[item[0]] = item[1]
             return table_dict
-        except Exception as e:
+        except Exception as error:
             self.session.rollback()
-            raise InputError(f"Error occurred: {str(e)}")
+            raise InputError(f'Error occurred: {str(error)}') from error
         finally:
             self.session.close()
 
@@ -110,16 +109,20 @@ class TableDB():
             )
             self.session.execute(stmt)
             self.session.commit()
-            
+
+            # delete table when the status is empty
             self.session.execute(delete(Tables).where(Tables.status == 'EMPTY'))
             self.session.commit()
-        except Exception as e:
+        except Exception as error:
             self.session.rollback()
-            raise InputError(f"Error occurred: {str(e)}")
+            raise InputError(f'Error occurred: {str(error)}') from error
         finally:
             self.session.close()
 
     def clear_tables_data(self):
+        '''
+        Clear table data.
+        '''
         metadata = MetaData()
         tables_table = Table('Tables', metadata, autoload_with=self.engine)
 

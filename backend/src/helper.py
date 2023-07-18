@@ -1,13 +1,14 @@
 from typing import Any, List
 from sqlalchemy import select
 from sqlalchemy.orm import Session
+from constant import INVALID_TABLE_MSG
 from src.db_model import Tables, Categories, Items, Orders
 from src.error import NotFoundError, InputError
 
 def check_table_exists(table_id: int, session: Session):
     # check if table number is valid
     if table_id is None or table_id < 0:
-        raise InputError('Table id is not available.')
+        raise InputError(INVALID_TABLE_MSG)
 
     try:
         result = session.query(Tables).filter_by(table_id=table_id).first()
@@ -55,7 +56,7 @@ def check_categories_key_is_valid(column: str, value: str, session: Session):
 def get_order(table_id: int, session: Session) -> List[Any]:
     
     if not check_table_exists(table_id, session):
-        raise InputError('The table_id does not refer to a valid table')
+        raise InputError(INVALID_TABLE_MSG)
 
     try:
         res = (
