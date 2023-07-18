@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
+import Button from '@mui/material/Button';
 import { Container, Box, Typography, IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import order from "../assets/order.png";
 import Table from "./Table";
 import TableOrder from "./TableOrder";
 import { useCookies } from 'react-cookie';
+import { handleLogoutSubmit } from '../auth.js';
 
 const WaitStaff = () => {
 
@@ -167,12 +169,31 @@ const WaitStaff = () => {
     }
   };
 
+  const logoutbuttonStyle = { 
+    position: 'fixed', // Set the position to fixed
+    top: '10px', // Distance from the top of the viewport
+    right: '20px', // Distance from the right of the viewport
+    border: '4px solid #FFA0A0', 
+    height: '5vh', 
+    width: '10vw',
+    textAlign: 'center', 
+    justifyContent: 'center',
+    background: "#FFCFCF",
+    color: 'black',
+    fontWeight: "bold",
+    borderRadius: 8,
+  }
+
   return (
     <Container>
       <Box display="flex" >
         <Box sx={{ border: '2px solid #000', width: '50%', height: '80vh', m: 2, padding: "3%" }}>
           {tableElements}
         </Box>
+
+        <Button variant="contained" color="primary" style={logoutbuttonStyle} onClick={handleLogoutSubmit}>
+          Logout
+        </Button>
 
         <Box sx={{ border: '2px solid #000', width: '50%', height: '80vh', m: 2, padding: "3%" }}>
           {selectedtable === -1 ? (
