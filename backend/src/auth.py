@@ -57,7 +57,7 @@ class Auth:
         user = fb_auth.create_user(
             email=self.KITCHENSTAFF_EMAIL,
             email_verified=False,
-            password=self.PASSWORD',
+            password=self.PASSWORD,
             display_name='Kitchenstaff',
             disabled=False)
         fb_auth.set_custom_user_claims(user.uid, {'hasRole': 'kitchenstaff'})

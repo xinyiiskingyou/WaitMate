@@ -170,8 +170,9 @@ class MenuDB:
         Return Value:
             Returns <list> that contains all the items
         '''
-
+        
         res = check_categories_key_is_valid('cat_order', int(category_id), self.session)
+
         # Check if the category ID exists
         if not res:
             raise InputError('Invalid category ID')
@@ -222,6 +223,7 @@ class MenuDB:
         if not result:
             raise InputError('Invalid ID')
 
+        print(result)
         old_name = result[0]
         new_name = kwargs.get('name')
         if new_name is not None:
@@ -426,7 +428,7 @@ class MenuDB:
     def _get_item_in_category(self, item_order: int, category_name: str):
 
         try:
-            query = select(Items).where(Items.category_name.ilike(category_name)).where(Items.item_order==item_order)
+            query = select(Items.name).where(Items.category_name.ilike(category_name)).where(Items.item_order==item_order)
             result = self.session.execute(query).fetchone()
         except Exception:
             raise NotFoundError('Database not found.')
