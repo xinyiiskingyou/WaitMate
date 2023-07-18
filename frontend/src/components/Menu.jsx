@@ -25,7 +25,7 @@ const Menu = () => {
   const [selectedCategory, setSelectedCategory] = useState(-1);
   const [menuItems, setMenuItems] = useState([]);
   const [adding, setAdding] = useState(false);
-  const [cardData, setCardData] = useState({ category: -1, name: '', price: '', description: '', ingredient: '', vegetarian: false, is_up: false });
+  const [cardData, setCardData] = useState({ category: -1, name: '', cost: '', description: '', ingredients: '', is_vegan: false, is_up: false });
   const [error, setError] = useState(null);
   const [cookies] = useCookies(['token']);
 
@@ -90,13 +90,13 @@ const Menu = () => {
     setAdding(true);
   };
 
-  const handleCardDoneClick = (category, name, cost, description, ingredient, is_vegan) => {
-    if (name && cost && description && ingredient) {
-      const newMenuItem = { category, name: name, cost: cost, description: description, ingredient: ingredient, is_vegan: is_vegan };
+  const handleCardDoneClick = (category, name, cost, description, ingredients, is_vegan) => {
+    if (name && cost && description && ingredients) {
+      const newMenuItem = { category, name: name, cost: cost, description: description, ingredients: ingredients, is_vegan: is_vegan };
       setMenuItems((prevMenuItems) => [...prevMenuItems, newMenuItem]);
       console.log('Item details:', cardData);
       // Reset the form data
-      setCardData({ category: -1, name: '', cost: '', description: '', ingredient: '', is_vegan: false, is_up: false });
+      setCardData({ category: -1, name: '', cost: '', description: '', ingredients: '', is_vegan: false, is_up: false });
       setAdding(false);
     }
   };
@@ -110,7 +110,7 @@ const Menu = () => {
   };
 
   const handleCardCancelClick = () => {
-    setCardData({ category: -1, name: '', cost: '', description: '', ingredient: '', is_vegan: false, is_up: false });
+    setCardData({ category: -1, name: '', cost: '', description: '', ingredients: '', is_vegan: false, is_up: false });
     setAdding(false);
   };
   
