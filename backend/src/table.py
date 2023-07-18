@@ -5,46 +5,26 @@ This module contains functions for creating, updating, and checking the tables.
 It utilizes SQLite as the underlying database engine to store and retrieve table-related data.
 '''
 
-import sqlite3
-from src.error import InputError, NotFoundError
-from src.clear import clear_database
+from sqlalchemy import create_engine, Table, MetaData, select, update, delete
+from sqlalchemy.orm import sessionmaker
+from src.db_model import Tables
+from src.error import InputError
 from src.helper import check_table_exists
-from constant import DB_PATH
+from constant import DB_PATH, DEFAULT_TABLE_STATUS
+from src.helper import check_table_exists
 
 class TableDB():
     '''
     The TableDB class implements operations related to tables.
-
-    Args:
-        database_path (str): The path to the SQLite database file.
     '''
 
-    def __init__(self, database=DB_PATH) -> None:
-        self.database = database
+    def __init__(self) -> None:
+        self.engine = create_engine(DB_PATH)
+        # create table
+        Tables.__table__.create(bind=self.engine, checkfirst=True)
 
-    def create_tables_db(self) -> None:
-        '''
-        Create a database for tables
-
-        Arguments:
-            N / A
-        Exceptions:
-            N /A
-        Return Value:
-            N/A
-        '''
-
-        con = sqlite3.connect(self.database)
-        cur = con.cursor()
-
-        cur.execute('''CREATE TABLE IF NOT EXISTS Tables (
-                        table_id INTEGER PRIMARY KEY NOT NULL,
-                        status TEXT NOT NULL,
-                        req_time TIMESTAMP
-                    )''')
-
-        con.commit()
-        con.close()
+        Session = sessionmaker(bind=self.engine)
+        self.session = Session()
 
     def select_table_number(self, table_id: int) -> int:
         '''
@@ -59,21 +39,18 @@ class TableDB():
             N/A
         '''
 
-        self.create_tables_db()
-        con = sqlite3.connect(self.database)
-        cur = con.cursor()
-
-        # check if table id exists
-        result = check_table_exists(table_id)
-
-        if result:
+        if check_table_exists(table_id, self.session):
             raise InputError('Table id is not available.')
 
-        cur.execute('INSERT INTO Tables (table_id, status) \
-        VALUES (?, ?)', (table_id, 'OCCUPIED'))
-        con.commit()
-        con.close()
-
+        try:
+            new_table = Tables(table_id=table_id, status=DEFAULT_TABLE_STATUS)
+            self.session.add(new_table)
+            self.session.commit()
+        except Exception as e:
+            self.session.rollback()
+            raise InputError(f"Error occurred: {str(e)}")
+        finally:
+            self.session.close()
         return table_id
 
     def get_all_tables_status(self) -> dict:
@@ -87,24 +64,21 @@ class TableDB():
         Return Value:
             Return Value <table_dict> of table_id with respective table status.
         '''
-        try:
-            con = sqlite3.connect(self.database)
-            cur = con.cursor()
-
-            cur.execute('SELECT * FROM Tables ORDER BY table_id ASC')
-            table_list = cur.fetchall()
-        except Exception:
-            raise NotFoundError('Table database not found.')
-        finally:
-            con.close()
-
         table_dict = {}
 
-        for table_stat in table_list:
-            table_id = table_stat[0]
-            table_dict[table_id] = table_stat[1]
+        try:
+            statement = select(Tables.table_id, Tables.status)
+            rows = self.session.execute(statement).all()
+            self.session.close()
 
-        return table_dict
+            for item in rows:
+                table_dict[item[0]] = item[1]
+            return table_dict
+        except Exception as e:
+            self.session.rollback()
+            raise InputError(f"Error occurred: {str(e)}")
+        finally:
+            self.session.close()
 
     def update_table_status(self, table_id: int, status: str) -> None:
         '''
@@ -121,40 +95,34 @@ class TableDB():
             Return Value <table_dict> of table_id with respective table status.
         '''
 
-        # check if table number exists
-        if not check_table_exists(table_id):
+        if not check_table_exists(table_id, self.session):
             raise InputError('Table id is not available.')
 
-        # if the status is not valid
+        # check if the status is valid
         if status not in ['OCCUPIED', 'ASSIST', 'BILL', 'EMPTY']:
             raise InputError('Unknown status')
 
         try:
-            con = sqlite3.connect(self.database)
-            cur = con.cursor()
-
-            # update table status
-            cur.execute('UPDATE Tables SET status = ? WHERE table_id = ?', (status, table_id))
-            con.commit()
-
-            # if the status is empty the table_id will be available again
-            cur.execute('DELETE FROM Tables WHERE status = ?', ('EMPTY',))
-            con.commit()
-        except Exception:
-            raise NotFoundError('Table database not found.')
+            stmt = (
+                update(Tables)
+                .where(Tables.table_id == table_id)
+                .values(status=status)
+            )
+            self.session.execute(stmt)
+            self.session.commit()
+            
+            self.session.execute(delete(Tables).where(Tables.status == 'EMPTY'))
+            self.session.commit()
+        except Exception as e:
+            self.session.rollback()
+            raise InputError(f"Error occurred: {str(e)}")
         finally:
-            con.close()
+            self.session.close()
 
-    @staticmethod
-    def clear_tables_data() -> None:
-        '''
-        Resets all the data of the table database.
+    def clear_tables_data(self):
+        metadata = MetaData()
+        tables_table = Table('Tables', metadata, autoload_with=self.engine)
 
-        Arguments:
-            N / A
-        Exceptions:
-            N /A
-        Return Value:
-            N/A
-        '''
-        clear_database('Tables')
+        with self.engine.begin() as conn:
+            delete_query = tables_table.delete()
+            conn.execute(delete_query)

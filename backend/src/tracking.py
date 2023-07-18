@@ -5,23 +5,23 @@ This module provides the Tracking class, which allows tracking orders and markin
 completed by different roles (such as kitchen and waitstaff).
 '''
 
-import sqlite3
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 from constant import DB_PATH
+from src.db_model import Orders
 from src.helper import get_order
 from src.error import AccessError, InputError
 
 class Tracking:
     '''
     Tracking class implements functionalies for managing orders and tracking their statuses.
-
-    Args:
-        database_path (str): The path to the SQLite database file.
     '''
-    def __init__(self, database=DB_PATH) -> None:
-        self.database = database
+    def __init__(self) -> None:
+        self.engine = create_engine(DB_PATH)
+        Session = sessionmaker(bind=self.engine)
+        self.session = Session()
 
-    @staticmethod
-    def customer_view_dish_status(table_id: int) -> list:
+    def customer_view_dish_status(self, table_id: int) -> list:
         '''
         Retrieves the status of dishes for a given table.
 
@@ -32,7 +32,7 @@ class Tracking:
         Return Value:
            Return Value <list>: A list of tuples containing (item_name, is_prepared, is_served).
         '''
-        order_list = get_order(table_id)
+        order_list = get_order(table_id, self.session)
         order_status = []
         for order in order_list:
             order_status.append((order[0], order[2], order[3]))
@@ -81,15 +81,11 @@ class Tracking:
         Return Value:
             N/A
         '''
-        table_order = get_order(table_id)
+        table_order = get_order(table_id, self.session)
 
         # check if the item existed
-        is_present = any(item[0] == item_name for item in table_order)
-        if not is_present:
+        if not any(item[0] == item_name for item in table_order):
             raise InputError("Item not existed")
-
-        con = sqlite3.connect(self.database)
-        cur = con.cursor()
 
         # check if all the items with the same name have been served
         is_prepared_values = [
@@ -97,7 +93,6 @@ class Tracking:
             for order in table_order
             if item_name == order[0]
         ]
-
         if not is_prepared_values.count(0):
             raise AccessError("Nothing to mark")
 
@@ -108,17 +103,22 @@ class Tracking:
                 # waitstaff cannot update the dish status unless it's ready to be served
                 if column_name == "is_served" and order[2] != 1:
                     raise AccessError("Dish is not ready!")
-                cur.execute(
-                    '''
-                    UPDATE Orders SET {column} = ?
-                    WHERE ROWID = (
-                        SELECT ROWID FROM Orders
-                        WHERE table_id = ? AND item_name = ? AND {column} != ?
-                        LIMIT 1
+                try:
+                    # Use a subquery to get the specific row that needs to be updated
+                    subquery = (
+                        self.session.query(Orders.id)
+                        .filter(Orders.table_id == table_id, Orders.item_name == item_name, getattr(Orders, column_name) != 1)
+                        .limit(1)
+                        .scalar_subquery()
                     )
-                    '''.format(column=column_name),
-                    (1, table_id, item_name, 1)
-                )
-                con.commit()
-                break
-        con.close()
+
+                    self.session.query(Orders) \
+                        .filter(Orders.id == subquery) \
+                        .update({getattr(Orders, column_name): 1}, synchronize_session=False)
+                    self.session.commit()
+                except Exception as e:
+                    self.session.rollback()
+                    print(f"Error occurred: {str(e)}")
+                finally:
+                    self.session.close()
+                    break

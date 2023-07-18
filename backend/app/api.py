@@ -208,6 +208,9 @@ def auth_kitchenstaff_update_password_api(form_data: OAuth2PasswordRequestForm =
 def auth_restart_api(user: dict = Depends(get_current_user)):
     auth.is_authorized(['manager'], user['user'])
     auth.delete_all()
+    checkout.clear_data()
+    menu.clear_tables_data()
+    order.clear_order_table()
     return {}
 
 ############ TRACKING #################
@@ -268,7 +271,7 @@ def checkout_bill_coupon_api(reqbody: Coupon_Cust):
 @app.post('/checkout/coupon/create')
 def checkout_coupon_create_api(reqbody: Coupon, user: dict = Depends(get_current_user)):
     auth.is_authorized(['manager'], user['user'])
-    checkout.checkout_coupon_create(reqbody.code, reqbody.int, reqbody.expiry)
+    checkout.checkout_coupon_create(reqbody.code, reqbody.amount)
     return {}
 
 @app.delete('/checkout/coupon/delete')

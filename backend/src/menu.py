@@ -6,74 +6,29 @@ updating item details and order, retrieving categories and items, and
 removing menu items.
 '''
 
-import sqlite3
-from constant import DB_PATH
-from src.error import InputError, AccessError
-from src.helper import (
-    check_if_category_exists, get_category_order_by_name, get_menu_item_order_by_name,
-    check_item_name_exists, check_categories_key_is_valid, get_order_in_category,
-    get_total_count, get_category_by_name, get_item_in_category
+from sqlalchemy import (
+    MetaData, Table, create_engine, select, update, delete, func
 )
+from sqlalchemy.orm import sessionmaker
+from constant import DB_PATH
+from src.db_model import Categories, Items
+from src.error import InputError, AccessError, NotFoundError
+from src.helper import check_category_exists, check_item_exists, check_categories_key_is_valid
 
 class MenuDB:
     '''
     The TableDB class implements operations related to menu.
-
-    Args:
-        database_path (str): The path to the SQLite database file.
     '''
 
-    def __init__(self, database=DB_PATH) -> None:
-        self.database = database
+    def __init__(self) -> None:
+        self.engine = create_engine(DB_PATH)
 
-    def create_category_table(self) -> None:
-        '''
-        Creates the Categories table if it does not exist.
-        '''
-        con = sqlite3.connect(self.database)
-        cur = con.cursor()
+        # create categories and items table
+        Categories.__table__.create(bind=self.engine, checkfirst=True)
+        Items.__table__.create(bind=self.engine, checkfirst=True)
 
-        cur.execute('''CREATE TABLE IF NOT EXISTS Categories (
-                        cat_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        name TEXT,
-                        cat_order INTEGER DEFAULT 0
-                    )''')
-        con.commit()
-
-        con.close()
-
-    def create_item_table(self) -> None:
-        '''
-        Creates the Items table if it does not exist.
-        '''
-        con = sqlite3.connect(self.database)
-        cur = con.cursor()
-        cur.execute('''CREATE TABLE IF NOT EXISTS Items (
-                        item_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        name TEXT,
-                        cost INTEGER,
-                        description TEXT,
-                        ingredients TEXT,
-                        is_vegan,
-                        item_order INTEGER,
-                        category_name TEXT
-                    )''')
-        con.commit()
-        con.close()
-
-    def create_menu_table(self) -> None:
-        '''
-        Creates the Categories table if it does not exist.
-        '''
-        con = sqlite3.connect(self.database)
-        cur = con.cursor()
-        cur.execute('''CREATE TABLE IF NOT EXISTS Menu (
-                        category TEXT,
-                        item TEXT,
-                        item_order INTEGER DEFAULT 0
-                    )''')
-        con.commit()
-        con.close()
+        Session = sessionmaker(bind=self.engine)
+        self.session = Session()
 
     def category_add(self, name: str) -> None:
         '''
@@ -88,36 +43,28 @@ class MenuDB:
             N/A
         '''
 
-        # create category table
-        self.create_category_table()
-
-        # check if the length is between 1 to 15
+        # check if the name length is valid
         if len(name) < 1 or len(name) > 15:
             raise InputError('Invalid name length')
 
-        # check if the category exists
-        if check_if_category_exists(name.lower()):
-            raise InputError('Name already used')
+        # check if the name exists
+        if check_category_exists(name, self.session):
+            raise InputError('Category not exist')
 
-        con = sqlite3.connect(self.database)
-        cur = con.cursor()
+        try:
+            # create new category
+            new_cat = Categories(name=name)
+            self.session.add(new_cat)
+            self.session.commit()
 
-        cur.execute('INSERT INTO Categories(name) VALUES(?)', (name,))
-        con.commit()
-
-        # update order column
-        cur.execute('UPDATE Categories SET cat_order = cat_id WHERE name = ?', (name,))
-        con.commit()
-
-        # insert category in menu
-        self.create_menu_table()
-        cur.execute('''
-            INSERT INTO Menu(category, item, item_order)
-            VALUES (?, ?, ?)
-        ''', (name, None, 0))
-
-        con.commit()
-        con.close()
+            # update order
+            new_cat.cat_order = new_cat.cat_id
+            self.session.commit()
+        except Exception as e:
+            self.session.rollback()
+            raise InputError(f"Error occurred: {str(e)}")
+        finally:
+            self.session.close()
 
     def item_add(self, item_data: dict) -> None:
         '''
@@ -135,7 +82,6 @@ class MenuDB:
         Return Value:
             None
         '''
-        self.create_item_table()
 
         try:
             category = item_data['category']
@@ -147,38 +93,48 @@ class MenuDB:
         except KeyError as err:
             raise InputError(f"Missing field in item_data: {err.args[0]}")
 
-        # check if the category name exists
-        if not check_categories_key_is_valid('name', category):
+        # check if the category exists
+        if not check_category_exists(category.lower(), self.session):
             raise InputError('Invalid category')
-
-        # check if the length is between 1 to 15
+        
+        # check if the name length is valid
         if len(name) < 1 or len(name) > 15:
             raise InputError('Invalid name length')
-
+        
         # check if the item name exists in the same category
-        if check_item_name_exists(name.lower()):
+        if check_item_exists(name.lower(), self.session):
             raise AccessError('Name already used')
 
-        # insert new item to the Items table
-        con = sqlite3.connect(self.database)
-        cur = con.cursor()
+        try: 
+            # insert new item to the Items table
+            new_item = Items(
+                name=name,
+                cost=cost,
+                description=description,
+                ingredients=ingredients,
+                is_vegan=is_vegan,
+                category_name=category
+            )
+            self.session.add(new_item)
+            self.session.commit()
 
-        cur.execute('''
-            INSERT INTO Items(name, cost, description, ingredients, is_vegan, category_name)
-            VALUES(?, ?, ?, ?, ?, ?)
-        ''', (name, cost, description, ingredients, is_vegan, category))
-        con.commit()
-
-        order = get_order_in_category(category) + 1
-        cur.execute('UPDATE Items SET item_order = (?) WHERE name = (?)', (order, name))
-        con.commit()
-
-        # insert to the menu
-        self.create_menu_table()
-        cur.execute('INSERT INTO Menu values(?,?,?)', (category, name, order))
-        con.commit()
-
-        con.close()
+            order = (
+                self.session.query(func.count())
+                .filter(Items.category_name == category, Items.name.isnot(None))
+                .scalar()
+            )
+            stmt = (
+                update(Items)
+                .where(Items.name == name)
+                .values(item_order = order)
+            ) 
+            self.session.execute(stmt)
+            self.session.commit()
+        except Exception as e:
+            self.session.rollback()
+            raise InputError(f"Error occurred: {str(e)}")
+        finally:
+            self.session.close()
 
     def get_all_categories(self) -> dict:
         '''
@@ -191,22 +147,17 @@ class MenuDB:
         Return Value:
             Returns <dict> that contains all the categories in order
         '''
-        self.create_category_table()
 
-        con = sqlite3.connect(self.database)
-        cursor = con.cursor()
-
-        cursor.execute("SELECT cat_order, name FROM Categories ORDER BY cat_order")
-        info = cursor.fetchall()
-
-        con.close()
-
-        categories_dict = {}
-        for item in info:
-            cat_order, name = item
-            categories_dict[cat_order] = name
-
-        return categories_dict
+        try:
+            query = select(Categories.cat_order, Categories.name).order_by(Categories.cat_order)
+            results = self.session.execute(query).fetchall()
+            categories_dict = {cat_order: name for cat_order, name in results}
+            return categories_dict
+        except Exception as e:
+            self.session.rollback()
+            raise InputError(f"Error occurred: {str(e)}")
+        finally:
+            self.session.close()
 
     def get_items_in_category(self, category_id: str) -> list:
         '''
@@ -219,38 +170,30 @@ class MenuDB:
         Return Value:
             Returns <list> that contains all the items
         '''
-        self.create_category_table()
-        self.create_item_table()
-        self.create_menu_table()
 
+        res = check_categories_key_is_valid('cat_order', int(category_id), self.session)
         # Check if the category ID exists
-        if not check_categories_key_is_valid('cat_id', int(category_id)):
-            raise InputError('Invalid ID')
+        if not res:
+            raise InputError('Invalid category ID')
 
-        con = sqlite3.connect(self.database)
-        cur = con.cursor()
+        category_name = res.name
+        try:
+            results = self.session.query(Items)\
+                .filter(Items.category_name == category_name)\
+                .order_by(Items.item_order)\
+                .all()
 
-        cur.execute(
-            '''SELECT item, cost, description, ingredients, is_vegan, item_id
-            FROM Categories c
-            LEFT JOIN Menu m
-                ON m.category = c.name
-            LEFT JOIN Items i
-                ON i.name = m.item
-            WHERE c.cat_order = ? AND m.item IS NOT NULL
-            ORDER BY m.item_order
-            ''', (category_id,)
-        )
-        info = cur.fetchall()
-        con.close()
-
-        items = []
-        columns = ['name', 'cost', 'description', 'ingredients', 'is_vegan']
-        for data in info:
-            item_dict = dict(zip(columns, data))
-            items.append(item_dict)
-
-        return items
+            items = []
+            columns = ['name', 'cost', 'description', 'ingredients', 'is_vegan']
+            for data in results:
+                item_dict = {column: getattr(data, column) for column in columns}
+                items.append(item_dict)
+            return items
+        except Exception as e:
+            self.session.rollback()
+            raise InputError(f"Error occurred: {str(e)}")
+        finally:
+            self.session.close()
 
     def update_details_menu_items(self, category_name: str, index: int, **kwargs) -> None:
         '''
@@ -271,61 +214,45 @@ class MenuDB:
         '''
 
         # check if category name is valid
-        if not check_categories_key_is_valid('name', category_name):
+        if not check_categories_key_is_valid('name', category_name, self.session):
             raise InputError('Invalid category')
 
-        check_result = get_item_in_category(index, category_name)
-        
-        # check if item_id is valid
-        if not check_result:
+        # check if the item is in the category
+        result = self._get_item_in_category(index, category_name)
+        if not result:
             raise InputError('Invalid ID')
 
-        con = sqlite3.connect(self.database)
-        cur = con.cursor()
-
-        # get the old name of the menu item
-        old_name = check_result[1]
-
+        old_name = result[0]
         new_name = kwargs.get('name')
         if new_name is not None:
             # invalid name length
             if len(new_name) < 1 or len(new_name) > 15:
                 raise InputError('Invalid name length')
             # item name is used by another item
-            if check_item_name_exists(new_name.lower()) and old_name.lower() != new_name.lower():
+            if check_item_exists(new_name, self.session) and old_name.lower() != new_name.lower():
                 raise InputError('Name already used')
-            # update the name in menu
-            cur.execute(
-                '''UPDATE Menu
-                SET item = (?)
-                WHERE item_order = (?) and category = (?)''',
-                (new_name, index, category_name)
+
+        try:
+            # update detail in Items table
+            update_query = (
+                update(Items)
+                .where(Items.item_order == index)
+                .where(Items.category_name == category_name)
+                .values(
+                    name=kwargs.get('name') or Items.name,
+                    cost=kwargs.get('cost') or Items.cost,
+                    description=kwargs.get('description') or Items.description,
+                    ingredients=kwargs.get('ingredients') or Items.ingredients,
+                    is_vegan=kwargs.get('is_vegan') or Items.is_vegan
+                )
             )
-            con.commit()
-
-        # update item detail in Items table
-        update_query = '''
-            UPDATE Items
-            SET
-                name = COALESCE(?, name),
-                cost = COALESCE(?, cost),
-                description = COALESCE(?, description),
-                ingredients = COALESCE(?, ingredients),
-                is_vegan = COALESCE(?, is_vegan)
-            WHERE item_order = (?) and category_name = (?)
-        '''
-        cur.execute(update_query, (
-            kwargs.get('name'),
-            kwargs.get('cost'),
-            kwargs.get('description'),
-            kwargs.get('ingredients'),
-            kwargs.get('is_vegan'),
-            index,
-            category_name
-        ))
-
-        con.commit()
-        con.close()
+            self.session.execute(update_query)
+            self.session.commit()
+        except Exception as e:
+            self.session.rollback()
+            raise InputError(f"Error occurred: {str(e)}")
+        finally:
+            self.session.close()
 
     def update_details_category(self, old_name: str, new_name: str) -> None:
         '''
@@ -342,7 +269,6 @@ class MenuDB:
         Return Value:
             N/A
         '''
-
         # if the name does not change then do nothing
         if old_name.lower() == new_name.lower():
             return
@@ -350,30 +276,25 @@ class MenuDB:
         if len(new_name) < 1 or len(new_name) > 15:
             raise InputError('Invalid name length')
         # old category name not exists
-        if not check_if_category_exists(old_name.lower()):
+        if not check_category_exists(old_name.lower(), self.session):
             raise InputError('Name not found')
         # new category name exists
-        if old_name != new_name and check_if_category_exists(new_name.lower()):
+        if old_name != new_name and check_category_exists(new_name.lower(), self.session):
             raise InputError('Name already used')
 
-        con = sqlite3.connect(self.database)
-        cur = con.cursor()
-        cur.execute(
-            '''UPDATE Categories
-            SET name = (?)
-            WHERE name = (?)''',
-            (new_name, old_name)
-        )
-        con.commit()
-
-        cur.execute(
-            '''UPDATE Menu
-            SET category = (?)
-            WHERE category = (?)''',
-            (new_name, old_name)
-        )
-        con.commit()
-        con.close()
+        try:
+            stmt = (
+                update(Categories)
+                .where(Categories.name == old_name)
+                .values(name = new_name)
+            ) 
+            self.session.execute(stmt)
+            self.session.commit()
+        except Exception as e:
+            self.session.rollback()
+            raise InputError(f"Error occurred: {str(e)}")
+        finally:
+            self.session.close()
 
     def remove_menu_items(self, item_name: str) -> None:
         '''
@@ -387,19 +308,18 @@ class MenuDB:
             N/A
         '''
 
-        if not check_item_name_exists(item_name.lower()):
+        # check if an item exists
+        if not check_item_exists(item_name.lower(), self.session):
             raise InputError('Invalid name')
-
-        con = sqlite3.connect(self.database)
-        cur = con.cursor()
-
-        cur.execute('''DELETE FROM Items WHERE name = (?)''', (item_name,))
-        con.commit()
-
-        cur.execute('''DELETE FROM Menu WHERE item = (?)''', (item_name,))
-        con.commit()
-
-        con.close()
+        
+        try:
+            self.session.execute(delete(Items).where(Items.name==item_name))
+            self.session.commit()
+        except Exception as e:
+            self.session.rollback()
+            raise InputError(f"Error occurred: {str(e)}")
+        finally:
+            self.session.close()
 
     def update_order_menu_items(self, item_name: str, is_up: bool) -> None:
         '''
@@ -414,19 +334,37 @@ class MenuDB:
         Return Value:
             None
         '''
-
-        # item name not exists
-        if not check_item_name_exists(item_name.lower()):
+        # check if item exists
+        if not check_item_exists(item_name.lower(), self.session):
             raise InputError('Invalid name')
+        
+        prev_order = self.session.query(Items.item_order).filter_by(name=item_name).scalar()
 
-        prev_order = get_menu_item_order_by_name(item_name)
-        cat_name = get_category_by_name(item_name)
+        # get item count in a category
+        cat_name = self.session.query(Items.category_name).filter_by(name=item_name).scalar()
+        total_count = self.session.query(Items).where(Items.category_name==cat_name).count()
 
-        # if the item is the last item in the category then it can move down
-        if prev_order + 1 > get_order_in_category(cat_name) and not is_up:
+        # if item is the last one in the category
+        if prev_order + 1 > total_count and not is_up:
             raise InputError('Invalid order')
 
-        self.update_order('Menu', 'item_order', is_up, prev_order)
+        # the first item of the table cannot move up
+        if prev_order == 1 and is_up:
+            raise InputError('Invalid order')
+
+        new_order = prev_order - 1 if is_up else prev_order + 1
+
+        try:
+            row1 = self.session.query(Items).where(Items.category_name==cat_name).filter_by(item_order=prev_order).one()
+            row2 = self.session.query(Items).where(Items.category_name==cat_name).filter_by(item_order=new_order).one()
+            row1.item_order, row2.item_order = row2.item_order, row1.item_order
+
+            self.session.commit()
+        except Exception as e:
+            self.session.rollback()
+            raise InputError(f"Error occurred: {str(e)}")
+        finally:
+            self.session.close()
 
     def update_order_menu_category(self, category_name: str, is_up: bool) -> None:
         '''
@@ -442,69 +380,57 @@ class MenuDB:
             None
         '''
 
-        # check if the category name exists
-        if not check_categories_key_is_valid('name', category_name):
+        # check if category name is valid
+        if not check_categories_key_is_valid('name', category_name, self.session):
             raise InputError('Invalid category name')
 
-        prev_order = get_category_order_by_name(category_name)
+        prev_order = self.session.query(Categories.cat_order).filter_by(name=category_name).scalar()
+
+        total_count = self.session.query(Categories.name).count()
 
         # the last item of the database cannot move down
-        if prev_order + 1 > get_total_count('Categories') and not is_up:
+        if prev_order + 1 > total_count and not is_up:
             raise InputError('Invalid order')
 
-        self.update_order('Categories', 'cat_order', is_up, prev_order)
-
-    def update_order(self, table_name: str, column_name: str, is_up: bool, prev_order: int) -> None:
-        '''
-        Helper function to update the order of items or categories in the database.
-
-        Arguments:
-            <table_name>  (<str>)    - The name of the table to update.
-            <column_name> (<str>)    - The name of the column to update.
-            <is_up>       (<bool>)   - Indicates whether to move the items/categories up or down.
-            <prev_order>  (<int>)    - The previous order value of the item/category.
-        Exceptions:
-            InputError  - Occurs when the order is invalid.
-        Returns:
-            None
-        '''
-
-        # the first item of the database cannot move up
+         # the first item of the table cannot move up
         if prev_order == 1 and is_up:
             raise InputError('Invalid order')
 
         new_order = prev_order - 1 if is_up else prev_order + 1
-        self.update_order_in_db(table_name, column_name, prev_order, new_order)
 
-        if table_name == "Menu":
-            self.update_order_in_db("Items", "item_order", prev_order, new_order)
+        try:
+            # swap order
+            row1 = self.session.query(Categories).filter_by(cat_order=prev_order).one()
+            row2 = self.session.query(Categories).filter_by(cat_order=new_order).one()
+            row1.cat_order, row2.cat_order = row2.cat_order, row1.cat_order
 
-    def update_order_in_db(self, table: str, column: str, prev_order: int, new_order: int) -> None:
-        '''
-        Helper function to update the order of items or categories in the database.
+            self.session.commit()
+        except Exception as e:
+            self.session.rollback()
+            raise InputError(f"Error occurred: {str(e)}")
+        finally:
+            self.session.close()
 
-        Arguments:
-            <table>       (<str>)    - The name of the table to update.
-            <column>      (<str>)    - The name of the column to update.
-            <prev_order>  (<int>)    - The previous order value of the item/category.
-            <new_order>   (<int>)    - The new order value of the item/category.
-        Exceptions:
-            N/A
-        Returns:
-            None
-        '''
+    def clear_tables_data(self):
+        metadata = MetaData()
+        items_table = Table('Items', metadata, autoload_with=self.engine)
+        cat_table = Table('Categories', metadata, autoload_with=self.engine)
 
-        con = sqlite3.connect(self.database)
-        cur = con.cursor()
-        cur.execute('''
-            UPDATE {table_name}
-            SET {column_name} = CASE
-                WHEN {column_name} = ? THEN ?
-                WHEN {column_name} = ? THEN ?
-                ELSE {column_name}
-            END
-        '''.format(table_name=table, column_name=column),
-                    (prev_order, new_order, new_order, prev_order))
+        with self.engine.begin() as conn:
+            delete_query = cat_table.delete()
+            conn.execute(delete_query)
 
-        con.commit()
-        con.close()
+            delete_query = items_table.delete()
+            conn.execute(delete_query)
+
+    def _get_item_in_category(self, item_order: int, category_name: str):
+
+        try:
+            query = select(Items).where(Items.category_name.ilike(category_name)).where(Items.item_order==item_order)
+            result = self.session.execute(query).fetchone()
+        except Exception:
+            raise NotFoundError('Database not found.')
+        finally:
+            self.session.close()
+
+        return result

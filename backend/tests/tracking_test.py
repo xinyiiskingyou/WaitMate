@@ -18,13 +18,13 @@ def test_customer_track_dish_invalid_id():
         track.customer_view_dish_status(25)
 
 def test_customer_track_dish_valid(empty, menu_japanese, table_id_3):
-    
     # add the item with the same name 3 times
-    order.add_order(table_id_3, "dorayaki", 2)
-    order.add_order(table_id_3, "dorayaki", 1)
-    order.add_order(table_id_3, "dorayaki", 3)
     
-    res = track.customer_view_dish_status(table_id_3)
+    order.add_order(table_id_3, menu_japanese[1], 2)
+    order.add_order(table_id_3, menu_japanese[1], 1)
+    order.add_order(table_id_3, menu_japanese[1], 2)
+
+    res = track.customer_view_dish_status(3)
     assert len(res) == 3
     assert res[0][0] == "dorayaki"
     assert res[0][1] == 0

@@ -6,8 +6,9 @@ from src.menu import MenuDB
 from src.order import OrderDB
 from src.auth import auth
 from fastapi.testclient import TestClient
-from src.clear import clear_database
+# from src.clear import clear_database
 from app.api import app
+
 
 VALID = 200
 ACCESSERROR = 403
@@ -61,10 +62,7 @@ def table_id_3():
 
 @pytest.fixture
 def menu_japanese():
-    clear_database('Menu')
-    clear_database('Categories')
-    clear_database('Items')
-
+    menu.clear_tables_data()
     menu.category_add('Japanese')
     menu.item_add({
         'category': 'Japanese',
@@ -88,14 +86,17 @@ def menu_japanese():
 
 @pytest.fixture
 def order_japanese(menu_japanese, table_id_1):
+    order.clear_order_table()
     order.add_order(table_id_1, menu_japanese[0], 1)
     order.add_order(table_id_1, menu_japanese[1], 2)
     return table_id_1
 
 @pytest.fixture
 def empty():
-    if os.path.exists("./src/database/restaurant.db"):
-        os.remove("./src/database/restaurant.db")
+    order.clear_order_table()
+    menu.clear_tables_data()
+    table.clear_tables_data()
+
 
 @pytest.fixture
 def restart_auth():

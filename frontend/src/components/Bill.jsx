@@ -15,7 +15,9 @@ import WestIcon from '@mui/icons-material/West';
 const Bill = () => {
   let [orders, setBill] = useState([])
   const id = useParams();
+  const tips = new URLSearchParams(window.location.search).get('tips');
   let amount = "$10"
+
   let getBill = async () => {
     let response = await fetch(`http://localhost:8000/order/cart/list?table_id=${id.id}`)
     let data = await response.json()
@@ -30,7 +32,7 @@ const Bill = () => {
   useEffect(() => {
     getBill()
   }, [])
-  
+
   return (
     <Container >
     <Grid container direction="column" spacing={2}>
@@ -88,7 +90,7 @@ const Bill = () => {
         <Grid container direction="column">
           <Grid item>
             <TableContainer  sx={{
-                maxheight: 500,
+                height: 500,
                 pt: 4,  
               }}>
               <Table aria-label='custom pagination table' >
@@ -133,7 +135,7 @@ const Bill = () => {
                   <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -5}}>  
                   </TableCell>
                   <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pl: 10}}>
-                    {amount}
+                    ${tips}
                   </TableCell>         
                 </TableRow>
                 <TableRow>

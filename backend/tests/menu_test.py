@@ -7,8 +7,7 @@ from tests.conftest import VALID, INPUTERROR, ACCESSERROR
 menu = MenuDB()
 
 def menu_1():
-    if os.path.exists("./src/database/restaurant.db"):
-        os.remove("./src/database/restaurant.db")
+    menu.clear_tables_data()
 
     menu.category_add('Fish')
     menu.category_add('Water')
@@ -176,9 +175,9 @@ def test_menu_remove():
     menu.remove_menu_items('FlatFish')
     assert len(menu.get_items_in_category(1)) == 1
 
-# ######################################
-# ########## endpoint tests ############
-# ######################################
+######################################
+########## endpoint tests ############
+#####################################
 
 def test_category_add_endpoint(client, manager_token):
     # valid case
