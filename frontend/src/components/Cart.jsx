@@ -37,7 +37,6 @@ const Cart = () => {
   const backLink = `/Browse/${id.id}` 
   const navigate = useNavigate();
 
-  let [value, setValue] = useState(null);
   let [error, setError] = useState(false);
   let [orders, setOrder] = useState([])
   let [tips, setTips] = useState(0)
@@ -82,8 +81,8 @@ const Cart = () => {
       }
       let order_list = []
       for (var i of data) {
-        console.log(i)
-        order_list.push({name: i[0], amount: i[1], cost: i[4]})
+        console.log(i[2])
+        order_list.push({name: i[0], amount: i[1], cost: i[4], state: i[2] === 0 ? "Preparing" : i[3] === 1 ? "Served" : "Ready"})
       }
       setOrder(order_list)
     }).catch(error => {
@@ -216,13 +215,16 @@ const Cart = () => {
                   {orders.map((row) => (
                     <TableRow key={row.name}>
                        <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
-                        {row.name}
+                       {row.name}
                       </TableCell>
                       <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -5}}>  
                         {row.amount}
                       </TableCell>
                       <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pl: 10}}>
                         ${row.cost}
+                      </TableCell>
+                      <TableCell style={{ width: '20%', textAlign: 'center', color: row.state === 'Ready' ? 'green' : row.state === 'Served' ? 'blue' : row.state === 'Preparing' ? 'orange' : 'black', }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pl: 10}}>
+                        {row.state}
                       </TableCell>
                     </TableRow> 
                   ))}
