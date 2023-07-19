@@ -100,7 +100,7 @@ const WaitStaff = () => {
       for (var i of data) {
         notification_lst.push({ table: i[0], status: i[1]})
       }
-      //console.log(notification_lst);
+      console.log('noti', notification_lst);
       //setTable(data);
       setNotificationKitchen(notification_lst);
     } catch (error) {
