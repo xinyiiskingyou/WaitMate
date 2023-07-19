@@ -238,7 +238,6 @@ const Settings = () => {
             <Grid item xs={8}>
               <Typography 
               variant="h3" 
-              component="h1" 
               align="center"
               noWrap
               fontWeight="bold"
