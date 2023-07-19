@@ -15,7 +15,7 @@ const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
   const [name, setName] = useState(ItemName);
   const [price, setPrice] = useState(ItemPrice);
   const [description, setDescription] = useState(ItemDescription);
-  const [ingredient, setIngredient] = useState(ItemIngredient);
+  const [ingredients, setIngredient] = useState(ItemIngredient);
   const [open, setOpen] = useState(false);
   const [cookies] = useCookies(['token']);
 
@@ -27,7 +27,7 @@ const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
       name: name,
       cost: parseFloat(price),
       description: description,
-      ingredients: ingredient,
+      ingredients: ingredients,
       is_vegan: vegetarian
     };
 
@@ -166,7 +166,7 @@ const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
         </Typography>
 
         <Typography variant="subtitle1" gutterBottom>
-          Ingredients: {ingredient}
+          Ingredients: {ingredients}
         </Typography>
       </CardContent>
             
@@ -233,7 +233,7 @@ const MenuItem = ({ ItemName, ItemPrice, ItemDescription, ItemIngredient, ItemVe
 
             <TextField
               label="Ingredients"
-              value={ingredient}
+              value={ingredients}
               size="small"
               margin="normal"
               fullWidth

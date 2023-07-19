@@ -17,8 +17,8 @@ const Bill = () => {
   let [total, setTotal] = useState(0)
 
   const id = useParams();
-  const coupon = new URLSearchParams(window.location.search).get('coupon');
   const tips = new URLSearchParams(window.location.search).get('tips');
+  const coupon = new URLSearchParams(window.location.search).get('coupon');
 
   let getItems = async () => {
     let response = await fetch(`http://localhost:8000/order/cart/list?table_id=${id.id}`)
@@ -134,7 +134,7 @@ const Bill = () => {
                       </TableCell>
                     </TableRow>
                   ))}
-                <TableRow>
+                {/* <TableRow>
                   {/* <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
                     Subtotal
                   </TableCell>
@@ -145,15 +145,15 @@ const Bill = () => {
                   </TableCell>         
                 </TableRow>
                 <TableRow> */}
-                  <TableCell style={{ width: '20%', textAlign: 'center', fontWeight: 'bold' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
+                  {/* <TableCell style={{ width: '20%', textAlign: 'center', fontWeight: 'bold' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
                     Coupon
-                  </TableCell>
-                  <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -5}}>  
+                  </TableCell> */}
+                  {/* <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -5}}>  
                   </TableCell>
                   <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pl: 10}}>
                     -${coupon}
-                  </TableCell>         
-                </TableRow>
+                  </TableCell>          */}
+                {/* </TableRow> */}
                 <TableRow>
                   <TableCell style={{ width: '20%', textAlign: 'center', fontWeight: 'bold' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
                     Tips

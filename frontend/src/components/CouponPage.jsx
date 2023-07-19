@@ -188,7 +188,7 @@ const Coupon = () => {
                             <Card key={coupon.code} style={{ marginTop: "20px" }}>
                               <CardContent>
                                 <h3>{coupon.code}</h3>
-                                <p>${coupon.amount} off</p>
+                                <p>{coupon.amount}% off</p>
                                 <p>{coupon.expiry}</p>
                                 <Button variant='contained' style={{fontSize: "10px"}} onClick={() => handleRemove(coupon.code)}>Remove</Button>
                               </CardContent>

@@ -98,7 +98,6 @@ class Checkout:
 
         if not check_table_exists(table_id, self.session):
             raise InputError(INVALID_TABLE_MSG)
-
         if not self._checkout_coupon_find(coupon):
             raise InputError('Invalid coupon.')
 

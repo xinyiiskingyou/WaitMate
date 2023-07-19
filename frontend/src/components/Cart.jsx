@@ -52,6 +52,7 @@ const Cart = () => {
 
   const handleCouponInput = (event) => {
     const inputCoupon = event.target.value;
+    console.log('c1', inputCoupon)
     setCoupon(inputCoupon);
   };
 
@@ -94,7 +95,7 @@ const Cart = () => {
   let handleCouponSubmit = async () => {
     const payload = {
       id: parseInt(id.id, 10),
-      amount: parseInt(tips, 10)
+      code: coupon
     };
 
     await fetch(`http://localhost:8000/checkout/bill/coupon`, {
@@ -105,7 +106,7 @@ const Cart = () => {
       body: JSON.stringify(payload),
     })
     .then((data) => {
-      console.log(data)
+      console.log('data', data)
       if (data === null) {
         return;
       }
