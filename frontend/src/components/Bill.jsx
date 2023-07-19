@@ -15,10 +15,10 @@ import WestIcon from '@mui/icons-material/West';
 const Bill = () => {
   let [orders, setOrders] = useState([])
   let [total, setTotal] = useState(0)
+  let [coupon, setCoupon] = useState(0)
 
   const id = useParams();
   const tips = new URLSearchParams(window.location.search).get('tips');
-  const coupon = new URLSearchParams(window.location.search).get('coupon');
 
   let getItems = async () => {
     let response = await fetch(`http://localhost:8000/order/cart/list?table_id=${id.id}`)
@@ -46,8 +46,8 @@ const Bill = () => {
         throw new Error('Failed to view bill. Please try again.');
       }
     }).then((data) => {
-      console.log('total', data)
-      setTotal(data);
+      setTotal(data.total);
+      setCoupon(data.coupon)
     }).catch(error => {
       console.log(error);
       alert(error);
@@ -134,26 +134,16 @@ const Bill = () => {
                       </TableCell>
                     </TableRow>
                   ))}
-                {/* <TableRow>
-                  {/* <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
-                    Subtotal
+                <TableRow>
+                  <TableCell style={{ width: '20%', textAlign: 'center', fontWeight: 'bold' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
+                    Discount
                   </TableCell>
                   <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -5}}>  
                   </TableCell>
                   <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pl: 10}}>
-                    {amount}
-                  </TableCell>         
-                </TableRow>
-                <TableRow> */}
-                  {/* <TableCell style={{ width: '20%', textAlign: 'center', fontWeight: 'bold' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
-                    Coupon
-                  </TableCell> */}
-                  {/* <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -5}}>  
-                  </TableCell>
-                  <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pl: 10}}>
                     -${coupon}
-                  </TableCell>          */}
-                {/* </TableRow> */}
+                  </TableCell>
+                </TableRow>
                 <TableRow>
                   <TableCell style={{ width: '20%', textAlign: 'center', fontWeight: 'bold' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
                     Tips

@@ -33,7 +33,7 @@ class Checkout:
 
         return ret
 
-    def checkout_bill(self, table_id: int) -> int:
+    def checkout_bill(self, table_id: int) -> dict:
         if not check_table_exists(table_id, self.session):
             raise InputError(INVALID_TABLE_MSG)
 
@@ -57,16 +57,19 @@ class Checkout:
 
             if 'coupon' in bill:
                 coupon_discount = self._checkout_coupon_find(bill['coupon'])
-                bill['total'] = bill['total'] * (100 - coupon_discount) / 100
-                bill['total'] = round(bill['total'], 2)
+                new_total = bill['total'] * (100 - coupon_discount) / 100
+
+                discount_amount = new_total - total
+                bill['coupon'] = round(discount_amount, 2) * -1
+                bill['total'] = round(new_total, 2)
 
             if 'tip' in bill:
                 bill['total'] += bill['tip']
 
-            return bill['total']
+            return bill
         except Exception as e:
             print(f"Error occurred: {str(e)}")
-            return 0
+            return {}
         finally:
             self.session.close()
 

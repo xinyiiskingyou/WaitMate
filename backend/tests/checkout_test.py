@@ -35,14 +35,17 @@ def test_checkout_bill_tip(order_japanese):
     checkout.clear_data()
 
     checkout.checkout_bill_tips(order_japanese, 5)
-    assert checkout.checkout_bill(order_japanese) != 0
+    assert checkout.checkout_bill(order_japanese) != {}
 
 def test_checkout_coupon(order_japanese):
     checkout.clear_data()
 
     checkout.checkout_coupon_create('catsz', 50)
     checkout.checkout_bill_coupon(order_japanese, 'catsz')
-    assert checkout.checkout_bill(order_japanese) != 0
+
+    res = checkout.checkout_bill(order_japanese)
+    assert res != {}
+    assert res['total'] != 0
 
 def test_checkout_coupon_delete():
     checkout.clear_data()
