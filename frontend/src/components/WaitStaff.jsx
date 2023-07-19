@@ -89,7 +89,6 @@ const WaitStaff = () => {
   const fetchNotificationKitchen = async () => {
     try {
       const response = await fetch('http://localhost:8000/notification/waitstaff/get/kitchen', {
-        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${cookies.token}`

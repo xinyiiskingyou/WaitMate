@@ -7,7 +7,7 @@ It utilizes SQLite as the underlying database engine to store and retrieve table
 
 from sqlalchemy import create_engine, Table, MetaData, select, update, delete
 from sqlalchemy.orm import sessionmaker
-from src.db_model import Tables
+from src.db_model import Tables, Orders
 from src.error import InputError
 from src.helper import check_table_exists
 from constant import DB_PATH, DEFAULT_TABLE_STATUS
@@ -110,9 +110,13 @@ class TableDB():
             self.session.execute(stmt)
             self.session.commit()
 
-            # delete table when the status is empty
-            self.session.execute(delete(Tables).where(Tables.status == 'EMPTY'))
-            self.session.commit()
+            if status == 'EMPTY':
+                # delete table when the status is empty
+                self.session.execute(delete(Tables).where(Tables.table_id == table_id))
+                self.session.commit()
+
+                self.session.execute(delete(Orders).where(Orders.table_id == table_id))
+                self.session.commit()
         except Exception as error:
             self.session.rollback()
             raise InputError(f'Error occurred: {str(error)}') from error

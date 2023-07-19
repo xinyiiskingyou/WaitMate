@@ -76,17 +76,33 @@ const Kitchenlist = () => {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.token}`
-      },  
+        'Authorization': `Bearer ${cookies.token}`},
       body: JSON.stringify({"order_req": order_payload, "table_req": table_payload}),
     }).then(response => {
       if (response.ok) {
-        setKitchen((prevKitchen) =>
-        prevKitchen.map((order) =>
-          order.tablenum === table_id && order.name === item_name
-            ? { ...order, state: 'Ready' }
-            : order
-        ));
+        // setKitchen((prevKitchen) =>
+        // prevKitchen.map((order) =>
+        //   order.tablenum === table_id && order.name === item_name && order.amount == amount
+        //     ? { ...order, state: 'Ready' }
+        //     : order
+        // ));
+        setKitchen((prevKitchen) => {
+          let isUpdated = false;
+          const updatedKitchen = prevKitchen.map((order) => {
+            if (
+              !isUpdated && // Check if not already updated
+              order.tablenum === table_id &&
+              order.name === item_name &&
+              order.amount == amount
+            ) {
+              isUpdated = true; // Set the flag to true to indicate that we have updated an element
+              return { ...order, state: 'Ready' };
+            }
+            return order;
+          });
+          return updatedKitchen;
+        });
+        
         return response.json();
       } else {
         throw new Error('Failed to update status');
