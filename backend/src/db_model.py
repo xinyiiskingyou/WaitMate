@@ -52,3 +52,12 @@ class Coupons(Base):
 
     code = Column(String, primary_key=True)
     amount = Column(Integer)
+
+class Memes(Base):
+    
+    __tablename__ = 'Memes'
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    filename = Column(String)
+    img_url = Column(String)
+    
