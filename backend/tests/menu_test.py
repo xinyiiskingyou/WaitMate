@@ -1,4 +1,3 @@
-import os
 import pytest
 from src.error import InputError, AccessError
 from src.menu import MenuDB
