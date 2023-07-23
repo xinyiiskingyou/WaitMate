@@ -6,13 +6,18 @@ import Box from '@mui/material/Grid';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import Snackbar from '@mui/material/Snackbar';
 import manage from '../assets/management.png'
 import welcome from '../assets/welcome.png'
 
 const Home = () => {
 
   const [value, setValue] = useState(null);
-  let [error, setError] = useState(false);
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [showSnackbar, setShowSnackbar] = useState(false);
 
   const nextLink = `/Browse/${value}`; 
   const navigate = useNavigate();
@@ -23,29 +28,35 @@ const Home = () => {
     setError(isNaN(inputValue));
   };
 
-  const handleSelectTable = () => {
+  const handleSnackbarClose = () => {
+    setShowSnackbar(false); // Close the Snackbar
+  };
 
+  const handleSelectTable = async () => {
     console.log('value:', value);
     const table = { table_id : value };
-
-    fetch("http://localhost:8000/table/select", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(table)
-    }).then(response => {
+    try {
+      const response = await  fetch('http://localhost:8000/table/select', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(table),
+      });
+  
       if (response.ok) {
-        return response.json();
+        navigate(nextLink);
       } else {
-        throw new Error('Failed to select table. Please try again.');
+        const errorResponse = await response.json();
+        setErrorMessage(errorResponse.detail);
+        setShowSnackbar(true);
       }
-    }).then(() => {
-      navigate(nextLink);
-    })
-    .catch(errors => {
-      console.log(errors);
-      alert(errors);
+    } catch (error) {
+      console.error(error);
+      setErrorMessage(error.message);
       navigate("/");
-    })
+      setShowSnackbar(true);
+    }
   };
 
   const buttonStyle = {
@@ -119,6 +130,18 @@ const Home = () => {
           </Grid>  
         </Grid>
       </Box>
+
+      <Snackbar
+        open={showSnackbar}
+        autoHideDuration={1500} 
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert severity="error" onClose={handleSnackbarClose} sx={{ width: '100%' }}>
+          <AlertTitle>Error</AlertTitle>
+          {errorMessage}
+        </Alert>
+      </Snackbar>
 
       <Link to="/staff">
         <Button
