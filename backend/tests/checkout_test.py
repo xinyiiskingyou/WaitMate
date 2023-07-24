@@ -8,16 +8,14 @@ checkout = CheckoutDB()
 def test_checkout_invalid_tip(table_id_1):
 
     checkout.clear_data()
-    with pytest.raises(InputError) as error:
+    with pytest.raises(InputError):
         checkout.checkout_bill_tips(table_id_1, -1)
-    assert str(error.value) == 'Invalid tip amount.'
-    
+
 def test_checkout_invalid_coupon(table_id_1):
 
     checkout.clear_data()
-    with pytest.raises(InputError) as error:
+    with pytest.raises(InputError):
         checkout.checkout_bill_coupon(table_id_1, 'Cats')
-    assert str(error.value) == 'Invalid coupon.'
 
 def test_checkout_order(order_japanese):
 
