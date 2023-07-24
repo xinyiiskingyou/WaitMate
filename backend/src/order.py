@@ -46,15 +46,15 @@ class OrderDB:
 
         # check if the table_id is valid
         if not check_table_exists(table_id, self.session):
-            raise InputError(INVALID_TABLE_MSG)
+            raise InputError(detail=INVALID_TABLE_MSG)
 
         # check if item name is valid
         if not check_item_exists(item_name.lower(), self.session):
-            raise InputError('The item_name does not refer to a valid item')
+            raise InputError(detail='The item_name does not refer to a valid item')
 
         # check if amount is valid
         if amount is None or amount < 1:
-            raise InputError('The amount must be more than 1')
+            raise InputError(detail='The amount must be more than 1')
 
         try:
             curr_time = datetime.datetime.now()
@@ -71,7 +71,7 @@ class OrderDB:
             self.session.commit()
         except Exception as error:
             self.session.rollback()
-            raise InputError(f'Error occurred: {str(error)}') from error
+            raise InputError(detail=f'Error occurred: {str(error)}') from error
         finally:
             self.session.close()
 
@@ -111,7 +111,7 @@ class OrderDB:
             return [tuple(row) for row in query]
         except Exception as error:
             self.session.rollback()
-            raise InputError(f'Error occurred: {str(error)}') from error
+            raise InputError(detail=f'Error occurred: {str(error)}') from error
         finally:
             self.session.close()
 

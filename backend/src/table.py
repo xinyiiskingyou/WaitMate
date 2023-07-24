@@ -39,7 +39,7 @@ class TableDB():
         '''
 
         if check_table_exists(table_id, self.session):
-            raise InputError('Table id is not available.')
+            raise InputError(detail='Table id is not available.')
 
         try:
             new_table = Tables(table_id=table_id, status=DEFAULT_TABLE_STATUS)
@@ -47,7 +47,7 @@ class TableDB():
             self.session.commit()
         except Exception as error:
             self.session.rollback()
-            raise InputError(f'Error occurred: {str(error)}') from error
+            raise InputError(detail=f'Error occurred: {str(error)}') from error
         finally:
             self.session.close()
         return table_id
@@ -75,7 +75,7 @@ class TableDB():
             return table_dict
         except Exception as error:
             self.session.rollback()
-            raise InputError(f'Error occurred: {str(error)}') from error
+            raise InputError(detail=f'Error occurred: {str(error)}') from error
         finally:
             self.session.close()
 
@@ -95,11 +95,11 @@ class TableDB():
         '''
 
         if not check_table_exists(table_id, self.session):
-            raise InputError('Table id is not available.')
+            raise InputError(detail='Table id is not available.')
 
         # check if the status is valid
         if status not in ['OCCUPIED', 'ASSIST', 'BILL', 'EMPTY']:
-            raise InputError('Unknown status')
+            raise InputError(detail='Unknown status')
 
         try:
             stmt = (
@@ -119,7 +119,7 @@ class TableDB():
                 self.session.commit()
         except Exception as error:
             self.session.rollback()
-            raise InputError(f'Error occurred: {str(error)}') from error
+            raise InputError(detail=f'Error occurred: {str(error)}') from error
         finally:
             self.session.close()
 
