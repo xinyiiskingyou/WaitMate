@@ -12,7 +12,7 @@ def test_upload_meme_invalid_url():
     with pytest.raises(InputError):
         meme.upload_meme('https://fakeIMG')
     with pytest.raises(InputError):
-        meme.upload_meme('')
+        meme.upload_meme('invalidlink')
 
 def test_upload_meme_valid():
     meme.clear_data()
@@ -30,9 +30,9 @@ def test_upload_meme_invalid_filename():
     
 def test_like_meme_invalid_email():
     with pytest.raises(InputError):
-        meme.like_a_meme('123456', '_91408619_55df76d5-2245-41c1-8031-07a4da3f313f.jpg')
+        meme.like_a_meme('123456', './images/nono.png')
     with pytest.raises(InputError):
-        meme.like_a_meme('123456@notexist.unsw.com', '_91408619_55df76d5-2245-41c1-8031-07a4da3f313f.jpg')    
+        meme.like_a_meme('123456@notexist.unsw.com', './images/nono.png')    
     
 def test_like_meme_invalid_image():
     with pytest.raises(NotFoundError):

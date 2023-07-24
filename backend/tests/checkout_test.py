@@ -26,14 +26,40 @@ def test_checkout_order(order_japanese):
     ]
     assert checkout.checkout_order(order_japanese) == exp
 
+def test_checkout_bill_invalid_table():
+    with pytest.raises(InputError):
+        checkout.checkout_bill(29999)
+    with pytest.raises(InputError):
+        checkout.checkout_bill(-1)
+
 def test_checkout_bill_simple(order_japanese):
     assert checkout.checkout_bill(order_japanese) != {}
+
+def test_checkout_bill_tip_invalid_table():
+    with pytest.raises(InputError):
+        checkout.checkout_bill_tips(29999, 1)
+    with pytest.raises(InputError):
+        checkout.checkout_bill_tips(-1, 1)
 
 def test_checkout_bill_tip(order_japanese):
     checkout.clear_data()
 
     checkout.checkout_bill_tips(order_japanese, 5)
     assert checkout.checkout_bill(order_japanese) != {}
+
+def test_checkout_bill_coupon_invalid_table():
+    with pytest.raises(InputError):
+        checkout.checkout_bill_coupon(29999, 10)
+    with pytest.raises(InputError):
+        checkout.checkout_bill_coupon(-1, 10)
+
+def test_checkout_coupon_create_invalid_amount():
+    checkout.clear_data()
+
+    with pytest.raises(InputError):
+        checkout.checkout_coupon_create('catsz' ,-1)
+    with pytest.raises(InputError):
+        checkout.checkout_coupon_create('catsz', -100)
 
 def test_checkout_coupon(order_japanese):
     checkout.clear_data()
@@ -44,6 +70,12 @@ def test_checkout_coupon(order_japanese):
     res = checkout.checkout_bill(order_japanese)
     assert res != {}
     assert res['total'] != 0
+
+def test_checkout_coupon_invalid_code():
+    with pytest.raises(InputError):
+        checkout.checkout_coupon_delete('gdfgfdgfdg') 
+    with pytest.raises(InputError):
+        checkout.checkout_coupon_delete(' ')
 
 def test_checkout_coupon_delete():
     checkout.clear_data()
