@@ -4,23 +4,22 @@ The `checkout` module provides functionalites for checkout related features.
 These features includes customer viewing their bill, adding any coupons,
 and tips. It also includes the coupons in relation to the manager
 '''
-from typing import List, Optional
+from typing import List
 import sqlalchemy.exc
 from sqlalchemy import MetaData, Table, create_engine, delete, update
 from sqlalchemy.orm import sessionmaker
 from constant import DB_PATH, INVALID_TABLE_MSG
 from src.error import InputError
-from src.db_model import Coupons, CheckoutDB
-from src.helper import get_order, check_table_exists
+from src.db_model import Coupons, Checkout
+from src.helper import get_order, check_table_exists, check_coupon_valid
 
-
-class Checkout:
+class CheckoutDB:
 
     def __init__(self) -> None:
         self.engine = create_engine(DB_PATH)
 
         Coupons.__table__.create(bind=self.engine, checkfirst=True)
-        CheckoutDB.__table__.create(bind=self.engine, checkfirst=True)
+        Checkout.__table__.create(bind=self.engine, checkfirst=True)
 
         session_maker = sessionmaker(bind=self.engine)
         self.session = session_maker()
@@ -35,14 +34,14 @@ class Checkout:
 
     def checkout_bill(self, table_id: int) -> dict:
         if not check_table_exists(table_id, self.session):
-            raise InputError(INVALID_TABLE_MSG)
+            raise InputError(detail=INVALID_TABLE_MSG)
 
         try:
             # Get the items for the checkout order
             items = self.checkout_order(table_id)
 
             # Get the coupon and tip from the Checkout table using SQLAlchemy
-            checkout_data = self.session.query(CheckoutDB).filter_by(table_id=table_id).first()
+            checkout_data = self.session.query(Checkout).filter_by(table_id=table_id).first()
             bill = {'items': items}
 
             if checkout_data:
@@ -56,7 +55,7 @@ class Checkout:
             bill['total'] = total
 
             if 'coupon' in bill:
-                coupon_discount = self._checkout_coupon_find(bill['coupon'])
+                coupon_discount = check_coupon_valid(bill['coupon'], self.session)
                 new_total = bill['total'] * (100 - coupon_discount) / 100
 
                 discount_amount = new_total - total
@@ -76,55 +75,55 @@ class Checkout:
     def checkout_bill_tips(self, table_id: int, amount: int):
 
         if not check_table_exists(table_id, self.session):
-            raise InputError(INVALID_TABLE_MSG)
+            raise InputError(detail=INVALID_TABLE_MSG)
 
         if amount <= 0:
-            raise InputError('Invalid tip amount.')
+            raise InputError(detail='Invalid tip amount.')
 
         self._checkout_add(table_id)
 
         try:
             stmt = (
-                update(CheckoutDB)
-                .where(CheckoutDB.table_id == table_id)
+                update(Checkout)
+                .where(Checkout.table_id == table_id)
                 .values(tip = amount)
             )
             self.session.execute(stmt)
             self.session.commit()
         except sqlalchemy.exc.SQLAlchemyError as err:
             self.session.rollback()
-            raise InputError(f"Database error occurred: {str(err)}") from err
+            raise InputError(detail=f"Error occurred: {str(err)}") from err
         finally:
             self.session.close()
 
     def checkout_bill_coupon(self, table_id: int, coupon: str):
 
         if not check_table_exists(table_id, self.session):
-            raise InputError(INVALID_TABLE_MSG)
-        if not self._checkout_coupon_find(coupon):
-            raise InputError('Invalid coupon.')
+            raise InputError(detail=INVALID_TABLE_MSG)
+        if not check_coupon_valid(coupon, self.session):
+            raise InputError(detail='Invalid coupon.')
 
         self._checkout_add(table_id)
 
         try:
             stmt = (
-                update(CheckoutDB)
-                .where(CheckoutDB.table_id == table_id)
+                update(Checkout)
+                .where(Checkout.table_id == table_id)
                 .values(coupon = coupon)
             )
             self.session.execute(stmt)
             self.session.commit()
         except sqlalchemy.exc.SQLAlchemyError as err:
             self.session.rollback()
-            raise InputError(f"Database error occurred: {str(err)}") from err
+            raise InputError(detail=f"Database error occurred: {str(err)}") from err
         finally:
             self.session.close()
 
     def checkout_coupon_create(self, code: str, amount: int):
-        if self._checkout_coupon_find(code):
-            raise InputError('Coupon code already in use')
+        if check_coupon_valid(code, self.session):
+            raise InputError(detail='Coupon code already in use')
         if amount <= 0:
-            raise InputError('Invalid coupon amount')
+            raise InputError(detail='Invalid coupon amount')
 
         try:
             new_coupon = Coupons(
@@ -135,12 +134,12 @@ class Checkout:
             self.session.commit()
         except sqlalchemy.exc.SQLAlchemyError as err:
             self.session.rollback()
-            raise InputError(f"Database error occurred: {str(err)}") from err
+            raise InputError(detail=f"Database error occurred: {str(err)}") from err
         finally:
             self.session.close()
 
     def checkout_coupon_delete(self, code: str):
-        if not self._checkout_coupon_find(code):
+        if not check_coupon_valid(code, self.session):
             return
 
         try:
@@ -148,7 +147,7 @@ class Checkout:
             self.session.commit()
         except sqlalchemy.exc.SQLAlchemyError as err:
             self.session.rollback()
-            raise InputError(f"Database error occurred: {str(err)}") from err
+            raise InputError(detail=f"Database error occurred: {str(err)}") from err
         finally:
             self.session.close()
 
@@ -178,42 +177,29 @@ class Checkout:
 
     # PRIVATE HELPER FUNCTIONS
 
-    def _checkout_coupon_find(self, code: str) -> Optional[int]:
-
-        try:
-            coupon = self.session.query(Coupons).filter_by(code=code).first()
-            if not coupon:
-                return None
-            return coupon.amount
-        except sqlalchemy.exc.SQLAlchemyError as err:
-            self.session.rollback()
-            raise InputError(f"Database error occurred: {str(err)}") from err
-        finally:
-            self.session.close()
-
     def _checkout_add(self, table_id: int):
 
         try:
             # Check if table id exists
-            checkout_row = self.session.query(CheckoutDB).filter_by(table_id=table_id).first()
+            checkout_row = self.session.query(Checkout).filter_by(table_id=table_id).first()
 
             # If it does not exist, insert a new row with default values
             if not checkout_row:
-                new_checkout = CheckoutDB(table_id=table_id, coupon=None, tip=None)
+                new_checkout = Checkout(table_id=table_id, coupon=None, tip=None)
                 self.session.add(new_checkout)
                 self.session.commit()
         except sqlalchemy.exc.SQLAlchemyError as err:
             self.session.rollback()
-            raise InputError(f"Database error occurred: {str(err)}") from err
+            raise InputError(detail=f"Database error occurred: {str(err)}") from err
         finally:
             self.session.close()
 
     def _checkout_remove(self, table_id: int):
         try:
-            self.session.execute(delete(CheckoutDB).where(CheckoutDB.table_id==table_id))
+            self.session.execute(delete(Checkout).where(Checkout.table_id==table_id))
             self.session.commit()
         except sqlalchemy.exc.SQLAlchemyError as err:
             self.session.rollback()
-            raise InputError(f"Database error occurred: {str(err)}") from err
+            raise InputError(detail=f"Database error occurred: {str(err)}") from err
         finally:
             self.session.close()

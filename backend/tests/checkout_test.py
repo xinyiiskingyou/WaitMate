@@ -1,9 +1,9 @@
 import pytest
 from src.error import InputError
-from src.checkout import Checkout
+from src.checkout import CheckoutDB
 from tests.conftest import VALID, INPUTERROR
 
-checkout = Checkout()
+checkout = CheckoutDB()
 
 def test_checkout_invalid_tip(table_id_1):
 
@@ -55,7 +55,6 @@ def test_checkout_coupon_delete():
 
     checkout.checkout_coupon_delete('catsz1')
     assert checkout.checkout_coupon_view() == []
-
 
 ######################################
 ########## endpoint tests ############

@@ -40,7 +40,7 @@ class Orders(Base):
     is_prepared = Column(Integer, default=0)
     is_served = Column(Integer, default=0)
 
-class CheckoutDB(Base):
+class Checkout(Base):
     __tablename__ = 'Checkout'
 
     table_id = Column(Integer, primary_key=True)
@@ -54,10 +54,14 @@ class Coupons(Base):
     amount = Column(Integer)
 
 class Memes(Base):
-    
     __tablename__ = 'Memes'
     
     id = Column(Integer, primary_key=True, autoincrement=True)
     filename = Column(String)
-    img_url = Column(String)
+    count = Column(Integer, default=0)
     
+class Votes(Base):
+    __tablename__ = 'Votes'
+    
+    email = Column(String, primary_key=True)
+    filename = Column(String)
