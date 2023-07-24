@@ -126,6 +126,6 @@ def test_update_table_status(client, waitstaff_token):
     # invalid table id
     resp = client.put("/table/status/update", 
         json={"table_id": 100, "status": "BILL"},
-         headers=waitstaff_token
+        headers=waitstaff_token
     )
     assert resp.status_code == INPUTERROR
