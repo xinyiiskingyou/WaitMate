@@ -9,4 +9,4 @@ venv/
 
 # Ignore mod
 node_modules/
-
+images/
