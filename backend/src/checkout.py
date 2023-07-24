@@ -140,7 +140,7 @@ class CheckoutDB:
 
     def checkout_coupon_delete(self, code: str):
         if not check_coupon_valid(code, self.session):
-            return
+            raise InputError(detail='Coupon code is not valid')
 
         try:
             self.session.execute(delete(Coupons).where(Coupons.code==code))
@@ -188,16 +188,6 @@ class CheckoutDB:
                 new_checkout = Checkout(table_id=table_id, coupon=None, tip=None)
                 self.session.add(new_checkout)
                 self.session.commit()
-        except sqlalchemy.exc.SQLAlchemyError as err:
-            self.session.rollback()
-            raise InputError(detail=f"Database error occurred: {str(err)}") from err
-        finally:
-            self.session.close()
-
-    def _checkout_remove(self, table_id: int):
-        try:
-            self.session.execute(delete(Checkout).where(Checkout.table_id==table_id))
-            self.session.commit()
         except sqlalchemy.exc.SQLAlchemyError as err:
             self.session.rollback()
             raise InputError(detail=f"Database error occurred: {str(err)}") from err

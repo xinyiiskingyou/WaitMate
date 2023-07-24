@@ -63,10 +63,6 @@ class Auth:
         fb_auth.set_custom_user_claims(user.uid, {'hasRole': 'kitchenstaff'})
         print('Sucessfully created kitchenstaff: {0}'.format(user.uid))
 
-    def create_customer(self):
-        #TODO
-        self.auth.sign_in_anonymous()
-
     def login_mananger(self, email: str, password: str):
         if not email or not password:
             raise InputError(detail='Enter your email and password')
@@ -137,17 +133,4 @@ class Auth:
             fb_auth.delete_user(user.uid)
         self.create_restaurant()
 
-    def print_all(self):
-        print("Printing users:")
-
-        for user in fb_auth.list_users().iterate_all():
-            print('User: ' + user.uid + ' ' + user.email)
-
-
 auth = Auth()
-
-if __name__ == '__main__':  
-    auth_system = Auth()
-    token = auth_system.login_mananger('manager@waitmate.com', 'waitmate1')['token']
-    auth_user = auth_system.is_authenticated(token)
-    auth_system.is_authorized(['manager'], auth_user)
