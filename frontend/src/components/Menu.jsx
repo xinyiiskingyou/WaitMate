@@ -489,6 +489,20 @@ const Menu = () => {
           Coupons
         </Button>
       </Link>
+      <Link to="/manager" style={{
+            marginTop: '8%',
+            marginLeft: "10%",
+            width: '100%',
+      }}>
+        <Button style={{...AddbuttonStyle, top: "5px", right: "0px"}}>
+          <img src={coupon} alt="CouponIcon" style={{
+            maxWidth: '100%',
+            maxHeight: '7vh',
+            marginRight: '1vw'
+          }}/>
+          Manager
+        </Button>
+      </Link>
       <Link to="/Settings" style={{
             marginTop: '8%',
             marginLeft: "10%",
