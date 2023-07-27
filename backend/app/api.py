@@ -22,7 +22,6 @@ from src.model.coupon_req import Coupon, Coupon_Cust, Coupon_Code
 from src.model.bill_req import Tip
 from src.model.meme_req import Memes
 from src.model.vote_req import Votes
-from verify_email import verify_email
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='http://localhost:8000/auth/manager/login')
 

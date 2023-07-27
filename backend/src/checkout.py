@@ -61,7 +61,8 @@ class CheckoutDB:
                 discount_amount = new_total - total
                 bill['coupon'] = round(discount_amount, 2) * -1
                 bill['total'] = round(new_total, 2)
-
+            else:
+                bill['coupon'] = 0
             if 'tip' in bill:
                 bill['total'] += bill['tip']
 
