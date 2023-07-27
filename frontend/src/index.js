@@ -17,6 +17,8 @@ import Coupon from './components/CouponPage';
 import { Navigate } from 'react-router-dom';
 import { getToken } from './auth.js';
 import Bill from './components/Bill';
+import Memory from './components/Memory';
+
 
 function App() {
   const [manager, setManager] = React.useState("false");
@@ -63,6 +65,8 @@ function App() {
         <Route path="/WaitstaffLogin" element={<WaitstaffLogin />} />
         <Route path="/KitchenstaffLogin" element={<KitchenstaffLogin />} />
         <Route path="/Bill/:id" element={<Bill />} />
+        <Route path="/Memory/:id" element={<Memory />} />
+
       </Routes>
     </Router>
   );

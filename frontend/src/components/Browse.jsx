@@ -21,6 +21,8 @@ const Browse = () => {
 
     const id = useParams();
     const cartLink = `/Cart/${id.id}` 
+    const memoryLink = `/Memory/${id.id}` 
+
 
     let handleCatChange = (category) => {
       cat = category.id;
@@ -234,15 +236,17 @@ const Browse = () => {
             </Grid>
 
             <Grid item>
-              <Button variant="contained" color="primary" style={buttonStyle}>
-                <img src={boring} alt="BoringIcon" style={{
-                  width: '4vw',
-                  height: '6vh',
-                  marginTop: '0.5vh',
-                  marginRight: '1vw',
-                }}/>
-                Too Bored?
-              </Button>
+              <Link to={memoryLink}>
+                <Button variant="contained" color="primary" style={buttonStyle}>
+                  <img src={boring} alt="BoringIcon" style={{
+                    width: '4vw',
+                    height: '6vh',
+                    marginTop: '0.5vh',
+                    marginRight: '1vw',
+                  }}/>
+                  Too Bored?
+                </Button>
+              </Link>
             </Grid>
 
             <Grid item>
