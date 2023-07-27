@@ -1,12 +1,12 @@
-
 import React, { useState, useEffect } from "react";
+import { useCookies } from 'react-cookie';
 import { Box, FormControlLabel, Checkbox, Button, TextField, InputAdornment } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
-import { useCookies } from 'react-cookie';
+import ErrorHandler from '../../ErrorHandler';
 
-const Item = ({ onItemAdd, onItemCancel, category }) => {
+const AddItem = ({ onItemAdd, onItemCancel, category }) => {
 
   const [vegetarian, setVegetarian] = useState(false);
   const [name, setName] = useState("");
@@ -14,19 +14,12 @@ const Item = ({ onItemAdd, onItemCancel, category }) => {
   const [description, setDescription] = useState("");
   const [ingredient, setIngredient] = useState("");
 
-  const [NameError, setNameError] = useState(false);
-  const [PriceError, setPriceError] = useState(false);
-  const [DescriptionError, setDescriptionError] = useState(false);
-  const [IngredientError, setIngredientError] = useState(false);
-
   const [open, setOpen] = useState(true);
   const [cookies] = useCookies(['token']);
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const { _, handleShowSnackbar, showError } = ErrorHandler(); 
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     console.log('category', category);
     const payload = {
         category: category,
@@ -36,34 +29,27 @@ const Item = ({ onItemAdd, onItemCancel, category }) => {
         ingredients: ingredient,
         is_vegan: vegetarian
       };
+    
+    try {
+      const response = await fetch('http://localhost:8000/menu/item/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${cookies.token}`
+        },
+        body: JSON.stringify(payload),
+      });
 
-    fetch('http://localhost:8000/menu/item/add', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cookies.token}`
-      },
-      body: JSON.stringify(payload),
-    })
-    .then(response => {
-        if (response.ok) {
-            return response.json();
-        } else {
-            throw new Error('Failed to add item. Please try again.');
-        }
-    })
-    .then(data => {
+      if (response.ok) {
         onItemAdd(category, name, price, description, ingredient, vegetarian);
-        setNameError(isNaN(name));
-        setPriceError(isNaN(price));
-        setDescriptionError(isNaN(description));
-        setIngredientError(isNaN(vegetarian));
-    })
-    .catch(error => {
-        // Handle the error if necessary
-        console.error(error);
-        alert(error);
-    });
+      } else {
+        const errorResponse = await response.json();
+        handleShowSnackbar(errorResponse.detail);
+      }
+    } catch (error) {
+      console.error(error);
+      handleShowSnackbar(error.message);
+    }
   }
   
   const handleCancel = () => {
@@ -71,14 +57,17 @@ const Item = ({ onItemAdd, onItemCancel, category }) => {
     setOpen(false);
   }
 
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   useEffect(() => {
-      // Update the state values when the props change
-      setName(name);
-      setPrice(price);
-      setDescription(description);
-      setIngredient(ingredient);
-      setVegetarian(vegetarian);
-    }, [name, price, description, ingredient, vegetarian]);
+    setName(name);
+    setPrice(price);
+    setDescription(description);
+    setIngredient(ingredient);
+    setVegetarian(vegetarian);
+  }, [name, price, description, ingredient, vegetarian]);
 
   return (
     <Box>
@@ -92,24 +81,20 @@ const Item = ({ onItemAdd, onItemCancel, category }) => {
       <DialogTitle><b>Add Item</b></DialogTitle>
 
       <form onSubmit={(e) => {
-        e.preventDefault(); // Prevent default form submission behavior
+        e.preventDefault();
       }}>
-      <Box sx={{m: 2}}>
-        <TextField
-          label="Name"
-          id="standard-required"
-          value={name}
-          error={NameError !== ''}
-          helperText={NameError && 'This field is required.'}
-          size="small"
-          margin= 'normal'
-          fullWidth
-          onChange={(e) => {
-            setName(e.target.value);
-            setNameError('');
-          }}
-          variant="filled"
-        />
+        <Box sx={{m: 2}}>
+          <TextField
+            label="Name"
+            id="standard-required"
+            value={name}
+            helperText={'Name field is required.'}
+            size="small"
+            margin= 'normal'
+            fullWidth
+            onChange={(e) => { setName(e.target.value); }}
+            variant="filled"
+          />
 
         <Box display="flex" flexDirection="row" flexWrap="wrap">
           <TextField
@@ -120,17 +105,13 @@ const Item = ({ onItemAdd, onItemCancel, category }) => {
               step: "0.01",
               min: "0"
             }}
-            error={PriceError !== ''}
-            helperText={PriceError && 'This field is required.'}
+            helperText={'Price field is required.'}
             size="small"
             margin= 'normal'
             InputProps={{
               startAdornment: <InputAdornment position="start">$</InputAdornment>,
             }}
-            onChange={(e) => {
-              setPrice(e.target.value);
-              setPriceError('');
-            }}
+            onChange={(e) => { setPrice(e.target.value); }}
             variant="filled"
           />
           
@@ -147,30 +128,22 @@ const Item = ({ onItemAdd, onItemCancel, category }) => {
         <TextField
           label="Description"
           value={description}
-          error={DescriptionError !== ''}
-          helperText={DescriptionError && 'This field is required.'}
+          helperText={'Description field is required.'}
           size="small"
           margin= 'normal'
           fullWidth
-          onChange={(e) => {
-            setDescription(e.target.value);
-            setDescriptionError('');
-          }}
+          onChange={(e) => { setDescription(e.target.value); }}
           variant="filled"
         />
 
         <TextField
           label="Ingredients"
           value={ingredient}
-          error={IngredientError !== ''}
-          helperText={IngredientError && 'This field is required.'}
+          helperText={'Ingredient field is required.'}
           size="small"
           margin= 'normal'
           fullWidth
-          onChange={(e) => {
-            setIngredient(e.target.value);
-            setIngredientError('');
-          }}
+          onChange={(e) => { setIngredient(e.target.value); }}
           variant="filled"
         />
       </Box>
@@ -190,8 +163,9 @@ const Item = ({ onItemAdd, onItemCancel, category }) => {
       </DialogActions>
       </form>
       </Dialog>
+      {showError}
     </Box>
   )
 };
 
-export default Item;
+export default AddItem;

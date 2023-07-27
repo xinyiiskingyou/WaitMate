@@ -1,21 +1,24 @@
 import React, { useState } from "react";
 import { List, ListItem, ListItemText, Menu, MenuItem } from '@mui/material';
-import { useCookies } from 'react-cookie';
+import ErrorHandler from '../ErrorHandler';
 
-const Table = ({ table_id, value }) => {
+const UpdateTable = ({ table_id, value, cookies }) => {
   const options = [
     'OCCUPIED',
     'ASSIST',
     'BILL',
     'EMPTY'
   ];
-
-  const [cookies] = useCookies(['token']);
+  const { handleShowSnackbar, showError } = ErrorHandler();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
   const handleClickListItem = (event) => {
     setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
   const handleMenuItemClick = async (option, table_id) => {
@@ -37,16 +40,13 @@ const Table = ({ table_id, value }) => {
       if (response.ok) {
         setAnchorEl(null);
       } else {
-        throw new Error('Failed to update status');
+        const errorResponse = await response.json();
+        handleShowSnackbar(errorResponse.detail);
       }
     } catch (error) {
       console.error(error);
-      alert('Failed to update the status.');
+      handleShowSnackbar(error.message);
     }
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
   };
 
   return (
@@ -87,8 +87,9 @@ const Table = ({ table_id, value }) => {
           </MenuItem>
         ))}
       </Menu>
+      {showError}
     </div>
   );
 };
 
-export default Table;
+export default UpdateTable;

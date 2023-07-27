@@ -1,9 +1,9 @@
 import React from 'react';
 import { Box, Grid, Button, Typography } from '@mui/material';
 import {Link} from 'react-router-dom';
-import worker from '../assets/worker.png'
-import chef from '../assets/chef.png'
-import manager from '../assets/manager.png'
+import worker from '../../assets/worker.png'
+import chef from '../../assets/chef.png'
+import manager from '../../assets/manager.png'
 
 const Staff = () => {
 
@@ -34,7 +34,7 @@ const Staff = () => {
           <h2 style={headingStyle}>Select Staff Type</h2>
         </Grid>
         <Grid item xs={4} textAlign={'right'}>
-          <Link to="/ManagerLogin">
+          <Link to="/manager/login">
             <Button variant='contained' color='primary' style={buttonStyle}>
               <Grid container direction="column" alignItems="center" spacing={1}>
                 <Grid item>
@@ -53,7 +53,7 @@ const Staff = () => {
           </Link>
         </Grid>
         <Grid item xs={4} textAlign={'center'}>
-          <Link to="/KitchenstaffLogin">
+          <Link to="/kitchenstaff/login">
           <Button variant='contained' color='primary' style={buttonStyle}>
             <Grid container direction="column" alignItems="center" spacing={1}>
               <Grid item>
@@ -72,7 +72,7 @@ const Staff = () => {
           </Link>
         </Grid>
         <Grid item xs={4} textAlign={'left'}>
-          <Link to="/WaitstaffLogin">
+          <Link to="/waitstaff/login">
           <Button variant='contained' color='primary' style={buttonStyle}>
             <Grid container direction="column" alignItems="center" spacing={1}>
               <Grid item>

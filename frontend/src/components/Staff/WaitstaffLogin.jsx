@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 import { Box, Button, Grid, Typography, Container } from '@mui/material';
 import { pink } from '@mui/material/colors';
 import { useCookies } from 'react-cookie';
-import CssTextField from './CssTextField.jsx'
+import CssTextField from '../CssTextField.jsx'
 
 const mainPink = pink[100];
 const secPink = pink[200];
@@ -16,7 +16,7 @@ const LoginButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const KitchenstaffLogin = () => {
+const WaitstaffLogin = () => {
   const [password, setPassword] = React.useState('');
   const [cookies, setCookie] = useCookies(['token']);
 
@@ -33,7 +33,7 @@ const KitchenstaffLogin = () => {
       'password': password,
     }
     try { 
-      const response = await fetch('http://localhost:8000/auth/kitchenstaff/login', {
+      const response = await fetch('http://localhost:8000/auth/waitstaff/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -47,7 +47,7 @@ const KitchenstaffLogin = () => {
       const data = await response.json();
       setCookie('token', data, { path: '/' });
       console.log(cookies.token)
-      window.location.href = '/Kitchenlist';
+      window.location.href = '/waitstaff/list';
     }
     catch (error) {
       console.log(error)
@@ -65,24 +65,16 @@ const KitchenstaffLogin = () => {
         flexDirection: 'column',
         alignItems: 'center',
         minWidth: 450,
-
-
       }}>
-      <Box container direction='column' justifyContent='center' 
+      <Box container direction='column' justifyContent='center'
         sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignContent: 'stretch',
           minWidth: 450,
         }}
-        
       >
-        <Typography variant="h5" sx={{ mb: 2 }}>Kitchenstaff Login</Typography>
+        <Typography variant="h5" sx={{ mb: 2 }}>Waitstaff Login</Typography>
         <CssTextField fullWidth type="password" required label="Password" onChange={handlePasswordChange}
-          sx={{ 
-            mb: 2,
-            length: 10
-          }}/>
+          sx={{ mb: 2 }}/>
+          
         <Grid container>
           <Grid item xs> 
             <Box display="flex" justifyContent="flex-end">
@@ -97,4 +89,4 @@ const KitchenstaffLogin = () => {
   )
 
 }
-export default KitchenstaffLogin;
+export default WaitstaffLogin;

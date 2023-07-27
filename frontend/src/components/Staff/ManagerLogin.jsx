@@ -3,8 +3,8 @@ import { styled } from '@mui/material/styles';
 import { Box, Button, Grid, Typography, Container, Popover } from '@mui/material';
 import { pink } from '@mui/material/colors';
 import { useCookies } from 'react-cookie';
-import { handleLogin } from '../auth.js';
-import CssTextField from './CssTextField.jsx'
+import { handleLogin } from '../../auth.js';
+import CssTextField from '../CssTextField.jsx'
 
 const mainPink = pink[100];
 const secPink = pink[200];
@@ -22,7 +22,6 @@ const ManagerLogin = () => {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [_, setCookie] = useCookies(['token']);
-
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -44,7 +43,7 @@ const ManagerLogin = () => {
     handleLogin(email, password).then( data => {
       setCookie('token', data, { path: '/' })
       console.log(data)
-      window.location.href = '/Menu'
+      window.location.href = '/manager/menu'
     })
   };
   
@@ -95,8 +94,6 @@ const ManagerLogin = () => {
       </Box>
     </Box>
     </Container>
-
-  
   )
 }
 

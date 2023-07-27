@@ -6,8 +6,8 @@ import {
 import { pink } from '@mui/material/colors';
 import WestIcon from '@mui/icons-material/West';
 import { useCookies } from 'react-cookie';
-import { handleLogin, handleLogoutSubmit } from '../auth.js';
-import CssTextField from './CssTextField.jsx'
+import { handleLogin, handleLogoutSubmit } from '../../auth.js';
+import CssTextField from '../CssTextField.jsx'
 
 const mainPink = pink[100];
 const secPink = pink[200];
@@ -198,7 +198,7 @@ const Settings = () => {
   }
 
   const handleBack = () => {
-    window.location.href = '/menu';
+    window.location.href = '/manager/menu';
   }
 
   const handleCloseSB = (reason) => {
