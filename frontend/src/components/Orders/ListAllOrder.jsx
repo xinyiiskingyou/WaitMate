@@ -3,6 +3,7 @@ import { useCookies } from 'react-cookie';
 import { 
   Grid, 
   Box,
+  Paper,
   TableContainer, 
   Table,
   TableBody,
@@ -25,7 +26,11 @@ const ListAllOrder = () => {
     })
 
     let data = await response.json()
-    let order_list = []
+    
+    if (!data) {
+      return;
+    }
+    let order_list = [];
 
     for (var i of data) {
       order_list.push({
@@ -55,7 +60,8 @@ const ListAllOrder = () => {
         sx={{ 
           margin: 1, 
           border: 10,
-          borderColor: '#FFA0A0',
+          borderColor: '#FFFFFF',
+          background: "#FFFFFF",
           borderRadius: 2, 
           display:"flex",
       }}>

@@ -4,6 +4,7 @@ import { Box, Button, Grid, Typography, Container } from '@mui/material';
 import { pink } from '@mui/material/colors';
 import { useCookies } from 'react-cookie';
 import CssTextField from '../CssTextField.jsx'
+import { useNavigate } from "react-router-dom";
 
 const mainPink = pink[100];
 const secPink = pink[200];
@@ -19,6 +20,7 @@ const LoginButton = styled(Button)(({ theme }) => ({
 const KitchenstaffLogin = () => {
   const [password, setPassword] = React.useState('');
   const [cookies, setCookie] = useCookies(['token']);
+  const navigate = useNavigate();
 
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
@@ -46,8 +48,7 @@ const KitchenstaffLogin = () => {
 
       const data = await response.json();
       setCookie('token', data, { path: '/' });
-      console.log(cookies.token)
-      window.location.href = '/kitchenstaff/list';
+      navigate('/kitchenstaff/list');
     }
     catch (error) {
       console.log(error)
