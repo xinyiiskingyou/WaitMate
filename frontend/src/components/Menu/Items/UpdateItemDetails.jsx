@@ -11,7 +11,8 @@ import {
   DialogTitle,
   DialogContent,
   CardContent,
-  Typography
+  Typography,
+  Divider
 } from "@mui/material";
 import ErrorHandler from '../../ErrorHandler';
 import veg from '../../../assets/vegan.png'
@@ -88,8 +89,8 @@ const UpdateItemDetails = ({
   return (
     <>
       <CardContent>
-        <Typography variant="h5" gutterBottom style={{ fontWeight: 'bold', textAlign: "center" }}>
-          {name(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ').split}
+        <Typography variant="h6" gutterBottom style={{ fontWeight: 'bold', textAlign: "center" }}>
+          {name.toUpperCase()}
           {vegetarian ? (
             <img 
               src={veg} 
@@ -115,7 +116,7 @@ const UpdateItemDetails = ({
           Ingredients: {ingredients}
         </Typography>
       </CardContent>
-
+      
       <Button
         size="small"
         onClick={handleOpen}

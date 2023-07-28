@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useCookies } from 'react-cookie';
-import { Box, FormControlLabel, Checkbox, Button, TextField, InputAdornment } from '@mui/material';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogTitle from '@mui/material/DialogTitle';
+import { 
+  Box, 
+  FormControlLabel, 
+  Checkbox, 
+  Button, 
+  TextField, 
+  InputAdornment,
+  Dialog,
+  DialogActions,
+} from '@mui/material';
 import ErrorHandler from '../../ErrorHandler';
+import DoneIcon from '@mui/icons-material/Done';
 
 const AddItem = ({ onItemAdd, onItemCancel, category }) => {
 
@@ -73,12 +80,9 @@ const AddItem = ({ onItemAdd, onItemCancel, category }) => {
     <Box>
       <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth sx={{
         "& .MuiDialog-paper": {
-          border: "8px solid #FFA0A0",
-          borderRadius: 8,
+          background: "#FBDDDD",
         },
       }}>
-
-      <DialogTitle><b>Add Item</b></DialogTitle>
 
       <form onSubmit={(e) => {
         e.preventDefault();
@@ -94,6 +98,7 @@ const AddItem = ({ onItemAdd, onItemCancel, category }) => {
             fullWidth
             onChange={(e) => { setName(e.target.value); }}
             variant="filled"
+            sx={{ background: "white" }}
           />
 
         <Box display="flex" flexDirection="row" flexWrap="wrap">
@@ -113,6 +118,7 @@ const AddItem = ({ onItemAdd, onItemCancel, category }) => {
             }}
             onChange={(e) => { setPrice(e.target.value); }}
             variant="filled"
+            sx={{ background: "white" }}
           />
           
           <Box margin="3%">
@@ -134,6 +140,7 @@ const AddItem = ({ onItemAdd, onItemCancel, category }) => {
           fullWidth
           onChange={(e) => { setDescription(e.target.value); }}
           variant="filled"
+          sx={{ background: "white" }}
         />
 
         <TextField
@@ -145,6 +152,7 @@ const AddItem = ({ onItemAdd, onItemCancel, category }) => {
           fullWidth
           onChange={(e) => { setIngredient(e.target.value); }}
           variant="filled"
+          sx={{ background: "white" }}
         />
       </Box>
 

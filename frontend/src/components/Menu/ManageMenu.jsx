@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { 
   Drawer, 
   Box,
   Typography,
-  Grid, 
   Button,
   TextField,
   ButtonGroup,
-  Container
+  Container,
+  Paper
 } from "@mui/material";
 import ListCategories from "./Category/ListCategories";
 import WestIcon from '@mui/icons-material/West';
@@ -18,8 +18,7 @@ import UpdateCategoryName from "./Category/UpdateCategoryName";
 import UpdateCategoryOrder from "./Category/UpdateCategoryOrder";
 import ListItems from './Items/ListItems'
 import ManageItems from './Items/ManageItems'
-import coupon from '../../assets/coupon.png'
-import meme from '../../assets/meme.png'
+import Manager from '../Staff/ManagerInterface'
 
 const EditButtonStyle = {
   marginTop: '2.5vh',
@@ -56,13 +55,16 @@ const ManageMenu = () => {
   const [categoryEditingIndex, setCategoryEditingIndex] = useState(-1);
   const [editedCategory, setEditedCategory] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(-1);
-
   const { menuItems, setMenuItems, fetchMenuItems } = ListItems(selectedCategory);
+  const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
+
+  const navigate = useNavigate();
 
   const backLink = `/staff`;
   const [cookies] = useCookies(['token']);
   
-  const navigate = useNavigate();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
 
   const handleCategoryInputChange = (value) => {
     setEditedCategory(value);
@@ -78,167 +80,126 @@ const ManageMenu = () => {
     fetchMenuItems(index);
   };
 
-  const handleSettingClick = () => {
-    navigate('/manager/setting');
-  }
+  const toggleSubMenu = () => {
+    setIsSubMenuOpen(!isSubMenuOpen);
+  };
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   return (
     <Container maxWidth="sm">
-      <Drawer 
-        variant="permanent" 
-        sx={{
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
-            width: '21.7vw', // Adjust the width as needed
-            boxSizing: 'border-box',
-          },
-        }}>
+      <Manager />
+
+      <div style={{display: "flex", alignItems: "center", justifyContent: "flex-start", height: "100vh"}}>
+        <Button style={{
+          height: "50%", 
+          background: "white", 
+          marginLeft: "-30vw", 
+          marginTop: "40vh", 
+          padding: "100px 0",
+          borderTopRightRadius: '20px',
+          borderBottomRightRadius: '20px'
+        }} onClick={toggleSidebar}>
+          <Typography className='sideways-text' color={"black"}>Menu Category</Typography>
+        </Button>
+
         <Box 
-          sx={{ 
-            margin: 2, 
-            borderRadius: 8, 
-            bgcolor: '#ECEBEB',
-            width: '20vw',
-            height: '140vh',
-            flexDirection:"column"
-          }}>
-          <Typography variant="h4" align="center" style={{ 
-            fontSize: '1.5vw', 
-            fontWeight: "bolder", 
-            marginTop: '3vh',
-          }}>
-            <Grid container spacing={2}>
-              <Grid item xs={2}>
-                <Link to={backLink}>
-                  <Button              
-                    sx={{ 
-                      border: 5,
-                      borderColor: '#FFA0A0',
-                      borderRadius: 2,
-                      color: 'black',
-                      marginTop: '-1vh',
-                      marginLeft: '0.5vw',
-                      fontWeight: "bolder"
-                    }}>
-                    <WestIcon sx={{ fontSize: 20, marginRight: '5px' }} />
-                  </Button>
-                </Link>
-              </Grid>
-              <Grid item xs={8} style={{ marginTop: '5vh', fontWeight: "bold" }}>
-                Menu Categories
-              </Grid>
-            </Grid>
-          </Typography>
-          
-          <AddCategory cookies={cookies} categories={categories} setCategories={setCategories} />
-          
-          { Object.entries(categories).map(([index, category]) => (
-            <Box key={index}>
-              {categoryEditingIndex === index ? (
-                <>
-                  <TextField
-                    value={editedCategory || category}
-                    size='small'
-                    variant='outlined'
-                    color='primary'
-                    style={{ margin: '5%', width: '80%' }}
-                    onChange={(e) => handleCategoryInputChange(e.target.value, index)}
-                    fullWidth 
-                  />
-                  <UpdateCategoryName cookies={cookies} index={index} editedCategory={editedCategory} 
-                    setCategoryEditingIndex={setCategoryEditingIndex} setEditedCategory={setEditedCategory}
-                    categories={categories} setCategories={setCategories}
-                  />
-                </>
-              ) : (
-                <Box display="flex" justifyContent="space-evenly">
-                  <Button 
-                    variant="outlined" 
-                    color="primary"
-                    style={{...EditButtonStyle, 
-                      border: selectedCategory===index ? "3px solid #FFA0A0" :"3px solid #bdbdbd",
-                      background: selectedCategory===index ? "#FFCFCF" : "#E0E0E0"
-                    }}
-                    onClick={() => handleCategoryClick(index)}>
-                    {category}
-                  </Button>
-                  
-                  <ButtonGroup variant="outlined" style={{smallbuttonStyle}}>
-                    <Button
-                      color="primary"
-                      style={{...smallbuttonStyle, padding: '4px', fontSize: '10px'}}
-                      onClick={() => handleEditCategory(index)}
-                    >
-                      Edit
-                    </Button>
-                    <UpdateCategoryOrder cookies={cookies} index={index} categories={categories} 
-                      setCategories={setCategories} 
-                    />
-                  </ButtonGroup>
-                </Box>
-              )}
-            </Box>
-          ))}
-        </Box>
-      </Drawer>
-
-      <div style={{display: 'flex', flexDirection: "row"}}>
-        <Button variant="contained" style={{...AddbuttonStyle, top: "5px", right: "0px"}}>
-          <img src={meme} alt="MemeIcon" style={{
-            maxWidth: '100%',
-            maxHeight: '7vh',
-            marginRight: '1vw'
-          }}/>
-          Memes
-        </Button>
-        <Link to="/manager/coupon" style={{
-          marginTop: '8%',
-          marginLeft: "10%",
-          width: '100%',
-        }}>
-        <Button style={{...AddbuttonStyle, top: "5px", right: "0px"}}>
-          <img src={coupon} alt="CouponIcon" style={{
-            maxWidth: '100%',
-            maxHeight: '7vh',
-            marginRight: '1vw'
-          }}/>
-          Coupons
-        </Button>
-      </Link>
-        <Button style={{...AddbuttonStyle, top: "5px", right: "0px"}} onClick={handleSettingClick}>
-          Settings
-        </Button>
-      </div>
-
-      <Box 
-        flexGrow={1} 
-        p={2} 
-        display="flex"
-        height="80vh"
-        width="350px"
-        marginLeft="-15vh"
-      >
-        {selectedCategory !== -1 ? (
-          <Box>
-            <Typography variant="h4" gutterBottom>
-              <b>Menu items</b>
-            </Typography>
+          flexGrow={1} 
+          p={2} 
+          display="flex"
+          height="80vh"
+          width="350px"
+        >
+          <Drawer
+            variant="temporary"
+            open={isSidebarOpen}
+            onClose={toggleSidebar}
+            ModalProps={{ keepMounted: true }}
+            PaperProps={{ style: { 
+              marginTop: "180px",
+              width: '250px', 
+              height: "600px", 
+              borderTopRightRadius: '20px',
+              borderBottomRightRadius: '20px'
+            }}}>
+            <div style={{ display: "flex", alignContent: "center", justifyContent: "center" }}>
+              <Typography variant='h5'style={{margin: "20px"}}>
+                Menu Category
+              </Typography>
+            </div>
+            <AddCategory cookies={cookies} categories={categories} setCategories={setCategories} />
             
-            <ManageItems 
-              categories={categories} 
-              selectedCategory={selectedCategory}
-              menuItems={menuItems} 
-              setMenuItems={setMenuItems}
-              onItemsCategory={() => handleCategoryClick(selectedCategory)}
-              cookies={cookies}
-            />
-            </Box>
-        ) : (
-          <Typography variant="h5" style={{ margin: '20px' }}>
-            Edit menu here. <span role="img" aria-label="Smiley">&#128512;</span>
-          </Typography>
-        )}
-      </Box>
+            { Object.entries(categories).map(([index, category]) => (
+              <Box key={index}>
+                {categoryEditingIndex === index ? (
+                  <>
+                    <TextField
+                      value={editedCategory || category}
+                      size='small'
+                      variant='outlined'
+                      color='primary'
+                      style={{ margin: '5%', width: '80%' }}
+                      onChange={(e) => handleCategoryInputChange(e.target.value, index)}
+                      fullWidth 
+                    />
+                    <UpdateCategoryName cookies={cookies} index={index} editedCategory={editedCategory} 
+                      setCategoryEditingIndex={setCategoryEditingIndex} setEditedCategory={setEditedCategory}
+                      categories={categories} setCategories={setCategories}
+                    />
+                  </>
+                ) : (
+                  <Box display="flex" justifyContent="space-evenly">
+                    <Button 
+                      variant="outlined" 
+                      color="primary"
+                      style={{...EditButtonStyle, 
+                        border: selectedCategory===index ? "3px solid #FFA0A0" :"3px solid #bdbdbd",
+                        background: selectedCategory===index ? "#FFCFCF" : "#E0E0E0"
+                      }}
+                      onClick={() => handleCategoryClick(index)}>
+                      {category}
+                    </Button>
+                    
+                    <ButtonGroup variant="outlined" style={{smallbuttonStyle}}>
+                      <Button
+                        color="primary"
+                        style={{...smallbuttonStyle, padding: '4px', fontSize: '10px'}}
+                        onClick={() => handleEditCategory(index)}
+                      >
+                        Edit
+                      </Button>
+                      <UpdateCategoryOrder cookies={cookies} index={index} categories={categories} 
+                        setCategories={setCategories} 
+                      />
+                    </ButtonGroup>
+                  </Box>
+                )}
+              </Box>
+            ))}
+          </Drawer>
+
+          {selectedCategory !== -1 ? (
+            <Paper elevation={3} sx={{
+              padding: "20px",
+              borderRadius: "8px",
+              width: "1200px", 
+              height: "80vh", 
+              marginLeft: "15vw",
+            }}>
+              <ManageItems 
+                categories={categories} 
+                selectedCategory={selectedCategory}
+                menuItems={menuItems} 
+                setMenuItems={setMenuItems}
+                onItemsCategory={() => handleCategoryClick(selectedCategory)}
+                cookies={cookies}
+              />
+            </Paper>
+          ) : ( <></> )}
+        </Box>
+      </div>
     </Container>
   );
 };

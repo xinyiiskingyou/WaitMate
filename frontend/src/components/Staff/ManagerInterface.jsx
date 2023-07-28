@@ -1,57 +1,79 @@
 import React from 'react';
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Grid';
-import Grid from '@mui/material/Grid';
-import {Link} from 'react-router-dom';
-// import Menu from './Menu';
+import { Link } from 'react-router-dom';
+import '../../app.css';
+import {
+  AppBar, 
+  Toolbar, 
+  Typography, 
+  ThemeProvider, 
+  createTheme,
+  Drawer, 
+  List,
+  ListItem,
+  ListItemText,
+  Input,
+  TextField,
+  IconButton,
+  Button
+} from '@mui/material';
+import WaitMate from "../../assets/WaitMate.png";
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+
+const theme = createTheme({
+  components: {
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: 'transparent',
+          boxShadow: 'none',
+        },
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
+            borderColor: "#FBDDDD",
+          },
+          "& .MuiOutlinedInput-root.Mui-focused  .MuiOutlinedInput-notchedOutline":
+            {
+              borderColor: "#FBDDDD",
+            },
+        },
+      },
+    },
+  },
+});
 
 const Manager = () => {
-  const buttonStyle = {
-    width: '200px',
-    height: '100px',
-    fontSize: '18px',
-    border: "5px solid #FFA0A0",
-    color: "black"
-  };
-  const headingStyle = {
-    textAlign: 'center',
-    fontSize: '24px',
-    marginBottom: '20px'
-  };
+
   return (
-    <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      height={"100vh"}
-    >
-      <Grid container spacing={2} alignItems="center">
-        <Grid item xs={12}>
-          <h2 style={headingStyle}>Manager Management Board</h2>
-        </Grid>
-        <Grid item xs={4} textAlign={'right'}>
-          <Link to="/menu">
-            <Button variant='outlined' style={buttonStyle}>
-              Menu
-            </Button>
-            </Link>
-        </Grid>
-        <Grid item xs={4} textAlign={'center'}>
-          <Link to="/coupon">
-            <Button variant='outlined' style={buttonStyle}>
-              Coupons
-            </Button>
-          </Link>
-        </Grid>
-        <Grid item xs={4} textAlign={'left'}>
-          <Link to="/waitstaff">
-          <Button variant='outlined' style={buttonStyle}>
-            Meme
-          </Button>
-          </Link>
-        </Grid>
-      </Grid>
-    </Box>
+    <ThemeProvider theme={theme}>
+      <div>
+        <AppBar position="fixed">
+          <Toolbar>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <img src={WaitMate} style={{ width: '200px', marginRight: '10px' }} />
+            <div style={{ display: 'flex', marginLeft: '500px', alignItems: "flex-end", justifyContent: 'space-between', gap: "50px" }}>
+                <Button style={{color:"black"}} component={Link} to="/manager/menu">
+                  Menu
+                </Button>
+                <Button style={{color:"black"}} component={Link} to="/button2">
+                  Meme
+                </Button>
+                <Button style={{color:"black"}} component={Link} to="/manager/coupon">
+                  Coupon
+                </Button>
+                <Button style={{color:"black"}} component={Link} to="/manager/setting">
+                  Management
+                </Button>
+              </div>
+            </div>
+          </Toolbar>
+        </AppBar>
+      </div>
+    </ThemeProvider>
   );
 };
 

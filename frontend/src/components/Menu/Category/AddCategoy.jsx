@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import ErrorHandler from '../../ErrorHandler';
 
 const buttonStyle = {
@@ -73,48 +73,49 @@ const AddCategory = ({ cookies, categories, setCategories }) => {
 
   return (
     <>
-    {editing ? (
-      <Box display="flex" flexDirection="column" alignItems="center">
-        <TextField
-          id="category"
-          label="Category"
-          value={categoryText}
-          onChange={handleCategoryTextChange}
-          size='small'
-          variant='outlined'
-          color='primary'
-          style= {{margin: '5%', width: '80%'}}
-          fullWidth
-        />
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Button 
-            onClick={handleAddCategory} 
-            variant="contained" 
-            color="primary"
-            style={{...buttonStyle, background: "#81c784"}}
+      {editing ? (
+        <Box display="flex" flexDirection="column" alignItems="center">
+          <TextField
+            id="category"
+            label="Category"
+            value={categoryText}
+            onChange={handleCategoryTextChange}
+            size='small'
+            variant='outlined'
+            color='primary'
+            style= {{margin: '5%', width: '80%'}}
+            fullWidth
+          />
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Button 
+              onClick={handleAddCategory} 
+              variant="contained" 
+              style={{background: "#81c784", marginRight: "10px"}}
+            >
+              Save
+            </Button>
+            <Button 
+              onClick={handleCategoryDone} 
+              variant="contained" 
+              style={{background: "#ffc570"}}
+            >
+              Cancel
+            </Button>
+          </div>
+        </Box>
+      ) : (
+        <Button
+          variant='contained'
+          style={{backgroundColor: "#FBDDDD", marginRight: "20px", marginLeft: "20px"}}
+          onClick={handleNewButtonClick} 
           >
-            Save
+          <Typography 
+            color="black"
+            style={{marginTop: "5px", marginBottom: "5px"}}>
+            + Add Category
+          </Typography>
           </Button>
-          <Button 
-            onClick={handleCategoryDone} 
-            variant="contained" 
-            color="primary"
-            style={{...buttonStyle, background: "#ffc570"}}
-          >
-            Cancel
-          </Button>
-        </div>
-      </Box>
-    ) : (
-      <Button 
-        onClick={handleNewButtonClick} 
-        variant="contained" 
-        color="primary"
-        style={AddbuttonStyle}
-      >
-        Add Category
-      </Button>
-    )}
+      )}
     {showError}
     </>
   );

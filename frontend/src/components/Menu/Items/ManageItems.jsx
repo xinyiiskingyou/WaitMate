@@ -1,9 +1,12 @@
 import React, { useState } from "react";
-import { Box, Button, Card } from "@mui/material";
+import { Box, Card, IconButton, Pagination, PaginationItem } from "@mui/material";
 import AddItem from "./AddItem"
 import UpdateItemOrder from "./UpdateItemOrder"
 import UpdateItemDetails from './UpdateItemDetails'
 import RemoveItem from './RemoveItem'
+import AddIcon from '@mui/icons-material/Add';
+
+const ITEMS_PER_PAGE = 6;
 
 const ManageItems = ({
   categories,
@@ -15,6 +18,15 @@ const ManageItems = ({
 }) => {
   const [adding, setAdding] = useState(false);
   const [cardData, setCardData] = useState({ category: -1, name: '', cost: '', description: '', ingredients: '', is_vegan: false, is_up: false });
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const itemsForCurrentPage = menuItems.slice(startIndex, endIndex);
+
+  const handlePageChange = (event, newPage) => {
+    setCurrentPage(newPage);
+  };
 
   const handleAddButtonClick = () => {
     setAdding(true);
@@ -52,20 +64,6 @@ const ManageItems = ({
 
   return (
     <>
-      <Button
-        variant='contained'
-        onClick={handleAddButtonClick} 
-        style={{
-          background: "#eeeeee",
-          border: "4px solid #FFA0A0",
-          color: 'black',
-          fontWeight: 'bold',
-          borderRadius: 10,
-        }}
-      >
-        Add menu item
-      </Button>
-
       <Box display="flex" flexDirection="row" alignItems="flex-start" marginTop={5} style={{ gap: '10px' }}>
         { adding && (
           <Box display="flex" flexDirection="row" alignItems="flex-start">
@@ -74,12 +72,12 @@ const ManageItems = ({
           </Box>
         )}
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1vw' }}>
-          {Object.entries(menuItems)
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2vw' }}>
+          {Object.entries(itemsForCurrentPage)
             .filter(([_, menuItem]) => menuItem.name !== null)
             .map(([index, menuItem]) => (
               <div style={{ width: '20vw', height: '30vh', margin: '4%' }}>
-                <Card sx={{ border: '5px solid #FFA0A0', maxHeight: '34vh', width: '100%', borderRadius: 8 }}>
+                <Card sx={{ maxHeight: '34vh', width: '100%', backgroundColor: "#FBDDDD" }}>
                   <UpdateItemDetails 
                     itemCategory={categories[selectedCategory]}
                     itemName={menuItem.name}
@@ -97,6 +95,38 @@ const ManageItems = ({
           ))}
         </div>
       </Box>
+
+      <div style={{ position: 'relative', marginTop: '2vh' }}>
+        <Box display="flex" justifyContent="center" alignItems="center" marginTop={2}>
+          <Pagination
+            count={Math.ceil(menuItems.length / ITEMS_PER_PAGE)}
+            page={currentPage}
+            onChange={handlePageChange}
+            renderItem={(item) => (
+              <PaginationItem
+                component={IconButton}
+                {...item}
+              />
+            )}
+          />
+        </Box>
+
+        <Box position="relative">
+          <IconButton
+            onClick={handleAddButtonClick}
+            style={{
+              backgroundColor: "#FBDDDD",
+              borderRadius: "50%",
+              fontSize: "12vh",
+              position: "absolute",
+              bottom: "10px", 
+              right: "11px",
+            }}
+          >
+            <AddIcon />
+          </IconButton>
+        </Box>
+      </div>
     </>
   );
 }
