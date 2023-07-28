@@ -1,16 +1,27 @@
 import React, { useState } from "react";
-import { Box, Grid, Button } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import styled from "@mui/system/styled";
+import { grey,pink } from '@mui/material/colors';
 
+const mainPink = pink[400]
 const CardFace = styled(Box)(({theme}) => ({
   position: 'absolute',
   transition: 'all ease-in 1s',
   transform: `rotateY(90deg)`,
 }));
 
+
 const CardBack = styled(Box)(({theme}) => ({
   transform: `rotateY(0deg)`,
-  transitionDelay: 0.2
+  transitionDelay: 0.2,
+  border: `2px solid ${mainPink}`,
+  borderRadius: 2,
+
+  '&:hover': {
+    border: `2px dashed #fff`,
+    borderRadius: 2
+
+  },
 }));
 
 function MemoryCard({ card, handleChoice, flipped, disable }) {
@@ -21,7 +32,8 @@ function MemoryCard({ card, handleChoice, flipped, disable }) {
   } 
 
   return(
-    <Grid item>
+    
+    <Grid item xs={3}>
       <Grid className={flipped ? "flipped" : ""}>
         {flipped ?           
           <CardBack>
