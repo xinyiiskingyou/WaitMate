@@ -24,21 +24,13 @@ class CheckoutDB:
         session_maker = sessionmaker(bind=self.engine)
         self.session = session_maker()
 
-    def checkout_order(self, table_id: int) -> List[dict]:
-        ret: list
-
-        result = get_order(table_id, self.session)
-        ret = [{'name': i[0], 'cost': i[4], 'amount': i[1]} for i in result]
-
-        return ret
-
     def checkout_bill(self, table_id: int) -> dict:
         if not check_table_exists(table_id, self.session):
             raise InputError(detail=INVALID_TABLE_MSG)
 
         try:
             # Get the items for the checkout order
-            items = self.checkout_order(table_id)
+            items = self._checkout_order(table_id)
 
             # Get the coupon and tip from the Checkout table using SQLAlchemy
             checkout_data = self.session.query(Checkout).filter_by(table_id=table_id).first()
@@ -68,7 +60,6 @@ class CheckoutDB:
                 bill['total'] = round(new_total, 2)
 
             bill['total'] += bill['tip']
-            print(bill)
             return bill
         except Exception as e:
             print(f"Error occurred: {str(e)}")
@@ -182,7 +173,6 @@ class CheckoutDB:
     # PRIVATE HELPER FUNCTIONS
 
     def _checkout_add(self, table_id: int):
-
         try:
             # Check if table id exists
             checkout_row = self.session.query(Checkout).filter_by(table_id=table_id).first()
@@ -197,3 +187,10 @@ class CheckoutDB:
             raise InputError(detail=f"Database error occurred: {str(err)}") from err
         finally:
             self.session.close()
+            
+    def _checkout_order(self, table_id: int) -> List[dict]:
+
+        result = get_order(table_id, self.session)
+        ret = [{'name': i[0], 'cost': i[4], 'amount': i[1]} for i in result]
+
+        return ret

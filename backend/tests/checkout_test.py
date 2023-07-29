@@ -17,15 +17,6 @@ def test_checkout_invalid_coupon(table_id_1):
     with pytest.raises(InputError):
         checkout.checkout_bill_coupon(table_id_1, 'Cats')
 
-def test_checkout_order(order_japanese):
-
-    checkout.clear_data()
-    exp = [
-        {'name': 'salmon sushi', 'cost': 10, 'amount': 1},
-        {'name': 'dorayaki', 'cost': 12, 'amount': 2}
-    ]
-    assert checkout.checkout_order(order_japanese) == exp
-
 def test_checkout_bill_invalid_table():
     with pytest.raises(InputError):
         checkout.checkout_bill(29999)
@@ -90,10 +81,6 @@ def test_checkout_coupon_delete():
 ########## endpoint tests ############
 ######################################
 
-def test_checkout_order_endpoint(client, table_id_1):
-    resp = client.get(f'/checkout/order/{table_id_1}')
-    assert resp.status_code == VALID
-
 def test_checkout_bill_endpoint(client, table_id_1):
     resp = client.get(f'/checkout/bill/{table_id_1}')
     assert resp.status_code == VALID
@@ -126,5 +113,3 @@ def test_checkout_coupon_create_endpoint(client, manager_token):
 def test_checkout_coupon_view_endpoint(client, manager_token):
     resp = client.get('/checkout/coupon/view', headers=manager_token)
     assert resp.status_code == VALID
-
-

@@ -250,10 +250,6 @@ def waitstaff_get_from_kitchen(user: dict = Depends(get_current_user)):
 
 ############ CHECKOUT #################
 
-@app.get('/checkout/order/{table_id}')
-def checkout_order_api(table_id: int):
-    return checkout.checkout_order(table_id)
-
 @app.get('/checkout/bill/{table_id}')
 def checkout_bill_api(table_id: int):
     return checkout.checkout_bill(table_id)
