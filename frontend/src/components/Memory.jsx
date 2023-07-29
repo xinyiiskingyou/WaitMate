@@ -3,9 +3,11 @@ import { Link, useParams } from 'react-router-dom';
 import { Box, Grid, Button, Typography, Dialog } from '@mui/material';
 import WestIcon from '@mui/icons-material/West';
 import MemoryCard from './MemoryCard';
-import { pink } from '@mui/material/colors';
+import { pink, grey } from '@mui/material/colors';
 
 const usedPink = pink[300]
+const usedGrey = grey[500]
+
 
 
 const cardImages = [
@@ -100,30 +102,86 @@ function Memory() {
   }, [firstCard, secCard])
 
   return(
-    <Box 
+    <Box justify="center"
+      display='flex'
       sx={{ 
-        display: 'flex',
         flexDirection: 'column',
         alignItems: 'center', 
+        py: 2
       }}>
 
-    <Link to={backLink}>
-      <Button              
-        sx={{ 
-          border: 5,
-          borderColor: '#FFA0A0',
-          borderRadius: 2,
-          color: 'black',
+    <Box display='flex' 
+      sx={{
+        backgroundColor: pink[100], 
+        minWidth: 1000,
+        maxWidth: '80%',
+        flexDirection: 'column',
+        border: `6px groove ${grey[50]}`,
         }}>
-        <WestIcon/>
-      </Button>
-    </Link>
-    <Typography variant="h4" align="center">Memory Game</Typography>
-    <Button onClick={shuffleCards}>Start</Button>
-    <Typography align="center">Turns Left: {turns}</Typography>
+      <Box display="flex" justifyContent="space-between" alignItems="flex-end"
+        sx={{ 
+          background: `linear-gradient(to right, ${pink[600]}, ${pink[100]})` }}>
+        <Typography color='white' sx={{m: 0.5}}>Memory Game</Typography>
+        <Button  
+          size="small"            
+          sx={{ 
+            maxWidth: '30px',
+            maxHeight: '30px', 
+            minWidth: '30px', 
+            minHeight: '30px',
+            border: '3px ridge #0A0',
+            borderColor: 'white',
+            borderSize: 0,
+            m: '2px',
+            color: 'black',
+            backgroundColor: usedGrey,
+          }}>
+          o
+        </Button>
+        <Link to={backLink}>
+          <Button  
+            size="small"            
+            sx={{ 
+              maxWidth: '30px',
+              maxHeight: '30px', 
+              minWidth: '30px', 
+              minHeight: '30px',
+              border: '3px ridge #0A0',
+              borderColor: 'white',
+              borderSize: 0,
+              m: '2px',
+              color: 'black',
+              backgroundColor: usedGrey,
+            }}>
+            X
+          </Button>
+        </Link>
 
-    <Box display='flex' sx={{ backgroundColor: usedPink, minWidth: 1000, maxWidth: '50%'}}>
-      <Grid container spacing={2} gridTemplateColumns="repeat(4, 1fr)">
+      </Box>
+
+      <Box display='flex' >
+      <Box  sx={{ mx: 5, backgroundColor: '#f0f0f0'}}>
+      <Button onClick={shuffleCards}
+        fullWidth
+          size="small"            
+          sx={{ 
+            maxHeight: '30px', 
+            minHeight: '30px',
+            border: '3px ridge #0A0',
+            borderColor: 'white',
+            borderSize: 0,
+            m: '2px',
+            color: 'black',
+            backgroundColor: usedGrey,
+          }}>
+          Restart
+        </Button>
+        <Typography align="center" sx={{mt: 2}}>Turns Left: {turns}</Typography>
+        <img src='/img/barbie_1.png' width="220" height="500"/>
+      </Box>
+
+      <Box display='flex' alignItems="center" sx={{backgroundColor: '#000000', width: 1000}}>
+      <Grid container justifyContent="center" direction='row' spacing={2} sx={{ py: 2,}}>
         {cards.map(card => (
           <MemoryCard 
             key={card.id} 
@@ -134,6 +192,9 @@ function Memory() {
           />
         ))}
       </Grid>
+      </Box>
+
+      </Box>
     </Box>
     </Box>
   )
