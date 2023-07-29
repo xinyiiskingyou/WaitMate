@@ -114,7 +114,7 @@ class CheckoutDB:
         finally:
             self.session.close()
 
-    def checkout_coupon_create(self, code: str, amount: int):
+    def checkout_coupon_create(self, code: str, amount: int, expiry: str):
         if check_coupon_valid(code, self.session):
             raise InputError(detail='Coupon code already in use')
         if amount <= 0:
@@ -123,7 +123,8 @@ class CheckoutDB:
         try:
             new_coupon = Coupons(
                 code = code,
-                amount = amount
+                amount = amount,
+                expiry = expiry
             )
             self.session.add(new_coupon)
             self.session.commit()
@@ -150,7 +151,7 @@ class CheckoutDB:
         try:
             coupons = self.session.query(Coupons).all()
 
-            coupon_list = [{'code': coupon.code, 'amount': coupon.amount} for coupon in coupons]
+            coupon_list = [{'code': coupon.code, 'amount': coupon.amount, 'expiry': coupon.expiry} for coupon in coupons]
             return coupon_list
         except sqlalchemy.exc.SQLAlchemyError:
             self.session.rollback()

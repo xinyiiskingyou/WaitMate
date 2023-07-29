@@ -267,7 +267,7 @@ def checkout_bill_coupon_api(reqbody: Coupon_Cust):
 @app.post('/checkout/coupon/create')
 def checkout_coupon_create_api(reqbody: Coupon, user: dict = Depends(get_current_user)):
     auth.is_authorized(['manager'], user['user'])
-    checkout.checkout_coupon_create(reqbody.code, reqbody.amount)
+    checkout.checkout_coupon_create(reqbody.code, reqbody.amount, reqbody.expiry)
     return {}
 
 @app.delete('/checkout/coupon/delete')
