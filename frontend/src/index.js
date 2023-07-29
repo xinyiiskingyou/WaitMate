@@ -54,7 +54,7 @@ function App() {
         <Route path="/manager/login" element={<ManagerLogin />} />
         <Route path="/manager/menu" element={ manager ? (<ManageMenu />) : (<Navigate to='/manager/login'/>)} />
         <Route path="/manager/setting" element={ manager ? (<ManagerSettings />) : (<Navigate to='/manager/login'/> )} />
-        <Route path="/manager/coupon" element={manager ? (<Coupon />) : (<Navigate to='/ManagerLogin'/>)} />
+        <Route path="/manager/coupon" element={manager ? (<Coupon />) : (<Navigate to='/manager/login'/>)} />
         <Route path="/waitstaff/login" element={<WaitstaffLogin />} />
         <Route path="/waitstaff/list" element={<WaitStaffInterface />} />
         <Route path="/kitchenstaff/login" element={<KitchenstaffLogin />} />
