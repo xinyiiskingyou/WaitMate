@@ -9,7 +9,7 @@ import Staff from './components/Staff/Staff';
 import ManagerLogin from './components/Staff/ManagerLogin'
 import ManageMenu from './components/Menu/ManageMenu';
 import ManagerSettings from './components/Staff/ManagerSettings';
-import Coupon from './components/Checkout/CouponPage';
+import Coupon from './components/Coupon/CouponPage';
 import KitchenstaffLogin from './components/Staff/KitchenstaffLogin'
 import KitchenInterface from './components/Staff/KitchenInterface';
 import WaitstaffLogin from './components/Staff/WaitstaffLogin';
