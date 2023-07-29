@@ -42,11 +42,16 @@ class CheckoutDB:
 
             # Get the coupon and tip from the Checkout table using SQLAlchemy
             checkout_data = self.session.query(Checkout).filter_by(table_id=table_id).first()
-            bill = {'items': items}
+            bill = {
+                'items': items,
+                'tip': 0,
+                'discount': 0,
+                'coupon_code': ''
+            }
 
             if checkout_data:
                 if checkout_data.coupon:
-                    bill['coupon'] = checkout_data.coupon
+                    bill['coupon_code'] = checkout_data.coupon
                 if checkout_data.tip:
                     bill['tip'] = checkout_data.tip
 
@@ -54,18 +59,16 @@ class CheckoutDB:
             total = sum(item['cost'] for item in items)
             bill['total'] = total
 
-            if 'coupon' in bill:
-                coupon_discount = check_coupon_valid(bill['coupon'], self.session)
+            if bill['coupon_code']:
+                # calculate the coupon discount
+                coupon_discount = check_coupon_valid(bill['coupon_code'], self.session)
                 new_total = bill['total'] * (100 - coupon_discount) / 100
-
                 discount_amount = new_total - total
-                bill['coupon'] = round(discount_amount, 2) * -1
+                bill['discount'] = round(discount_amount, 2) * -1
                 bill['total'] = round(new_total, 2)
-            else:
-                bill['coupon'] = 0
-            if 'tip' in bill:
-                bill['total'] += bill['tip']
 
+            bill['total'] += bill['tip']
+            print(bill)
             return bill
         except Exception as e:
             print(f"Error occurred: {str(e)}")
