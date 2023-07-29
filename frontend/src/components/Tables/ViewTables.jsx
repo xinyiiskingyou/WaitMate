@@ -12,7 +12,7 @@ const ViewTables = ({
 }) => {
   const [table, setTable] = useState({});
   const [cookies] = useCookies(['token']);
-  const { _, handleShowSnackbar, showError } = ErrorHandler(); 
+  const { handleShowSnackbar, showError } = ErrorHandler(); 
 
   const ViewTableStatus = async () => {
     try {

@@ -20,7 +20,7 @@ const UpdateCategoryName = ({
   setCategories
 }) => {
 
-  const { _, handleShowSnackbar, showError } = ErrorHandler(); 
+  const { handleShowSnackbar, showError } = ErrorHandler(); 
 
   const handleCancelSaveCategory = () => {
     setCategoryEditingIndex(-1);

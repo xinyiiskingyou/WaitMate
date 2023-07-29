@@ -4,7 +4,7 @@ import OrderButton from '../OrderButton';
 
 const UpdateCategoryOrder = ({ cookies, index, categories, setCategories }) => {
 
-  const { _, handleShowSnackbar, showError } = ErrorHandler(); 
+  const { handleShowSnackbar, showError } = ErrorHandler(); 
 
   const handleUpdateOrder = async (index, is_up) => {
     const payload = {

@@ -47,11 +47,10 @@ const GetBill = ({id}) => {
     const fetchData = async () => {
       const order_list = await ListTableOrder(id);
       setOrders(order_list);
-      console.log(orders)
     };
 
     fetchData();
-  }, [id.id]);
+  }, [id]);
 
   const getTotal = async () => {
     console.log('Fetching total...')
@@ -66,7 +65,7 @@ const GetBill = ({id}) => {
         throw new Error('Failed to view bill. Please try again.');
       }
     }).then((data) => {
-      console.log(data)
+      console.log(data);
       setTotal(data.total);
       setCoupon(data.discount);
       setTips(data.tip);
@@ -78,7 +77,7 @@ const GetBill = ({id}) => {
 
   useEffect(() => {
     getTotal();
-  }, [])
+  })
 
   return (
     <>

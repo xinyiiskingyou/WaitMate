@@ -43,7 +43,7 @@ const FetchKitchenNotification = ({ cookies }) => {
       // Clean up the EventSource connection on unmounting the component
       eventSource.close();
     };
-  }, []);
+  });
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -53,7 +53,7 @@ const FetchKitchenNotification = ({ cookies }) => {
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  });
 
   return (
     <>

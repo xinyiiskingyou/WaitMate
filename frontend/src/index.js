@@ -5,7 +5,6 @@ import { Navigate } from 'react-router-dom';
 import Home from './components/Home';
 import BrowseMenu from './components/Menu/BrowseMenu'
 import ViewCart from './components/Orders/ViewCart';
-import GetBill from './components/Checkout/GetBill';
 import Staff from './components/Staff/Staff';
 import ManagerLogin from './components/Staff/ManagerLogin'
 import ManageMenu from './components/Menu/ManageMenu';
@@ -51,7 +50,6 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/browse/:id" element={<BrowseMenu />} />
         <Route path="/cart/:id" element={<ViewCart />} />
-        <Route path="/bill/:id" element={<GetBill />} />
         <Route path="/staff" element={<Staff />} />
         <Route path="/manager/login" element={<ManagerLogin />} />
         <Route path="/manager/menu" element={ manager ? (<ManageMenu />) : (<Navigate to='/manager/login'/>)} />
