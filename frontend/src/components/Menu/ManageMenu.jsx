@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { 
   Drawer, 
@@ -12,7 +11,6 @@ import {
   Paper
 } from "@mui/material";
 import ListCategories from "./Category/ListCategories";
-import WestIcon from '@mui/icons-material/West';
 import AddCategory from "./Category/AddCategoy";
 import UpdateCategoryName from "./Category/UpdateCategoryName";
 import UpdateCategoryOrder from "./Category/UpdateCategoryOrder";
@@ -38,34 +36,16 @@ const smallbuttonStyle = {
   color: 'black'
 }
 
-const AddbuttonStyle = {
-  marginTop: '8%',
-  marginButton: '10%',
-  marginLeft: '10%',
-  width: '80%',
-  background: "transparent",
-  border: "4px solid #FFA0A0",
-  borderRadius: 15,
-  color: 'black',
-  fontWeight: 'bold'
-}
-
 const ManageMenu = () => {
   const { categories, setCategories } = ListCategories();
   const [categoryEditingIndex, setCategoryEditingIndex] = useState(-1);
   const [editedCategory, setEditedCategory] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(-1);
   const { menuItems, setMenuItems, fetchMenuItems } = ListItems(selectedCategory);
-  const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
-
-  const navigate = useNavigate();
-
-  const backLink = `/staff`;
-  const [cookies] = useCookies(['token']);
-  
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-
+  const [cookies] = useCookies(['token']);
+  
   const handleCategoryInputChange = (value) => {
     setEditedCategory(value);
   };
@@ -78,10 +58,6 @@ const ManageMenu = () => {
     setMenuItems([]);
     setSelectedCategory(index);
     fetchMenuItems(index);
-  };
-
-  const toggleSubMenu = () => {
-    setIsSubMenuOpen(!isSubMenuOpen);
   };
 
   const toggleSidebar = () => {

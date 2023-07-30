@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { 
   Container,
-  Box,
+  Drawer,
   Typography,
   List,
   ListItem,
@@ -13,7 +13,10 @@ import {
   AppBar,
   Toolbar,
   Button,
-  createTheme
+  createTheme,
+  Paper,
+  Pagination, 
+  PaginationItem,
 } from "@mui/material";
 import { Link, useParams } from 'react-router-dom';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -49,6 +52,12 @@ const theme = createTheme({
   },
 });
 
+const buttonStyle = {
+  color:"black", 
+  fontWeight:"bolder"
+};
+const ITEMS_PER_PAGE = 6;
+
 const BrowseMenu = () => {
   const { categories } = ListCategories();
   const [currentCategory, setCurrentCategory] = useState(null);
@@ -57,12 +66,21 @@ const BrowseMenu = () => {
   const id = useParams();
   const cartLink = `/cart/${id.id}` 
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const itemsForCurrentPage = menuItems.slice(startIndex, endIndex);
+
   const handleCategoryChange = (index, category) => {
     setMenuItems([]);
     setCurrCategoryID(index);
     setCurrentCategory(category);
     fetchMenuItems(index);
     console.log(menuItems)
+  };
+
+  const handlePageChange = (event, newPage) => {
+    setCurrentPage(newPage);
   };
 
   useEffect(() => {
@@ -74,134 +92,133 @@ const BrowseMenu = () => {
   return (
     <Container maxWidth="sm">
       <ThemeProvider theme={theme}>
-      <div>
-        <AppBar position="fixed">
-          <Toolbar>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <img src={WaitMate} style={{ width: '200px', marginRight: '10px' }} />
-            <div style={{ display: 'flex', marginLeft: '500px', alignItems: "flex-end", justifyContent: 'space-between', gap: "45px" }}>
-                <Button style={{color:"black", fontWeight:"bolder"}} component={Link} to="/browse/:id">
-                  Menu
-                </Button>
-                <Button style={{color:"black", fontWeight:"bolder"}} component={Link} to="/toobored/:id">
-                  Too Bored?
-                </Button>
-                <Button style={{color:"black", fontWeight:"bolder"}} component={Link} to="/manager/coupon">
-                  Meme of the Week
-                </Button>
+        <div>
+          <AppBar position="fixed">
+            <Toolbar>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <img src={WaitMate} alt={WaitMate} style={{ width: '200px', marginRight: '10px' }} />
+                <div style={{ display: 'flex', marginLeft: '500px', alignItems: "flex-end", justifyContent: 'space-between', gap: "50px" }}>
+                  <Button style={buttonStyle} component={Link} to={`/browse/${id.id}`}>
+                    Menu
+                  </Button>
+                  <Button style={buttonStyle} component={Link} to="/button2">
+                    Meme of the Week
+                  </Button>
+                  <Button style={buttonStyle} component={Link} to="/button2">
+                    Too Bored?
+                  </Button>
+                  <SendNotification id={id.id}/>
+                </div>
               </div>
-            </div>
-          </Toolbar>
-        </AppBar>
-      </div>
-    </ThemeProvider>
-      <Box sx={{ display: "flex"}}>
-     
-        {/* <Drawer variant="permanent"> */}
-       
-          <Box
-            sx={{
-              margin: 2,
-              mt: 10,
-              borderRadius: 8,
-              bgcolor: '#FFFFFF',
-              width: '20vw',
-              height: '70vh',
-              flexDirection: 'column',
-              justifyContent: "flex-start"
-            }}
-          >
-            <Typography
-              variant="h4"
-              align="center"
-              style={{
-                fontSize: '1.5vw',
-                fontWeight: 'bolder',
-                marginTop: '20vh',
-              }}
-            >
-              Menu Categories
+            </Toolbar>
+          </AppBar>
+        </div>
+      </ThemeProvider>
+
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100vh',
+      }}>
+        <Drawer
+          variant="permanent"
+          PaperProps={{ style: { 
+            marginTop: "90px",
+            width: '250px', 
+            height: "86vh", 
+            borderTopRightRadius: '20px',
+            borderBottomRightRadius: '20px'
+          }}}>
+          <div style={{ display: "flex", alignContent: "center", justifyContent: "center" }}>
+            <Typography variant='h5'style={{margin: "20px"}}>
+              Menu Category
             </Typography>
-            { Object.entries(categories).map(([index, category]) => (
-              <List key={category}>
-                <ListItem disablePadding value={category} onClick={()=>handleCategoryChange(index, category)}>
-                  <ListItemButton>
-                    <ListItemText 
-                      primary={category.toUpperCase()}
-                      primaryTypographyProps={{ 
-                        style: { 
-                          fontSize: '1vw', 
-                          border: category === currentCategory ? "5px solid #FFA0A0" :"5px solid #bdbdbd",
-                          borderRadius: 18, 
-                          padding: '0.5vh',
-                          textAlign: "center",
-                          background: category === currentCategory ? "#FFCFCF" : "#E0E0E0",
-                          marginBottom: '-1.5vh'
-                        } 
-                      }} 
-                    />
-                  </ListItemButton>
-                </ListItem>
-              </List>
-            ))}
+          </div>
 
-            <Grid container direction="column" spacing={0}>
-              <Link to={cartLink}>
-                <IconButton sx={{
-                  margin: '15%', 
-                  spacing: '-20', 
-                  width: '70%', 
-                  height: '5vh',
-                  border: "6px solid #FFA0A0",
-                  background: "#FFCFCF",
-                  color: 'black',
-                  fontSize: '1vw',
-                  borderRadius: 8,
-                }}>
-                  Order Summary <ShoppingCartIcon />
-                </IconButton>
-              </Link>
-            </Grid>
+          { Object.entries(categories).map(([index, category]) => (
+            <List key={category}>
+              <ListItem disablePadding value={category} onClick={()=>handleCategoryChange(index, category)}>
+                <ListItemButton>
+                  <ListItemText 
+                    primary={category.toUpperCase()}
+                    primaryTypographyProps={{ 
+                      style: { 
+                        fontSize: '1vw', 
+                        border: category === currentCategory ? "5px solid #FFA0A0" :"5px solid #bdbdbd",
+                        borderRadius: 18, 
+                        padding: '0.5vh',
+                        textAlign: "center",
+                        background: category === currentCategory ? "#FFCFCF" : "#E0E0E0",
+                        marginBottom: '-1.5vh'
+                      } 
+                    }} 
+                  />
+                </ListItemButton>
+              </ListItem>
+            </List>
+          ))}
 
-          </Box>
-        {/* </Drawer> */}
-        <Box flexGrow={1} p={2} marginLeft="-22%">
-          <Grid container columnGap={3} justifyContent="right" alignItems="right">
-            <SendNotification id={id.id} />
+          <Grid container direction="column" spacing={0}>
+            <Link to={cartLink}>
+              <IconButton sx={{
+                margin: '15%', 
+                spacing: '-20', 
+                width: '70%', 
+                height: '5vh',
+                border: "6px solid #FFA0A0",
+                background: "#FFCFCF",
+                color: 'black',
+                fontSize: '15px',
+                borderRadius: 8,
+              }}>
+                Order Summary <ShoppingCartIcon />
+              </IconButton>
+            </Link>
           </Grid>
-          {categoryID !== -1 ? (
-            <Box>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.1vw',  gridRowGap: '2vw' }}>
-              {Object.entries(menuItems)
+        </Drawer>
+        
+        {categoryID !== -1 ? (
+          <Paper elevation={3} sx={{
+            padding: "20px",
+            borderRadius: "8px",
+            width: "1150px", 
+            height: "570px", 
+            marginLeft: "200px",
+            position: 'absolute',
+            marginTop: '60px',
+          }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1vw'}}>
+              {Object.entries(itemsForCurrentPage)
                 .filter(([_, menuItem]) => menuItem.name !== null)
                 .map(([index, menuItem]) => (
-                  <div style={{ width: '20vw', height: '30vh', margin: '5%' }}>
-                    <BrowseItems
-                      itemName={menuItem.name}
-                      itemPrice={menuItem.cost}
-                      itemDescription={menuItem.description}
-                      itemIngredient={menuItem.ingredients} 
-                      itemVegetarian={menuItem.is_vegan}
-                      tableID={id.id}
-                    />
-                  </div>
+                  <BrowseItems
+                    itemName={menuItem.name}
+                    itemPrice={menuItem.cost}
+                    itemDescription={menuItem.description}
+                    itemIngredient={menuItem.ingredients} 
+                    itemVegetarian={menuItem.is_vegan}
+                    tableID={id.id}
+                  />
                 ))}
-              </div>
-            </Box>
-          ) : (
-            <Box 
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              height="80vh"
-            >
-              <Typography variant="h4" justifyContent="flex-end" alignItems="flex-end" mr= {- 20} style={{ margin: '20px' }}>
-                No Menu Item 
-              </Typography>
-            </Box>
-        )}
-        </Box>
-      </Box>
+            </div>
+          </Paper>
+        ) : (<></>)}
+
+        <div style={{ position: 'absolute', bottom: '22px', left: '55%', transform: 'translateX(-50%)' }}>
+          <Pagination
+            count={Math.ceil(menuItems.length / ITEMS_PER_PAGE)}
+            page={currentPage}
+            onChange={handlePageChange}
+            renderItem={(item) => (
+              <PaginationItem
+                component={IconButton}
+                {...item}
+              />
+            )}
+          />
+        </div>
+      </div>
     </Container>
   );
 };

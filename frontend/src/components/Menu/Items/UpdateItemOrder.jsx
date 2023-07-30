@@ -4,7 +4,7 @@ import ErrorHandler from '../../ErrorHandler';
 
 const UpdateItemOrder = ({ name, onItemsCategory, cookies } ) => {
 
-  const { _, handleShowSnackbar, showError } = ErrorHandler(); 
+  const { handleShowSnackbar, showError } = ErrorHandler(); 
 
   const handleUpdateOrder = async (is_up) => {
     const payload = {

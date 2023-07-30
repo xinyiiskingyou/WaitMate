@@ -11,7 +11,6 @@ import {
   DialogActions,
 } from '@mui/material';
 import ErrorHandler from '../../ErrorHandler';
-import DoneIcon from '@mui/icons-material/Done';
 
 const AddItem = ({ onItemAdd, onItemCancel, category }) => {
 
@@ -24,7 +23,7 @@ const AddItem = ({ onItemAdd, onItemCancel, category }) => {
   const [open, setOpen] = useState(true);
   const [cookies] = useCookies(['token']);
 
-  const { _, handleShowSnackbar, showError } = ErrorHandler(); 
+  const { handleShowSnackbar, showError } = ErrorHandler(); 
 
   const handleAdd = async () => {
     console.log('category', category);

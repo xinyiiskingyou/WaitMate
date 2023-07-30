@@ -7,7 +7,7 @@ import bell from '../../assets/bell.png'
 const buttonStyle = { 
   border: '4px solid #FFFFFF', 
   height: '6vh', 
-  width: '17vw',
+  width: '200px',
   textAlign: 'center', 
   justifyContent: 'right',
   alignItems: 'right',

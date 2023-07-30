@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import {
   Container,
   Grid,
@@ -21,16 +21,14 @@ import GetBill from "../Checkout/GetBill";
 const ViewCart = () => {
   const id = useParams();
   const [orders, setOrders] = useState([]);
-  const [tips] = useState(0)
+  const [tips] = useState('');
+
   const backLink = `/browse/${id.id}` 
-  const billLink = `/bill/${id.id}?tips=${tips}`
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       const order_list = await ListTableOrder(id.id);
       setOrders(order_list);
-      console.log(orders)
     };
 
     fetchData();
@@ -67,7 +65,7 @@ const ViewCart = () => {
         </Grid>
 
         <Grid item xs={2}>
-          <GetBill tips={tips}/>
+          <GetBill id={id.id} />
         </Grid>
       </Grid>
 

@@ -52,12 +52,14 @@ class Coupons(Base):
 
     code = Column(String, primary_key=True)
     amount = Column(Integer)
+    expiry = Column(String, default=None)
 
 class Memes(Base):
     __tablename__ = 'Memes'
     
     id = Column(Integer, primary_key=True, autoincrement=True)
     filename = Column(String)
+    url = Column(String)
     count = Column(Integer, default=0)
     
 class Votes(Base):

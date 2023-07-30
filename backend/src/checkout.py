@@ -24,29 +24,26 @@ class CheckoutDB:
         session_maker = sessionmaker(bind=self.engine)
         self.session = session_maker()
 
-    def checkout_order(self, table_id: int) -> List[dict]:
-        ret: list
-
-        result = get_order(table_id, self.session)
-        ret = [{'name': i[0], 'cost': i[4], 'amount': i[1]} for i in result]
-
-        return ret
-
     def checkout_bill(self, table_id: int) -> dict:
         if not check_table_exists(table_id, self.session):
             raise InputError(detail=INVALID_TABLE_MSG)
 
         try:
             # Get the items for the checkout order
-            items = self.checkout_order(table_id)
+            items = self._checkout_order(table_id)
 
             # Get the coupon and tip from the Checkout table using SQLAlchemy
             checkout_data = self.session.query(Checkout).filter_by(table_id=table_id).first()
-            bill = {'items': items}
+            bill = {
+                'items': items,
+                'tip': 0,
+                'discount': 0,
+                'coupon_code': ''
+            }
 
             if checkout_data:
                 if checkout_data.coupon:
-                    bill['coupon'] = checkout_data.coupon
+                    bill['coupon_code'] = checkout_data.coupon
                 if checkout_data.tip:
                     bill['tip'] = checkout_data.tip
 
@@ -54,18 +51,15 @@ class CheckoutDB:
             total = sum(item['cost'] for item in items)
             bill['total'] = total
 
-            if 'coupon' in bill:
-                coupon_discount = check_coupon_valid(bill['coupon'], self.session)
+            if bill['coupon_code']:
+                # calculate the coupon discount
+                coupon_discount = check_coupon_valid(bill['coupon_code'], self.session)
                 new_total = bill['total'] * (100 - coupon_discount) / 100
-
                 discount_amount = new_total - total
-                bill['coupon'] = round(discount_amount, 2) * -1
+                bill['discount'] = round(discount_amount, 2) * -1
                 bill['total'] = round(new_total, 2)
-            else:
-                bill['coupon'] = 0
-            if 'tip' in bill:
-                bill['total'] += bill['tip']
 
+            bill['total'] += bill['tip']
             return bill
         except Exception as e:
             print(f"Error occurred: {str(e)}")
@@ -120,7 +114,7 @@ class CheckoutDB:
         finally:
             self.session.close()
 
-    def checkout_coupon_create(self, code: str, amount: int):
+    def checkout_coupon_create(self, code: str, amount: int, expiry: str):
         if check_coupon_valid(code, self.session):
             raise InputError(detail='Coupon code already in use')
         if amount <= 0:
@@ -129,7 +123,8 @@ class CheckoutDB:
         try:
             new_coupon = Coupons(
                 code = code,
-                amount = amount
+                amount = amount,
+                expiry = expiry
             )
             self.session.add(new_coupon)
             self.session.commit()
@@ -156,7 +151,7 @@ class CheckoutDB:
         try:
             coupons = self.session.query(Coupons).all()
 
-            coupon_list = [{'code': coupon.code, 'amount': coupon.amount} for coupon in coupons]
+            coupon_list = [{'code': coupon.code, 'amount': coupon.amount, 'expiry': coupon.expiry} for coupon in coupons]
             return coupon_list
         except sqlalchemy.exc.SQLAlchemyError:
             self.session.rollback()
@@ -179,7 +174,6 @@ class CheckoutDB:
     # PRIVATE HELPER FUNCTIONS
 
     def _checkout_add(self, table_id: int):
-
         try:
             # Check if table id exists
             checkout_row = self.session.query(Checkout).filter_by(table_id=table_id).first()
@@ -194,3 +188,10 @@ class CheckoutDB:
             raise InputError(detail=f"Database error occurred: {str(err)}") from err
         finally:
             self.session.close()
+            
+    def _checkout_order(self, table_id: int) -> List[dict]:
+
+        result = get_order(table_id, self.session)
+        ret = [{'name': i[0], 'cost': i[4], 'amount': i[1]} for i in result]
+
+        return ret
