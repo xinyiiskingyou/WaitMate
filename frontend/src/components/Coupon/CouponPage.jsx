@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import Manager from "../Staff/ManagerInterface";
+import Manager from "../UserInterface/ManagerInterface";
 import CreateCoupon from "./CreateCoupon";
 import ViewCoupons from "./ViewCoupons";
 
