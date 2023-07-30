@@ -1,0 +1,11 @@
+/* app.css */
+
+body {
+    /* Replace these colors with your desired gradient colors */
+    background-image: linear-gradient(to right, #FFF2AB, #FF9EE4);
+  }
+  
+.sideways-text {
+writing-mode: vertical-rl; /* Rotate the text vertically from right to left */
+transform: rotate(180deg); /* Flip the text to make it display correctly */
+}

@@ -1,2 +1,6 @@
 .pytest**/
+<<<<<<< HEAD
 node_modules/
+=======
+node_modules/
+>>>>>>> leanna_merge
