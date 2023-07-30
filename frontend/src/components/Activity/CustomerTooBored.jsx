@@ -14,44 +14,18 @@ import barbieright from "../../assets/barbieright.png";
 import CustomerInterface from "../UserInterface/CustomerInterface";
 
 const buttonStyle = { 
-    border: '4px solid #FFFFFF', 
-    textAlign: 'center', 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    width: '700px', 
-    height: '300px', 
-    fontSize: '20px',
-    background: "#FFFFFF",
-    color: 'black',
-    fontWeight: "bolder",
-    borderRadius: 6,
-  }
-
-const theme = createTheme({
-    components: {
-      MuiAppBar: {
-        styleOverrides: {
-          root: {
-            backgroundColor: 'transparent',
-            boxShadow: 'none',
-          },
-        },
-      },
-      MuiTextField: {
-        styleOverrides: {
-          root: {
-            "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#FBDDDD",
-            },
-            "& .MuiOutlinedInput-root.Mui-focused  .MuiOutlinedInput-notchedOutline":
-              {
-                borderColor: "#FBDDDD",
-              },
-          },
-        },
-      },
-    },
-  });
+  border: '4px solid #FFFFFF', 
+  textAlign: 'center', 
+  justifyContent: 'center', 
+  alignItems: 'center', 
+  width: '700px', 
+  height: '300px', 
+  fontSize: '20px',
+  background: "#FFFFFF",
+  color: 'black',
+  fontWeight: "bolder",
+  borderRadius: 6,
+}
 
 const CustomerTooBored = () => {
 

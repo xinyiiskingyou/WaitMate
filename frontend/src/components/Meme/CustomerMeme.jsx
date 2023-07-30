@@ -195,3 +195,16 @@
 // };
 
 // export default CustomerMeme;
+
+import React from "react";
+
+const CustomerMeme = () => {
+  
+  return (
+    <div>
+      hihihihi
+    </div>
+  );
+}
+
+export default CustomerMeme;
