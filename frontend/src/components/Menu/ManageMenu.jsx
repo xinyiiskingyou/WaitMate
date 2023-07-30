@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { 
   Drawer, 
@@ -8,16 +9,15 @@ import {
   TextField,
   ButtonGroup,
   Container,
-  Paper
+  Paper,
 } from "@mui/material";
 import ListCategories from "./Category/ListCategories";
 import AddCategory from "./Category/AddCategoy";
-import UpdateCategoryName from "./Category/UpdateCategoryName";
-import UpdateCategoryOrder from "./Category/UpdateCategoryOrder";
 import ListItems from './Items/ListItems'
 import ManageItems from './Items/ManageItems'
 import Manager from '../Staff/ManagerInterface'
-
+import { Reorder, motion } from "framer-motion";
+import { Item } from "./Item";
 const EditButtonStyle = {
   marginTop: '2.5vh',
   marginLeft: '1vw',
@@ -38,21 +38,14 @@ const smallbuttonStyle = {
 
 const ManageMenu = () => {
   const { categories, setCategories } = ListCategories();
-  const [categoryEditingIndex, setCategoryEditingIndex] = useState(-1);
-  const [editedCategory, setEditedCategory] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(-1);
   const { menuItems, setMenuItems, fetchMenuItems } = ListItems(selectedCategory);
+  const [items, setItems] = useState(categories);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const navigate = useNavigate();
 
   const [cookies] = useCookies(['token']);
   
-  const handleCategoryInputChange = (value) => {
-    setEditedCategory(value);
-  };
-
-  const handleEditCategory = (index) => {
-    setCategoryEditingIndex(index);
-  };
 
   const handleCategoryClick = (index) => {
     setMenuItems([]);
@@ -64,15 +57,19 @@ const ManageMenu = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
+  useEffect(() => {
+    setItems(categories);
+  }, [categories]);
+
+
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="100%">
       <Manager />
 
-      <div style={{display: "flex", alignItems: "center", justifyContent: "flex-start", height: "100vh"}}>
+      <div style={{display: "flex", alignItems: "center", justifyContent: "center", height: "80vh", marginLeft: "-40px"}}>
         <Button style={{
           height: "50%", 
-          background: "white", 
-          marginLeft: "-30vw", 
+          background: "white",  
           marginTop: "40vh", 
           padding: "100px 0",
           borderTopRightRadius: '20px',
@@ -105,64 +102,29 @@ const ManageMenu = () => {
                 Menu Category
               </Typography>
             </div>
+
             <AddCategory cookies={cookies} categories={categories} setCategories={setCategories} />
-            
-            { Object.entries(categories).map(([index, category]) => (
-              <Box key={index}>
-                {categoryEditingIndex === index ? (
-                  <>
-                    <TextField
-                      value={editedCategory || category}
-                      size='small'
-                      variant='outlined'
-                      color='primary'
-                      style={{ margin: '5%', width: '80%' }}
-                      onChange={(e) => handleCategoryInputChange(e.target.value, index)}
-                      fullWidth 
-                    />
-                    <UpdateCategoryName cookies={cookies} index={index} editedCategory={editedCategory} 
-                      setCategoryEditingIndex={setCategoryEditingIndex} setEditedCategory={setEditedCategory}
-                      categories={categories} setCategories={setCategories}
-                    />
-                  </>
-                ) : (
-                  <Box display="flex" justifyContent="space-evenly">
-                    <Button 
-                      variant="outlined" 
-                      color="primary"
-                      style={{...EditButtonStyle, 
-                        border: selectedCategory===index ? "3px solid #FFA0A0" :"3px solid #bdbdbd",
-                        background: selectedCategory===index ? "#FFCFCF" : "#E0E0E0"
-                      }}
-                      onClick={() => handleCategoryClick(index)}>
-                      {category}
-                    </Button>
-                    
-                    <ButtonGroup variant="outlined" style={{smallbuttonStyle}}>
-                      <Button
-                        color="primary"
-                        style={{...smallbuttonStyle, padding: '4px', fontSize: '10px'}}
-                        onClick={() => handleEditCategory(index)}
-                      >
-                        Edit
-                      </Button>
-                      <UpdateCategoryOrder cookies={cookies} index={index} categories={categories} 
-                        setCategories={setCategories} 
-                      />
-                    </ButtonGroup>
-                  </Box>
-                )}
-              </Box>
-            ))}
+            <Reorder.Group axis="y" onReorder={setCategories} values={items}>
+              {Object.entries(items).map(([index, category]) => (
+                <Item 
+                  key={category} 
+                  item={category} 
+                  index={index}
+                  selectedCategory={selectedCategory}
+                  handleCategoryClick={handleCategoryClick}
+                  />
+              ))}
+            </Reorder.Group>
           </Drawer>
 
           {selectedCategory !== -1 ? (
             <Paper elevation={3} sx={{
               padding: "20px",
               borderRadius: "8px",
-              width: "1200px", 
+              width: "70vw", 
               height: "80vh", 
-              marginLeft: "15vw",
+              marginTop: "10vh",
+              marginLeft: "10vw",
             }}>
               <ManageItems 
                 categories={categories} 

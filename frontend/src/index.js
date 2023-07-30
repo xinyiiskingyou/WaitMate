@@ -8,6 +8,7 @@ import ViewCart from './components/Orders/ViewCart';
 import Staff from './components/Staff/Staff';
 import ManagerLogin from './components/Staff/ManagerLogin'
 import ManageMenu from './components/Menu/ManageMenu';
+import ManageMeme from './components/Meme/ManageMeme';
 import ManagerSettings from './components/Staff/ManagerSettings';
 import Coupon from './components/Coupon/CouponPage';
 import KitchenstaffLogin from './components/Staff/KitchenstaffLogin'
@@ -53,6 +54,7 @@ function App() {
         <Route path="/staff" element={<Staff />} />
         <Route path="/manager/login" element={<ManagerLogin />} />
         <Route path="/manager/menu" element={ manager ? (<ManageMenu />) : (<Navigate to='/manager/login'/>)} />
+        <Route path="/manager/meme" element={ manager ? (<ManageMeme />) : (<Navigate to='/manager/login'/>)} />
         <Route path="/manager/setting" element={ manager ? (<ManagerSettings />) : (<Navigate to='/manager/login'/> )} />
         <Route path="/manager/coupon" element={manager ? (<Coupon />) : (<Navigate to='/manager/login'/>)} />
         <Route path="/waitstaff/login" element={<WaitstaffLogin />} />
