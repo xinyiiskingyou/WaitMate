@@ -16,6 +16,7 @@ import WaitstaffLogin from './components/Staff/WaitstaffLogin';
 import WaitStaffInterface from './components/Staff/WaitStaffInterface';
 import { getToken } from './auth.js';
 import CustomerTooBored from './components/Activity/CustomerTooBored';
+import CustomerMeme from './components/Meme/CustomerMeme';
 
 function App() {
   const [manager, setManager] = React.useState("false");
@@ -60,6 +61,7 @@ function App() {
         <Route path="/kitchenstaff/login" element={<KitchenstaffLogin />} />
         <Route path="/kitchenstaff/list" element={<KitchenInterface />} />
         <Route path="/toobored/:id" element={<CustomerTooBored />} />
+        <Route path="/customermeme/:id" element={<CustomerMeme />} />
       </Routes>
     </Router>
   );
