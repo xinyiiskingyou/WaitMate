@@ -17,7 +17,8 @@ const UpdateCategoryName = ({
   setCategoryEditingIndex, 
   setEditedCategory,
   categories, 
-  setCategories
+  setCategories,
+  handleItemNameChange
 }) => {
 
   const { _, handleShowSnackbar, showError } = ErrorHandler(); 
@@ -59,6 +60,7 @@ const UpdateCategoryName = ({
       
         // Reset the category editing index
         setCategoryEditingIndex(-1);
+        handleItemNameChange(editedCategory);
         setEditedCategory("");
         return response.json();
       } else {

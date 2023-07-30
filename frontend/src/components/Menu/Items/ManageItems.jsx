@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Card, IconButton, Pagination, PaginationItem } from "@mui/material";
+import { Box, Card, IconButton, Pagination, PaginationItem, Tooltip } from "@mui/material";
 import AddItem from "./AddItem"
 import UpdateItemOrder from "./UpdateItemOrder"
 import UpdateItemDetails from './UpdateItemDetails'
@@ -96,8 +96,17 @@ const ManageItems = ({
         </div>
       </Box>
 
-      <div style={{ position: 'relative', marginTop: '2vh' }}>
-        <Box display="flex" justifyContent="center" alignItems="center" marginTop={2}>
+      <Box
+        position="fixed"
+        bottom="10vh"
+        right="50%"
+        transform="translateX(50%)"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        flexDirection="column"
+      >
+        <Box position="relative" display="flex" justifyContent="center" alignItems="center" marginTop={2}>
           <Pagination
             count={Math.ceil(menuItems.length / ITEMS_PER_PAGE)}
             page={currentPage}
@@ -110,8 +119,14 @@ const ManageItems = ({
             )}
           />
         </Box>
-
+      </Box>
+      <Box
+        position="fixed"
+        bottom="12vh"
+        right="18vw"
+      >
         <Box position="relative">
+          <Tooltip title="Add menu item">
           <IconButton
             onClick={handleAddButtonClick}
             style={{
@@ -119,14 +134,13 @@ const ManageItems = ({
               borderRadius: "50%",
               fontSize: "12vh",
               position: "absolute",
-              bottom: "10px", 
-              right: "11px",
             }}
           >
             <AddIcon />
           </IconButton>
+          </Tooltip>
         </Box>
-      </div>
+      </Box>
     </>
   );
 }

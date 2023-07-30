@@ -59,7 +59,7 @@ const Manager = () => {
                 <Button style={{color:"black"}} component={Link} to="/manager/menu">
                   Menu
                 </Button>
-                <Button style={{color:"black"}} component={Link} to="/button2">
+                <Button style={{color:"black"}} component={Link} to="/manager/meme">
                   Meme
                 </Button>
                 <Button style={{color:"black"}} component={Link} to="/manager/coupon">
