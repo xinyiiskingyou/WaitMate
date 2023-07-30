@@ -20,7 +20,7 @@ const SelectTable = () => {
   const { showSnackbar, handleShowSnackbar, showError } = ErrorHandler(); 
 
   const navigate = useNavigate();
-  const nextLink = `/browse/${value}`;
+  const nextLink = `/customer/browse/${value}`;
 
   const handleInputChange = (event) => {
     const inputValue = event.target.value;

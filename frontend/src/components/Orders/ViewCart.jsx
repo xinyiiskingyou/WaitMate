@@ -23,7 +23,7 @@ const ViewCart = () => {
   const [orders, setOrders] = useState([]);
   const [tips] = useState('');
 
-  const backLink = `/browse/${id.id}` 
+  const backLink = `/customer/browse/${id.id}` 
 
   useEffect(() => {
     const fetchData = async () => {

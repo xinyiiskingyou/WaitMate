@@ -16,7 +16,7 @@ import UpdateCategoryName from "./Category/UpdateCategoryName";
 import UpdateCategoryOrder from "./Category/UpdateCategoryOrder";
 import ListItems from './Items/ListItems'
 import ManageItems from './Items/ManageItems'
-import Manager from '../Staff/ManagerInterface'
+import Manager from '../UserInterface/ManagerInterface'
 
 const EditButtonStyle = {
   marginTop: '2.5vh',

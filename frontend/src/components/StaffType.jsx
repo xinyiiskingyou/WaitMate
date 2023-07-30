@@ -1,9 +1,9 @@
 import React from 'react';
 import { Box, Grid, Button, Typography } from '@mui/material';
 import {Link} from 'react-router-dom';
-import worker from '../../assets/worker.png'
-import chef from '../../assets/chef.png'
-import manager from '../../assets/manager.png'
+import worker from '../assets/worker.png'
+import chef from '../assets/chef.png'
+import manager from '../assets/manager.png'
 
 const Staff = () => {
 
