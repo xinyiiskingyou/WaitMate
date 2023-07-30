@@ -55,7 +55,7 @@ class MemeDB():
                 shutil.copyfileobj(response.raw, image_file)
 
             # add memes to table
-            new_meme = Memes(filename=image_path, count=0)
+            new_meme = Memes(filename=image_path, count=0, url=img_url)
             self.session.add(new_meme)
             self.session.commit()
         except Exception as error:
@@ -67,7 +67,7 @@ class MemeDB():
     def view_all_memes(self) -> List[Any]:
 
         try:
-            statement = select(Memes.id, Memes.filename, Memes.count)
+            statement = select(Memes.id, Memes.filename, Memes.count, Memes.url)
             rows = self.session.execute(statement).all()
 
             return [tuple(row) for row in rows]

@@ -24,19 +24,22 @@ import Manager from '../Staff/ManagerInterface'
 
 const actions = [
     { icon: <AddAPhotoIcon />, name: 'Upload Meme', content: "Upload Meme" },
-    { icon: <ConfirmationNumberIcon />, name: 'Check vote count', content: "action 2" },
+    { icon: <ConfirmationNumberIcon />, name: 'Check vote count', content: "Vote Count" },
   ];
 const ManageMeme = () => {
-    
+    const [cookies] = useCookies(['token']);
     const [showUploadMeme, setShowUploadMeme] = useState(false);
 
     const [memes, setMemes] = useState([]);
+    const [email, setEmail] = useState([]);
     const handleUploadMemeClose = () => {
         setShowUploadMeme(false);
       };
     const handleClick = (content) => {
       if (content === 'Upload Meme') {
         setShowUploadMeme(true);
+      } else if (content === "Vote Count") {
+        fetchMemesCount();
       }
     };
 
@@ -52,12 +55,36 @@ const ManageMeme = () => {
         console.log('here1', memesArray)
         const transformedMemes = memesArray.map((meme, index) => ({
             index: index,
-            image: meme[1], // Assuming the image is the first element in each array, adjust this based on your actual data structure
+            image: meme[3], // Assuming the image is the first element in each array, adjust this based on your actual data structure
             count: meme[2], // Assuming the count is the third element in each array, adjust this based on your actual data structure
           }));
       
           console.log('transformedMemes:', transformedMemes);
           setMemes(transformedMemes);
+        } catch (error) {
+        console.error('Error fetching Items:', error);
+        }
+    };
+
+    const fetchMemesCount = async () => {
+        try {
+        const response = await fetch('http://localhost:8000/meme/listall/emails', {
+            headers: {
+              'Content-Type': 'application/json', 
+              'Authorization': `Bearer ${cookies.token}`
+            },
+          });
+        const data = await response.json();
+        const memesArray = Object.values(data);
+        console.log('email', memesArray)
+        const transformedMemes = memesArray.map((meme, index) => ({
+            index: index,
+            image: meme[3],
+            count: meme[2],
+          }));
+      
+          console.log('transformedMemes:', transformedMemes);
+          setEmail(transformedMemes);
         } catch (error) {
         console.error('Error fetching Items:', error);
         }
@@ -74,15 +101,23 @@ const ManageMeme = () => {
               marginLeft: "10vw",
             }}>
         <Box display="flex" justifyContent="center">
-        <ImageList sx={{ width: "60vw", height: "80vh"}} cols={3} rowHeight={120} gap={8}>
+        {/* sx={{ width: "60vw", height: "80vh"}}  */}
+        <ImageList cols={3} rowHeight={200} gap={10} sx={{ display: 'grid' }}>
         {memes.map((item) => (
-            <ImageListItem key={item.image}>
+            <ImageListItem key={item.index} style={{border: "2px red solid", borderBottomLeftRadius: "10px", borderBottomRightRadius: "10px"}}>
+            <div>
             <img
-                src={`${item.image}?w=120&h=120&fit=crop&auto=format`}
-                srcSet={`${item.image}?w=120&h=120&fit=crop&auto=format&dpr=2 2x`}
+                src={`${item.image}?w=200&h=200&fit=crop&auto=format`}
                 alt={item.title}
                 loading="lazy"
-            />
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            />            
+            </div>    
+
+            <div style={{padding: "10px"}}>
+                {item.count} Likes
+            </div>
+            
             </ImageListItem>
         ))}
         </ImageList>
@@ -112,42 +147,3 @@ const ManageMeme = () => {
 };
 
 export default ManageMeme;
-
-const itemData = [
-    {
-      img: 'https://www.theinterrobang.ca/images/interrobang/030819/B8QC6DAZ9PWRK7M2.jpg',
-      title: 'Breakfast',
-    },
-    {
-        img: 'https://cdn.i-scmp.com/sites/default/files/styles/1200x800/public/d8/images/canvas/2021/10/30/85f2cb5f-44f8-4f2f-a813-63e657e11acc_5065cac7.jpg?itok=gY-K9HdU&v=1635566576',
-        title: 'Dinner',
-    },
-    {
-    img: 'https://www.theinterrobang.ca/images/interrobang/030819/B8QC6DAZ9PWRK7M2.jpg',
-    title: 'Breakfast',
-    },
-    {
-        img: 'https://www.theinterrobang.ca/images/interrobang/030819/B8QC6DAZ9PWRK7M2.jpg',
-        title: 'Breakfast',
-      },
-      {
-          img: 'https://www.theinterrobang.ca/images/interrobang/030819/B8QC6DAZ9PWRK7M2.jpg',
-          title: 'Breakfast',
-      },
-      {
-      img: 'https://www.theinterrobang.ca/images/interrobang/030819/B8QC6DAZ9PWRK7M2.jpg',
-      title: 'Breakfast',
-      },
-      {
-        img: 'https://www.theinterrobang.ca/images/interrobang/030819/B8QC6DAZ9PWRK7M2.jpg',
-        title: 'Breakfast',
-      },
-      {
-          img: 'https://www.theinterrobang.ca/images/interrobang/030819/B8QC6DAZ9PWRK7M2.jpg',
-          title: 'Breakfast',
-      },
-      {
-      img: 'https://www.theinterrobang.ca/images/interrobang/030819/B8QC6DAZ9PWRK7M2.jpg',
-      title: 'Breakfast',
-      },
-  ];

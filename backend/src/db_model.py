@@ -58,6 +58,7 @@ class Memes(Base):
     
     id = Column(Integer, primary_key=True, autoincrement=True)
     filename = Column(String)
+    url = Column(String)
     count = Column(Integer, default=0)
     
 class Votes(Base):
