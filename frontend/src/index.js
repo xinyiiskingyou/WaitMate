@@ -52,6 +52,7 @@ function App() {
         <Route path="/customer/browse/:id" element={<BrowseMenu />} />
         <Route path="/customer/cart/:id" element={<ViewCart />} />
         <Route path="/customer/activity/:id" element={<CustomerTooBored />} />
+        <Route path="/customer/meme/:id" element={<CustomerMeme />} />
         <Route path="/staff" element={<Staff />} />
         <Route path="/manager/login" element={<ManagerLogin />} />
         <Route path="/manager/menu" element={ manager ? (<ManageMenu />) : (<Navigate to='/manager/login'/>)} />
