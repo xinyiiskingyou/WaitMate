@@ -12,7 +12,7 @@ import CssTextField from '../CssTextField.jsx'
 const mainPink = pink[100];
 const secPink = pink[200];
 
-const LoginButton = styled(Button)(({ }) => ({
+const LoginButton = styled(Button)(() => ({
   color: "#FFFFFF",
   backgroundColor: mainPink,
   '&:hover': {

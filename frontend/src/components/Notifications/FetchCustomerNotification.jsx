@@ -42,7 +42,7 @@ const FetchCustomerNotification = ({ cookies }) => {
     return () => {
       eventSource.close();
     };
-  }, []);
+  });
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -52,7 +52,7 @@ const FetchCustomerNotification = ({ cookies }) => {
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  });
   
   return (
     <>

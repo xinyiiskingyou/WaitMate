@@ -47,7 +47,7 @@ const ListAllOrder = () => {
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  });
 
   return (
     <Grid item xs={2}>

@@ -4,21 +4,11 @@ import '../../app.css';
 import {
   AppBar, 
   Toolbar, 
-  Typography, 
   ThemeProvider, 
   createTheme,
-  Drawer, 
-  List,
-  ListItem,
-  ListItemText,
-  Input,
-  TextField,
-  IconButton,
   Button
 } from '@mui/material';
 import WaitMate from "../../assets/WaitMate.png";
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
 
 const theme = createTheme({
   components: {
@@ -54,7 +44,7 @@ const Manager = () => {
         <AppBar position="fixed">
           <Toolbar>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <img src={WaitMate} style={{ width: '200px', marginRight: '10px' }} />
+            <img src={WaitMate} alt={WaitMate} style={{ width: '200px', marginRight: '10px' }} />
             <div style={{ display: 'flex', marginLeft: '500px', alignItems: "flex-end", justifyContent: 'space-between', gap: "50px" }}>
                 <Button style={{color:"black"}} component={Link} to="/manager/menu">
                   Menu

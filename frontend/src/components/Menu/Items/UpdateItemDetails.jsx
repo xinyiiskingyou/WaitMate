@@ -11,8 +11,7 @@ import {
   DialogTitle,
   DialogContent,
   CardContent,
-  Typography,
-  Divider
+  Typography
 } from "@mui/material";
 import ErrorHandler from '../../ErrorHandler';
 import veg from '../../../assets/vegan.png'
@@ -34,7 +33,7 @@ const UpdateItemDetails = ({
   const [ingredients, setIngredient] = useState(itemIngredient);
   const [vegetarian, setVegetarian] = useState(itemVegetarian);
   const [open, setOpen] = useState(false);
-  const { _, handleShowSnackbar, showError } = ErrorHandler(); 
+  const { handleShowSnackbar, showError } = ErrorHandler(); 
 
   const handleClose = () => {
     setOpen(false);
