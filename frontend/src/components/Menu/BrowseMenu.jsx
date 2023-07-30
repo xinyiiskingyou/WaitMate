@@ -98,13 +98,13 @@ const BrowseMenu = () => {
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <img src={WaitMate} alt={WaitMate} style={{ width: '200px', marginRight: '10px' }} />
                 <div style={{ display: 'flex', marginLeft: '500px', alignItems: "flex-end", justifyContent: 'space-between', gap: "50px" }}>
-                  <Button style={buttonStyle} component={Link} to={`/browse/${id.id}`}>
+                <Button style={buttonStyle} component={Link} to={`/browse/${id.id}`}>
                     Menu
                   </Button>
-                  <Button style={buttonStyle} component={Link} to="/button2">
+                  <Button style={buttonStyle} component={Link} to={`/customermeme/${id.id}`}>
                     Meme of the Week
                   </Button>
-                  <Button style={buttonStyle} component={Link} to="/button2">
+                  <Button style={buttonStyle} component={Link} to={`/toobored/${id.id}`}>
                     Too Bored?
                   </Button>
                   <SendNotification id={id.id}/>

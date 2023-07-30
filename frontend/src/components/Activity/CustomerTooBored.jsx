@@ -72,10 +72,10 @@ const CustomerTooBored = () => {
             <Button style={buttonStyle} component={Link} to={`/browse/${id.id}`}>
                     Menu
                   </Button>
-                  <Button style={buttonStyle} component={Link} to={`/toobored/${id.id}`}>
+                  <Button style={buttonStyle} component={Link} to={`/customermeme/${id.id}`}>
                     Meme of the Week
                   </Button>
-                  <Button style={buttonStyle} component={Link} to={`/customermeme/${id.id}`}>
+                  <Button style={buttonStyle} component={Link} to={`/toobored/${id.id}`}>
                     Too Bored?
                   </Button>
                   <SendNotification id={id.id}/>
