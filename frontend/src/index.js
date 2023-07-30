@@ -16,6 +16,7 @@ import WaitstaffLogin from './components/LoginPage/WaitstaffLogin';
 import WaitStaffInterface from './components/UserInterface/WaitStaffInterface';
 import { getToken } from './auth.js';
 import CustomerTooBored from './components/Activity/CustomerTooBored';
+import CustomerMeme from './components/Meme/CustomerMeme';
 
 function App() {
   const [manager, setManager] = React.useState("false");

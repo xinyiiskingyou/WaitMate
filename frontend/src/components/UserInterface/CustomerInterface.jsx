@@ -55,7 +55,7 @@ const CustomerInterface = () => {
                 <Button style={buttonStyle} component={Link} to={`/customer/browse/${id.id}`}>
                   Menu
                 </Button>
-                <Button style={buttonStyle} component={Link} to={`/button2`}>
+                <Button style={buttonStyle} component={Link} to={`/customer/meme/${id.id}`}>
                   Meme of the Week
                 </Button>
                 <Button style={buttonStyle} component={Link} to={`/customer/activity/${id.id}`}>
