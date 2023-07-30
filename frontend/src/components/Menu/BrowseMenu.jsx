@@ -96,9 +96,9 @@ const BrowseMenu = () => {
           <AppBar position="fixed">
             <Toolbar>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <img src={WaitMate} alt={WaitMate} style={{ width: '200px', marginRight: '10px' }} />
-                <div style={{ display: 'flex', marginLeft: '500px', alignItems: "flex-end", justifyContent: 'space-between', gap: "50px" }}>
-                <Button style={buttonStyle} component={Link} to={`/browse/${id.id}`}>
+                <img src={WaitMate} alt={WaitMate} style={{ width: '200px', marginRight: '30vw' }} />
+                <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: "flex-end", gap: "50px" }}>
+                  <Button style={buttonStyle} component={Link} to={`/browse/${id.id}`}>
                     Menu
                   </Button>
                   <Button style={buttonStyle} component={Link} to={`/customermeme/${id.id}`}>
