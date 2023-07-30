@@ -8,22 +8,24 @@ const CardFace = styled(Box)(({theme}) => ({
   position: 'absolute',
   transition: 'all ease-in 1s',
   transform: `rotateY(90deg)`,
+  borderRadius: 2,
+
 }));
 
 
 const CardBack = styled(Box)(({theme}) => ({
-  width: 180,
-  height: 180,
+  width: 170,
+  height: 170,
   transform: `rotateY(0deg)`,
   transitionDelay: 0.2,
-  border: `3px inset ${mainPink}`,
+  border: `4px outset ${mainPink}`,
   borderRadius: 5,
 
-  '&:hover': {
-    border: `3px dashed #fff`,
-    borderRadius: 5
+  // '&:hover': {
+  //   border: `3px dashed #fff`,
+  //   borderRadius: 5
 
-  },
+  // },
 }));
 
 function MemoryCard({ card, handleChoice, flipped, disable }) {
@@ -39,19 +41,19 @@ function MemoryCard({ card, handleChoice, flipped, disable }) {
       <Grid className={flipped ? "flipped" : ""}>
         {flipped ?           
           <CardBack>
-            <img src={card.src} width="180" height="180" alt='front' xs={{transform: 90}}/>
+            <img src={card.src} width="170" height="170" alt='front' xs={{transform: 90, borderRadius: '5'}}/>
           </CardBack> :         
           <CardFace>
-            <img src={card.src} width="180" height="180" alt='front' xs={{transform: 90}}/>
+            <img src={card.src} width="170" height="170" alt='front' xs={{transform: 90, borderRadius: 5}}/>
           </CardFace>
         }
 
         {flipped ?           
           <CardFace>
-            <img src='/img/memory_bg.jpg' onClick={handleClick} width="180" height="180" alt='back'  xs={{transform: 0}}/>
+            <img src='/img/memory_bg.jpg' onClick={handleClick} width="170" height="170" alt='back'  xs={{transform: 0, borderRadius: 10}}/>
           </CardFace> :         
           <CardBack>
-            <img src='/img/memory_bg.jpg' onClick={handleClick} width="180" height="180" alt='back'  xs={{transform: 0}}/>
+            <img src='/img/memory_bg.jpg' onClick={handleClick} width="170" height="170" alt='back'  xs={{transform: 0, borderRadius: 10}}/>
           </CardBack>
         }
 
