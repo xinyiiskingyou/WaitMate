@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Button, Grid, Dialog, DialogContent, DialogActions } from "@mui/material";
+import { Button, Grid, Dialog, DialogContent, DialogActions } from "@mui/material";
 import ErrorHandler from '../ErrorHandler';
 import thanks from '../../assets/thank.png'
 import bell from '../../assets/bell.png'
@@ -7,7 +7,7 @@ import bell from '../../assets/bell.png'
 const buttonStyle = { 
   border: '4px solid #FFFFFF', 
   height: '6vh', 
-  width: '17vw',
+  width: '200px',
   textAlign: 'center', 
   justifyContent: 'right',
   alignItems: 'right',
@@ -15,7 +15,6 @@ const buttonStyle = {
   color: 'black',
   fontWeight: "bolder",
   borderRadius: 6,
-  position: 'absolute',
 }
 
 const SendNotification = ({ id }) => {
@@ -57,7 +56,6 @@ const SendNotification = ({ id }) => {
 
   return (
     <Grid item>
-      <Box display="flex" justifyContent="flex-end" ml={88} mt={-1}>
       <Button 
         variant="contained" 
         color="primary" 
@@ -71,7 +69,6 @@ const SendNotification = ({ id }) => {
         }}/>
         Request Assistance
       </Button>
-      </Box>
 
       <Dialog open={open} onClose={handleClose} fullWidth>
         <div style={{

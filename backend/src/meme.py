@@ -55,7 +55,7 @@ class MemeDB():
                 shutil.copyfileobj(response.raw, image_file)
 
             # add memes to table
-            new_meme = Memes(filename=image_path, count=0)
+            new_meme = Memes(filename=image_path, count=0, url=img_url)
             self.session.add(new_meme)
             self.session.commit()
         except Exception as error:
