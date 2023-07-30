@@ -7,7 +7,7 @@ const RemoveItem = ({
   cookies,
   onItemRemove
 }) => {
-  const { _, handleShowSnackbar, showError } = ErrorHandler();
+  const { handleShowSnackbar, showError } = ErrorHandler();
 
   const handleRemove = async () => {
     const payload = { name: itemName };

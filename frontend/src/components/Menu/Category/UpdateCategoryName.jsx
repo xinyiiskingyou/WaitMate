@@ -21,7 +21,7 @@ const UpdateCategoryName = ({
   handleItemNameChange
 }) => {
 
-  const { _, handleShowSnackbar, showError } = ErrorHandler(); 
+  const { handleShowSnackbar, showError } = ErrorHandler(); 
 
   const handleCancelSaveCategory = () => {
     setCategoryEditingIndex(-1);

@@ -27,11 +27,11 @@ const SendNotification = ({ id }) => {
 
   const handle_require_assistance = async () => {
     const payload = {
-      table_id: id.id,
+      table_id: id,
       status: "ASSIST"
     };
     try {
-      const response = fetch('http://localhost:8000/notification/customer/send', {
+      const response = await fetch('http://localhost:8000/notification/customer/send', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

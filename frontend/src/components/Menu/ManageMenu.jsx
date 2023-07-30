@@ -12,7 +12,6 @@ import {
   Paper,
 } from "@mui/material";
 import ListCategories from "./Category/ListCategories";
-import WestIcon from '@mui/icons-material/West';
 import AddCategory from "./Category/AddCategoy";
 import ListItems from './Items/ListItems'
 import ManageItems from './Items/ManageItems'
@@ -37,18 +36,6 @@ const smallbuttonStyle = {
   color: 'black'
 }
 
-const AddbuttonStyle = {
-  marginTop: '8%',
-  marginButton: '10%',
-  marginLeft: '10%',
-  width: '80%',
-  background: "transparent",
-  border: "4px solid #FFA0A0",
-  borderRadius: 15,
-  color: 'black',
-  fontWeight: 'bold'
-}
-
 const ManageMenu = () => {
   const { categories, setCategories } = ListCategories();
   const [selectedCategory, setSelectedCategory] = useState(-1);
@@ -57,7 +44,6 @@ const ManageMenu = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
-  const backLink = `/staff`;
   const [cookies] = useCookies(['token']);
   
 

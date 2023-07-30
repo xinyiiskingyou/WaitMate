@@ -2,29 +2,11 @@ import React, { useState } from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import ErrorHandler from '../../ErrorHandler';
 
-const buttonStyle = {
-  margin: '5%',
-  width: '70%',
-  height: '80%',
-}
-
-const AddbuttonStyle = {
-  marginTop: '8%',
-  marginButton: '10%',
-  marginLeft: '10%',
-  width: '80%',
-  background: "transparent",
-  border: "4px solid #FFA0A0",
-  borderRadius: 15,
-  color: 'black',
-  fontWeight: 'bold'
-}
-
 const AddCategory = ({ cookies, categories, setCategories }) => {
 
   const [editing, setEditing] = useState(false);
   const [categoryText, setCategoryText] = useState('');
-  const { _, handleShowSnackbar, showError } = ErrorHandler(); 
+  const { handleShowSnackbar, showError } = ErrorHandler(); 
 
   const handleCategoryTextChange = (e) => {
     setCategoryText(e.target.value);

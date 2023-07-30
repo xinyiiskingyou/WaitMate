@@ -5,13 +5,12 @@ import { Navigate } from 'react-router-dom';
 import Home from './components/Home';
 import BrowseMenu from './components/Menu/BrowseMenu'
 import ViewCart from './components/Orders/ViewCart';
-import GetBill from './components/Checkout/GetBill';
 import Staff from './components/Staff/Staff';
 import ManagerLogin from './components/Staff/ManagerLogin'
 import ManageMenu from './components/Menu/ManageMenu';
 import ManageMeme from './components/Meme/ManageMeme';
 import ManagerSettings from './components/Staff/ManagerSettings';
-import Coupon from './components/Checkout/CouponPage';
+import Coupon from './components/Coupon/CouponPage';
 import KitchenstaffLogin from './components/Staff/KitchenstaffLogin'
 import KitchenInterface from './components/Staff/KitchenInterface';
 import WaitstaffLogin from './components/Staff/WaitstaffLogin';
@@ -52,13 +51,12 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/browse/:id" element={<BrowseMenu />} />
         <Route path="/cart/:id" element={<ViewCart />} />
-        <Route path="/bill/:id" element={<GetBill />} />
         <Route path="/staff" element={<Staff />} />
         <Route path="/manager/login" element={<ManagerLogin />} />
         <Route path="/manager/menu" element={ manager ? (<ManageMenu />) : (<Navigate to='/manager/login'/>)} />
         <Route path="/manager/meme" element={ manager ? (<ManageMeme />) : (<Navigate to='/manager/login'/>)} />
         <Route path="/manager/setting" element={ manager ? (<ManagerSettings />) : (<Navigate to='/manager/login'/> )} />
-        <Route path="/manager/coupon" element={manager ? (<Coupon />) : (<Navigate to='/ManagerLogin'/>)} />
+        <Route path="/manager/coupon" element={manager ? (<Coupon />) : (<Navigate to='/manager/login'/>)} />
         <Route path="/waitstaff/login" element={<WaitstaffLogin />} />
         <Route path="/waitstaff/list" element={<WaitStaffInterface />} />
         <Route path="/kitchenstaff/login" element={<KitchenstaffLogin />} />

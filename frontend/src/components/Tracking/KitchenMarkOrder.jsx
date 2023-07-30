@@ -23,7 +23,7 @@ const KitchenMarkOrder = ({
   is_prepared,
   cookies
 }) => {
-  const { _, handleShowSnackbar, showError } = ErrorHandler(); 
+  const { handleShowSnackbar, showError } = ErrorHandler(); 
 
   const markOrder = async () => {
     const table_payload = {
