@@ -1,16 +1,17 @@
 import React, { useState } from "react";
-import { Button, Grid, Dialog, DialogContent, DialogActions } from "@mui/material";
+import { Box, Button, Grid, Dialog, DialogContent, DialogActions } from "@mui/material";
 import ErrorHandler from '../ErrorHandler';
 import thanks from '../../assets/thank.png'
 import bell from '../../assets/bell.png'
 
 const buttonStyle = { 
-  border: '4px solid #FFA0A0', 
+  border: '4px solid #FFFFFF', 
   height: '8vh', 
-  width: '10vw',
+  width: '17vw',
   textAlign: 'center', 
-  justifyContent: 'center',
-  background: "transparent",
+  justifyContent: 'right',
+  alignItems: 'right',
+  background: "#FFFFFF",
   color: 'black',
   fontWeight: "bolder",
   borderRadius: 6,
@@ -27,11 +28,12 @@ const SendNotification = ({ id }) => {
 
   const handle_require_assistance = async () => {
     const payload = {
-      table_id: id.id,
+      table_id: id,
       status: "ASSIST"
     };
+    console.log(id.id);
     try {
-      const response = fetch('http://localhost:8000/notification/customer/send', {
+      const response = await fetch('http://localhost:8000/notification/customer/send', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -54,6 +56,7 @@ const SendNotification = ({ id }) => {
 
   return (
     <Grid item>
+      <Box display="flex" justifyContent="right" ml={60}>
       <Button 
         variant="contained" 
         color="primary" 
@@ -66,6 +69,7 @@ const SendNotification = ({ id }) => {
         }}/>
         Require Assistance
       </Button>
+      </Box>
 
       <Dialog open={open} onClose={handleClose} fullWidth>
         <div style={{

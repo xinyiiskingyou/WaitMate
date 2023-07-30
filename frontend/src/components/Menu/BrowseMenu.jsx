@@ -9,7 +9,12 @@ import {
   ListItemButton,
   ListItemText,
   Grid,
-  IconButton
+  IconButton,
+  ThemeProvider,
+  AppBar,
+  Toolbar,
+  Button,
+  createTheme
 } from "@mui/material";
 import { Link, useParams } from 'react-router-dom';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -17,6 +22,33 @@ import ListCategories from './Category/ListCategories';
 import ListItems from './Items/ListItems';
 import BrowseItems from './Items/BrowseItems';
 import SendNotification from "../Notifications/SendNotification";
+import WaitMate from "../../assets/WaitMate.png";
+
+const theme = createTheme({
+  components: {
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: 'transparent',
+          boxShadow: 'none',
+        },
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
+            borderColor: "#FBDDDD",
+          },
+          "& .MuiOutlinedInput-root.Mui-focused  .MuiOutlinedInput-notchedOutline":
+            {
+              borderColor: "#FBDDDD",
+            },
+        },
+      },
+    },
+  },
+});
 
 const BrowseMenu = () => {
   const { categories } = ListCategories();
@@ -42,18 +74,42 @@ const BrowseMenu = () => {
   
   return (
     <Container maxWidth="sm">
+      <ThemeProvider theme={theme}>
+      <div>
+        <AppBar position="fixed">
+          <Toolbar>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <img src={WaitMate} style={{ width: '200px', marginRight: '10px' }} />
+            <div style={{ display: 'flex', marginLeft: '500px', alignItems: "flex-end", justifyContent: 'space-between', gap: "50px" }}>
+                <Button style={{color:"black"}} component={Link} to="/browse/:id">
+                  Menu
+                </Button>
+                <Button style={{color:"black"}} component={Link} to="/button2">
+                  Too Bored?
+                </Button>
+                <Button style={{color:"black"}} component={Link} to="/manager/coupon">
+                  Meme of the Week
+                </Button>
+              </div>
+            </div>
+          </Toolbar>
+        </AppBar>
+      </div>
+    </ThemeProvider>
       <Box sx={{ display: 'flex' }}>
+     
         <Drawer variant="permanent">
-          <Box
+       
+          {/* <Box
             sx={{
               margin: 2,
               borderRadius: 8,
-              bgcolor: '#ECEBEB',
+              bgcolor: '#FFFFFF',
               width: '20vw',
               height: '140vh',
               flexDirection: 'column',
             }}
-          >
+          > */}
             <Typography
               variant="h4"
               align="center"
@@ -105,11 +161,11 @@ const BrowseMenu = () => {
                 </IconButton>
               </Link>
             </Grid>
-          </Box>
+
+          {/* </Box> */}
         </Drawer>
-        
         <Box flexGrow={1} p={2} marginLeft="-22%">
-          <Grid container columnGap={3} justifyContent="flex-end">
+          <Grid container columnGap={3} justifyContent="right" alignItems="right">
             <SendNotification id={id.id} />
           </Grid>
           {categoryID !== -1 ? (
@@ -138,7 +194,7 @@ const BrowseMenu = () => {
               justifyContent="center"
               height="80vh"
             >
-              <Typography variant="h4" align="center" alignItems="center" style={{ margin: '20px' }}>
+              <Typography variant="h4" justifyContent="flex-end" alignItems="flex-end" mr= {- 20} style={{ margin: '20px' }}>
                 No Menu Item 
               </Typography>
             </Box>
