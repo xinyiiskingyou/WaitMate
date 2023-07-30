@@ -3,17 +3,19 @@ import { styled } from '@mui/material/styles';
 import { 
   Box, Button, Typography, Dialog, DialogTitle, Alert,
   Container, Grid, Divider, Snackbar, Backdrop, CircularProgress} from '@mui/material';
-import { pink } from '@mui/material/colors';
+import { pink, yellow, grey } from '@mui/material/colors';
 import WestIcon from '@mui/icons-material/West';
 import { useCookies } from 'react-cookie';
 import { handleLogin, handleLogoutSubmit } from '../auth.js';
 import CssTextField from './CssTextField.jsx'
 
-const mainPink = pink[100];
-const secPink = pink[200];
+const mainPink = '#FF9EE4';
+const secPink = '#FF9EE4';
 
 const LoginButton = styled(Button)(({ }) => ({
   color: "#FFFFFF",
+  borderRadius: 0,
+
   backgroundColor: mainPink,
   '&:hover': {
     backgroundColor: secPink,
@@ -212,7 +214,7 @@ const Settings = () => {
   return (
     <Container >
     <Grid container direction="column" spacing={2}>
-      <Grid item xs={2}>
+      <Grid item xs={2} sx={{mb: 2}}>
         <Box
           sx={{ 
             margin: 2, 
@@ -261,21 +263,23 @@ const Settings = () => {
     <Box
       justifyContent="center"
       sx={{ 
-        pt: 6,
-        pr: 2,
-        pl: 4,
+        py: 4,
+        px: 4,
         minWidth: 40,
         display: 'flex',
         flexDirection: 'column', 
+        backgroundColor: 'white',
+        borderRadius: 2,
       }}>
-      <Divider textAlign="left" sx={{ mb: 2 }}>
-        <Typography variant="h5">User Managerment</Typography>
-      </Divider>
+      <Typography variant="h5" sx={{ mb: 2, backgroundColor: mainPink, p: 1, color: 'white', textShadow: `-1px 0px ${grey[400]}` }}>User Managerment</Typography>
 
       <Grid container direction="row" spacing={2}>
-        <Grid item xs={10} sx={{mb: 2}}>
-          <CssTextField fullWidth type="password" label="Set waitstaff password" 
-            onChange={handlewaitstaffPasswordChange} sx={{pt: 0.2}}
+        <Grid alignItems="center" item xs={4} sx={{}}>
+          <Typography fullHeight sx={{backgroundColor: 'grey', height: '7.5vh'}}> Waitstaff password</Typography>
+        </Grid>
+        <Grid item xs={6} sx={{mb: 2}}>
+          <CssTextField fullWidth type="password" label="Waitstaff password" 
+            onChange={handlewaitstaffPasswordChange} 
             />
         </Grid>
         <Grid item xs={2}>
@@ -290,9 +294,9 @@ const Settings = () => {
 
       <Grid container direction="row" spacing={2}>
         <Grid item xs={10}>
-          <CssTextField fullWidth type="password" label="Set kitchenstaff password"  
+          <CssTextField fullWidth type="password" label="Kitchenstaff password  "  
             onChange={handlekitchenstaffPasswordChange}
-            sx={{ mb: 2, pt: 0.2 }}/>
+            sx={{ mb: 2 }}/>
         </Grid>
         <Grid item xs={2}>
           <LoginButton disabled={!(kitchenstaffPassword.length > 5)}  
@@ -304,13 +308,11 @@ const Settings = () => {
       </Grid>
 
 
-      <Divider textAlign="left" sx={{ mt: 6, mb: 2 }}>
-        <Typography variant="h5">Manage Account</Typography>
-      </Divider>
+      <Typography variant="h5" sx={{ mt: 6, mb: 2, backgroundColor: mainPink, p: 1, color: 'white', textShadow: `-1px 0px ${grey[400]}` }}>Manage Account</Typography>
       <Grid container direction="row" spacing={2}>
         <Grid item xs={10}>
           <CssTextField fullWidth label="Set new email" onChange={handlEmailChange}
-            sx={{ mb: 2, pt: 0.2 }}/>
+            sx={{ mb: 2 }}/>
         </Grid>
         <Grid item xs={2}>
           <LoginButton disabled={!email} sx={{ height: '7.5vh', width: 1 }} onClick={handleEmailSubmit}>
@@ -327,7 +329,7 @@ const Settings = () => {
         open={open}
         onClose={handleClose}
       />
-      <LoginButton sx={{ mt: 4, mb: 2 }} onClick={handleResetSubmit}>
+      <LoginButton sx={{ mt: 4 }} onClick={handleResetSubmit}>
         Reset management
       </LoginButton>
 
