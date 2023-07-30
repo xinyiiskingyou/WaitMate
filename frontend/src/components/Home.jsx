@@ -47,13 +47,14 @@ const Home = () => {
       <Link to="/staff">  
         <Button
           variant="contained"
-          color="secondary"
+          color="primary"
           style={{
+            color: 'black',
             position: 'fixed',
             bottom: 16,
             right: 16,
             fontWeight: "bolder",
-            background: "#FFA0A0"
+            background: "#FFFFFF",
           }}
         >
           <img 

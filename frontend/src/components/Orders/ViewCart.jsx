@@ -42,7 +42,8 @@ const ViewCart = () => {
             <Button              
               sx={{ 
                 border: 5,
-                borderColor: '#FFA0A0',
+                borderColor: '#FFFFFF',
+                background: '#FFFFFF',
                 borderRadius: 2,
                 color: 'black',
               }}>
@@ -73,7 +74,8 @@ const ViewCart = () => {
           sx={{ 
             margin: 1, 
             border: 10,
-            borderColor: '#FFA0A0',
+            borderColor: '#FFFFFF',
+            background: "#FFFFFF",
             borderRadius: 2, 
             display:"flex",
           }}>

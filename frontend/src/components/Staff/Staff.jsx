@@ -11,9 +11,9 @@ const Staff = () => {
     width: '18vw',
     height: '50vh',
     fontSize: '18px',
-    background: 'transparent',
+    background: '#FFFFFF',
     color: 'black',
-    border: "10px solid #FFA0A0",
+    border: "10px solid #FFFFFF",
   };
 
   const headingStyle = {

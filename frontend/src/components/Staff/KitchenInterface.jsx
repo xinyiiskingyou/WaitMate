@@ -6,12 +6,12 @@ import { handleLogoutSubmit } from '../../auth.js';
 import ListAllOrder from "../Orders/ListAllOrder.jsx";
 
 const logoutbuttonStyle = { 
-  border: '4px solid #FFA0A0', 
+  border: '4px solid #FFFFFF', 
   height: '7vh', 
   width: '12vw',
   textAlign: 'center', 
   justifyContent: 'center',
-  background: "#FFCFCF",
+  background: "#FFFFFF",
   color: 'black',
   fontWeight: "bold",
   borderRadius: 8,
@@ -36,7 +36,8 @@ const KitchenInterface = () => {
                   <Button              
                     sx={{ 
                       border: 5,
-                      borderColor: '#FFA0A0',
+                      borderColor: '#FFFFFF',
+                      background: "#FFFFFF",
                       borderRadius: 2,
                       color: 'black' 
                     }}>
