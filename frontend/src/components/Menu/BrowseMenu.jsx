@@ -185,7 +185,7 @@ const BrowseMenu = () => {
             width: "1150px", 
             height: "570px", 
             marginLeft: "200px",
-            position: 'absolute',
+            position: 'fixed',
             marginTop: '60px',
           }}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1vw'}}>
@@ -205,7 +205,7 @@ const BrowseMenu = () => {
           </Paper>
         ) : (<></>)}
 
-        <div style={{ position: 'absolute', bottom: '22px', left: '55%', transform: 'translateX(-50%)' }}>
+        <div style={{ position: 'fixed', bottom: '22px', left: '55%', transform: 'translateX(-50%)' }}>
           <Pagination
             count={Math.ceil(menuItems.length / ITEMS_PER_PAGE)}
             page={currentPage}
