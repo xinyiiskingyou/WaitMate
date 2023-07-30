@@ -69,18 +69,17 @@ const CustomerTooBored = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <img src={WaitMate} style={{ width: '200px', marginRight: '10px' }} />
             <div style={{ display: 'flex', marginLeft: '500px', alignItems: "flex-end", justifyContent: 'space-between', gap: "45px" }}>
-                <Button style={{color:"black", fontWeight:"bolder"}} component={Link} to="/browse/:id">
-                  Menu
-                </Button>
-                <Button style={{color:"black", fontWeight:"bolder"}} component={Link} to="/toobored/{id}">
-                  Too Bored?
-                </Button>
-                <Button style={{color:"black", fontWeight:"bolder"}} component={Link} to="/manager/coupon">
-                  Meme of the Week
-                </Button>
-                <Grid container columnGap={3} justifyContent="right" alignItems="right">
-            <SendNotification id={id.id} />
-          </Grid>              </div>
+            <Button style={buttonStyle} component={Link} to={`/browse/${id.id}`}>
+                    Menu
+                  </Button>
+                  <Button style={buttonStyle} component={Link} to={`/toobored/${id.id}`}>
+                    Meme of the Week
+                  </Button>
+                  <Button style={buttonStyle} component={Link} to={`/customermeme/${id.id}`}>
+                    Too Bored?
+                  </Button>
+                  <SendNotification id={id.id}/>
+                  </div>
             </div>
           </Toolbar>
         </AppBar>
