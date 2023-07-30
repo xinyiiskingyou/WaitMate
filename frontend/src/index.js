@@ -15,8 +15,8 @@ import KitchenstaffLogin from './components/Staff/KitchenstaffLogin'
 import KitchenInterface from './components/Staff/KitchenInterface';
 import WaitstaffLogin from './components/Staff/WaitstaffLogin';
 import WaitStaffInterface from './components/Staff/WaitStaffInterface';
-
 import { getToken } from './auth.js';
+import CustomerTooBored from './components/Activity/CustomerTooBored';
 
 function App() {
   const [manager, setManager] = React.useState("false");
@@ -61,6 +61,7 @@ function App() {
         <Route path="/waitstaff/list" element={<WaitStaffInterface />} />
         <Route path="/kitchenstaff/login" element={<KitchenstaffLogin />} />
         <Route path="/kitchenstaff/list" element={<KitchenInterface />} />
+        <Route path="/toobored/:id" element={<CustomerTooBored />} />
       </Routes>
     </Router>
   );

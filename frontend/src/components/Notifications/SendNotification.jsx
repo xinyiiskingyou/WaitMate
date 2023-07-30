@@ -15,7 +15,6 @@ const buttonStyle = {
   color: 'black',
   fontWeight: "bolder",
   borderRadius: 6,
-  position: 'absolute',
 }
 
 const SendNotification = ({ id }) => {

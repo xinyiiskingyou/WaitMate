@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { 
   Container,
   Box,
-  Drawer,
   Typography,
   List,
   ListItem,
@@ -84,7 +83,7 @@ const BrowseMenu = () => {
                 <Button style={{color:"black", fontWeight:"bolder"}} component={Link} to="/browse/:id">
                   Menu
                 </Button>
-                <Button style={{color:"black", fontWeight:"bolder"}} component={Link} to="/button2">
+                <Button style={{color:"black", fontWeight:"bolder"}} component={Link} to="/toobored/:id">
                   Too Bored?
                 </Button>
                 <Button style={{color:"black", fontWeight:"bolder"}} component={Link} to="/manager/coupon">
