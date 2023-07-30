@@ -27,16 +27,41 @@ const actions = [
     { icon: <ConfirmationNumberIcon />, name: 'Check vote count', content: "action 2" },
   ];
 const ManageMeme = () => {
-
+    
     const [showUploadMeme, setShowUploadMeme] = useState(false);
-  
+
+    const [memes, setMemes] = useState([]);
+    const handleUploadMemeClose = () => {
+        setShowUploadMeme(false);
+      };
     const handleClick = (content) => {
       if (content === 'Upload Meme') {
         setShowUploadMeme(true);
       }
     };
 
-  
+    useEffect(() => {
+        fetchMemes();
+    }, []);
+
+    const fetchMemes = async () => {
+        try {
+        const response = await fetch('http://localhost:8000/meme/listall');
+        const data = await response.json();
+        const memesArray = Object.values(data);
+        console.log('here1', memesArray)
+        const transformedMemes = memesArray.map((meme, index) => ({
+            index: index,
+            image: meme[1], // Assuming the image is the first element in each array, adjust this based on your actual data structure
+            count: meme[2], // Assuming the count is the third element in each array, adjust this based on your actual data structure
+          }));
+      
+          console.log('transformedMemes:', transformedMemes);
+          setMemes(transformedMemes);
+        } catch (error) {
+        console.error('Error fetching Items:', error);
+        }
+    };
   return (
     <Container maxWidth="100%">
         <Manager/>
@@ -50,11 +75,11 @@ const ManageMeme = () => {
             }}>
         <Box display="flex" justifyContent="center">
         <ImageList sx={{ width: "60vw", height: "80vh"}} cols={3} rowHeight={120} gap={8}>
-        {itemData.map((item) => (
-            <ImageListItem key={item.img}>
+        {memes.map((item) => (
+            <ImageListItem key={item.image}>
             <img
-                src={`${item.img}?w=120&h=120&fit=crop&auto=format`}
-                srcSet={`${item.img}?w=120&h=120&fit=crop&auto=format&dpr=2 2x`}
+                src={`${item.image}?w=120&h=120&fit=crop&auto=format`}
+                srcSet={`${item.image}?w=120&h=120&fit=crop&auto=format&dpr=2 2x`}
                 alt={item.title}
                 loading="lazy"
             />
@@ -80,7 +105,7 @@ const ManageMeme = () => {
             ))}
         </SpeedDial>
 
-      {showUploadMeme && <UploadMeme />}
+      {showUploadMeme && <UploadMeme onClose={handleUploadMemeClose}/>}
         </Box>
     </Container>
   );
