@@ -6,7 +6,7 @@ import bell from '../../assets/bell.png'
 
 const buttonStyle = { 
   border: '4px solid #FFFFFF', 
-  height: '8vh', 
+  height: '6vh', 
   width: '17vw',
   textAlign: 'center', 
   justifyContent: 'right',
@@ -15,6 +15,7 @@ const buttonStyle = {
   color: 'black',
   fontWeight: "bolder",
   borderRadius: 6,
+  position: 'absolute',
 }
 
 const SendNotification = ({ id }) => {
@@ -56,18 +57,19 @@ const SendNotification = ({ id }) => {
 
   return (
     <Grid item>
-      <Box display="flex" justifyContent="right" ml={60}>
+      <Box display="flex" justifyContent="flex-end" ml={88} mt={-1}>
       <Button 
         variant="contained" 
         color="primary" 
+        justifyContent="flex-end"
         style={buttonStyle}
         onClick={() => handle_require_assistance()}
       >
         <img src={bell} alt="BellIcon" style={{
-          width: '2.6vw',
-          height: '5vh',
+          width: '2.1vw',
+          height: '4vh',
         }}/>
-        Require Assistance
+        Request Assistance
       </Button>
       </Box>
 

@@ -80,14 +80,14 @@ const BrowseMenu = () => {
           <Toolbar>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <img src={WaitMate} style={{ width: '200px', marginRight: '10px' }} />
-            <div style={{ display: 'flex', marginLeft: '500px', alignItems: "flex-end", justifyContent: 'space-between', gap: "50px" }}>
-                <Button style={{color:"black"}} component={Link} to="/browse/:id">
+            <div style={{ display: 'flex', marginLeft: '500px', alignItems: "flex-end", justifyContent: 'space-between', gap: "45px" }}>
+                <Button style={{color:"black", fontWeight:"bolder"}} component={Link} to="/browse/:id">
                   Menu
                 </Button>
-                <Button style={{color:"black"}} component={Link} to="/button2">
+                <Button style={{color:"black", fontWeight:"bolder"}} component={Link} to="/button2">
                   Too Bored?
                 </Button>
-                <Button style={{color:"black"}} component={Link} to="/manager/coupon">
+                <Button style={{color:"black", fontWeight:"bolder"}} component={Link} to="/manager/coupon">
                   Meme of the Week
                 </Button>
               </div>
@@ -96,27 +96,29 @@ const BrowseMenu = () => {
         </AppBar>
       </div>
     </ThemeProvider>
-      <Box sx={{ display: 'flex' }}>
+      <Box sx={{ display: "flex"}}>
      
-        <Drawer variant="permanent">
+        {/* <Drawer variant="permanent"> */}
        
-          {/* <Box
+          <Box
             sx={{
               margin: 2,
+              mt: 10,
               borderRadius: 8,
               bgcolor: '#FFFFFF',
               width: '20vw',
-              height: '140vh',
+              height: '70vh',
               flexDirection: 'column',
+              justifyContent: "flex-start"
             }}
-          > */}
+          >
             <Typography
               variant="h4"
               align="center"
               style={{
                 fontSize: '1.5vw',
                 fontWeight: 'bolder',
-                marginTop: '4vh',
+                marginTop: '20vh',
               }}
             >
               Menu Categories
@@ -162,8 +164,8 @@ const BrowseMenu = () => {
               </Link>
             </Grid>
 
-          {/* </Box> */}
-        </Drawer>
+          </Box>
+        {/* </Drawer> */}
         <Box flexGrow={1} p={2} marginLeft="-22%">
           <Grid container columnGap={3} justifyContent="right" alignItems="right">
             <SendNotification id={id.id} />
