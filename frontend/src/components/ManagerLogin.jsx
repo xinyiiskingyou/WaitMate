@@ -6,11 +6,12 @@ import { useCookies } from 'react-cookie';
 import { handleLogin } from '../auth.js';
 import CssTextField from './CssTextField.jsx'
 
-const mainPink = pink[100];
-const secPink = pink[200];
+const mainPink = '#FF9EE4';
+const secPink = '#FF9EE4';
 
 const LoginButton = styled(Button)(({ theme }) => ({
   color: "#FFFFFF",
+  borderRadius: 0,
   backgroundColor: mainPink,
   '&:hover': {
     backgroundColor: secPink,
@@ -62,19 +63,21 @@ const ManagerLogin = () => {
         minWidth: 450,
 
       }}>
-      <Box container direction='column' justifyContent='center' 
+      <Box container direction='column'  
         sx={{
           minWidth: 450,
         }}
       >
-        <Typography variant="h5" sx={{ mb: 2 }}>Manager Login</Typography>
+        <Box display='flex' justifyContent='center' sx={{ pb: 3 }}>
+          <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>Manager Login</Typography>
+        </Box>
         <CssTextField fullWidth required label="Email" onChange={handleEmailChange}
           sx={{ mb: 1 }}/>
         <CssTextField type="password" fullWidth required label="Password" onChange={handlePasswordChange}
           sx={{ mb: 2 }}/>
         <Grid container>
           <Grid item xs>
-            <Button justifyContent='center' onClick={handleClick} sx={{color: secPink}}>First Time?</Button>
+            <Button justifyContent='center' onClick={handleClick} sx={{color: secPink, minWidth: '35px', maxWidth: '35px', backgroundColor: 'white', border: `2px solid ${mainPink}`, borderRadius: 0}}>?</Button>
             <Popover 
               id={id}
               open={open}

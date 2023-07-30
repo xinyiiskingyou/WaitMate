@@ -5,8 +5,8 @@ import { pink } from '@mui/material/colors';
 import { useCookies } from 'react-cookie';
 import CssTextField from './CssTextField.jsx'
 
-const mainPink = pink[100];
-const secPink = pink[200];
+const mainPink = '#FF9EE4';
+const secPink = '#FF9EE4';
 
 const LoginButton = styled(Button)(({ theme }) => ({
   color: "#FFFFFF",
