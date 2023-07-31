@@ -36,7 +36,7 @@ const ViewCart = () => {
 
   return (
     <Container>
-      <Grid container direction="column" spacing={2}>
+      <Grid container direction="row" spacing={2} style={{ marginTop: '7vh', marginBottom: '3vh' }}>
         <Grid item xs={2}>
           <Link to={backLink}>
             <Button              
@@ -46,6 +46,7 @@ const ViewCart = () => {
                 background: '#FFFFFF',
                 borderRadius: 2,
                 color: 'black',
+                marginLeft: '20px',
               }}>
               <WestIcon/>
             </Button>
@@ -64,65 +65,58 @@ const ViewCart = () => {
           </Typography>
         </Grid>
 
-        <Grid item xs={2}>
+        <Grid item xs={2} style={{ marginLeft: '-40px'}}>
           <GetBill id={id.id} />
         </Grid>
       </Grid>
 
       <Grid item xs={2}>
-        <Box
-          sx={{ 
-            margin: 1, 
-            border: 10,
-            borderColor: '#FFFFFF',
-            background: "#FFFFFF",
-            borderRadius: 2, 
-            display:"flex",
-          }}>
-        </Box>
-        <Grid container direction="column">
-          <Grid item>
-            <TableContainer sx={{
-              height: 500,
-              pt: 4,  
-            }}>
-              <Table aria-label='custom pagination table' >
-                <TableBody>
-                  {orders.map((row) => (
-                    <TableRow key={row.name}>
-                      <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify="space-between" align="center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10 }}>
-                        {row.name}
+        <Box sx={{ 
+          margin: 1, 
+          border: 10,
+          borderColor: '#FFFFFF',
+          background: "#FFFFFF",
+          borderRadius: 2, 
+          display:"flex",
+        }}>
+          <Grid container direction="column">
+            <Grid item>
+              <TableContainer sx={{ height: '70vh', pt: 4, }}>
+                <Table aria-label='custom pagination table' >
+                  <TableBody>
+                    {orders.map((row) => (
+                      <TableRow key={row.name}>
+                        <TableCell style={{ width: '25%', textAlign: 'center' }} component='th' scope='row' justify="space-between" align="center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10 }}>
+                          {row.amount} x {row.name.toUpperCase()}
+                        </TableCell>
+                        <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify="space-between" align="center" sx={{ fontSize: 27, borderBottom: 'none', pl: 10 }}>
+                          ${row.cost}
+                        </TableCell>
+                        <TableCell style={{ width: '20%', textAlign: 'center', color: row.is_prepared === 0 ? 'orange' : row.is_served === 1 ? 'green' : 'blue' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pl: 10}}>
+                          {row.is_prepared === 0 ? "Preparing" : row.is_served === 1 ? "Served" : "Ready"}
                       </TableCell>
-                      <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify="space-between" align="center" sx={{ fontSize: 27, borderBottom: 'none', pr: -5 }}>
-                        {row.amount}
+                      </TableRow>
+                    ))}
+
+                    <TableRow>
+                      <TableCell style={{ width: '20%', textAlign: 'center', fontWeight: 'bold' }} component='th' scope='row' justify="space-between" align="center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10 }}>
+                        Coupon Code?
                       </TableCell>
-                      <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify="space-between" align="center" sx={{ fontSize: 27, borderBottom: 'none', pl: 10 }}>
-                        ${row.cost}
-                      </TableCell>
-                      <TableCell style={{ width: '20%', textAlign: 'center', color: row.is_prepared === 0 ? 'orange' : row.is_served === 1 ? 'green' : 'blue' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pl: 10}}>
-                      {row.is_prepared === 0 ? "Preparing" : row.is_served === 1 ? "Served" : "Ready"}
-                    </TableCell>
+                      <SubmitCoupon id={id} />
                     </TableRow>
-                  ))}
 
-                  <TableRow>
-                    <TableCell style={{ width: '20%', textAlign: 'center', fontWeight: 'bold' }} component='th' scope='row' justify="space-between" align="center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10 }}>
-                      Coupon Code?
-                    </TableCell>
-                    <SubmitCoupon id={id} />
-                  </TableRow>
-
-                  <TableRow>
-                    <TableCell style={{ width: '20%', textAlign: 'center', fontWeight: 'bold' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
-                      Tips?
-                    </TableCell>
-                    <SubmitTips id={id} tip={tips}/>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </TableContainer>
+                    <TableRow>
+                      <TableCell style={{ width: '20%', textAlign: 'center', fontWeight: 'bold' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
+                        Tips?
+                      </TableCell>
+                      <SubmitTips id={id} tip={tips}/>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Grid>
           </Grid>
-        </Grid>
+        </Box>
       </Grid>
     </Container>
   );

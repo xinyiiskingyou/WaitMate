@@ -10,13 +10,13 @@ import {
 } from '@mui/material'
 import ErrorHandler from '../ErrorHandler';
 import ListTableOrder from "../Orders/ListTableOrder";
+import bill from "../../assets/bill.png"
 
 const buttonStyle = { 
   border: '4px solid #FFA0A0', 
-  height: '7vh', 
-  width: '12vw',
-  textAlign: 'center', 
-  justifyContent: 'center',
+  height: '40px', 
+  width: '200px',
+  justifyContent: 'space-evenly',
   background: "#FFCFCF",
   color: 'black',
   fontWeight: "bold",
@@ -83,6 +83,10 @@ const GetBill = ({id}) => {
     <>
       <Button variant="contained" color="primary" style={buttonStyle} onClick={() => setOpen(true)}>
         Request Bill
+        <img src={bill} alt="BillIcon" style={{
+          width: '36px',
+          height: '32px',
+        }}/>
       </Button>
       <Dialog open={open} onClose={handleClose} sx={{
         "& .MuiDialog-paper": {
