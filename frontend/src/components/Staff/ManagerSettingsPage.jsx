@@ -1,5 +1,3 @@
-import React, { useState } from "react";
-
 import Manager from "../Staff/ManagerInterface";
 import ManagerSettings from "./ManagerSettings";
 
