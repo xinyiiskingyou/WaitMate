@@ -1,12 +1,12 @@
 import { useParams } from 'react-router-dom';
 import { Box } from '@mui/material';
-import logo from '../assets/WaitMate.png'
+import logo from '../../assets/WaitMate.png'
 import ActivityPink from './ActivityPink'
 import MemoryTab from './MemoryTab'
 
 function GamePage() {
   const id = useParams();
-  const backLink = `/Browse/${id.id}` 
+  const backLink = `/customer/activity/${id.id}` 
 
   return(
     <Box 

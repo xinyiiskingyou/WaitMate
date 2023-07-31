@@ -15,9 +15,10 @@ import ListCategories from "./Category/ListCategories";
 import AddCategory from "./Category/AddCategoy";
 import ListItems from './Items/ListItems'
 import ManageItems from './Items/ManageItems'
-import Manager from '../Staff/ManagerInterface'
 import { Reorder, motion } from "framer-motion";
 import { Item } from "./Item";
+import Manager from '../UserInterface/ManagerInterface'
+
 const EditButtonStyle = {
   marginTop: '2.5vh',
   marginLeft: '1vw',

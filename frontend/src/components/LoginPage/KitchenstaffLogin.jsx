@@ -3,23 +3,24 @@ import { styled } from '@mui/material/styles';
 import { Box, Button, Grid, Typography, Container } from '@mui/material';
 import { yellow } from '@mui/material/colors';
 import { useCookies } from 'react-cookie';
-import CssTextField from '../CssTextField.jsx'
+import CssTextField from './CssTextField.jsx'
+import { useNavigate } from "react-router-dom";
 
 const mainPink = '#FF9EE4';
 const secPink = '#FF9EE4';
 
 const LoginButton = styled(Button)(({ theme }) => ({
   color: "#FFFFFF",
-  borderRadius: 0,
   backgroundColor: mainPink,
   '&:hover': {
     backgroundColor: secPink,
   },
 }));
 
-const WaitstaffLogin = () => {
+const KitchenstaffLogin = () => {
   const [password, setPassword] = React.useState('');
   const [cookies, setCookie] = useCookies(['token']);
+  const navigate = useNavigate();
 
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
@@ -34,7 +35,7 @@ const WaitstaffLogin = () => {
       'password': password,
     }
     try { 
-      const response = await fetch('http://localhost:8000/auth/waitstaff/login', {
+      const response = await fetch('http://localhost:8000/auth/kitchenstaff/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -47,8 +48,7 @@ const WaitstaffLogin = () => {
 
       const data = await response.json();
       setCookie('token', data, { path: '/' });
-      console.log(cookies.token)
-      window.location.href = '/waitstaff/list';
+      navigate('/kitchenstaff/list');
     }
     catch (error) {
       console.log(error)
@@ -66,22 +66,27 @@ const WaitstaffLogin = () => {
         flexDirection: 'column',
         alignItems: 'center',
         minWidth: 450,
+
+
       }}>
-      <Box container direction='column' justifyContent='center'
+      <Box container direction='column' justifyContent='center' 
         sx={{
-          minWidth: 450,
           backgroundColor: 'white',
           py: 3,
           px: 4,
           borderRadius: 2,
+          minWidth: 450,
         }}
+        
       >
         <Box display='flex' justifyContent='center' sx={{ pb: 3, mt: 1 }}>
-          <Typography variant="h5" sx={{ fontWeight: 'bold', color: secPink, textShadow: `-3px 1px 2px ${yellow[100]}` }}>Waitstaff Login</Typography>
+          <Typography variant="h5" sx={{ fontWeight: 'bold', color: secPink, textShadow: `-3px 1px 2px ${yellow[100]}` }}>Kitchenstaff Login</Typography>
         </Box>
         <CssTextField fullWidth type="password" required label="Password" onChange={handlePasswordChange}
-          sx={{ mb: 2 }}/>
-          
+          sx={{ 
+            mb: 2,
+            length: 10
+          }}/>
         <Grid container>
           <Grid item xs> 
             <Box display="flex" justifyContent="flex-end">
@@ -96,4 +101,4 @@ const WaitstaffLogin = () => {
   )
 
 }
-export default WaitstaffLogin;
+export default KitchenstaffLogin;

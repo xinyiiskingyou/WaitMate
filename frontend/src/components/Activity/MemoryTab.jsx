@@ -43,7 +43,7 @@ function MemoryTab() {
   const [open, setOpen] = useState(false);
 
   const id = useParams();
-  const backLink = `/Browse/${id.id}` 
+  const backLink = `/customer/activity/${id.id}` 
 
   const shuffleCards = () => {
     const shuffledCards = [...cardImages, ...cardImages]

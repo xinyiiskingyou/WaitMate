@@ -21,7 +21,7 @@ import UploadMeme from "./UploadMeme";
 import ViewVoteCount from "./ViewVoteCount";
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
-import Manager from '../Staff/ManagerInterface'
+import Manager from '../UserInterface/ManagerInterface'
 
 const actions = [
     { icon: <AddAPhotoIcon />, name: 'Upload Meme', content: "Upload Meme" },

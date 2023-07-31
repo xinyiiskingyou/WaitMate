@@ -1,4 +1,4 @@
-import Manager from "../Staff/ManagerInterface";
+import Manager from "../UserInterface/ManagerInterface";
 import ManagerSettings from "./ManagerSettings";
 
 
