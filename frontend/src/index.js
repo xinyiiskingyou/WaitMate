@@ -1,3 +1,4 @@
+
 import * as React from 'react';
 import { render } from 'react-dom';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
@@ -53,6 +54,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/browse/:id" element={<BrowseMenu />} />
         <Route path="/cart/:id" element={<ViewCart />} />
+        <Route path="/memory/:id" element={<Memory />} />
         <Route path="/staff" element={<Staff />} />
         <Route path="/manager/login" element={<ManagerLogin />} />
         <Route path="/manager/menu" element={ manager ? (<ManageMenu />) : (<Navigate to='/manager/login'/>)} />
