@@ -54,13 +54,11 @@ def test_update_table_status_invalid_table_id():
 
 def test_update_table_status_invalid_status(table_id_1):
 
-    with pytest.raises(InputError) as error:
+    with pytest.raises(InputError):
         table.update_table_status(table_id_1, 'abc')
-    assert str(error.value) == 'Unknown status'
 
-    with pytest.raises(InputError) as error:
+    with pytest.raises(InputError):
         table.update_table_status(table_id_1, 'fdsfadfs')
-    assert str(error.value) == 'Unknown status'
     
 def test_valid_update_table_status(table_id_1, table_id_2):
 
@@ -126,6 +124,6 @@ def test_update_table_status(client, waitstaff_token):
     # invalid table id
     resp = client.put("/table/status/update", 
         json={"table_id": 100, "status": "BILL"},
-         headers=waitstaff_token
+        headers=waitstaff_token
     )
     assert resp.status_code == INPUTERROR

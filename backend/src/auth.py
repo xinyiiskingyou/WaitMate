@@ -63,24 +63,20 @@ class Auth:
         fb_auth.set_custom_user_claims(user.uid, {'hasRole': 'kitchenstaff'})
         print('Sucessfully created kitchenstaff: {0}'.format(user.uid))
 
-    def create_customer(self):
-        #TODO
-        self.auth.sign_in_anonymous()
-
     def login_mananger(self, email: str, password: str):
         if not email or not password:
-            raise InputError('Enter your email and password')
+            raise InputError(detail='Enter your email and password')
         try:
             user = self.auth.sign_in_with_email_and_password(email, password)
             print('Successfully logged in: manager')
 
             return {'token': user['idToken']}
         except:
-            raise AccessError('Invalid email or password')
+            raise AccessError(detail='Invalid email or password')
         
     def login_staff(self, password: str, is_waitstaff: bool):
         if not password:
-            raise InputError('Enter your password')
+            raise InputError(detail='Enter your password')
         
         email: str = WAITSTAFF_EMAIL if is_waitstaff else KITCHENSTAFF_EMAIL
         print(email)
@@ -90,7 +86,7 @@ class Auth:
 
             return {'token': user['idToken']}
         except:
-            raise AccessError('Invalid password')
+            raise AccessError(detail='Invalid password')
 
     def is_authenticated(self, token: str):
         try:
@@ -98,12 +94,12 @@ class Auth:
             print('User is authenticated')
             return user
         except:
-            raise AccessError('Authentication failed')
+            raise AccessError(detail='Authentication failed')
     
     def is_authorized(self, roles: list, user: dict):
         print(user)
         if not user['hasRole'] in roles:
-            raise AccessError(f"{user['hasRole']} is not authorized")
+            raise AccessError(detail=f"{user['hasRole']} is not authorized")
         print('User is authorized')
 
     def change_password_mananger(self, user: dict):
@@ -113,7 +109,7 @@ class Auth:
 
     def change_email_mananger(self, user: dict, new_email: str):
         if not re.search(self.EMAIL_CHECK, new_email):
-            raise InputError('Invalid email')
+            raise InputError(detail='Invalid email')
 
         print(user['uid'], new_email)
         fb_auth.update_user( user['uid'], email=new_email)
@@ -122,7 +118,7 @@ class Auth:
 
     def change_password_staff(self, new_password: str, is_waitstaff: bool):
         if len(new_password) == 0:
-            raise InputError('Invalid password size')
+            raise InputError(detail='Invalid password size')
         
         email: str = WAITSTAFF_EMAIL if is_waitstaff else KITCHENSTAFF_EMAIL
 
@@ -137,17 +133,4 @@ class Auth:
             fb_auth.delete_user(user.uid)
         self.create_restaurant()
 
-    def print_all(self):
-        print("Printing users:")
-
-        for user in fb_auth.list_users().iterate_all():
-            print('User: ' + user.uid + ' ' + user.email)
-
-
 auth = Auth()
-
-if __name__ == '__main__':  
-    auth_system = Auth()
-    token = auth_system.login_mananger('manager@waitmate.com', 'waitmate1')['token']
-    auth_user = auth_system.is_authenticated(token)
-    auth_system.is_authorized(['manager'], auth_user)

@@ -1,22 +1,22 @@
 import * as React from 'react';
 import { render } from 'react-dom';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './components/Home';
-import Menu from './components/Menu';
-import Staff from './components/Staff';
-import WaitStaff from './components/WaitStaff';
-import Kitchenlist from './components/Kitchenlist';
-import Cart from './components/Cart';
-import Browse from './components/Browse';
-import ManagerLogin from './components/ManagerLogin';
-import KitchenstaffLogin from './components/KitchenstaffLogin';
-import WaitstaffLogin from './components/WaitstaffLogin';
-import Settings from './components/Settings';
-import Manager from './components/ManagerInterface';
-import Coupon from './components/CouponPage';
 import { Navigate } from 'react-router-dom';
+import Home from './components/Home';
+import BrowseMenu from './components/Menu/BrowseMenu'
+import ViewCart from './components/Orders/ViewCart';
+import Staff from './components/Staff/Staff';
+import ManagerLogin from './components/Staff/ManagerLogin'
+import ManageMenu from './components/Menu/ManageMenu';
+import ManageMeme from './components/Meme/ManageMeme';
+import SettingPage from './components/Staff/ManagerSettingsPage';
+import Coupon from './components/Coupon/CouponPage';
+import KitchenstaffLogin from './components/Staff/KitchenstaffLogin'
+import KitchenInterface from './components/Staff/KitchenInterface';
+import WaitstaffLogin from './components/Staff/WaitstaffLogin';
+import WaitStaffInterface from './components/Staff/WaitStaffInterface';
+
 import { getToken } from './auth.js';
-import Bill from './components/Bill';
 import Memory from './components/Memory';
 
 
@@ -51,22 +51,18 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/menu" element={ manager ? (<Menu />) : (<Navigate to='/ManagerLogin'/>)} />
-        <Route path="/Settings" element={ manager ? (<Settings />) : (<Navigate to='/ManagerLogin'/> )} />
-        <Route path="/Manager" element={manager ? (<Manager />) : (<Navigate to='/ManagerLogin'/>)} />
-        <Route path="/coupon" element={manager ? (<Coupon />) : (<Navigate to='/ManagerLogin'/>)} />
-
+        <Route path="/browse/:id" element={<BrowseMenu />} />
+        <Route path="/cart/:id" element={<ViewCart />} />
         <Route path="/staff" element={<Staff />} />
-        <Route path="/waitstaff" element={<WaitStaff />} />
-        <Route path="/Kitchenlist" element={<Kitchenlist />} />
-        <Route path="/Cart/:id" element={<Cart />} />
-        <Route path="/Browse/:id" element={<Browse />} />
-        <Route path="/ManagerLogin" element={<ManagerLogin />} />
-        <Route path="/WaitstaffLogin" element={<WaitstaffLogin />} />
-        <Route path="/KitchenstaffLogin" element={<KitchenstaffLogin />} />
-        <Route path="/Bill/:id" element={<Bill />} />
-        <Route path="/Memory/:id" element={<Memory />} />
-
+        <Route path="/manager/login" element={<ManagerLogin />} />
+        <Route path="/manager/menu" element={ manager ? (<ManageMenu />) : (<Navigate to='/manager/login'/>)} />
+        <Route path="/manager/meme" element={ manager ? (<ManageMeme />) : (<Navigate to='/manager/login'/>)} />
+        <Route path="/manager/setting" element={ manager ? (<SettingPage />) : (<Navigate to='/manager/login'/> )} />
+        <Route path="/manager/coupon" element={manager ? (<Coupon />) : (<Navigate to='/manager/login'/>)} />
+        <Route path="/waitstaff/login" element={<WaitstaffLogin />} />
+        <Route path="/waitstaff/list" element={<WaitStaffInterface />} />
+        <Route path="/kitchenstaff/login" element={<KitchenstaffLogin />} />
+        <Route path="/kitchenstaff/list" element={<KitchenInterface />} />
       </Routes>
     </Router>
   );

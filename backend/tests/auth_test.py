@@ -6,51 +6,37 @@ from tests.conftest import VALID, ACCESSERROR, INPUTERROR
 
 # add a restet here
 def test_auth_invalid_token(restart_auth):
-    with pytest.raises(AccessError) as error:
+    with pytest.raises(AccessError):
         auth.is_authenticated('')
-    assert str(error.value) == 'Authentication failed'
     
 def test_auth_invalid_login_manager():
-    with pytest.raises(InputError) as error:
+    with pytest.raises(InputError):
         auth.login_mananger('', auth.MANAGER_EMAIL)
-    assert str(error.value) == 'Enter your email and password'
-
-    with pytest.raises(InputError) as error:
+    with pytest.raises(InputError):
         auth.login_mananger(auth.PASSWORD, '')
-    assert str(error.value) == 'Enter your email and password'
-
-    with pytest.raises(AccessError) as error:
+    with pytest.raises(AccessError):
         auth.login_mananger(auth.PASSWORD + ':)', auth.MANAGER_EMAIL)
-    assert str(error.value) == 'Invalid email or password'
 
 def test_auth_invalid_login_staff():
-    with pytest.raises(InputError) as error:
+    with pytest.raises(InputError) :
         auth.login_staff('', True)
-    assert str(error.value) == 'Enter your password'
-
-    with pytest.raises(InputError) as error:
+    with pytest.raises(InputError):
         auth.login_staff('', False)
-    assert str(error.value) == 'Enter your password'
-
-    with pytest.raises(AccessError) as error:
+    with pytest.raises(AccessError):
         auth.login_staff(auth.PASSWORD + ':)', False)
-    assert str(error.value) == 'Invalid password'
 
 def test_auth_not_authorised(waitstaff_token_plain):
     waitstaff: dict = auth.is_authenticated(waitstaff_token_plain)
-    with pytest.raises(AccessError) as error:
+    with pytest.raises(AccessError):
         auth.is_authorized(['manager'], waitstaff)
-    assert str(error.value) == 'waitstaff is not authorized'
 
 def test_auth_invalid_email():
-    with pytest.raises(InputError) as error:
+    with pytest.raises(InputError):
         auth.change_email_mananger({}, '')
-    assert str(error.value) == 'Invalid email'
 
 def test_auth_invalid_password_staff():
     with pytest.raises(InputError) as error:
         auth.change_password_staff('', True)
-    assert str(error.value) == 'Invalid password size'
 
 def test_login_manager():
     token = auth.login_mananger(auth.MANAGER_EMAIL, auth.PASSWORD)

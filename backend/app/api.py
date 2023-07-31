@@ -2,13 +2,15 @@ import sys
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, Depends
 from fastapi.security import OAuth2PasswordRequestForm, HTTPBearer, OAuth2PasswordBearer
+from src.error import InputError
 from src.order import OrderDB
 from src.table import TableDB
 from src.menu import MenuDB
 from src.auth import auth
 from src.notifications import Notifications
 from src.tracking import Tracking
-from src.checkout import Checkout
+from src.checkout import CheckoutDB
+from src.meme import MemeDB
 from src.model.category_req import Category
 from src.model.category_order_req import CategoryOrder
 from src.model.category_update_req import CategoryUpdate
@@ -18,7 +20,8 @@ from src.model.order_req import Order
 from src.model.auth_req import Password, Email, StaffType
 from src.model.coupon_req import Coupon, Coupon_Cust, Coupon_Code
 from src.model.bill_req import Tip
-
+from src.model.meme_req import Memes
+from src.model.vote_req import Votes
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='http://localhost:8000/auth/manager/login')
 
@@ -32,7 +35,8 @@ table = TableDB()
 menu = MenuDB()
 track = Tracking()
 notification = Notifications()
-checkout = Checkout()
+checkout = CheckoutDB()
+meme = MemeDB()
 
 origins = [
     'http://localhost:3000',
@@ -68,7 +72,7 @@ def category_add_api(reqBody: Category, user: dict = Depends(get_current_user)):
 @app.put("/menu/category/update/order")
 def menu_category_update_order_api(reqbody: CategoryOrder, user: dict = Depends(get_current_user)):
     auth.is_authorized(['manager'], user['user'])
-    menu.update_order_menu_category(reqbody.name, reqbody.is_up)
+    menu.update_order_menu_category(reqbody.name, reqbody.new_index)
     return {}
 
 @app.put("/menu/category/update/details")
@@ -115,7 +119,7 @@ def menu_item_update_details_api(reqbody: Item, user: dict = Depends(get_current
 @app.put("/menu/item/update/order")
 def menu_item_update_order_api(reqbody: Item, user: dict = Depends(get_current_user)):
     auth.is_authorized(['manager'], user['user'])
-    menu.update_order_menu_items(reqbody.name, reqbody.is_up)
+    menu.update_order_menu_items(reqbody.name, reqbody.new_index)
     return {}
 
 @app.delete("/menu/item/remove")
@@ -247,10 +251,6 @@ def waitstaff_get_from_kitchen(user: dict = Depends(get_current_user)):
 
 ############ CHECKOUT #################
 
-@app.get('/checkout/order/{table_id}')
-def checkout_order_api(table_id: int):
-    return checkout.checkout_order(table_id)
-
 @app.get('/checkout/bill/{table_id}')
 def checkout_bill_api(table_id: int):
     return checkout.checkout_bill(table_id)
@@ -268,7 +268,7 @@ def checkout_bill_coupon_api(reqbody: Coupon_Cust):
 @app.post('/checkout/coupon/create')
 def checkout_coupon_create_api(reqbody: Coupon, user: dict = Depends(get_current_user)):
     auth.is_authorized(['manager'], user['user'])
-    checkout.checkout_coupon_create(reqbody.code, reqbody.amount)
+    checkout.checkout_coupon_create(reqbody.code, reqbody.amount, reqbody.expiry)
     return {}
 
 @app.delete('/checkout/coupon/delete')
@@ -281,3 +281,31 @@ def checkout_coupon_delete_api(reqbody: Coupon_Code, user: dict = Depends(get_cu
 def checkout_coupon_view_api(user: dict = Depends(get_current_user)):
     auth.is_authorized(['manager'], user['user'])
     return checkout.checkout_coupon_view()
+
+############ MEME #################
+
+@app.post('/meme/upload')
+def meme_upload(meme_req: Memes, user: dict = Depends(get_current_user)):
+    auth.is_authorized(['manager'], user['user'])
+    meme.upload_meme(img_url=meme_req.url, filename=meme_req.filename)
+    return {}
+
+@app.get('/meme/listall')
+def meme_listall():
+    return meme.view_all_memes()
+
+@app.post('/meme/like')
+def meme_like(vote_req: Votes):
+    meme.like_a_meme(vote_req.email, vote_req.filename)
+    return {}
+
+@app.get('/meme/listall/emails')
+def meme_listall_emails(user: dict = Depends(get_current_user)):
+    auth.is_authorized(['manager'], user['user'])
+    return meme.get_emails_by_highest_vote()
+
+@app.post('/meme/send/emails')
+def meme_upload(reqbody: Coupon_Code, user: dict = Depends(get_current_user)):
+    auth.is_authorized(['manager'], user['user'])
+    meme.send_coupons_by_votes(reqbody.code)
+    return {}

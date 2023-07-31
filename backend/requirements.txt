@@ -6,3 +6,7 @@ pylint==2.6.0
 python-multipart==0.0.6
 pytest==7.3.2
 SQLAlchemy==2.0.19
+uvicorn==0.23.1
+requests==2.31.0
+coverage==7.2.7
+dnspython==2.4.0

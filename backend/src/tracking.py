@@ -68,7 +68,7 @@ class Tracking:
 
         # check if the item existed
         if not any(item[0] == item_name for item in table_order):
-            raise InputError("Item not existed")
+            raise InputError(detail="Item not existed")
 
         # check if all the items with the same name have been served
         is_prepared_values = [
@@ -77,7 +77,7 @@ class Tracking:
             if item_name == order[0]
         ]
         if not is_prepared_values.count(0):
-            raise AccessError("Nothing to mark")
+            raise AccessError(detail="Nothing to mark")
 
         # mark item to be served
         try:
@@ -85,7 +85,7 @@ class Tracking:
             self.session.commit()
         except sqlalchemy.exc.SQLAlchemyError as err:
             self.session.rollback()
-            raise InputError(f"Database error occurred: {str(err)}") from err
+            raise InputError(detail=f"Database error occurred: {str(err)}") from err
         finally:
             self.session.close()
 
@@ -97,7 +97,7 @@ class Tracking:
             value = order[2] if column == "is_prepared" else order[3]
             if order[0] == item_name and value != 1:
                 if column == "is_served" and order[2] != 1:
-                    raise AccessError("Dish is not ready!")
+                    raise AccessError(detail="Dish is not ready!")
 
                 subquery = (
                     self.session.query(Orders.id)

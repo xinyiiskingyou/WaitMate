@@ -1,0 +1,19 @@
+.custom-card {
+    display: flex;
+    flex-direction: column;
+    border: 2px dashed #000000;
+    width: 220px;
+    height: 130px; 
+    border-radius: 8;
+}
+
+.pink-section {
+    background-color: #FBDDDD;
+    padding: 20px;
+}
+
+.expiry-date {
+    background-color: white;
+    margin-bottom: 3px;
+}
+  

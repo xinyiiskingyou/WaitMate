@@ -1,4 +1,3 @@
-import os
 import pytest
 from src.error import InputError, AccessError
 from src.menu import MenuDB
@@ -29,6 +28,27 @@ def menu_1():
         'ingredients': '_',
         'is_vegan': False
     })
+
+def test_item_add_invalid_cat():
+    with pytest.raises(InputError):
+        menu.item_add({
+            'category': 'Fish11',
+            'name': 'hh',
+            'cost': 10,
+            'description': '_',
+            'ingredients': '_',
+            'is_vegan': False
+        })
+        
+    with pytest.raises(InputError):
+        menu.item_add({
+            'category': '',
+            'name': 'hh',
+            'cost': 10,
+            'description': '_',
+            'ingredients': '_',
+            'is_vegan': False
+        })
 
 def test_item_add_invalid_name():
     menu_1()
@@ -61,6 +81,27 @@ def test_item_add_invalid_name():
             'is_vegan': False
         })
 
+def test_item_add_missing_arguments():
+    with pytest.raises(InputError):
+        menu.item_add({
+            'category': 'Fish',
+            'cost': 10,
+            'description': '_',
+            'ingredients': '_',
+            'is_vegan': False
+        })
+        
+    with pytest.raises(InputError):
+        menu.item_add({
+            'category': 'Fish'
+        })
+        
+    with pytest.raises(InputError):
+        menu.item_add({
+            'category': 'Fish',
+            'is_vegan': False
+        })
+    
 def test_cat_add_invalid_name():
     menu_1()
 
@@ -79,6 +120,12 @@ def test_get_categories_valid():
     res = menu.get_all_categories()
     assert len(res) == 2
 
+def test_item_update_details_invalid_cat():
+    with pytest.raises(InputError):
+        menu.update_details_menu_items(' ', 1)
+    with pytest.raises(InputError):
+        menu.update_details_menu_items('Fish11', 1, new_name='Big')
+
 def test_item_update_details_invalid_id():
     menu_1()
 
@@ -96,7 +143,9 @@ def test_item_update_details_invalid_name():
         menu.update_details_menu_items('Fish', 1, name='BigSeaBassTodayYum')
     with pytest.raises(InputError):
         menu.update_details_menu_items('Fish', 1, name='')
-
+    with pytest.raises(InputError):
+        menu.update_details_menu_items('Fish', 1, name='FlatFish')
+    
 def test_item_update_details_valid_name():
     menu_1()
     original = menu.get_items_in_category(1)
@@ -115,6 +164,9 @@ def test_cat_update_details_invalid():
 def test_cat_update_details_valid():
     menu_1()
 
+    menu.update_details_category('Fish', 'Fish') 
+    assert True
+
     orig = menu.get_all_categories()
     menu.update_details_category('Fish', 'Seafood') 
     res = menu.get_all_categories()
@@ -124,14 +176,14 @@ def test_cat_update_details_valid():
 def test_item_update_order_invalid():
     menu_1()
     with pytest.raises(InputError):
-        menu.update_order_menu_items('SeaBass', True) 
+        menu.update_order_menu_items('SeaBass', 0) 
     with pytest.raises(InputError):
-        menu.update_order_menu_items('FlatFish', False)
+        menu.update_order_menu_items('FlatFish', 3)
 
 def test_item_update_order_valid():
     menu_1()
     original = menu.get_items_in_category(1)
-    menu.update_order_menu_items('SeaBass', False) 
+    menu.update_order_menu_items('SeaBass', 2) 
     res = menu.get_items_in_category(1)
 
     assert original != res
@@ -139,15 +191,15 @@ def test_item_update_order_valid():
 def test_cat_update_order_invalid():
     menu_1()
     with pytest.raises(InputError):
-        menu.update_order_menu_category('Fish', True) 
+        menu.update_order_menu_category('Fish', 0) 
     with pytest.raises(InputError):
-        menu.update_order_menu_category('Water', False)
+        menu.update_order_menu_category('Water', 3)
 
 def test_cat_update_order_valid():
     menu_1()
 
     original = menu.get_all_categories()
-    menu.update_order_menu_category('Fish', False) 
+    menu.update_order_menu_category('Fish', 2) 
     result = menu.get_all_categories()
     assert original != result
 
@@ -167,6 +219,12 @@ def test_valid_view_menu_item_in_category():
     result = menu.get_items_in_category(1)
     assert result == [{'name': 'SeaBass', 'cost': 10, 'description': '_', 'ingredients': '_', 'is_vegan': 0}, 
                 {'name': 'FlatFish', 'cost': 20, 'description': '_', 'ingredients': '_', 'is_vegan': 0}]
+
+def test_menu_remove_invalid_item():
+    with pytest.raises(InputError):
+        menu.remove_menu_items('naninani')
+    with pytest.raises(InputError):
+        menu.remove_menu_items(' ')
 
 def test_menu_remove():
     menu_1()
@@ -197,15 +255,15 @@ def test_category_add_endpoint(client, manager_token):
 
 def test_category_update_order_endpoint(client, manager_token):
     # valid case
-    resp = client.put("/menu/category/update/order", json={"name": "pizza"}, params={"is_up": False}, headers=manager_token)
+    resp = client.put("/menu/category/update/order", json={"name": "pizza", "new_index": 2}, headers=manager_token)
     assert resp.status_code == VALID
 
     # invalid move
-    resp = client.put("/menu/category/update/order", json={"name": "pizza"}, params={"is_up": False}, headers=manager_token)
+    resp = client.put("/menu/category/update/order", json={"name": "pizza", "new_index": 0}, headers=manager_token)
     assert resp.status_code == INPUTERROR
 
     # invalid category name
-    resp = client.put("/menu/category/update/order", json={"name": "random"}, params={"is_up": False}, headers=manager_token)
+    resp = client.put("/menu/category/update/order", json={"name": "random", "new_index": 1}, headers=manager_token)
     assert resp.status_code == INPUTERROR
 
 def test_category_update_name_endpoint(client, manager_token):
@@ -344,13 +402,13 @@ def test_item_update_details(client, manager_token):
 def test_item_update_order_endpoint(client, manager_token):
 
     resp = client.put("/menu/item/update/order", 
-        json={"name": "hawaiian", "is_up": True},
+        json={"name": "hawaiian", "new_index": 1},
         headers=manager_token
     )
     assert resp.status_code == VALID
 
     resp = client.put("/menu/item/update/order", 
-        json={"name": "hawaiian", "is_up": True},
+        json={"name": "hawaiian", "new_index": 0},
         headers=manager_token
     )
     assert resp.status_code == INPUTERROR

@@ -42,10 +42,10 @@ class Notifications:
 
         # check if table id exists
         if not check_table_exists(table_id, self.session):
-            raise InputError('Table id is not valid.')
+            raise InputError(detail='Table id is not valid.')
 
         if status not in ['ASSIST', 'BILL']:
-            raise InputError('Unknown status')
+            raise InputError(detail='Unknown status')
 
         try:
             curr_time = datetime.datetime.now()
@@ -57,8 +57,8 @@ class Notifications:
             )
             self.session.execute(stmt)
             self.session.commit()
-        except Exception as exc:
-            raise NotFoundError("Details not found") from exc
+        except sqlalchemy.exc.SQLAlchemyError as err:
+            raise InputError(detail=f"Database error occurred: {str(err)}") from err
         finally:
             self.session.close()
 
