@@ -72,7 +72,7 @@ def category_add_api(reqBody: Category, user: dict = Depends(get_current_user)):
 @app.put("/menu/category/update/order")
 def menu_category_update_order_api(reqbody: CategoryOrder, user: dict = Depends(get_current_user)):
     auth.is_authorized(['manager'], user['user'])
-    menu.update_order_menu_category(reqbody.name, reqbody.is_up)
+    menu.update_order_menu_category(reqbody.name, reqbody.new_index)
     return {}
 
 @app.put("/menu/category/update/details")
@@ -119,7 +119,7 @@ def menu_item_update_details_api(reqbody: Item, user: dict = Depends(get_current
 @app.put("/menu/item/update/order")
 def menu_item_update_order_api(reqbody: Item, user: dict = Depends(get_current_user)):
     auth.is_authorized(['manager'], user['user'])
-    menu.update_order_menu_items(reqbody.name, reqbody.is_up)
+    menu.update_order_menu_items(reqbody.name, reqbody.new_index)
     return {}
 
 @app.delete("/menu/item/remove")
