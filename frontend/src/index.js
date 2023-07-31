@@ -18,7 +18,7 @@ import WaitstaffLogin from './components/Staff/WaitstaffLogin';
 import WaitStaffInterface from './components/Staff/WaitStaffInterface';
 
 import { getToken } from './auth.js';
-import Memory from './components/Memory';
+import GamePage from './components/ActivityGamePage';
 
 
 function App() {
@@ -54,7 +54,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/browse/:id" element={<BrowseMenu />} />
         <Route path="/cart/:id" element={<ViewCart />} />
-        <Route path="/memory/:id" element={<Memory />} />
+        <Route path="/gamepage/:id" element={<GamePage />} />
         <Route path="/staff" element={<Staff />} />
         <Route path="/manager/login" element={<ManagerLogin />} />
         <Route path="/manager/menu" element={ manager ? (<ManageMenu />) : (<Navigate to='/manager/login'/>)} />
