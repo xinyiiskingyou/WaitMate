@@ -1,23 +1,36 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from 'react-router-dom';
-import { Box, Grid, Button, Typography, Dialog, LinearProgress, linearProgressClasses, IconButton } from '@mui/material';
-import styled from "@mui/system/styled";
-import { ArrowDropUpRounded, ArrowDropDownRounded, CloseRounded, MinimizeRounded } from '@mui/icons-material';
-import MemoryCard from './MemoryCard';
+import { Box, Grid, Button, Typography, Dialog, LinearProgress, linearProgressClasses } from '@mui/material';
+import { CloseRounded, MinimizeRounded } from '@mui/icons-material';
 import { pink, grey, yellow } from '@mui/material/colors';
+import styled from "@mui/system/styled";
 import logo from '../assets/WaitMate.png'
+import MemoryCard from './MemoryCard';
+import ActivityPink from './ActivityPink'
 
 const usedPink = pink[300]
 
 const GameButton = styled(Button)(({ }) => ({
   color: "#FFFFFF",
   borderRadius: 4,
-  border: `4px outset ${pink[300]}`,
+  border: `4px outset ${usedPink}`,
 
-  backgroundColor: pink[300],
+  backgroundColor: usedPink,
   '&:hover': {
     backgroundColor: pink[200],
   },
+}));
+
+const HeaderButtons = styled(Button)(({ }) => ({
+  maxWidth: '25px',
+  maxHeight: '25px', 
+  minWidth: '25px', 
+  minHeight: '25px',
+  border: '2px inset #0A0',
+  borderColor: 'white',
+  borderRadius: 8,
+  color: 'black',
+  backgroundColor: pink[100],
 }));
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
@@ -58,24 +71,9 @@ function SimpleDialog(props) {
             borderBottom: `2px solid ${yellow[300]}`,
             p: '4px',
             background: yellow[100] }}>
-          <Button  
-            size="small" onClick={handleClick}         
-            sx={{ 
-              maxWidth: '25px',
-              maxHeight: '25px', 
-              minWidth: '25px', 
-              minHeight: '25px',
-              border: '2px inset #0A0',
-              borderColor: 'white',
-              borderRadius: 2,
-              mr: '10px',
-              ml: '4px',
-              fontWeight: 'bold',
-              color: 'black',
-              backgroundColor: pink[100],
-            }}>
+          <HeaderButtons onClick={handleClick} >    
             <CloseRounded fontSize='small'/>
-          </Button>
+          </HeaderButtons>
         </Box>
         <Box display='flex' alignItems="center" sx={{ flexDirection: 'column'}}>
           <Typography variant="h5" sx={{ pt: 2, color: yellow[100], textShadow: `-3px 2px 0 ${pink[200]}`, fontWeight: 'bold',}}>{title}</Typography>
@@ -119,7 +117,6 @@ function Memory() {
   const [won, setWon] = useState(false)
   const [lost, setLost] = useState(false)
   const [open, setOpen] = useState(false);
-  const [gamePink, setGamePink] = useState(0)
 
   const id = useParams();
   const backLink = `/Browse/${id.id}` 
@@ -136,19 +133,7 @@ function Memory() {
     setTurns(10)
   }
 
-  const handlePinkClickUp = () => {
-    if (gamePink === 900) {
-      return
-    }
-    setGamePink(gamePink => gamePink += 100)
-  }
 
-  const handlePinkClickDown = () => {
-    if (gamePink === 0) {
-      return
-    }
-    setGamePink(gamePink => gamePink -= 100)
-  }
 
   const handleChoice = (card) => {
     console.log(card.src)
@@ -230,80 +215,8 @@ function Memory() {
 
 
       <Box display='flex' alignItems='center' justifyContent="space-between" sx={{ minWidth: '18%', minHeight: 670,  flexDirection: 'column', pr: 2}}>
-        <Box display='flex' sx={{ width: '90%', height: '20vh', backgroundColor: yellow[50], border: `6px groove ${grey[50]}`, borderRadius: 4, flexDirection: 'column'}}>
-        <Box display="flex" justifyContent="space-between" alignItems="center"
-        sx={{ 
-          borderRadius: '10px 10px 1px 1px',
-          borderBottom: `2px solid ${pink[300]}`,
-          p: '4px',
-          boxShadow: `1px 3px 4px ${pink[300]}`,
-          background: `linear-gradient(to right, ${pink[600]}, ${pink[200]})` }}>
-        <Typography color='white' sx={{ml: 1, fontFamily: 'cursive',}}>create your pink</Typography>
-        <Box>
-        <Button  
-          size="small"            
-          sx={{ 
-            maxWidth: '25px',
-            maxHeight: '25px', 
-            minWidth: '25px', 
-            minHeight: '25px',
-            border: '2px inset #0A0',
-            borderColor: 'white',
-            borderRadius: 2,
-            mx: '4px',
-            color: 'black',
-            backgroundColor: pink[100],
-            fontWeight: 'bold',
-            pb: 1,
-          }}>
-          <MinimizeRounded fontSize='small' />
-        </Button>
-        <Link to={backLink}>
-          <Button  
-            size="small"            
-            sx={{ 
-              maxWidth: '25px',
-              maxHeight: '25px', 
-              minWidth: '25px', 
-              minHeight: '25px',
-              border: '2px inset #0A0',
-              borderColor: 'white',
-              borderRadius: 2,
-              mr: '10px',
-              ml: '4px',
-              color: 'black',
-              backgroundColor: pink[100],
-            }}>
-            <CloseRounded fontSize='small'/>
 
-          </Button>
-        </Link>
-        </Box>
-
-      </Box> 
-      <Box display='flex' alignItems='center' height="100%" justifyContent="space-around">
-        <Box sx={{ width: '60%', height: '75%', backgroundColor: pink[`${gamePink}`], mx: 2, borderRadius: 2 }}></Box>  
-        <Box display='flex' flexDirection='column' sx={{  mr: 2 }}>
-
-          <GameButton onClick={handlePinkClickUp}
-            sx={{ 
-              height: '35px',
-              maxWidth: '40px',
-              minWidth: '40px',            
-            }}><ArrowDropUpRounded sx={{ fontSize: 60 }} /></GameButton>
-            <GameButton onClick={handlePinkClickDown}    
-              sx={{ 
-                height: '35px',
-                maxWidth: '40px',
-                minWidth: '40px',
-                mt: 1,
-              }}><ArrowDropDownRounded sx={{ fontSize: 60 }}/></GameButton>  
-        </Box>
-      </Box>
-        </Box>
-      {/* <Box display='flex' justifyContent='flex-start' alignItems='flex-start' sx={{width: '60%', height: '80px', border: `5px solid ${grey[50]}`, p: 1.5,  borderRadius: 1, backgroundColor: pink[50]}}>
-        <Typography variant="h4" sx={{color: yellow[100], textShadow: `-3px 2px ${pink[200]}`, fontWeight: 'bold',}}>Excellent Work !</Typography>
-      </Box> */}
+      <ActivityPink backLink={backLink}/>
       <Box          
         sx={{
           display: 'flex',
@@ -313,13 +226,11 @@ function Memory() {
         <img src='/img/barbie_1.png' width="184" height="400"/>
       </Box>
 
-
       <Box      
         sx={{
           display: 'flex',
           justifyContent: "center",
           pt: 4,
-          // border: '3px outset #000000',
         }}>
 
         <img src={logo} />
@@ -333,59 +244,28 @@ function Memory() {
         minWidth: 850,
         maxWidth: 850,
         flexDirection: 'column',
-        border: `6px groove ${grey[50]}`,
+        border: `8px groove ${grey[50]}`,
         borderRadius: 4,
-
         }}>
       <Box display="flex" justifyContent="space-between" alignItems="center"
         sx={{ 
-          borderRadius: '10px 10px 1px 1px',
-          // borderBottom: `3px solid ${pink[500]}`,
+          borderRadius: '8px 8px 1px 1px',
           boxShadow: `1px 3px 4px ${pink[300]}`,
           p: '4px',
           background: `linear-gradient(to right, ${pink[600]}, ${pink[200]})` }}>
         <Typography color='white' sx={{ml: 1, fontFamily: 'cursive', letterSpacing: '1px'}}>memory game</Typography>
         <Box>
-        <Button  
-          size="small"            
-          sx={{ 
-            maxWidth: '25px',
-            maxHeight: '25px', 
-            minWidth: '25px', 
-            minHeight: '25px',
-            border: '2px inset #0A0',
-            borderColor: 'white',
-            borderRadius: 2,
-            mx: '4px',
-            color: 'black',
-            backgroundColor: pink[100],
-            pb: 1
-          }}>
-          <MinimizeRounded fontSize='small' />
-        </Button>
-        <Link to={backLink}>
-          <Button  
-            size="small"            
+          <HeaderButtons sx={{ mx: '2px', pb: 1 }}>
+            <MinimizeRounded fontSize='small' />
+          </HeaderButtons>
+          <HeaderButtons component={Link} to={backLink}
             sx={{ 
-              maxWidth: '25px',
-              maxHeight: '25px', 
-              minWidth: '25px', 
-              minHeight: '25px',
-              border: '2px inset #0A0',
-              borderColor: 'white',
-              borderRadius: 2,
               mr: '10px',
               ml: '4px',
-              fontWeight: 'bold',
-              color: 'black',
-              backgroundColor: pink[100],
             }}>
             <CloseRounded fontSize='small'/>
-          </Button>
-        </Link>
+          </HeaderButtons>
         </Box>
-
-
       </Box>
 
       <Box display='flex' direction='column'>
