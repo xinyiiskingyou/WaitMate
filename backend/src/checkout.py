@@ -6,7 +6,7 @@ and tips. It also includes the coupons in relation to the manager
 '''
 from typing import List
 import sqlalchemy.exc
-from sqlalchemy import MetaData, Table, create_engine, delete, update
+from sqlalchemy import MetaData, Table, create_engine, delete, update, select
 from sqlalchemy.orm import sessionmaker
 from constant import DB_PATH, INVALID_TABLE_MSG
 from src.error import InputError
@@ -105,8 +105,14 @@ class CheckoutDB:
                 .where(Checkout.table_id == table_id)
                 .values(coupon = coupon)
             )
+            # amount
             self.session.execute(stmt)
             self.session.commit()
+            
+            stmt = select(Coupons.amount).where(Coupons.code == coupon)
+            result = self.session.execute(stmt).scalar()
+
+            return {'amount': result}
         except sqlalchemy.exc.SQLAlchemyError as err:
             self.session.rollback()
             raise InputError(detail=f"Database error occurred: {str(err)}") from err

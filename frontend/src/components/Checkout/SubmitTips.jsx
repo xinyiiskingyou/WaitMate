@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { Typography, Button, TextField, TableCell } from "@mui/material";
+import { Typography, Button, TextField } from "@mui/material";
 import ErrorHandler from '../ErrorHandler';
+import DoneIcon from '@mui/icons-material/Done';
+import tipIcon from "../../assets/tip.png"
 
 const SmallbuttonStyle = { 
   border: '4px solid #FFA0A0', 
-  height: '5vh', 
-  width: '10vw',
+  height: '40px', 
+  width: '20px',
   textAlign: 'center', 
   justifyContent: 'center',
   background: "#FFCFCF",
@@ -13,7 +15,7 @@ const SmallbuttonStyle = {
   fontWeight: "bold",
   borderRadius: 8,
   marginLeft: '1vw',
-  marginTop: '0.6vh',
+  marginRight: '1vw',
 }
 
 const SubmitTips = ({ id, tip }) => {
@@ -30,7 +32,7 @@ const SubmitTips = ({ id, tip }) => {
 
   const handleTipsSubmit = async () => {
     const payload = {
-      id: parseInt(id.id, 10),
+      id: parseInt(id, 10),
       amount: parseInt(tips, 10)
     };
 
@@ -59,18 +61,27 @@ const SubmitTips = ({ id, tip }) => {
   }
 
   return (
-    <TableCell style={{ width: '20%', textAlign: 'center' }} sx={{borderBottom: 'none', pr: -10}}>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <img
+        src={tipIcon}
+        alt="TipIcon"
+        style={{ width: "48px", height: "43px", marginBottom: '15px' }}
+      />
       {tipsSubmitted ? (
-        <Typography variant="body1">${tips}</Typography>
+        <Typography variant="body1" style={{ marginTop: '6px', marginLeft: '10px' }}>
+          ${tips} tip has been added to you bill. Thank you!
+        </Typography>
       ) : (
         <div style={{ display: 'flex', alignItems: 'center' }}>
+          <h3 style={{ marginTop: '4px', marginLeft: '15px' }}>
+            Tip?
+          </h3>
           <TextField
             required
             id='standard-required'
             label='Enter NUMBERS Only'
             value={tips}
             onChange={handleInputChange}
-            helperText={'Tip field must be a number'}
             size='small'
             margin='normal'
             type='number'
@@ -79,14 +90,15 @@ const SubmitTips = ({ id, tip }) => {
               step: '1',
               min: '1',
             }}
+            style={{ marginLeft: "37px" }}
           />
           <Button variant='contained' color='primary' onClick={handleTipsSubmit} style={SmallbuttonStyle}>
-            Submit
+            <DoneIcon />
           </Button>
         </div>
       )}
       {showError}
-    </TableCell>
+    </div>
   );
 }
 

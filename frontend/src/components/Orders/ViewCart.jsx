@@ -11,18 +11,14 @@ import {
   TableBody,
   TableRow,
   Box,
-  Divider
 } from "@mui/material";
 import WestIcon from '@mui/icons-material/West';
 import ListTableOrder from "./ListTableOrder";
-import SubmitCoupon from "../Checkout/SubmitCoupon";
-import SubmitTips from "../Checkout/SubmitTips";
 import GetBill from "../Checkout/GetBill";
 
 const ViewCart = () => {
   const id = useParams();
   const [orders, setOrders] = useState([]);
-  const [tips, setTips] = useState('');
 
   const backLink = `/customer/browse/${id.id}` 
 
@@ -121,4 +117,3 @@ const ViewCart = () => {
 }
 
 export default ViewCart;
-
