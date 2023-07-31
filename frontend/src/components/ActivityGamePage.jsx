@@ -33,7 +33,7 @@ function GamePage() {
             justifyContent: "center",
             mt: 3
           }}>
-          <img src='/img/barbie_1.png' width="184" height="400"/>
+          <img src='/img/barbie_1.png' alt='barbie-img' width="184" height="400"/>
         </Box>
 
         <Box      
@@ -42,7 +42,7 @@ function GamePage() {
             justifyContent: "center",
             pt: 4,
           }}>
-          <img src={logo} />
+          <img src={logo} alt='logo'/>
         </Box>
       </Box>
 

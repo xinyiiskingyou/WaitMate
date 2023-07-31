@@ -38,7 +38,7 @@ function MemoryTab() {
   const [firstCard, setFirstCard] = useState(null)
   const [secCard, setSecCard] = useState(null)
   const [disabled, setDisabled] = useState(false)
-  const [won, setWon] = useState(false)
+  const [_, setWon] = useState(false)
   const [lost, setLost] = useState(false)
   const [open, setOpen] = useState(false);
 
@@ -84,7 +84,8 @@ function MemoryTab() {
 
   const checkWon = () => {
     var count = 0
-    cards.map(card => {
+    
+    cards.forEach(card => {
       if (card.matched === true) {
         count += 1
       } 

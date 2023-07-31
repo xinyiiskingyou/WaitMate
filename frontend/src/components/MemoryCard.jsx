@@ -1,6 +1,6 @@
 import { Box, Grid } from '@mui/material';
 import styled from "@mui/system/styled";
-import { grey, pink } from '@mui/material/colors';
+import { pink } from '@mui/material/colors';
 
 const mainPink = pink[400]
 

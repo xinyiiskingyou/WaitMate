@@ -1,7 +1,7 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
 import { Box, Button, Grid, Typography, Container, Popover } from '@mui/material';
-import { pink, yellow } from '@mui/material/colors';
+import { yellow } from '@mui/material/colors';
 import { useCookies } from 'react-cookie';
 import { handleLogin } from '../../auth.js';
 import CssTextField from '../CssTextField.jsx'

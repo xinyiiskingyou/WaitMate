@@ -6,7 +6,7 @@ import { pink, grey, yellow } from '@mui/material/colors';
 import { GameButton, HeaderButtons } from './ActivityButtons'
 import styled from "@mui/system/styled";
 
-export const ControlGameButton = styled(GameButton)(({ }) => ({
+export const ControlGameButton = styled(GameButton)(() => ({
   height: '35px',
   maxWidth: '40px',
   minWidth: '40px',

@@ -1,9 +1,7 @@
 import { styled } from '@mui/material/styles';
 import { TextField } from '@mui/material';
-import { pink } from '@mui/material/colors';
 
 const mainPink = '#FF9EE4';
-const secPink = '#FF9EE4';
 
 const CssTextField = styled(TextField)({
   background: 'white',
@@ -22,7 +20,7 @@ const CssTextField = styled(TextField)({
     borderRadius: 0,
   },
   '& .MuiInput-underline:after': {
-    borderBottomColor: secPink,
+    borderBottomColor: mainPink,
   },
   '& .MuiOutlinedInput-root': {
     '& fieldset': {
@@ -32,11 +30,11 @@ const CssTextField = styled(TextField)({
 
     },
     '&:hover fieldset': {
-      borderColor: secPink,
+      borderColor: mainPink,
       borderWidth: "3px",
     },
     '&.Mui-focused fieldset': {
-      borderColor: secPink,
+      borderColor: mainPink,
       borderWidth: "3px",
 
     },

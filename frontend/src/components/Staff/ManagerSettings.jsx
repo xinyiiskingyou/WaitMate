@@ -2,9 +2,8 @@ import React from 'react';
 import { styled } from '@mui/material/styles';
 import { 
   Box, Button, Typography, Dialog, DialogTitle, Alert,
-  Container, Grid, Divider, Snackbar, Backdrop, CircularProgress} from '@mui/material';
-import { pink, yellow, grey } from '@mui/material/colors';
-import WestIcon from '@mui/icons-material/West';
+  Container, Grid, Snackbar, Backdrop, CircularProgress} from '@mui/material';
+import { grey } from '@mui/material/colors';
 import { useCookies } from 'react-cookie';
 import { handleLogin, handleLogoutSubmit } from '../../auth.js';
 import CssTextField from '../CssTextField.jsx'
@@ -26,7 +25,7 @@ function SimpleDialog(props) {
   const { onClose, open } = props;
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const [cookies, setCookie] = useCookies(['token']);
+  const [_, setCookie] = useCookies(['token']);
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -251,10 +250,6 @@ const Settings = () => {
       setLoading(false)
       alert('Failed to delete. Please try again.');
     }
-  }
-
-  const handleBack = () => {
-    window.location.href = '/manager/menu';
   }
 
   const handleCloseSB = (reason) => {

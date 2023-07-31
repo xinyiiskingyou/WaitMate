@@ -5,7 +5,7 @@ import styled from "@mui/system/styled";
 const usedPink = pink[300]
 
 
-export const GameButton = styled(Button)(({ }) => ({
+export const GameButton = styled(Button)(() => ({
   color: "#FFFFFF",
   borderRadius: 4,
   border: `4px outset ${usedPink}`,
@@ -16,7 +16,7 @@ export const GameButton = styled(Button)(({ }) => ({
   },
 }));
 
-export const HeaderButtons = styled(Button)(({ }) => ({
+export const HeaderButtons = styled(Button)(() => ({
   maxWidth: '25px',
   maxHeight: '25px', 
   minWidth: '25px', 
