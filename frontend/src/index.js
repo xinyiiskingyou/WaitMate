@@ -27,6 +27,7 @@ import WaitStaffInterface from './components/Staff/WaitStaffInterface';
 import { getToken } from './auth.js';
 >>>>>>> 0f929a4f4 (merged with s3sunnie)
 import CustomerTooBored from './components/Activity/CustomerTooBored';
+import CustomerMeme from './components/Meme/CustomerMeme';
 
 function App() {
   const [manager, setManager] = React.useState("false");
