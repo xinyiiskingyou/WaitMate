@@ -14,7 +14,7 @@ import bill from "../../assets/bill.png"
 
 const buttonStyle = { 
   border: '4px solid #FFA0A0', 
-  height: '40px', 
+  height: '43px', 
   width: '200px',
   justifyContent: 'space-evenly',
   background: "#FFCFCF",

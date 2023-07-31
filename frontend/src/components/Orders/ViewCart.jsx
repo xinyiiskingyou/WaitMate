@@ -11,6 +11,7 @@ import {
   TableBody,
   TableRow,
   Box,
+  Divider
 } from "@mui/material";
 import WestIcon from '@mui/icons-material/West';
 import ListTableOrder from "./ListTableOrder";
@@ -21,7 +22,7 @@ import GetBill from "../Checkout/GetBill";
 const ViewCart = () => {
   const id = useParams();
   const [orders, setOrders] = useState([]);
-  const [tips] = useState('');
+  const [tips, setTips] = useState('');
 
   const backLink = `/customer/browse/${id.id}` 
 
@@ -84,34 +85,31 @@ const ViewCart = () => {
               <TableContainer sx={{ height: '70vh', pt: 4, }}>
                 <Table aria-label='custom pagination table' >
                   <TableBody>
+                    <TableRow>
+                      <TableCell style={{ width: '25%', textAlign: 'center' }} component='th' scope='row' justify="space-between" align="center" sx={{ fontSize: 24, borderBottom: 'none', pr: -10 }}>
+                        <b>Qty x Item</b>
+                      </TableCell>
+                      <TableCell style={{ width: '25%', textAlign: 'center' }} component='th' scope='row' justify="space-between" align="center" sx={{ fontSize: 24, borderBottom: 'none', pr: -10 }}>
+                        <b>Price</b>
+                      </TableCell>
+                      <TableCell style={{ width: '25%', textAlign: 'center' }} component='th' scope='row' justify="space-between" align="center" sx={{ fontSize: 24, borderBottom: 'none', pr: -10 }}>
+                        <b>Status</b>
+                      </TableCell>
+                    </TableRow>
                     {orders.map((row) => (
                       <TableRow key={row.name}>
-                        <TableCell style={{ width: '25%', textAlign: 'center' }} component='th' scope='row' justify="space-between" align="center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10 }}>
+                        <TableCell style={{ width: '25%', textAlign: 'center' }} component='th' scope='row' justify="space-between" align="center" sx={{ fontSize: 23, borderBottom: 'none', pr: -10 }}>
                           {row.amount} x {row.name.toUpperCase()}
                         </TableCell>
-                        <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify="space-between" align="center" sx={{ fontSize: 27, borderBottom: 'none', pl: 10 }}>
+                        <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify="space-between" align="center" sx={{ fontSize: 23, borderBottom: 'none', pl: 3 }}>
                           ${row.cost}
                         </TableCell>
-                        <TableCell style={{ width: '20%', textAlign: 'center', color: row.is_prepared === 0 ? 'orange' : row.is_served === 1 ? 'green' : 'blue' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pl: 10}}>
+                        <TableCell style={{ width: '20%', textAlign: 'center', color: row.is_prepared === 0 ? 'orange' : row.is_served === 1 ? 'green' : 'blue' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 23, borderBottom: 'none', pl: 3}}>
                           {row.is_prepared === 0 ? "Preparing" : row.is_served === 1 ? "Served" : "Ready"}
-                      </TableCell>
+                        </TableCell>
                       </TableRow>
                     ))}
-
-                    <TableRow>
-                      <TableCell style={{ width: '20%', textAlign: 'center', fontWeight: 'bold' }} component='th' scope='row' justify="space-between" align="center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10 }}>
-                        Coupon Code?
-                      </TableCell>
-                      <SubmitCoupon id={id} />
-                    </TableRow>
-
-                    <TableRow>
-                      <TableCell style={{ width: '20%', textAlign: 'center', fontWeight: 'bold' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
-                        Tips?
-                      </TableCell>
-                      <SubmitTips id={id} tip={tips}/>
-                    </TableRow>
-                  </TableBody>
+                  </TableBody> 
                 </Table>
               </TableContainer>
             </Grid>
@@ -123,3 +121,4 @@ const ViewCart = () => {
 }
 
 export default ViewCart;
+
