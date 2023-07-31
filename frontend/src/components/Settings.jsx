@@ -45,15 +45,18 @@ function SimpleDialog(props) {
   }
 
   return (
-    <Dialog open={open}>
+    <Dialog open={open} PaperProps={{
+      style: { backgroundColor: 'transparent' }   }}>
       <Box sx={{    
-        px: 2,            
+        px: 4,            
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'column',
-        border: `7px solid ${mainPink}`,}}>
-      <DialogTitle>Login with new email</DialogTitle>
+        background: 'white',
+        border: `2px solid ${mainPink}`,
+        borderRadius: 1}}>
+      <DialogTitle>Login with your new email</DialogTitle>
       <CssTextField fullWidth required label="Email" 
         onChange={handleEmailChange}
         sx={{ mb: 1 }}/>
@@ -70,11 +73,53 @@ function SimpleDialog(props) {
   );
 }
 
+function ResetDialog(props) {
+  const { onClose, open, onReset } = props;
+
+  const handleReset = async () => {
+    onReset()
+  }
+
+  const handleCancel = async () => {
+    onClose()
+  }
+
+  return (
+    <Dialog open={open} PaperProps={{
+      style: { backgroundColor: 'transparent' }   }}>
+      <Box sx={{    
+        px: 4,            
+        display: 'flex',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        background: 'white',
+        border: `2px solid ${mainPink}`,
+        borderRadius: 1}}>
+      <Typography variant="h5" sx={{my: 2, p: 1, color: mainPink, fontWeight: 'bold', textAlign: 'center'}}>Continue Reset</Typography>
+      <Box display='flex' justifyContent="space-between" sx={{ mb: 1, width: '100%' }}> 
+        <LoginButton onClick={handleReset}
+          sx={{ mb : 2, px: 3.2 }}
+        >
+          Okay
+        </LoginButton>      
+        <LoginButton onClick={handleCancel}
+          sx={{ ml: 4, mb : 2, px: 2 }}
+        >
+          Cancel
+        </LoginButton>
+      </Box>
+      </Box>
+    </Dialog>
+  );
+}
+
 const Settings = () => {
   const [waitstaffPassword, setWaitstaffPassword] = React.useState('');
   const [kitchenstaffPassword, setKitchenstaffPassword] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [open, setOpen] = React.useState(false);
+  const [openRD, setOpenRD] = React.useState(false);
+
   const [openSB, setOpenSB] = React.useState(false);
   const [msgSB, setMsgSB] = React.useState('');
   const [loading, setLoading] = React.useState(false);
@@ -82,6 +127,10 @@ const Settings = () => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleCloseRD = () => {
+    setOpenRD(false);
   };
 
   const handlewaitstaffPasswordChange = (event) => {
@@ -177,7 +226,12 @@ const Settings = () => {
     }
   };
 
+  const handleResetClick = () => {
+    setOpenRD(true)
+  }
+
   const handleResetSubmit = async () => {
+    handleCloseRD()
     setLoading(true)
     try { 
       const response = await fetch('http://localhost:8000/auth/delete', {
@@ -274,10 +328,7 @@ const Settings = () => {
       <Typography variant="h5" sx={{ mb: 2, backgroundColor: mainPink, p: 1, color: 'white', textShadow: `-1px 0px ${grey[400]}` }}>User Managerment</Typography>
 
       <Grid container direction="row" spacing={2}>
-        <Grid alignItems="center" item xs={4} sx={{}}>
-          <Typography fullHeight sx={{backgroundColor: 'grey', height: '7.5vh'}}> Waitstaff password</Typography>
-        </Grid>
-        <Grid item xs={6} sx={{mb: 2}}>
+        <Grid item xs={10} sx={{mb: 2}}>
           <CssTextField fullWidth type="password" label="Waitstaff password" 
             onChange={handlewaitstaffPasswordChange} 
             />
@@ -325,13 +376,21 @@ const Settings = () => {
       <LoginButton sx={{ mb: 2 }} onClick={handlePasswordSubmit}>
         Send password reset 
       </LoginButton>
+
       <SimpleDialog
         open={open}
         onClose={handleClose}
       />
-      <LoginButton sx={{ mt: 4 }} onClick={handleResetSubmit}>
+
+      <LoginButton sx={{ mt: 4 }} onClick={handleResetClick}>
         Reset management
       </LoginButton>
+
+      <ResetDialog 
+        open={openRD}
+        onClose={handleCloseRD}
+        onReset={handleResetSubmit}
+      />
 
       <Snackbar
         open={openSB}
