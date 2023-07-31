@@ -58,7 +58,6 @@ class CheckoutDB:
                 discount_amount = new_total - total
                 bill['discount'] = round(discount_amount, 2) * -1
                 bill['total'] = round(new_total, 2)
-
             bill['total'] += bill['tip']
             return bill
         except Exception as e:
@@ -69,11 +68,11 @@ class CheckoutDB:
 
     def checkout_bill_tips(self, table_id: int, amount: int):
 
+        if not amount or amount <= 0:
+            raise InputError(detail='Invalid tip amount.')
+
         if not check_table_exists(table_id, self.session):
             raise InputError(detail=INVALID_TABLE_MSG)
-
-        if amount <= 0:
-            raise InputError(detail='Invalid tip amount.')
 
         self._checkout_add(table_id)
 
@@ -92,11 +91,11 @@ class CheckoutDB:
             self.session.close()
 
     def checkout_bill_coupon(self, table_id: int, coupon: str):
-
+    
+        if not coupon or not check_coupon_valid(coupon, self.session):
+            raise InputError(detail='Invalid coupon.')
         if not check_table_exists(table_id, self.session):
             raise InputError(detail=INVALID_TABLE_MSG)
-        if not check_coupon_valid(coupon, self.session):
-            raise InputError(detail='Invalid coupon.')
 
         self._checkout_add(table_id)
 
