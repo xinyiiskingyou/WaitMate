@@ -268,55 +268,12 @@ const Settings = () => {
   return (
     <Container >
     <Grid container direction="column" spacing={2}>
-      <Grid item xs={2} sx={{mb: 2}}>
-        <Box
-          sx={{ 
-            margin: 2, 
-            mt: 4, 
-            borderRadius: 2, 
-            height: '100%',
-            display:'flex',
-            flexDirection:"column",
-          }}>
-          <Grid container spacing={2}>
-            <Grid item xs={2}>
-              <Button onClick={handleBack}        
-                sx={{ 
-                  border: 5,
-                  borderColor: mainPink,
-                  borderRadius: 2,
-                  color: 'black' 
-                }}>
-                <WestIcon/>
-              </Button>
-            </Grid>
-
-            <Grid item xs={8}>
-              <Typography 
-              variant="h3" 
-              align="center"
-              noWrap
-              fontWeight="bold"
-              >
-                Settings
-              </Typography>
-            </Grid>
-
-            <Grid item xs={2}>
-              <Box display='flex' justifyContent='flex-end'>
-                <LoginButton sx={{}} onClick={handleLogoutSubmit}>
-                  Logout
-                </LoginButton>
-              </Box>
-            </Grid>
-
-          </Grid>
-        </Box>
-      </Grid>   
+      
 
     <Box
       justifyContent="center"
       sx={{ 
+        marginTop: '15vh',
         py: 4,
         px: 4,
         minWidth: 40,
@@ -373,7 +330,7 @@ const Settings = () => {
       </Grid>
 
 
-      <LoginButton sx={{ mb: 2 }} onClick={handlePasswordSubmit}>
+      <LoginButton sx={{ mb: 1 }} onClick={handlePasswordSubmit}>
         Send password reset 
       </LoginButton>
 
@@ -382,6 +339,8 @@ const Settings = () => {
         onClose={handleClose}
       />
 
+      <LoginButton onClick={handleLogoutSubmit}>Logout</LoginButton>
+  
       <LoginButton sx={{ mt: 4 }} onClick={handleResetClick}>
         Reset management
       </LoginButton>
