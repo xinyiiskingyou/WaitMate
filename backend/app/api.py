@@ -208,6 +208,7 @@ def auth_kitchenstaff_update_password_api(form_data: OAuth2PasswordRequestForm =
 def auth_restart_api(user: dict = Depends(get_current_user)):
     auth.is_authorized(['manager'], user['user'])
     auth.delete_all()
+    table.clear_tables_data()
     checkout.clear_data()
     menu.clear_data()
     order.clear_order_table()
