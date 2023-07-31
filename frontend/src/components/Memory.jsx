@@ -1,14 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from 'react-router-dom';
-import { Box, Grid, Button, Typography, Dialog, LinearProgress, linearProgressClasses, DialogTitle } from '@mui/material';
+import { Box, Grid, Button, Typography, Dialog, LinearProgress, linearProgressClasses, IconButton } from '@mui/material';
 import styled from "@mui/system/styled";
-import { Autorenew } from '@mui/icons-material';
+import { ArrowDropUpRounded, ArrowDropDownRounded } from '@mui/icons-material';
 import MemoryCard from './MemoryCard';
 import { pink, grey, yellow } from '@mui/material/colors';
 import logo from '../assets/WaitMate.png'
 
 const usedPink = pink[300]
-const usedGrey = grey[500]
+
+const GameButton = styled(Button)(({ }) => ({
+  color: "#FFFFFF",
+  borderRadius: 4,
+  border: `4px outset ${pink[300]}`,
+
+  backgroundColor: pink[300],
+  '&:hover': {
+    backgroundColor: pink[200],
+  },
+}));
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 30,
@@ -109,8 +119,8 @@ function Memory() {
   const [disabled, setDisabled] = useState(false)
   const [won, setWon] = useState(false)
   const [lost, setLost] = useState(false)
-  const [open, setOpen] = React.useState(false);
-
+  const [open, setOpen] = useState(false);
+  const [gamePink, setGamePink] = useState(0)
 
   const id = useParams();
   const backLink = `/Browse/${id.id}` 
@@ -125,6 +135,20 @@ function Memory() {
     setLost(false)
     setCards(shuffledCards)
     setTurns(10)
+  }
+
+  const handlePinkClickUp = () => {
+    if (gamePink === 900) {
+      return
+    }
+    setGamePink(gamePink => gamePink += 100)
+  }
+
+  const handlePinkClickDown = () => {
+    if (gamePink === 0) {
+      return
+    }
+    setGamePink(gamePink => gamePink -= 100)
   }
 
   const handleChoice = (card) => {
@@ -205,17 +229,86 @@ function Memory() {
         py: 2
       }}>
 
-      <Box fullHeight display='flex' alignItems='center' justifyContent="space-between" sx={{ minWidth: '18%', minHeight: 700,  flexDirection: 'column'}}>
 
-      {/* <Typography align="center" sx={{mt: 2}}>Turns Left: {turns}</Typography> */}
-      <Box display='flex' justifyContent='center' sx={{mt: 10, width: '60%', border: `4px double ${pink[100]}`, p: 2,  borderRadius: 5,}}>
-        <Typography>Excellent Work!</Typography>
+      <Box display='flex' alignItems='center' justifyContent="space-between" sx={{ minWidth: '18%', minHeight: 670,  flexDirection: 'column', pr: 2}}>
+        <Box display='flex' sx={{ width: '90%', height: '20vh', backgroundColor: yellow[50], border: `6px groove ${grey[50]}`, borderRadius: 4, flexDirection: 'column'}}>
+        <Box display="flex" justifyContent="space-between" alignItems="center"
+        sx={{ 
+          borderRadius: '10px 10px 1px 1px',
+          borderBottom: `2px solid ${pink[300]}`,
+          p: '4px',
+          boxShadow: `1px 3px 4px ${pink[300]}`,
+          background: `linear-gradient(to right, ${pink[600]}, ${pink[200]})` }}>
+        <Typography color='white' sx={{ml: 1, fontFamily: 'Arial',}}>Create your pink</Typography>
+        <Box>
+        <Button  
+          size="small"            
+          sx={{ 
+            maxWidth: '25px',
+            maxHeight: '25px', 
+            minWidth: '25px', 
+            minHeight: '25px',
+            border: '2px inset #0A0',
+            borderColor: 'white',
+            borderRadius: 2,
+            mx: '4px',
+            color: 'black',
+            backgroundColor: pink[100],
+            fontWeight: 'bold',
+          }}>
+          _
+        </Button>
+        <Link to={backLink}>
+          <Button  
+            size="small"            
+            sx={{ 
+              maxWidth: '25px',
+              maxHeight: '25px', 
+              minWidth: '25px', 
+              minHeight: '25px',
+              border: '2px inset #0A0',
+              borderColor: 'white',
+              borderRadius: 2,
+              mr: '10px',
+              ml: '4px',
+              fontWeight: 'bold',
+              color: 'black',
+              backgroundColor: pink[100],
+            }}>
+            X
+          </Button>
+        </Link>
+        </Box>
+
+      </Box> 
+      <Box display='flex' alignItems='center' height="100%" justifyContent="space-around">
+        <Box sx={{ width: '60%', height: '75%', backgroundColor: pink[`${gamePink}`], mx: 2, borderRadius: 2 }}></Box>  
+        <Box display='flex' flexDirection='column' sx={{  mr: 2 }}>
+
+          <GameButton onClick={handlePinkClickUp}
+            sx={{ 
+              height: '35px',
+              maxWidth: '40px',
+              minWidth: '40px',            
+            }}><ArrowDropUpRounded sx={{ fontSize: 60 }} /></GameButton>
+            <GameButton onClick={handlePinkClickDown}    
+              sx={{ 
+                height: '35px',
+                maxWidth: '40px',
+                minWidth: '40px',
+                mt: 1,
+              }}><ArrowDropDownRounded sx={{ fontSize: 60 }}/></GameButton>  
+        </Box>
       </Box>
+        </Box>
+      {/* <Box display='flex' justifyContent='flex-start' alignItems='flex-start' sx={{width: '60%', height: '80px', border: `5px solid ${grey[50]}`, p: 1.5,  borderRadius: 1, backgroundColor: pink[50]}}>
+        <Typography variant="h4" sx={{color: yellow[100], textShadow: `-3px 2px ${pink[200]}`, fontWeight: 'bold',}}>Excellent Work !</Typography>
+      </Box> */}
       <Box          
         sx={{
           display: 'flex',
           justifyContent: "center",
-          
+          mt: 3
         }}>
         <img src='/img/barbie_1.png' width="184" height="400"/>
       </Box>
@@ -225,7 +318,7 @@ function Memory() {
         sx={{
           display: 'flex',
           justifyContent: "center",
-          py: 4,
+          pt: 4,
           // border: '3px outset #000000',
         }}>
 
@@ -247,7 +340,8 @@ function Memory() {
       <Box display="flex" justifyContent="space-between" alignItems="center"
         sx={{ 
           borderRadius: '10px 10px 1px 1px',
-          borderBottom: `2px solid ${pink[600]}`,
+          // borderBottom: `3px solid ${pink[500]}`,
+          boxShadow: `1px 3px 4px ${pink[300]}`,
           p: '4px',
           background: `linear-gradient(to right, ${pink[600]}, ${pink[200]})` }}>
         <Typography color='white' sx={{ml: 1, fontFamily: 'Arial',}}>Memory Game</Typography>
@@ -268,25 +362,6 @@ function Memory() {
             fontWeight: 'bold',
           }}>
           _
-        </Button>
-
-        <Button  
-          size="small" onClick={shuffleCards}        
-          sx={{ 
-            maxWidth: '25px',
-            maxHeight: '25px', 
-            minWidth: '25px', 
-            minHeight: '25px',
-            border: '2px inset #0A0',
-            borderColor: 'white',
-            borderRadius: 2,
-            mx: '4px',
-            color: 'black',
-            backgroundColor: pink[100],
-           
-            
-          }}>
-          <Autorenew sx={{ fontSize: 18 }} />
         </Button>
         <Link to={backLink}>
           <Button  
@@ -331,16 +406,31 @@ function Memory() {
       </Box>
 
       </Box>
-      <Box>
-      <div style={{ position: "relative", width: '35%', padding: '1em 2.8em'}}>
-        <BorderLinearProgress variant="determinate" value={turns * 10} />
-        <Typography sx={{ position: 'absolute', top: 22, color: 'white',
-          left: "15%",
+      <Box display='flex' direction='column' justifyContent="space-between" alignItems="center">
+        <div style={{ position: "relative", width: '35%', padding: '1em 2.8em'}}>
+          <BorderLinearProgress variant="determinate" value={turns * 10} />
+          <Typography sx={{ position: 'absolute', top: 22, color: 'white',
+            left: "15%",
+            }}>
+            Barbie Meter
+          </Typography>
+        </div>
+        <Box display='flex' sx={{ mr: 5.5}}>
+        <GameButton  
+          size="small"         
+          sx={{ 
+            border: `4px outset ${pink[300]}`,
+            borderRadius: 1,
+            color: 'white',
+            px: 2,
+            backgroundColor: pink[300],
+            
           }}>
-          Barbie Meter
-        </Typography>
-
-      </div>
+            <Typography onClick={shuffleCards} sx={{ textTransform: "none" }}>
+              Restart
+            </Typography>        
+          </GameButton>
+        </Box>
       </Box>
     </Box>
       <SimpleDialog
@@ -353,7 +443,7 @@ function Memory() {
         open={lost}
         onClose={handleLoseClose}
         title='Game Over'
-        text="It's okay, you are Ken enough."
+        text="It's okay, you are Kenough."
       />
     </Box>
   )
