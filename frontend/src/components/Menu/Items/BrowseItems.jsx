@@ -20,10 +20,10 @@ const BrowseItems = ({
   }
 
   return (
-    <Card sx={{ border: '5px solid #FFA0A0', maxHeight: '34vh', borderRadius: 8 }}>
+    <Card sx={{ maxHeight: '34vh', borderRadius: 3, backgroundColor: '#FBDDDD' }}>
       <CardContent>
         <Box>
-          <Typography variant="h5" gutterBottom style={{ fontWeight: 'bold', textAlign: "center" }}>
+          <Typography variant="h5" gutterBottom style={{ fontWeight: 'bolder', textAlign: "center" }}>
             {itemName.toUpperCase()}
             {itemVegetarian===1 ? (
               <img 
@@ -38,16 +38,16 @@ const BrowseItems = ({
             ): null }
           </Typography>
 
-          <Typography variant="subtitle1" gutterBottom>
-            Price: ${itemPrice}
+          <Typography gutterBottom style={{fontSize: '2.4vh'}}>
+            <b>Price:</b> ${itemPrice}
           </Typography>
 
-          <Typography variant="subtitle1" gutterBottom>
-            Descriptions: {itemDescription}
+          <Typography gutterBottom style={{fontSize: '2.4vh'}}>
+            <b>Descriptions:</b> {itemDescription}
           </Typography>
 
-          <Typography variant="subtitle1" gutterBottom>
-            Ingredients: {itemIngredient}
+          <Typography gutterBottom style={{fontSize: '2.4vh'}}>
+            <b>Ingredients:</b> {itemIngredient}
           </Typography>
 
           <Typography variant="subtitle1">
@@ -61,11 +61,12 @@ const BrowseItems = ({
                     type="number" 
                     size="small"
                     id="outlined-size-small"
-                    label="Enter quantity" 
+                    label="Enter Quantity" 
                     onChange={handleSubmitAmount} 
                     InputProps={{
                       inputProps: { min: 1 }
                     }}
+                    style={{marginTop: '1vh'}}
                   />
                 </Grid>
                 <AddOrder tableID={tableID} itemName={itemName} amount={amount} setAmount={setAmount} />

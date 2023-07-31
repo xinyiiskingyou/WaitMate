@@ -72,11 +72,11 @@ const ManageItems = ({
           </Box>
         )}
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2vw' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2.5vw', marginLeft: '4vw'}}>
           {Object.entries(itemsForCurrentPage)
             .filter(([_, menuItem]) => menuItem.name !== null)
             .map(([index, menuItem]) => (
-              <div style={{ width: '20vw', height: '30vh', margin: '4%' }}>
+              <div style={{ width: '20vw', height: '30vh'}}>
                 <Card sx={{ maxHeight: '34vh', width: '100%', backgroundColor: "#FBDDDD" }}>
                   <UpdateItemDetails 
                     itemCategory={categories[selectedCategory]}
@@ -96,37 +96,33 @@ const ManageItems = ({
         </div>
       </Box>
 
-      <div style={{ position: 'relative', marginTop: '2vh' }}>
-        <Box display="flex" justifyContent="center" alignItems="center" marginTop={2}>
-          <Pagination
-            count={Math.ceil(menuItems.length / ITEMS_PER_PAGE)}
-            page={currentPage}
-            onChange={handlePageChange}
-            renderItem={(item) => (
-              <PaginationItem
-                component={IconButton}
-                {...item}
-              />
-            )}
-          />
-        </Box>
-
-        <Box position="relative">
-          <IconButton
-            onClick={handleAddButtonClick}
-            style={{
-              backgroundColor: "#FBDDDD",
-              borderRadius: "50%",
-              fontSize: "12vh",
-              position: "absolute",
-              bottom: "10px", 
-              right: "11px",
-            }}
-          >
-            <AddIcon />
-          </IconButton>
-        </Box>
+      <div style={{ position: 'fixed', bottom: '6vh', left: '55%', transform: 'translateX(-45%)' }}>
+        <Pagination
+          count={Math.ceil(menuItems.length / ITEMS_PER_PAGE)}
+          page={currentPage}
+          onChange={handlePageChange}
+          renderItem={(item) => (
+            <PaginationItem
+              component={IconButton}
+              {...item}
+            />
+          )}
+        />
       </div>
+
+      <IconButton
+        onClick={handleAddButtonClick}
+        style={{
+          backgroundColor: "#FBDDDD",
+          borderRadius: "50%",
+          fontSize: "12vh",
+          position: "fixed",
+          bottom: "6vh", 
+          right: '10vw'
+        }}
+      >
+        <AddIcon />
+      </IconButton>
     </>
   );
 }

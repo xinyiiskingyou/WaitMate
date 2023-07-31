@@ -121,13 +121,13 @@ const BrowseMenu = () => {
         <Paper elevation={3} sx={{
           padding: "20px",
           borderRadius: "8px",
-          width: "1150px", 
-          height: "570px", 
+          width: "73vw", 
+          height: "80vh", 
           marginLeft: "200px",
           position: 'fixed',
           marginTop: '60px',
         }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1vw'}}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2.5vw'}}>
             {Object.entries(itemsForCurrentPage)
               .filter(([_, menuItem]) => menuItem.name !== null)
               .map(([index, menuItem]) => (
@@ -144,7 +144,7 @@ const BrowseMenu = () => {
         </Paper>
       ) : (<></>)}
 
-      <div style={{ position: 'fixed', bottom: '22px', left: '55%', transform: 'translateX(-50%)' }}>
+      <div style={{ position: 'fixed', bottom: '4.3vh', left: '55%', transform: 'translateX(-45%)' }}>
         <Pagination
           count={Math.ceil(menuItems.length / ITEMS_PER_PAGE)}
           page={currentPage}

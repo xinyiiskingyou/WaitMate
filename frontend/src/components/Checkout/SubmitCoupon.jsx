@@ -14,7 +14,7 @@ const SmallbuttonStyle = {
   color: 'black',
   fontWeight: "bold",
   borderRadius: 8,
-  marginLeft: '0.4vw',
+  marginLeft: '0.3vw',
   marginRight: '1vw',
   marginTop: '1vh',
 }

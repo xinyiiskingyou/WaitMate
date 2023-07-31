@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useCookies } from 'react-cookie';
-import { 
-  Drawer, 
+import {
+  Drawer,
   Box,
   Typography,
   Button,
@@ -45,7 +45,7 @@ const ManageMenu = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const [cookies] = useCookies(['token']);
-  
+
   const handleCategoryInputChange = (value) => {
     setEditedCategory(value);
   };
@@ -69,21 +69,21 @@ const ManageMenu = () => {
       <Manager />
 
       <div style={{display: "flex", alignItems: "center", justifyContent: "flex-start", height: "100vh"}}>
-        <Button style={{
-          height: "50%", 
-          background: "white", 
-          marginLeft: "-30vw", 
-          marginTop: "40vh", 
-          padding: "100px 0",
+      <Button style={{
+          height: "50%",
+          background: "white",
+          position: "fixed",
+          top: "40vh",
+          left: 0,
           borderTopRightRadius: '20px',
           borderBottomRightRadius: '20px'
         }} onClick={toggleSidebar}>
           <Typography className='sideways-text' color={"black"}>Menu Category</Typography>
         </Button>
 
-        <Box 
-          flexGrow={1} 
-          p={2} 
+        <Box
+          flexGrow={1}
+          p={2}
           display="flex"
           height="80vh"
           width="350px"
@@ -93,10 +93,10 @@ const ManageMenu = () => {
             open={isSidebarOpen}
             onClose={toggleSidebar}
             ModalProps={{ keepMounted: true }}
-            PaperProps={{ style: { 
-              marginTop: "180px",
-              width: '250px', 
-              height: "600px", 
+            PaperProps={{ style: {
+              marginTop: "24vh",
+              width: '19vw',
+              height: "73vh",
               borderTopRightRadius: '20px',
               borderBottomRightRadius: '20px'
             }}}>
@@ -106,7 +106,7 @@ const ManageMenu = () => {
               </Typography>
             </div>
             <AddCategory cookies={cookies} categories={categories} setCategories={setCategories} />
-            
+
             { Object.entries(categories).map(([index, category]) => (
               <Box key={index}>
                 {categoryEditingIndex === index ? (
@@ -118,26 +118,26 @@ const ManageMenu = () => {
                       color='primary'
                       style={{ margin: '5%', width: '80%' }}
                       onChange={(e) => handleCategoryInputChange(e.target.value, index)}
-                      fullWidth 
+                      fullWidth
                     />
-                    <UpdateCategoryName cookies={cookies} index={index} editedCategory={editedCategory} 
+                    <UpdateCategoryName cookies={cookies} index={index} editedCategory={editedCategory}
                       setCategoryEditingIndex={setCategoryEditingIndex} setEditedCategory={setEditedCategory}
                       categories={categories} setCategories={setCategories}
                     />
                   </>
                 ) : (
                   <Box display="flex" justifyContent="space-evenly">
-                    <Button 
-                      variant="outlined" 
+                    <Button
+                      variant="outlined"
                       color="primary"
-                      style={{...EditButtonStyle, 
+                      style={{...EditButtonStyle,
                         border: selectedCategory===index ? "3px solid #FFA0A0" :"3px solid #bdbdbd",
                         background: selectedCategory===index ? "#FFCFCF" : "#E0E0E0"
                       }}
                       onClick={() => handleCategoryClick(index)}>
                       {category}
                     </Button>
-                    
+
                     <ButtonGroup variant="outlined" style={{smallbuttonStyle}}>
                       <Button
                         color="primary"
@@ -146,8 +146,8 @@ const ManageMenu = () => {
                       >
                         Edit
                       </Button>
-                      <UpdateCategoryOrder cookies={cookies} index={index} categories={categories} 
-                        setCategories={setCategories} 
+                      <UpdateCategoryOrder cookies={cookies} index={index} categories={categories}
+                        setCategories={setCategories}
                       />
                     </ButtonGroup>
                   </Box>
@@ -158,16 +158,17 @@ const ManageMenu = () => {
 
           {selectedCategory !== -1 ? (
             <Paper elevation={3} sx={{
-              padding: "20px",
               borderRadius: "8px",
-              width: "1200px", 
-              height: "80vh", 
-              marginLeft: "15vw",
+              width: "73vw",
+              height: "84vh",
+              marginLeft: "-15vw",
+              marginTop: '5px',
+              position: 'fixed',
             }}>
-              <ManageItems 
-                categories={categories} 
+              <ManageItems
+                categories={categories}
                 selectedCategory={selectedCategory}
-                menuItems={menuItems} 
+                menuItems={menuItems}
                 setMenuItems={setMenuItems}
                 onItemsCategory={() => handleCategoryClick(selectedCategory)}
                 cookies={cookies}
