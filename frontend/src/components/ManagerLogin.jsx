@@ -1,7 +1,7 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
 import { Box, Button, Grid, Typography, Container, Popover } from '@mui/material';
-import { pink } from '@mui/material/colors';
+import { pink, yellow } from '@mui/material/colors';
 import { useCookies } from 'react-cookie';
 import { handleLogin } from '../auth.js';
 import CssTextField from './CssTextField.jsx'
@@ -66,10 +66,15 @@ const ManagerLogin = () => {
       <Box container direction='column'  
         sx={{
           minWidth: 450,
+          backgroundColor: 'white',
+          py: 3,
+          px: 4,
+          borderRadius: 2,
+
         }}
       >
         <Box display='flex' justifyContent='center' sx={{ pb: 3 }}>
-          <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>Manager Login</Typography>
+          <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold', color: secPink, textShadow: `-3px 1px 2px ${yellow[100]}` }}>Manager Login</Typography>
         </Box>
         <CssTextField fullWidth required label="Email" onChange={handleEmailChange}
           sx={{ mb: 1 }}/>
@@ -77,7 +82,7 @@ const ManagerLogin = () => {
           sx={{ mb: 2 }}/>
         <Grid container>
           <Grid item xs>
-            <Button justifyContent='center' onClick={handleClick} sx={{color: secPink, minWidth: '35px', maxWidth: '35px', backgroundColor: 'white', border: `2px solid ${mainPink}`, borderRadius: 0}}>?</Button>
+            <Button justifyContent='center' onClick={handleClick} sx={{color: secPink, backgroundColor: 'white',  borderRadius: 0}}>First Time?</Button>
             <Popover 
               id={id}
               open={open}
@@ -88,7 +93,7 @@ const ManagerLogin = () => {
                 horizontal: 'left',
               }}
             >
-              <Typography sx={{ p: 2 }}>Email: manager@waitmate.com <br/>Password: waitmate1</Typography>
+              <Typography sx={{ p: 2, color: secPink }}>Email: manager@waitmate.com <br/>Password: waitmate1</Typography>
             </Popover> 
           </Grid>
           <Grid item> 
