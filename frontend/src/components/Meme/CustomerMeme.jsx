@@ -5,7 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 const ITEMS_PER_PAGE = 6;
 
 const CustomerMeme = () => {
-  
+  const id = useParams();
   return (
     <>
       <Box display="flex" flexDirection="row" alignItems="flex-start" marginTop={5} style={{ gap: '10px' }}>
