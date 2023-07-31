@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Box, Grid } from '@mui/material';
 import styled from "@mui/system/styled";
-import { grey,pink } from '@mui/material/colors';
+import { grey, pink, yellow } from '@mui/material/colors';
 
 const mainPink = pink[400]
 const CardFace = styled(Box)(({theme}) => ({
@@ -20,6 +20,7 @@ const CardBack = styled(Box)(({theme}) => ({
   transitionDelay: 0.2,
   border: `4px outset ${mainPink}`,
   borderRadius: 5,
+  backgroundColor: grey[200],
 
   // '&:hover': {
   //   border: `3px dashed #fff`,
@@ -36,6 +37,7 @@ function MemoryCard({ card, handleChoice, flipped, disable }) {
   } 
 
   return(
+
     
     <Grid item  >
       <Grid className={flipped ? "flipped" : ""}>
