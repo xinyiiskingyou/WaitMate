@@ -1,7 +1,7 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
 import { Box, Button, Grid, Typography, Container } from '@mui/material';
-import { pink } from '@mui/material/colors';
+import { pink, yellow } from '@mui/material/colors';
 import { useCookies } from 'react-cookie';
 import CssTextField from './CssTextField.jsx'
 
@@ -70,14 +70,17 @@ const KitchenstaffLogin = () => {
       }}>
       <Box container direction='column' justifyContent='center' 
         sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignContent: 'stretch',
+          backgroundColor: 'white',
+          py: 3,
+          px: 4,
+          borderRadius: 2,
           minWidth: 450,
         }}
         
       >
-        <Typography variant="h5" sx={{ mb: 2 }}>Kitchenstaff Login</Typography>
+        <Box display='flex' justifyContent='center' sx={{ pb: 3, mt: 1 }}>
+          <Typography variant="h5" sx={{ fontWeight: 'bold', color: secPink, textShadow: `-3px 1px 2px ${yellow[100]}` }}>Kitchenstaff Login</Typography>
+        </Box>
         <CssTextField fullWidth type="password" required label="Password" onChange={handlePasswordChange}
           sx={{ 
             mb: 2,

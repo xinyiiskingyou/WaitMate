@@ -1,7 +1,7 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
 import { Box, Button, Grid, Typography, Container } from '@mui/material';
-import { pink } from '@mui/material/colors';
+import { pink, yellow } from '@mui/material/colors';
 import { useCookies } from 'react-cookie';
 import CssTextField from './CssTextField.jsx'
 
@@ -10,6 +10,7 @@ const secPink = '#FF9EE4';
 
 const LoginButton = styled(Button)(({ theme }) => ({
   color: "#FFFFFF",
+  borderRadius: 0,
   backgroundColor: mainPink,
   '&:hover': {
     backgroundColor: secPink,
@@ -69,9 +70,15 @@ const WaitstaffLogin = () => {
       <Box container direction='column' justifyContent='center'
         sx={{
           minWidth: 450,
+          backgroundColor: 'white',
+          py: 3,
+          px: 4,
+          borderRadius: 2,
         }}
       >
-        <Typography variant="h5" sx={{ mb: 2 }}>Waitstaff Login</Typography>
+        <Box display='flex' justifyContent='center' sx={{ pb: 3, mt: 1 }}>
+          <Typography variant="h5" sx={{ fontWeight: 'bold', color: secPink, textShadow: `-3px 1px 2px ${yellow[100]}` }}>Waitstaff Login</Typography>
+        </Box>
         <CssTextField fullWidth type="password" required label="Password" onChange={handlePasswordChange}
           sx={{ mb: 2 }}/>
           
