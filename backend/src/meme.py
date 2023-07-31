@@ -183,22 +183,24 @@ class MemeDB():
         address = email.split('@')
         domain = str(address[1])
 
+        server = None
         try:
             # MX record lookup
             records = dns.resolver.resolve(domain, 'MX')
             mx_record = records[0].exchange
             mx_record = str(mx_record)
+            
+            host = socket.gethostname()
+            server = smtplib.SMTP()
+            server.set_debuglevel(0)
+
+            server.connect(mx_record)
+            server.helo(host)
+            server.mail(sender)
+            code, _ = server.rcpt(str(email))
+            return code == 250
         except Exception as err:
             raise InputError(detail='Error: '+ str(err)) from err
-
-        host = socket.gethostname()
-        server = smtplib.SMTP()
-        server.set_debuglevel(0)
-
-        server.connect(mx_record)
-        server.helo(host)
-        server.mail(sender)
-        code, _ = server.rcpt(str(email))
-        server.quit()
-
-        return code == 250
+        finally:
+            if server:
+                server.quit()

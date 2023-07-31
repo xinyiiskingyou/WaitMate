@@ -386,7 +386,8 @@ class MenuDB:
         Return Value:
             None
         '''
-
+        print(self.get_all_categories())
+        print(new_index)
         # check if category name is valid
         if not check_categories_key_is_valid('name', category_name, self.session):
             raise InputError(detail='Invalid category name')
