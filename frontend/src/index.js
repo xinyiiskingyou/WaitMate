@@ -63,8 +63,11 @@ function App() {
         <Route path="/customer/browse/:id" element={<BrowseMenu />} />
         <Route path="/customer/cart/:id" element={<ViewCart />} />
         <Route path="/customer/activity/:id" element={<CustomerTooBored />} />
+<<<<<<< HEAD
         <Route path="/customer/activity/gamepage/:id" element={<GamePage />} />
 
+=======
+>>>>>>> 83281f792 (add path for meme)
         <Route path="/customer/meme/:id" element={<CustomerMeme />} />
         <Route path="/staff" element={<Staff />} />
         <Route path="/manager/login" element={<ManagerLogin />} />
