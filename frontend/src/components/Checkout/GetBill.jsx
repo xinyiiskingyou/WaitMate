@@ -6,18 +6,19 @@ import {
   Paper,
   Button,
   DialogActions,
-  Divider
+  Divider,
+  Box
 } from '@mui/material'
 import ErrorHandler from '../ErrorHandler';
 import ListTableOrder from "../Orders/ListTableOrder";
 
 const buttonStyle = { 
-  border: '4px solid #FFA0A0', 
+  border: '4px solid #FFFFFF', 
   height: '7vh', 
   width: '12vw',
   textAlign: 'center', 
   justifyContent: 'center',
-  background: "#FFCFCF",
+  background: "#FFFFFF",
   color: 'black',
   fontWeight: "bold",
   borderRadius: 8,
@@ -81,9 +82,11 @@ const GetBill = ({id}) => {
 
   return (
     <>
+      <Box display="flex" justifyContent="flex-end" marginTop="-110px">     
       <Button variant="contained" color="primary" style={buttonStyle} onClick={() => setOpen(true)}>
         Request Bill
       </Button>
+      </Box>
       <Dialog open={open} onClose={handleClose} sx={{
         "& .MuiDialog-paper": {
           border: "8px solid #FFA0A0",

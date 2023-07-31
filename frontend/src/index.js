@@ -62,8 +62,8 @@ function App() {
         <Route path="/waitstaff/list" element={<WaitStaffInterface />} />
         <Route path="/kitchenstaff/login" element={<KitchenstaffLogin />} />
         <Route path="/kitchenstaff/list" element={<KitchenInterface />} />
-        <Route path="/toobored/:id" element={<CustomerTooBored />} />
-        <Route path="/customermeme/:id" element={<CustomerMeme />} />
+        <Route path="/customer/activity/:id" element={<CustomerTooBored />} />
+        <Route path="/customer/meme/:id" element={<CustomerMeme />} />
       </Routes>
     </Router>
   );

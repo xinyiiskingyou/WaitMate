@@ -1,39 +1,44 @@
-import React from "react";
-import { Carousel } from 'react-material-ui-carousel';
-import {
-  Container,
-  Paper,
-  Button,
-  Grid,
-  Typography,
-  createTheme
-} from "@mui/material";
-import CustomerInterface from "../UserInterface/CustomerInterface";
-import MemeCarousel from "../Meme/MemeCarousel";
+import React, { useState } from "react";
+import { Box, Card, IconButton, Pagination, PaginationItem } from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
+
+const ITEMS_PER_PAGE = 6;
 
 const CustomerMeme = () => {
   
   return (
-    <Container maxWidth="sm">
-      <CustomerInterface />
-      <Grid container direction="column" spacing={2}>
-        <Grid item xs={8}>
-          <Typography 
-            variant="h4" 
-            component="h1" 
-            align="center"
-            noWrap
-            fontWeight="bold"
-            marginTop="7vw"
-          >
-            Meme of the Week
-          </Typography>
-        </Grid>
-        </Grid>
-        <div>
-          <MemeCarousel/>
+    <>
+      <Box display="flex" flexDirection="row" alignItems="flex-start" marginTop={5} style={{ gap: '10px' }}>
+        {(
+          <Box display="flex" flexDirection="row" alignItems="flex-start">
+          </Box>
+        )}
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2vw' }}>
+         
         </div>
-    </Container>
+      </Box>
+
+      <div style={{ position: 'relative', marginTop: '2vh' }}>
+        <Box display="flex" justifyContent="center" alignItems="center" marginTop={2}>
+        </Box>
+
+        <Box position="relative">
+          <IconButton
+            style={{
+              backgroundColor: "#FBDDDD",
+              borderRadius: "50%",
+              fontSize: "12vh",
+              position: "absolute",
+              bottom: "10px", 
+              right: "11px",
+            }}
+          >
+            <AddIcon />
+          </IconButton>
+        </Box>
+      </div>
+    </>
   );
 }
 

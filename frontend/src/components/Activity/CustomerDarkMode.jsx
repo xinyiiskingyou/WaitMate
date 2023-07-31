@@ -80,8 +80,7 @@ function App() {
         <div className="App">
             <ThemeProvider theme={darkTheme}>
                 <CssBaseline />
-                <CustomerTooBored></CustomerTooBored>
-                <label>Dark Mode</label>
+                <label>Surprise!</label>
                 <Switch
                     checked={theme}
                     color='success'

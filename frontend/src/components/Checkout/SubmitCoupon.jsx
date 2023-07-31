@@ -3,12 +3,12 @@ import { Typography, Button, TextField, TableCell } from "@mui/material";
 import ErrorHandler from '../ErrorHandler';
 
 const SmallbuttonStyle = { 
-  border: '4px solid #FFA0A0', 
+  border: '4px solid #FFFFFF', 
   height: '5vh', 
   width: '10vw',
   textAlign: 'center', 
   justifyContent: 'center',
-  background: "#FFCFCF",
+  background: "#FFFFFF",
   color: 'black',
   fontWeight: "bold",
   borderRadius: 8,
