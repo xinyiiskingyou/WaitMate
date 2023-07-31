@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from 'react-router-dom';
 import { Box, Grid, Button, Typography, Dialog, LinearProgress, linearProgressClasses, IconButton } from '@mui/material';
 import styled from "@mui/system/styled";
-import { ArrowDropUpRounded, ArrowDropDownRounded } from '@mui/icons-material';
+import { ArrowDropUpRounded, ArrowDropDownRounded, CloseRounded, MinimizeRounded } from '@mui/icons-material';
 import MemoryCard from './MemoryCard';
 import { pink, grey, yellow } from '@mui/material/colors';
 import logo from '../assets/WaitMate.png'
@@ -74,13 +74,12 @@ function SimpleDialog(props) {
               color: 'black',
               backgroundColor: pink[100],
             }}>
-            X
+            <CloseRounded fontSize='small'/>
           </Button>
         </Box>
         <Box display='flex' alignItems="center" sx={{ flexDirection: 'column'}}>
           <Typography variant="h5" sx={{ pt: 2, color: yellow[100], textShadow: `-3px 2px 0 ${pink[200]}`, fontWeight: 'bold',}}>{title}</Typography>
           <Typography sx={{ px: 5, py: 2, color: 'white', fontWeight: 'bold'}}>{text}</Typography>
-          {/* <img width='100px' src="/img/memory_1.png"/> */}
           <Button onClick={handleClick} 
             sx={{ 
               maxHeight: '25px', 
@@ -239,7 +238,7 @@ function Memory() {
           p: '4px',
           boxShadow: `1px 3px 4px ${pink[300]}`,
           background: `linear-gradient(to right, ${pink[600]}, ${pink[200]})` }}>
-        <Typography color='white' sx={{ml: 1, fontFamily: 'Arial',}}>Create your pink</Typography>
+        <Typography color='white' sx={{ml: 1, fontFamily: 'cursive',}}>create your pink</Typography>
         <Box>
         <Button  
           size="small"            
@@ -255,8 +254,9 @@ function Memory() {
             color: 'black',
             backgroundColor: pink[100],
             fontWeight: 'bold',
+            pb: 1,
           }}>
-          _
+          <MinimizeRounded fontSize='small' />
         </Button>
         <Link to={backLink}>
           <Button  
@@ -271,11 +271,11 @@ function Memory() {
               borderRadius: 2,
               mr: '10px',
               ml: '4px',
-              fontWeight: 'bold',
               color: 'black',
               backgroundColor: pink[100],
             }}>
-            X
+            <CloseRounded fontSize='small'/>
+
           </Button>
         </Link>
         </Box>
@@ -344,7 +344,7 @@ function Memory() {
           boxShadow: `1px 3px 4px ${pink[300]}`,
           p: '4px',
           background: `linear-gradient(to right, ${pink[600]}, ${pink[200]})` }}>
-        <Typography color='white' sx={{ml: 1, fontFamily: 'Arial',}}>Memory Game</Typography>
+        <Typography color='white' sx={{ml: 1, fontFamily: 'cursive', letterSpacing: '1px'}}>memory game</Typography>
         <Box>
         <Button  
           size="small"            
@@ -359,9 +359,9 @@ function Memory() {
             mx: '4px',
             color: 'black',
             backgroundColor: pink[100],
-            fontWeight: 'bold',
+            pb: 1
           }}>
-          _
+          <MinimizeRounded fontSize='small' />
         </Button>
         <Link to={backLink}>
           <Button  
@@ -380,7 +380,7 @@ function Memory() {
               color: 'black',
               backgroundColor: pink[100],
             }}>
-            X
+            <CloseRounded fontSize='small'/>
           </Button>
         </Link>
         </Box>
@@ -409,10 +409,10 @@ function Memory() {
       <Box display='flex' direction='column' justifyContent="space-between" alignItems="center">
         <div style={{ position: "relative", width: '35%', padding: '1em 2.8em'}}>
           <BorderLinearProgress variant="determinate" value={turns * 10} />
-          <Typography sx={{ position: 'absolute', top: 22, color: 'white',
+          <Typography sx={{ position: 'absolute', top: 22, color: 'white', fontFamily: 'cursive', letterSpacing: '2px',
             left: "15%",
             }}>
-            Barbie Meter
+            barbie meter
           </Typography>
         </div>
         <Box display='flex' sx={{ mr: 5.5}}>
@@ -426,8 +426,8 @@ function Memory() {
             backgroundColor: pink[300],
             
           }}>
-            <Typography onClick={shuffleCards} sx={{ textTransform: "none" }}>
-              Restart
+            <Typography onClick={shuffleCards} sx={{ textTransform: "none", fontFamily: 'cursive'}}>
+              restart
             </Typography>        
           </GameButton>
         </Box>
