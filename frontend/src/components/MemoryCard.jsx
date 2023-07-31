@@ -18,7 +18,7 @@ const CardBack = styled(Box)(() => ({
   transitionDelay: 0.2,
   border: `4px outset ${mainPink}`,
   borderRadius: 5,
-  backgroundColor: grey[200],
+  backgroundColor: pink[300],
 }));
 
 const styles =  {
