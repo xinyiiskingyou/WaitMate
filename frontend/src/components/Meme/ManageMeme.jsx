@@ -18,6 +18,7 @@ import {
   IconButton
 } from "@mui/material";
 import UploadMeme from "./UploadMeme";
+import ViewVoteCount from "./ViewVoteCount";
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import Manager from '../Staff/ManagerInterface'
@@ -29,16 +30,22 @@ const actions = [
 const ManageMeme = () => {
     const [cookies] = useCookies(['token']);
     const [showUploadMeme, setShowUploadMeme] = useState(false);
+    const [showVoteCount, setShowVoteCount] = useState(false);
 
     const [memes, setMemes] = useState([]);
     const [email, setEmail] = useState([]);
     const handleUploadMemeClose = () => {
         setShowUploadMeme(false);
       };
+
+    const handleVoteCount = () => {
+        setShowVoteCount(false);
+    };
     const handleClick = (content) => {
       if (content === 'Upload Meme') {
         setShowUploadMeme(true);
       } else if (content === "Vote Count") {
+        setShowVoteCount(true);
         fetchMemesCount();
       }
     };
@@ -102,21 +109,25 @@ const ManageMeme = () => {
             }}>
         <Box display="flex" justifyContent="center">
         {/* sx={{ width: "60vw", height: "80vh"}}  */}
-        <ImageList cols={3} rowHeight={200} gap={10} sx={{ display: 'grid' }}>
+        <ImageList cols={3} rowHeight={250} gap={10} sx={{ display: 'grid' }}>
         {memes.map((item) => (
-            <ImageListItem key={item.index} style={{border: "2px red solid", borderBottomLeftRadius: "10px", borderBottomRightRadius: "10px"}}>
-            <div>
+            <ImageListItem key={item.index} >
+            <Paper elevation={3} style={{border: "2px #FFA0A0 solid", borderBottomLeftRadius: "10px", borderBottomRightRadius: "10px"}}>
+            <div style={{height: "200px", width: "200px"}}>
             <img
                 src={`${item.image}?w=200&h=200&fit=crop&auto=format`}
                 alt={item.title}
                 loading="lazy"
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
-            />            
-            </div>    
+            />     
+            </div>
+       
+               
 
             <div style={{padding: "10px"}}>
                 {item.count} Likes
             </div>
+            </Paper> 
             
             </ImageListItem>
         ))}
@@ -141,6 +152,7 @@ const ManageMeme = () => {
         </SpeedDial>
 
       {showUploadMeme && <UploadMeme onClose={handleUploadMemeClose}/>}
+      {showVoteCount && <ViewVoteCount onClose={handleVoteCount}/>}
         </Box>
     </Container>
   );
