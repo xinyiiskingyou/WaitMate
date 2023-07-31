@@ -1,19 +1,17 @@
-import React, { useState } from "react";
 import { Box, Grid } from '@mui/material';
 import styled from "@mui/system/styled";
-import { grey, pink, yellow } from '@mui/material/colors';
+import { grey, pink } from '@mui/material/colors';
 
 const mainPink = pink[400]
-const CardFace = styled(Box)(({theme}) => ({
+
+const CardFace = styled(Box)(() => ({
   position: 'absolute',
   transition: 'all ease-in 1s',
   transform: `rotateY(90deg)`,
   borderRadius: 2,
-
 }));
 
-
-const CardBack = styled(Box)(({theme}) => ({
+const CardBack = styled(Box)(() => ({
   width: 170,
   height: 170,
   transform: `rotateY(0deg)`,
@@ -21,13 +19,14 @@ const CardBack = styled(Box)(({theme}) => ({
   border: `4px outset ${mainPink}`,
   borderRadius: 5,
   backgroundColor: grey[200],
-
-  // '&:hover': {
-  //   border: `3px dashed #fff`,
-  //   borderRadius: 5
-
-  // },
 }));
+
+const styles =  {
+  imgsize: {
+    width: 170,
+    height: "170"
+  }
+}
 
 function MemoryCard({ card, handleChoice, flipped, disable }) {
   const handleClick = () => {
@@ -37,31 +36,47 @@ function MemoryCard({ card, handleChoice, flipped, disable }) {
   } 
 
   return(
-
-    
-    <Grid item  >
+    <Grid item>
       <Grid className={flipped ? "flipped" : ""}>
         {flipped ?           
           <CardBack>
-            <img src={card.src} width="170" height="170" alt='front' xs={{transform: 90, borderRadius: '5'}}/>
+            <img 
+              src={card.src} 
+              style={styles.imgsize} 
+              alt='front' 
+              xs={{transform: 90}}
+            />
           </CardBack> :         
           <CardFace>
-            <img src={card.src} width="170" height="170" alt='front' xs={{transform: 90, borderRadius: 5}}/>
+            <img 
+              src={card.src} 
+              style={styles.imgsize} 
+              alt='front' 
+              xs={{transform: 90}}
+            />
           </CardFace>
         }
 
         {flipped ?           
           <CardFace>
-            <img src='/img/memory_bg.jpg' onClick={handleClick} width="170" height="170" alt='back'  xs={{transform: 0, borderRadius: 10}}/>
+            <img 
+              src='/img/memory_bg.jpg' 
+              onClick={handleClick} 
+              style={styles.imgsize} 
+              alt='back' 
+              xs={{transform: 0}}
+            />
           </CardFace> :         
           <CardBack>
-            <img src='/img/memory_bg.jpg' onClick={handleClick} width="170" height="170" alt='back'  xs={{transform: 0, borderRadius: 10}}/>
+            <img 
+              src='/img/memory_bg.jpg' 
+              onClick={handleClick} 
+              style={styles.imgsize} 
+              alt='back'  
+              xs={{transform: 0}}
+            />
           </CardBack>
         }
-
-        {/* <Box>
-          <img src='/img/memory_bg.jpg' onClick={handleClick} width="200" height="200" alt='back'  xs={{transform: 0}}/>
-        </Box> */}
 
       </Grid>
     </Grid>
