@@ -43,6 +43,7 @@ const buttonStyle = {
 
 const CustomerInterface = () => {
   const id = useParams();
+  const { requestAssistance } = SendNotification();
 
   return (
     <ThemeProvider theme={theme}>
@@ -61,7 +62,7 @@ const CustomerInterface = () => {
                 <Button style={buttonStyle} component={Link} to={`/customer/activity/${id.id}`}>
                   Too Bored?
                 </Button>
-                <SendNotification id={id.id}/>
+                {requestAssistance(id.id, "ASSIST")}
               </div>
             </div>
           </Toolbar>

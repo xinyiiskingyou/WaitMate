@@ -12,6 +12,7 @@ import ListTableOrder from "../Orders/ListTableOrder";
 import bill from "../../assets/bill.png"
 import SubmitCoupon from "../Checkout/SubmitCoupon";
 import SubmitTips from "../Checkout/SubmitTips";
+import SendNotification from "../Notifications/SendNotification";
 
 const buttonStyle = { 
   border: '4px solid #FFA0A0', 
@@ -39,6 +40,7 @@ const GetBill = ({id}) => {
   const formattedTime = currentDate.toLocaleTimeString();
   const navigate = useNavigate();
 
+  const { handle_require_assistance } = SendNotification();
   const handleClose = () => {
     setOpen(false);
     navigate("/");
@@ -86,7 +88,10 @@ const GetBill = ({id}) => {
 
   return (
     <>
-      <Button variant="contained" color="primary" style={buttonStyle} onClick={() => setDialogOpen(true)}>
+      <Button variant="contained" color="primary" style={buttonStyle} onClick={() => { 
+          setDialogOpen(true);
+          handle_require_assistance(id, 'BILL');
+        }}>
         Request Bill
         <img src={bill} alt="BillIcon" style={{
           width: '36px',
@@ -138,11 +143,12 @@ const GetBill = ({id}) => {
 
       <Dialog open={open} onClose={handleClose} sx={{
         "& .MuiDialog-paper": {
-          width: 400,
-          height: '65%',
+          width: "410px",
+          height: 'auto',
+          backgroundColor: '#FFC0CB',
         },
       }}>
-        <Paper elevation={5} sx={{ textAlign: 'left', margin: 'auto', padding: '25px', width: '300px' }}>
+        <Paper elevation={5} sx={{ textAlign: 'left', marginTop: '2vh', marginLeft: '2.5vh', padding: '25px', width: '320px' }}>
           <DialogTitle style={{ textAlign: 'center', fontSize: '30px' }}>
             <b>Bill</b>
             <br /> 
@@ -187,7 +193,7 @@ const GetBill = ({id}) => {
             size="small"
             onClick={handleClose} 
             style={{
-              background: '#81c784', 
+              background: '#AED581', 
               color: 'black',
               fontWeight: 'bold',
               fontSize: '1vw',
