@@ -73,7 +73,7 @@ const ManagerLogin = () => {
         }}
       >
         <Box display='flex' justifyContent='center' sx={{ pb: 3 }}>
-          <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold', color: secPink, textShadow: `-3px 1px 2px ${yellow[100]}` }}>Manager Login</Typography>
+          <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold', color: secPink, textShadow: `-3px 1px 2px ${yellow[100]}` }}>MANAGER LOGIN</Typography>
         </Box>
         <CssTextField fullWidth required label="Email" onChange={handleEmailChange}
           sx={{ mb: 1 }}/>

@@ -13,7 +13,9 @@ const Staff = () => {
     fontSize: '18px',
     background: '#FFFFFF',
     color: 'black',
-    border: "10px solid #FFFFFF",
+    border: "4px solid #FF9EE4",
+    borderRadius: 3,
+    boxShadow: '-2px 3px 4px #FF9EE4'
   };
 
   const headingStyle = {
@@ -21,6 +23,7 @@ const Staff = () => {
     fontSize: '3vw',
     marginTop: '10vh',
     marginBottom: '10vh',
+    fontFamily: 'Arial',
   };
 
   return (
@@ -31,7 +34,7 @@ const Staff = () => {
     >
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <h2 style={headingStyle}>Select Staff Type</h2>
+          <h2 style={headingStyle}>SELECT STAFF TYPE</h2>
         </Grid>
         <Grid item xs={4} textAlign={'right'}>
           <Link to="/manager/login">
@@ -44,7 +47,7 @@ const Staff = () => {
                   }}/>
                 </Grid>
                 <Grid item>
-                  <Typography sx={{ fontSize: '1.4vw' }}>
+                  <Typography sx={{ fontSize: '1.4vw', textShadow: '1px 1px 0 pink' }}>
                     <b>Manager</b>
                   </Typography>
                 </Grid>
@@ -63,7 +66,7 @@ const Staff = () => {
                 }}/>
               </Grid>
               <Grid item>
-                <Typography sx={{ fontSize: '1.4vw' }}>
+                <Typography sx={{ fontSize: '1.4vw', textShadow: '1px 1px 0 pink' }}>
                   <b>Kitchen Staff</b>
                 </Typography>
               </Grid>
@@ -82,7 +85,7 @@ const Staff = () => {
                 }}/>
               </Grid>
               <Grid item>
-                <Typography sx={{ fontSize: '1.4vw' }}>
+                <Typography sx={{ fontSize: '1.4vw',  textShadow: '1px 1px 0 pink' }}>
                   <b>Wait staff</b>
                 </Typography>
               </Grid>

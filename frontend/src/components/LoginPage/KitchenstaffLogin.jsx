@@ -80,7 +80,7 @@ const KitchenstaffLogin = () => {
         
       >
         <Box display='flex' justifyContent='center' sx={{ pb: 3, mt: 1 }}>
-          <Typography variant="h5" sx={{ fontWeight: 'bold', color: secPink, textShadow: `-3px 1px 2px ${yellow[100]}` }}>Kitchenstaff Login</Typography>
+          <Typography variant="h5" sx={{ fontWeight: 'bold', color: secPink, textShadow: `-3px 1px 2px ${yellow[100]}` }}>KITCHEN STAFF LOGIN</Typography>
         </Box>
         <CssTextField fullWidth type="password" required label="Password" onChange={handlePasswordChange}
           sx={{ 
