@@ -4,7 +4,8 @@ import {
   Box,
   Button,
   Typography,
-  IconButton
+  IconButton,
+  Paper
 } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useCookies } from 'react-cookie';
@@ -13,17 +14,18 @@ import WaitstaffMarkOrder from '../Tracking/WaitstaffMarkOrder';
 import FetchCustomerNotification from '../Notifications/FetchCustomerNotification';
 import FetchKitchenNotification from '../Notifications/FetchKitchenNotification';
 import { handleLogoutSubmit } from '../../auth.js';
+import logout from "../../assets/logout.png"
+import WaitMate from "../../assets/WaitMate.png";
 
 const logoutbuttonStyle = { 
-  position: 'fixed', // Set the position to fixed
-  top: '10px', // Distance from the top of the viewport
-  right: '20px', // Distance from the right of the viewport
-  border: '4px solid #FFA0A0', 
-  height: '5vh', 
+  position: 'fixed',
+  top: '2vh',
+  right: '2vw',
+  height: '6vh', 
   width: '10vw',
   textAlign: 'center', 
   justifyContent: 'center',
-  background: "#FFCFCF",
+  background: "#FEFFCB",
   color: 'black',
   fontWeight: "bold",
   borderRadius: 8,
@@ -41,25 +43,36 @@ const WaitStaffInterface = () => {
   return (
     <Container>
       <Box display="flex" >
-        <ViewTables setSelectedTable={setSelectedTable} setTableOrder={setTableOrder}/>
+        <img src={WaitMate} alt={WaitMate} style={{ width: '200px', left: 20, height: '60px', position: 'fixed' }} />
         <Button variant="contained" color="primary" style={logoutbuttonStyle} onClick={handleLogoutSubmit}>
           Logout
+          <img src={logout} alt="LogoutIcon" style={{
+            height: '4vh',
+            width: '2vw',
+            marginLeft: '0.7vw'
+          }}/>
         </Button>
+        <ViewTables setSelectedTable={setSelectedTable} setTableOrder={setTableOrder}/>
 
-        <Box sx={{ border: '2px solid #000', width: '50%', height: '80vh', m: 2, padding: "3%" }}>
+        <div>
           {selectedtable === -1 ? (
             <>
-              <div>
-                <Typography variant="h4" align="center" margin={'15px'}>Notification Board</Typography>
-              </div>
               <FetchCustomerNotification cookies={cookies} />
               <FetchKitchenNotification cookies={cookies} />
             </>
           ) : (
-            <div>
+            <Paper elevation={5} sx={{
+              padding: "20px",
+              borderRadius: "8px",
+              width: "30vw", 
+              height: "80vh", 
+              left: "54vw",
+              position: 'fixed',
+              marginTop: '9vh',
+            }}>
               <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                 <IconButton><ArrowBackIcon onClick={handleReturn} /></IconButton>
-                <Typography variant="h4" align="center" margin={'15px'}>Table {selectedtable} Order </Typography>
+                <Typography variant="h4" align="center" margin={'12px'}>Table {selectedtable} Order </Typography>
               </div>
 
               {tableOrder.map((table) => (
@@ -73,9 +86,9 @@ const WaitStaffInterface = () => {
                   />
                 </div>
               ))}
-            </div>
+            </Paper>
           )}
-        </Box>
+        </div>
       </Box>
     </Container>
   );

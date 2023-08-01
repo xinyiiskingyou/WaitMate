@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Paper, Typography } from "@mui/material";
 import ErrorHandler from '../ErrorHandler';
 
 const FetchKitchenNotification = ({ cookies }) => {
@@ -56,14 +57,23 @@ const FetchKitchenNotification = ({ cookies }) => {
   });
 
   return (
-    <>
+    <Paper elevation={5} sx={{
+      padding: "20px",
+      borderRadius: "8px",
+      width: "30vw", 
+      height: "35vh", 
+      left: "54vw",
+      position: 'fixed',
+      marginTop: '54vh',
+    }}>
+      <Typography variant="h5" align="center" margin={'15px'}>Kitchen Notifications</Typography>
       {notificationKitchen.map((order) => (
         <div key={order.table}>
-          <p style={{color: '#3f50b5'}}><b>Table {order.table}</b> {order.status} is ready to be served</p>
+          <p style={{color: '#3f50b5', fontSize: '2.5vh', marginLeft: '2vw'}}><b>Table {order.table}</b> {order.status} is ready to be served</p>
         </div>
       ))}
       {showError}
-    </>
+    </Paper>
   )
 }
 

@@ -10,7 +10,8 @@ import {
   TableRow,
   TableCell,
 } from "@mui/material";
-import KitchenMarkOrder from '../Tracking/KitchenMarkOrder'
+import KitchenMarkOrder from '../Tracking/KitchenMarkOrder';
+import customTableCell, { CustomCell } from './CellStyle';
 
 const ListAllOrder = () => {
   const [orders, setOrders] = useState([])
@@ -55,55 +56,49 @@ const ListAllOrder = () => {
   });
 
   return (
-    <Grid item xs={2}>
-      <Box
-        sx={{ 
-          margin: 1, 
-          border: 10,
-          borderColor: '#FFFFFF',
-          background: "#FFFFFF",
-          borderRadius: 2, 
-          display:"flex",
-      }}>
-        <Grid container direction="column">
-          <Grid item>
-            <TableContainer sx={{height: 500, pt: 4, }}>
-              <Table aria-label='custom pagination table'>
-                <TableBody>
-                  {orders.map((row) => (
-                  <TableRow key={row.name}>
-                    <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pl: 10}}>
-                      {row.time}
-                    </TableCell>
-                    <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pl: -5}}>
-                      Table {row.tablenum}
-                    </TableCell>
-                    <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
-                      {row.name}
-                    </TableCell>
-                    <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -5}}>  
-                      {row.amount}
-                    </TableCell>
-                    <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: 10}}>  
-                      <KitchenMarkOrder 
-                        tableID={row.tablenum} 
-                        itemName={row.name} 
-                        amount={row.amount} 
-                        state={row.state} 
-                        setKitchen={setOrders}
-                        is_prepared={row.is_prepared}
-                        cookies={cookies}
-                      />
-                    </TableCell>
-                  </TableRow>
-                ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Grid>
-        </Grid>
-      </Box>
-    </Grid>
+    <Box sx={{ 
+      border: 10,
+      borderColor: '#FFFFFF',
+      background: "#FFFFFF",
+      borderRadius: 2, 
+      height: '73vh',
+      width: '80vw',
+      marginTop: '3vh',
+      marginLeft: '10vw'
+    }}>
+      <TableContainer sx={{height: '69vh', pt: 4, }}>
+        <Table aria-label='custom pagination table'>
+          <TableBody>
+            <TableRow>
+              {customTableCell('Time')}
+              {customTableCell('Table No.')}
+              {customTableCell('Item')}
+              {customTableCell('Qty')}
+              {customTableCell('Status')}
+            </TableRow>
+            {orders.map((row) => (
+            <TableRow key={row.name}>
+              <CustomCell content={row.time} paddingLeft={2} />
+              <CustomCell content={`Table ${row.tablenum}`} paddingRight={1} />
+              <CustomCell content={row.name.toUpperCase()} paddingLeft={2} nowrap/>
+              <CustomCell content={row.amount} paddingRight={1} />
+              <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ borderBottom: 'none', pr: 2}}>  
+                <KitchenMarkOrder 
+                  tableID={row.tablenum} 
+                  itemName={row.name} 
+                  amount={row.amount} 
+                  state={row.state} 
+                  setKitchen={setOrders}
+                  is_prepared={row.is_prepared}
+                  cookies={cookies}
+                />
+              </TableCell>
+            </TableRow>
+          ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
   );
 }
 

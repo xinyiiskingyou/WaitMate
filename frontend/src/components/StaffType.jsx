@@ -40,7 +40,7 @@ const Staff = () => {
                 <Grid item>
                   <img src={manager} alt="managerIcon" style={{
                     width: '14vw',
-                    height: '25vh',
+                    height: '27vh',
                   }}/>
                 </Grid>
                 <Grid item>
@@ -59,7 +59,7 @@ const Staff = () => {
               <Grid item>
                 <img src={chef} alt="ChefIcon" style={{
                   width: '14vw',
-                  height: '25vh',
+                  height: '27vh',
                 }}/>
               </Grid>
               <Grid item>
@@ -78,7 +78,7 @@ const Staff = () => {
               <Grid item>
                 <img src={worker} alt="WorkerIcon" style={{
                   width: '14vw',
-                  height: '25vh',
+                  height: '27vh',
                 }}/>
               </Grid>
               <Grid item>

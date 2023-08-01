@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Paper, Typography } from "@mui/material";
 import ErrorHandler from '../ErrorHandler';
 
 const FetchCustomerNotification = ({ cookies }) => {
@@ -55,16 +56,25 @@ const FetchCustomerNotification = ({ cookies }) => {
   });
   
   return (
-    <>
+    <Paper elevation={5} sx={{
+      padding: "20px",
+      borderRadius: "8px",
+      width: "30vw", 
+      height: "35vh", 
+      left: "54vw",
+      position: 'fixed',
+      marginTop: '9vh',
+    }}>
+      <Typography variant="h5" align="center" margin={'15px'}>Customer Notifications</Typography>
       {notification.map((item) => (
         <div key={item.table}>
-          <p style={{ color: item.status === 'ASSIST' ? "#FB0F0F" : item.status === 'BILL' ? "#F59B0C" : "inherit" }}>
+          <p style={{ color: item.status === 'ASSIST' ? "#FB0F0F" : item.status === 'BILL' ? "#F59B0C" : "inherit", fontSize: '2.5vh', marginLeft: '2vw' }}>
             <b>Table {item.table}</b> requested {item.status}
           </p>
         </div>
       ))}
       {showError}
-    </>
+    </Paper>
   );
 }
 

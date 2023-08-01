@@ -262,8 +262,7 @@ def checkout_bill_tips_api(reqbody: Tip):
 
 @app.post('/checkout/bill/coupon')
 def checkout_bill_coupon_api(reqbody: Coupon_Cust):
-    checkout.checkout_bill_coupon(reqbody.id, reqbody.code)
-    return {}
+    return checkout.checkout_bill_coupon(reqbody.id, reqbody.code)
 
 @app.post('/checkout/coupon/create')
 def checkout_coupon_create_api(reqbody: Coupon, user: dict = Depends(get_current_user)):

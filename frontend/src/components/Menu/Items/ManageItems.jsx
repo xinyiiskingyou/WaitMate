@@ -72,11 +72,11 @@ const ManageItems = ({
           </Box>
         )}
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2vw' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2.5vw', marginLeft: '4vw'}}>
           {Object.entries(itemsForCurrentPage)
             .filter(([_, menuItem]) => menuItem.name !== null)
             .map(([index, menuItem]) => (
-              <div style={{ width: '20vw', height: '30vh', margin: '4%' }}>
+              <div style={{ width: '20vw', height: '30vh'}}>
                 <Card sx={{ maxHeight: '34vh', width: '100%', backgroundColor: "#FBDDDD" }}>
                   <UpdateItemDetails 
                     itemCategory={categories[selectedCategory]}
@@ -96,51 +96,33 @@ const ManageItems = ({
         </div>
       </Box>
 
-      <Box
-        position="fixed"
-        bottom="10vh"
-        right="50%"
-        transform="translateX(50%)"
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        flexDirection="column"
+      <div style={{ position: 'fixed', bottom: '6vh', left: '55%', transform: 'translateX(-45%)' }}>
+        <Pagination
+          count={Math.ceil(menuItems.length / ITEMS_PER_PAGE)}
+          page={currentPage}
+          onChange={handlePageChange}
+          renderItem={(item) => (
+            <PaginationItem
+              component={IconButton}
+              {...item}
+            />
+          )}
+        />
+      </div>
+
+      <IconButton
+        onClick={handleAddButtonClick}
+        style={{
+          backgroundColor: "#FBDDDD",
+          borderRadius: "50%",
+          fontSize: "12vh",
+          position: "fixed",
+          bottom: "6vh", 
+          right: '10vw'
+        }}
       >
-        <Box position="relative" display="flex" justifyContent="center" alignItems="center" marginTop={2}>
-          <Pagination
-            count={Math.ceil(menuItems.length / ITEMS_PER_PAGE)}
-            page={currentPage}
-            onChange={handlePageChange}
-            renderItem={(item) => (
-              <PaginationItem
-                component={IconButton}
-                {...item}
-              />
-            )}
-          />
-        </Box>
-      </Box>
-      <Box
-        position="fixed"
-        bottom="12vh"
-        right="18vw"
-      >
-        <Box position="relative">
-          <Tooltip title="Add menu item">
-          <IconButton
-            onClick={handleAddButtonClick}
-            style={{
-              backgroundColor: "#FBDDDD",
-              borderRadius: "50%",
-              fontSize: "12vh",
-              position: "absolute",
-            }}
-          >
-            <AddIcon />
-          </IconButton>
-          </Tooltip>
-        </Box>
-      </Box>
+        <AddIcon />
+      </IconButton>
     </>
   );
 }
