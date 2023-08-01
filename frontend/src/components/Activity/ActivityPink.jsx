@@ -16,13 +16,21 @@ export const GameSlider = styled(Slider)(() => ({
   height: 10,
 
   '& .MuiSlider-rail': {
-    border: '2px solid #0A0',
-    borderColor: grey[400],
+    borderRadius: 3,
+    border: `3px solid ${pink[200]}`,
+    // borderColor: grey[400],
+  },
+  '& .MuiSlider-track': {
+    borderRadius: 3,
+    border: `3px solid ${pink[200]}`,
+    // borderColor: grey[400],
   },
   '& .MuiSlider-thumb': {
-    borderRadius: 0,
+    borderRadius: 2,
     boxShadow: 'none',
     height: 20,
+    border: `2px solid ${pink[200]}`,
+
     // border: '2px solid #0A0',
     // borderColor: pink[200],
    },
