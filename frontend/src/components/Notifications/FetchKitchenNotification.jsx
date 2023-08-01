@@ -15,6 +15,9 @@ const FetchKitchenNotification = ({ cookies }) => {
         },
       })
       const data = await response.json();
+      if (! data) {
+        return [];
+      }
       let notification_lst = []
       for (var i of data) {
         notification_lst.push({ table: i[0], status: i[1]})
