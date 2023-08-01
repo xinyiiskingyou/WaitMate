@@ -67,7 +67,7 @@ class MemeDB():
     def view_all_memes(self) -> List[Any]:
 
         try:
-            statement = select(Memes.id, Memes.filename, Memes.count)
+            statement = select(Memes.id, Memes.filename, Memes.count, Memes.url)
             rows = self.session.execute(statement).all()
 
             return [tuple(row) for row in rows]

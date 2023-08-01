@@ -1,86 +1,102 @@
 import React, { useState } from "react";
-import { Box, Container, Card, IconButton, Pagination, PaginationItem, Typography } from "@mui/material";
-import heart from "../../assets/heart.png";
-import barbiememe from "../../assets/barbiememe.png";
+import {
+  CardMedia,
+  Paper,
+  Button,
+  Typography
+} from "@mui/material";
 import CustomerInterface from "../UserInterface/CustomerInterface";
+import ViewMemes from "./ViewMemes";
+import LikeMeme from "./LikeMeme";
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+
+const buttonStyle = {
+  borderRadius: '50%', 
+  background: 'white', 
+  color: 'black', 
+  fontSize: '6vh'
+}
 
 const CustomerMeme = () => {
-  const [like, setLike] = useState(false);
+  const { memes } = ViewMemes();
 
-  const handleLikeButtonClick = () => {
-    setLike(true);
+  const totalPages = memes.length;
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const handlePrev = () => {
+    setCurrentPage((prevPage) => (prevPage > 1 ? prevPage - 1 : 1));
   };
-    const payload = {
-      like: like
-    };
-    try {
-      const response = fetch('http://localhost:8000/meme/like', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
 
-      if (response.ok) {
-        handleLikeButtonClick(like);
-      } else {
-        const errorResponse = response.json();
-        console.error(errorResponse);
+  const handleNext = () => {
+    setCurrentPage((prevPage) =>
+      prevPage < totalPages ? prevPage + 1 : totalPages
+    );
+  };
 
-      }
-    } catch (error) {
-      console.error(error);
-    }
+  const currentMemes = memes.slice(
+    (currentPage - 1),
+    currentPage
+  );
 
   return (
-    <Container maxWidth="sm">
-    <CustomerInterface />
-      {/* <Box display="flex" flexDirection="row" alignItems="flex-start" marginTop={5} style={{ gap: '10px' }}>
-      </Box> */}
-
-      <div style={{ position: 'relative', marginTop: '2vh' }}>
-        <Box display="flex" justifyContent="center" alignItems="center" marginTop={10}>
-          <Typography fontWeight="bold" variant="h4" component="h1">
-            Meme of the Week
-          </Typography>
-          </Box>
-          <Box display="flex" justifyContent="center" alignItems="center" marginTop={10}>
-            <img src={barbiememe} alt="barbiememe" style={{
-                width: '50vw',
-                height: '80vh',
-                ml: '10vh',
-                mr: '10vh',
-                justifyContent: 'center',
-                alignContent: 'center'
-              }}/>
-        </Box>
-       
-        <Box position="relative">
-          <IconButton
-            onClick={handleLikeButtonClick}
-            style={{
-              backgroundColor: "#FFFFFF",
-              borderRadius: "50%",
-              fontSize: "12vh",
-              position: "absolute",
-              bottom: "10px", 
-              right: "11px",
-            }}
-          >
-            <img src={heart} alt="heart" style={{
-              width: '1.5vw',
-              height: '3vh',
-              ml: '10vh',
-              mr: '10vh',
-              justifyContent: 'center',
-              alignContent: 'center'
-            }}/>
-          </IconButton>
-        </Box>
-      </div>
-      </Container>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        position: 'fixed',
+        left: '18vw',
+        top: '8vh'
+      }}
+    >
+      <CustomerInterface />
+      <Typography
+        variant="h5"
+        style={{
+          position: "fixed",
+          top: "10vh",
+          left: "45vw",
+          color: "black",
+          fontWeight: 'bolder',
+          padding: "8px",
+          borderRadius: "4px",
+        }}
+      >
+        Meme of the Week
+      </Typography>
+      <Button onClick={handlePrev}><KeyboardArrowLeftIcon style={{...buttonStyle, marginRight: '4vw'}}/></Button>
+      <Paper elevation={10} sx={{ width: '56vw', height: '80vh' }}>
+        {currentMemes.map((meme) => (
+          <div key={meme.memeID} style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            height: "100%",
+          }}>
+            <Typography variant="h6" style={{
+              position: "fixed",
+              marginTop: '75vh',
+              left: "50vw",
+              color: "black",
+            }}>
+              Meme {currentPage}
+            </Typography>
+            <CardMedia
+              component="img"
+              style={{ maxWidth: "500px", maxHeight: "800px", minWidth: '400px', minHeight: '400px'}}
+              image={meme.img_url}
+              alt={meme.filename}
+            />
+            <LikeMeme filename={meme.filename} />
+          </div>
+        ))}
+      </Paper>
+      <Button onClick={handleNext}><KeyboardArrowRightIcon style={{...buttonStyle, marginLeft: '4vw'}}/></Button>
+    </div>
   );
-}
+};
 
 export default CustomerMeme;
