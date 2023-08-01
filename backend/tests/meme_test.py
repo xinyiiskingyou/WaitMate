@@ -53,7 +53,7 @@ def test_like_meme_invalid_vote():
 
 def test_get_emails_valid():
     assert len(meme.get_emails_by_highest_vote()) == 1
-    
+
 def test_send_coupons_invalid_code():
     with pytest.raises(InputError):
         meme.send_coupons_by_votes('notexist')
@@ -62,7 +62,7 @@ def test_send_coupons_invalid_code():
 
 def test_send_coupon_valid():
     checkout.clear_data()
-    checkout.checkout_coupon_create('MEMES', 5)
+    checkout.checkout_coupon_create('MEMES', 5, '20/10/2023')
     meme.send_coupons_by_votes('MEMES')
     
     assert True
