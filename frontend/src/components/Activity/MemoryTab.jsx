@@ -232,7 +232,7 @@ function MemoryTab() {
         open={open}
         onClose={handleWinClose}
         title='Fa-Barbielous!'
-        text='A discount has been applied to your cart!'
+        text='Magic happens when you believe in yourself.!'
       />
       <StatusDialog
         open={lost}

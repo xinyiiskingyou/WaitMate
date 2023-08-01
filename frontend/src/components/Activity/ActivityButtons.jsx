@@ -2,15 +2,15 @@ import { Button } from '@mui/material';
 import { pink } from '@mui/material/colors';
 import styled from "@mui/system/styled";
 
-const usedPink = pink[300]
+const mainPink = pink[300]
 
 
 export const GameButton = styled(Button)(() => ({
   color: "#FFFFFF",
   borderRadius: 4,
-  border: `4px outset ${usedPink}`,
+  border: `4px outset ${mainPink}`,
 
-  backgroundColor: usedPink,
+  backgroundColor: mainPink,
   '&:hover': {
     backgroundColor: pink[200],
   },

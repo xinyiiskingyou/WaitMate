@@ -43,7 +43,6 @@ class Auth:
             display_name='Manager',
             disabled=False)
         fb_auth.set_custom_user_claims(user.uid, {'hasRole': 'manager'})
-        print('Sucessfully created manager: {0}'.format(user.uid))
 
         user = fb_auth.create_user(
             email=self.WAITSTAFF_EMAIL,
@@ -52,7 +51,6 @@ class Auth:
             display_name='Waitstaff',
             disabled=False)
         fb_auth.set_custom_user_claims(user.uid, {'hasRole': 'waitstaff'})
-        print('Sucessfully created waitstaff: {0}'.format(user.uid))
 
         user = fb_auth.create_user(
             email=self.KITCHENSTAFF_EMAIL,
@@ -61,15 +59,12 @@ class Auth:
             display_name='Kitchenstaff',
             disabled=False)
         fb_auth.set_custom_user_claims(user.uid, {'hasRole': 'kitchenstaff'})
-        print('Sucessfully created kitchenstaff: {0}'.format(user.uid))
 
     def login_mananger(self, email: str, password: str):
         if not email or not password:
             raise InputError(detail='Enter your email and password')
         try:
             user = self.auth.sign_in_with_email_and_password(email, password)
-            print('Successfully logged in: manager')
-
             return {'token': user['idToken']}
         except:
             raise AccessError(detail='Invalid email or password')
@@ -79,10 +74,8 @@ class Auth:
             raise InputError(detail='Enter your password')
         
         email: str = WAITSTAFF_EMAIL if is_waitstaff else KITCHENSTAFF_EMAIL
-        print(email)
         try:
             user = self.auth.sign_in_with_email_and_password(email, password)
-            print('Successfully logged in: waitstaff')
 
             return {'token': user['idToken']}
         except:
@@ -91,42 +84,32 @@ class Auth:
     def is_authenticated(self, token: str):
         try:
             user = fb_auth.verify_id_token(token)
-            print('User is authenticated')
             return user
         except:
             raise AccessError(detail='Authentication failed')
     
     def is_authorized(self, roles: list, user: dict):
-        print(user)
         if not user['hasRole'] in roles:
             raise AccessError(detail=f"{user['hasRole']} is not authorized")
-        print('User is authorized')
 
     def change_password_mananger(self, user: dict):
-        print(user)
         self.auth.send_password_reset_email(user['user']['email'])
-        print('Sucessfully updated manager password')
 
     def change_email_mananger(self, user: dict, new_email: str):
         if not re.search(self.EMAIL_CHECK, new_email):
             raise InputError(detail='Invalid email')
 
-        print(user['uid'], new_email)
         fb_auth.update_user( user['uid'], email=new_email)
         
-        print('Sucessfully updated manager email')
-
     def change_password_staff(self, new_password: str, is_waitstaff: bool):
         if len(new_password) == 0:
             raise InputError(detail='Invalid password size')
         
         email: str = WAITSTAFF_EMAIL if is_waitstaff else KITCHENSTAFF_EMAIL
 
-        print(fb_auth.get_user_by_email(email).uid)
         fb_auth.update_user(
             fb_auth.get_user_by_email(email).uid,
             password=new_password)
-        print('Sucessfully updated staff password')
 
     def delete_all(self):
         for user in fb_auth.list_users().iterate_all():

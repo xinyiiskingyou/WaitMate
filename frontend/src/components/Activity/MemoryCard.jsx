@@ -2,7 +2,7 @@ import { Box, Grid } from '@mui/material';
 import styled from "@mui/system/styled";
 import { pink } from '@mui/material/colors';
 
-const mainPink = pink[400]
+const mainPink = pink[300]
 
 const CardFace = styled(Box)(() => ({
   position: 'absolute',
@@ -18,7 +18,7 @@ const CardBack = styled(Box)(() => ({
   transitionDelay: 0.2,
   border: `4px outset ${mainPink}`,
   borderRadius: 5,
-  backgroundColor: pink[300],
+  backgroundColor: mainPink,
 }));
 
 const styles =  {

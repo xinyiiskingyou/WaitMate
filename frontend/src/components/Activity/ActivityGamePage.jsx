@@ -6,7 +6,8 @@ import MemoryTab from './MemoryTab'
 
 function GamePage() {
   const id = useParams();
-  const backLink = `/customer/activity/${id.id}` 
+  const backLink = `/customer/activity/${id.id}`
+  const darkMode = false 
 
   return(
     <Box 
@@ -31,9 +32,9 @@ function GamePage() {
           sx={{
             display: 'flex',
             justifyContent: "center",
-            mt: 3
+            mt: 2
           }}>
-          <img src='/img/barbie_1.png' alt='barbie-img' width="184" height="400"/>
+          <img src='/img/barbie_1.png' alt='barbie-img' width="163" height="350"/>
         </Box>
 
         <Box      
