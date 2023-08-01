@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import ErrorHandler from '../../ErrorHandler';
 import veg from '../../../assets/vegan.png'
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
 
 const UpdateItemDetails = ({
   itemCategory,
@@ -122,7 +123,7 @@ const UpdateItemDetails = ({
         size="small"
         onClick={handleOpen}
         style={{ color: 'white', backgroundColor: '#7CBD96' }}>
-        Update
+        <ModeEditIcon/>
       </Button>
       
       <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth sx={{
