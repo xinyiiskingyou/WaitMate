@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useCookies } from 'react-cookie';
 import { IconButton, Paper } from "@mui/material";
 import UpdateTable from "./UpdateTable";
-import ErrorHandler from '../ErrorHandler';
 import order from "../../assets/order.png";
 import ListTableOrder from "../Orders/ListTableOrder";
 
@@ -12,7 +11,6 @@ const ViewTables = ({
 }) => {
   const [table, setTable] = useState({});
   const [cookies] = useCookies(['token']);
-  const { handleShowSnackbar, showError } = ErrorHandler(); 
 
   const ViewTableStatus = async () => {
     try {
@@ -28,7 +26,6 @@ const ViewTables = ({
       setTable(data);
     } catch (error) {
       console.error('Error fetching status:', error);
-      handleShowSnackbar(error.message);
     }
   }
   const handleFetchOrder = async (index) => {
@@ -60,8 +57,14 @@ const ViewTables = ({
   });
 
   useEffect(() => {
-    ViewTableStatus();
-  })
+    const interval = setInterval(() => {
+      ViewTableStatus();
+    }, 2000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  });
 
   return (
     <Paper elevation={5} sx={{
@@ -74,7 +77,6 @@ const ViewTables = ({
       marginTop: '9vh',
     }}>
       {tableElements}
-      {showError}
     </Paper>
   );
 };

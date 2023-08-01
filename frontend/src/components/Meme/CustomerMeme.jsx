@@ -1,210 +1,102 @@
-// import React, { useState, useEffect } from "react";
-// import { 
-//   Container,
-//   Drawer,
-//   Typography,
-//   List,
-//   ListItem,
-//   ListItemButton,
-//   ListItemText,
-//   Grid,
-//   IconButton,
-//   ThemeProvider,
-//   AppBar,
-//   Toolbar,
-//   Button,
-//   createTheme,
-//   Paper,
-//   Pagination, 
-//   PaginationItem,
-// } from "@mui/material";
-// import { Link, useParams } from 'react-router-dom';
-// import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-// import ListCategories from './Category/ListCategories';
-// import ListItems from './Items/ListItems';
-// import BrowseItems from './Items/BrowseItems';
-// import SendNotification from "../Notifications/SendNotification";
-// import WaitMate from "../../assets/WaitMate.png";
+import React, { useState } from "react";
+import {
+  CardMedia,
+  Paper,
+  Button,
+  Typography
+} from "@mui/material";
+import CustomerInterface from "../UserInterface/CustomerInterface";
+import ViewMemes from "./ViewMemes";
+import LikeMeme from "./LikeMeme";
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
-// const theme = createTheme({
-//   components: {
-//     MuiAppBar: {
-//       styleOverrides: {
-//         root: {
-//           backgroundColor: 'transparent',
-//           boxShadow: 'none',
-//         },
-//       },
-//     },
-//     MuiTextField: {
-//       styleOverrides: {
-//         root: {
-//           "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
-//             borderColor: "#FBDDDD",
-//           },
-//           "& .MuiOutlinedInput-root.Mui-focused  .MuiOutlinedInput-notchedOutline":
-//             {
-//               borderColor: "#FBDDDD",
-//             },
-//         },
-//       },
-//     },
-//   },
-// });
-
-// const buttonStyle = {
-//   color:"black", 
-//   fontWeight:"bolder"
-// };
-// const ITEMS_PER_PAGE = 6;
-
-// const CustomerMeme = () => {
-  
-//   return (
-//     <Container maxWidth="sm">
-//       <ThemeProvider theme={theme}>
-//         <div>
-//           <AppBar position="fixed">
-//             <Toolbar>
-//               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-//                 <img src={WaitMate} alt={WaitMate} style={{ width: '200px', marginRight: '10px' }} />
-//                 <div style={{ display: 'flex', marginLeft: '500px', alignItems: "flex-end", justifyContent: 'space-between', gap: "50px" }}>
-//                   <Button style={buttonStyle} component={Link} to={`/browse/${id.id}`}>
-//                     Menu
-//                   </Button>
-//                   <Button style={buttonStyle} component={Link} to={`/customermeme/${id.id}`}>
-//                     Meme of the Week
-//                   </Button>
-//                   <Button style={buttonStyle} component={Link} to={`/toobored/${id.id}`}>
-//                     Too Bored?
-//                   </Button>
-//                   <SendNotification id={id.id}/>
-//                 </div>
-//               </div>
-//             </Toolbar>
-//           </AppBar>
-//         </div>
-//       </ThemeProvider>
-
-//       <div style={{
-//         display: 'flex',
-//         alignItems: 'center',
-//         justifyContent: 'center',
-//         height: '100vh',
-//       }}>
-//         <Drawer
-//           variant="permanent"
-//           PaperProps={{ style: { 
-//             marginTop: "90px",
-//             width: '250px', 
-//             height: "86vh", 
-//             borderTopRightRadius: '20px',
-//             borderBottomRightRadius: '20px'
-//           }}}>
-//           <div style={{ display: "flex", alignContent: "center", justifyContent: "center" }}>
-//             <Typography variant='h5'style={{margin: "20px"}}>
-//               Menu Category
-//             </Typography>
-//           </div>
-
-//           { Object.entries(categories).map(([index, category]) => (
-//             <List key={category}>
-//               <ListItem disablePadding value={category} onClick={()=>handleCategoryChange(index, category)}>
-//                 <ListItemButton>
-//                   <ListItemText 
-//                     primary={category.toUpperCase()}
-//                     primaryTypographyProps={{ 
-//                       style: { 
-//                         fontSize: '1vw', 
-//                         border: category === currentCategory ? "5px solid #FFA0A0" :"5px solid #bdbdbd",
-//                         borderRadius: 18, 
-//                         padding: '0.5vh',
-//                         textAlign: "center",
-//                         background: category === currentCategory ? "#FFCFCF" : "#E0E0E0",
-//                         marginBottom: '-1.5vh'
-//                       } 
-//                     }} 
-//                   />
-//                 </ListItemButton>
-//               </ListItem>
-//             </List>
-//           ))}
-
-//           <Grid container direction="column" spacing={0}>
-//             <Link to={cartLink}>
-//               <IconButton sx={{
-//                 margin: '15%', 
-//                 spacing: '-20', 
-//                 width: '70%', 
-//                 height: '5vh',
-//                 border: "6px solid #FFA0A0",
-//                 background: "#FFCFCF",
-//                 color: 'black',
-//                 fontSize: '15px',
-//                 borderRadius: 8,
-//               }}>
-//                 Order Summary <ShoppingCartIcon />
-//               </IconButton>
-//             </Link>
-//           </Grid>
-//         </Drawer>
-        
-//         {categoryID !== -1 ? (
-//           <Paper elevation={3} sx={{
-//             padding: "20px",
-//             borderRadius: "8px",
-//             width: "1150px", 
-//             height: "570px", 
-//             marginLeft: "200px",
-//             position: 'fixed',
-//             marginTop: '60px',
-//           }}>
-//             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1vw'}}>
-//               {Object.entries(itemsForCurrentPage)
-//                 .filter(([_, menuItem]) => menuItem.name !== null)
-//                 .map(([index, menuItem]) => (
-//                   <BrowseItems
-//                     itemName={menuItem.name}
-//                     itemPrice={menuItem.cost}
-//                     itemDescription={menuItem.description}
-//                     itemIngredient={menuItem.ingredients} 
-//                     itemVegetarian={menuItem.is_vegan}
-//                     tableID={id.id}
-//                   />
-//                 ))}
-//             </div>
-//           </Paper>
-//         ) : (<></>)}
-
-//         <div style={{ position: 'fixed', bottom: '22px', left: '55%', transform: 'translateX(-50%)' }}>
-//           <Pagination
-//             count={Math.ceil(menuItems.length / ITEMS_PER_PAGE)}
-//             page={currentPage}
-//             onChange={handlePageChange}
-//             renderItem={(item) => (
-//               <PaginationItem
-//                 component={IconButton}
-//                 {...item}
-//               />
-//             )}
-//           />
-//         </div>
-//       </div>
-//     </Container>
-//   );
-// };
-
-// export default CustomerMeme;
-
-import React from "react";
+const buttonStyle = {
+  borderRadius: '50%', 
+  background: 'white', 
+  color: 'black', 
+  fontSize: '6vh'
+}
 
 const CustomerMeme = () => {
-  
+  const { memes } = ViewMemes();
+
+  const totalPages = memes.length;
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const handlePrev = () => {
+    setCurrentPage((prevPage) => (prevPage > 1 ? prevPage - 1 : 1));
+  };
+
+  const handleNext = () => {
+    setCurrentPage((prevPage) =>
+      prevPage < totalPages ? prevPage + 1 : totalPages
+    );
+  };
+
+  const currentMemes = memes.slice(
+    (currentPage - 1),
+    currentPage
+  );
+
   return (
-    <div>
-      hihihihi
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        position: 'fixed',
+        left: '18vw',
+        top: '8vh'
+      }}
+    >
+      <CustomerInterface />
+      <Typography
+        variant="h5"
+        style={{
+          position: "fixed",
+          top: "10vh",
+          left: "45vw",
+          color: "black",
+          fontWeight: 'bolder',
+          padding: "8px",
+          borderRadius: "4px",
+        }}
+      >
+        Meme of the Week
+      </Typography>
+      <Button onClick={handlePrev}><KeyboardArrowLeftIcon style={{...buttonStyle, marginRight: '4vw'}}/></Button>
+      <Paper elevation={10} sx={{ width: '56vw', height: '80vh' }}>
+        {currentMemes.map((meme) => (
+          <div key={meme.memeID} style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            height: "100%",
+          }}>
+            <Typography variant="h6" style={{
+              position: "fixed",
+              marginTop: '75vh',
+              left: "50vw",
+              color: "black",
+            }}>
+              Meme {currentPage}
+            </Typography>
+            <CardMedia
+              component="img"
+              style={{ maxWidth: "500px", maxHeight: "800px", minWidth: '400px', minHeight: '400px'}}
+              image={meme.img_url}
+              alt={meme.filename}
+            />
+            <LikeMeme filename={meme.filename} />
+          </div>
+        ))}
+      </Paper>
+      <Button onClick={handleNext}><KeyboardArrowRightIcon style={{...buttonStyle, marginLeft: '4vw'}}/></Button>
     </div>
   );
-}
+};
 
 export default CustomerMeme;

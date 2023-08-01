@@ -10,7 +10,7 @@ const SmallbuttonStyle = {
   width: '20px',
   textAlign: 'center', 
   justifyContent: 'center',
-  background: "#FFCFCF",
+  background: "#FFFFFF",
   color: 'black',
   fontWeight: "bold",
   borderRadius: 8,

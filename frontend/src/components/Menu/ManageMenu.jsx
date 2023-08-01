@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import {
   Drawer,
@@ -9,10 +8,12 @@ import {
   TextField,
   ButtonGroup,
   Container,
-  Paper,
+  Paper
 } from "@mui/material";
 import ListCategories from "./Category/ListCategories";
 import AddCategory from "./Category/AddCategoy";
+import UpdateCategoryName from "./Category/UpdateCategoryName";
+import UpdateCategoryOrder from "./Category/UpdateCategoryOrder";
 import ListItems from './Items/ListItems'
 import ManageItems from './Items/ManageItems'
 import Manager from "../UserInterface/ManagerInterface";
@@ -38,14 +39,12 @@ const smallbuttonStyle = {
 
 const ManageMenu = () => {
   const { categories, setCategories } = ListCategories();
-  const [selectedCategory, setSelectedCategory] = useState(-1);
-  const [editedCategory, setEditedCategory] = useState('');
   const [categoryEditingIndex, setCategoryEditingIndex] = useState(-1);
+  const [editedCategory, setEditedCategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState(-1);
   const { menuItems, setMenuItems, fetchMenuItems } = ListItems(selectedCategory);
-  const [items, setItems] = useState(categories);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const navigate = useNavigate();
-
+  const [items, setItems] = useState(categories);
   const [cookies] = useCookies(['token']);
 
   const handleCategoryInputChange = (value) => {
@@ -126,7 +125,6 @@ const ManageMenu = () => {
                 Menu Category
               </Typography>
             </div>
-
             <AddCategory cookies={cookies} categories={categories} setCategories={setCategories} />
             <Reorder.Group axis="y" onReorder={setCategories} values={items}>
               {Object.entries(items).map(([index, category]) => (

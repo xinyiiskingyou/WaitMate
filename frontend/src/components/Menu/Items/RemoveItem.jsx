@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "@mui/material";
 import ErrorHandler from '../../ErrorHandler';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const RemoveItem = ({
   itemName,
@@ -41,7 +42,7 @@ const RemoveItem = ({
         size="small" 
         onClick={() => handleRemove()}
         style={{ color: 'white', backgroundColor: '#FF7A7A' }}>
-        Remove
+        <DeleteIcon/>
       </Button>
       {showError}
     </>

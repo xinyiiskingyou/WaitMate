@@ -173,7 +173,7 @@ class MemeDB():
         
         # Address used for SMTP MAIL FROM command.
         sender = 'test@example.com'
-
+        print(email)
         # Simple Regex for syntax checking
         search = r'\b^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$\b'
         if not re.search(search, email):
