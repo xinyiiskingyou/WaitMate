@@ -91,7 +91,7 @@ class CheckoutDB:
             self.session.close()
 
     def checkout_bill_coupon(self, table_id: int, coupon: str):
-    
+
         if not coupon or not check_coupon_valid(coupon, self.session):
             raise InputError(detail='Invalid coupon.')
         if not check_table_exists(table_id, self.session):
@@ -108,7 +108,7 @@ class CheckoutDB:
             # amount
             self.session.execute(stmt)
             self.session.commit()
-            
+
             stmt = select(Coupons.amount).where(Coupons.code == coupon)
             result = self.session.execute(stmt).scalar()
 
@@ -193,7 +193,7 @@ class CheckoutDB:
             raise InputError(detail=f"Database error occurred: {str(err)}") from err
         finally:
             self.session.close()
-            
+
     def _checkout_order(self, table_id: int) -> List[dict]:
 
         result = get_order(table_id, self.session)

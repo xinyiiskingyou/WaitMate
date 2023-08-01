@@ -68,11 +68,11 @@ class Auth:
             return {'token': user['idToken']}
         except:
             raise AccessError(detail='Invalid email or password')
-        
+
     def login_staff(self, password: str, is_waitstaff: bool):
         if not password:
             raise InputError(detail='Enter your password')
-        
+
         email: str = WAITSTAFF_EMAIL if is_waitstaff else KITCHENSTAFF_EMAIL
         try:
             user = self.auth.sign_in_with_email_and_password(email, password)
@@ -87,7 +87,7 @@ class Auth:
             return user
         except:
             raise AccessError(detail='Authentication failed')
-    
+
     def is_authorized(self, roles: list, user: dict):
         if not user['hasRole'] in roles:
             raise AccessError(detail=f"{user['hasRole']} is not authorized")
@@ -100,11 +100,11 @@ class Auth:
             raise InputError(detail='Invalid email')
 
         fb_auth.update_user( user['uid'], email=new_email)
-        
+
     def change_password_staff(self, new_password: str, is_waitstaff: bool):
         if len(new_password) == 0:
             raise InputError(detail='Invalid password size')
-        
+
         email: str = WAITSTAFF_EMAIL if is_waitstaff else KITCHENSTAFF_EMAIL
 
         fb_auth.update_user(

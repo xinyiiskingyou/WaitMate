@@ -107,7 +107,6 @@ class Notifications:
                 .order_by(Orders.table_id)
                 .all()
             )
-            print(query)
             return [tuple(row) for row in query]
         except sqlalchemy.exc.SQLAlchemyError as err:
             print(f"Database error occurred: {str(err)}")

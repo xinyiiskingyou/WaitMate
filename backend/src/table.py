@@ -40,7 +40,7 @@ class TableDB():
 
         if check_table_exists(table_id, self.session):
             raise InputError(detail='Table id is not available.')
-        
+
         try:
             new_table = Tables(table_id=table_id, status=DEFAULT_TABLE_STATUS)
             self.session.add(new_table)

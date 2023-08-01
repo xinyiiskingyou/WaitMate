@@ -29,7 +29,7 @@ class MemeDB():
         self.session = session_maker()
 
     def upload_meme(self, img_url: str, filename: str = None):
-        
+
         if filename:
             existing_meme = self.session.query(Memes).filter(Memes.filename.ilike(f'%{filename}%')).first()
             if existing_meme:
@@ -42,9 +42,9 @@ class MemeDB():
             response = requests.get(img_url, stream=True)
             if response.status_code != 200:
                 raise InputError(detail="Image url is not valid")
-        
+
             img_name = filename if filename else img_url.split("/")[-1]
-    
+
             if any(img_name.lower().endswith(ext) for ext in ('.jpg', '.jpeg', '.png')):
                 image_path = f"{upload_dir}/{img_name}"
             else:
@@ -93,7 +93,7 @@ class MemeDB():
         try:
             meme.count += 1
             self.session.commit()
-            
+
             new_vote = Votes(filename=meme.filename, email=email)
             self.session.add(new_vote)
             self.session.commit()
@@ -110,9 +110,9 @@ class MemeDB():
         emails = [vote.email for vote in votes]
 
         emails = random.sample(emails, min(5, len(emails)))
-        
+
         return emails
-        
+
     def send_coupons_by_votes(self, coupon_code: str) -> None:
         if not check_coupon_valid(coupon_code, self.session):
             raise InputError(detail='Invalid coupon.')
@@ -124,11 +124,11 @@ class MemeDB():
             subject = 'Coupon Code for You!'
             body = textwrap.dedent(f'''
                 Hi there!
-                
+
                 Thank you for voting. Here is your coupon code: \b{coupon_code}
-                
+
                 Use it for a discount on your next visit!
-                
+
                 Best regards,
                 Team WaitMate
             ''')
@@ -170,10 +170,10 @@ class MemeDB():
                 os.remove(file_path)
 
     def _check_valid_email(self, email: str) -> bool:
-        
+
         # Address used for SMTP MAIL FROM command.
         sender = 'test@example.com'
-        print(email)
+
         # Simple Regex for syntax checking
         search = r'\b^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$\b'
         if not re.search(search, email):
@@ -189,7 +189,7 @@ class MemeDB():
             records = dns.resolver.resolve(domain, 'MX')
             mx_record = records[0].exchange
             mx_record = str(mx_record)
-            
+
             host = socket.gethostname()
             server = smtplib.SMTP()
             server.set_debuglevel(0)

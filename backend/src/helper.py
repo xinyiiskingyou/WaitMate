@@ -55,7 +55,7 @@ def check_categories_key_is_valid(column: str, value: str, session: Session):
     return result
 
 def get_order(table_id: int, session: Session) -> List[Any]:
-    
+
     if not check_table_exists(table_id, session):
         raise InputError(detail=INVALID_TABLE_MSG)
 

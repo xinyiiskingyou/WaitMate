@@ -167,7 +167,7 @@ class MenuDB:
         Return Value:
             Returns <list> that contains all the items
         '''
-        
+
         res = check_categories_key_is_valid('cat_order', int(category_id), self.session)
 
         # Check if the category ID exists
@@ -220,7 +220,6 @@ class MenuDB:
         if not result:
             raise InputError(detail='Invalid ID')
 
-        print(result)
         old_name = result[0]
         new_name = kwargs.get('name')
         if new_name is not None:

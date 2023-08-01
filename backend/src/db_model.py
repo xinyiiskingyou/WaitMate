@@ -19,7 +19,7 @@ class Categories(Base):
 
 class Items(Base):
     __tablename__ = 'Items'
-    
+
     item_id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String, nullable=False)
     cost = Column(Integer, nullable=False)
@@ -56,14 +56,14 @@ class Coupons(Base):
 
 class Memes(Base):
     __tablename__ = 'Memes'
-    
+
     id = Column(Integer, primary_key=True, autoincrement=True)
     filename = Column(String)
     url = Column(String)
     count = Column(Integer, default=0)
-    
+
 class Votes(Base):
     __tablename__ = 'Votes'
-    
+
     email = Column(String, primary_key=True)
     filename = Column(String)
