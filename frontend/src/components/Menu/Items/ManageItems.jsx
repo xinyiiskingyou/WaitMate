@@ -5,6 +5,7 @@ import UpdateItemOrder from "./UpdateItemOrder"
 import UpdateItemDetails from './UpdateItemDetails'
 import RemoveItem from './RemoveItem'
 import AddIcon from '@mui/icons-material/Add';
+import { useMotionValue, Reorder, motion, useDragControls, AnimatePresence } from "framer-motion";
 
 const ITEMS_PER_PAGE = 6;
 
@@ -25,9 +26,19 @@ const ManageItems = ({
   const itemsForCurrentPage = menuItems.slice(startIndex, endIndex);
   const [items, setItems] = useState(itemsForCurrentPage);
 
+  // useEffect(() => {
+  //   setItems(itemsForCurrentPage);
+  // }, [itemsForCurrentPage]);
+
   useEffect(() => {
-    setItems(itemsForCurrentPage);
-  }, [itemsForCurrentPage]);
+    // Calculate the new startIndex and endIndex based on the currentPage
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    
+    // Update the items for the current page
+    const itemsForPage = menuItems.slice(startIndex, endIndex);
+    setItems(itemsForPage);
+  }, [currentPage, menuItems]);
 
   const handlePageChange = (event, newPage) => {
     setCurrentPage(newPage);
@@ -67,6 +78,7 @@ const ManageItems = ({
     });
   };
 
+  
   return (
     <>
       <Box display="flex" flexDirection="row" alignItems="flex-start" marginTop={5} style={{ gap: '10px' }}>
@@ -81,7 +93,7 @@ const ManageItems = ({
           {Object.entries(itemsForCurrentPage)
             .filter(([_, menuItem]) => menuItem.name !== null)
             .map(([index, menuItem]) => (
-              <div style={{ width: '20vw', height: '30vh', margin: '4%' }}>
+              <div key={index} style={{ width: '20vw', height: '30vh', margin: '4%' }}>
                 <Card sx={{ maxHeight: '34vh', width: '100%', backgroundColor: "#FBDDDD" }}>
                   <UpdateItemDetails 
                     itemCategory={categories[selectedCategory]}

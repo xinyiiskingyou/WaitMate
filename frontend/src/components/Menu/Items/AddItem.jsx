@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useCookies } from 'react-cookie';
 import { 
   Box, 
@@ -172,7 +172,7 @@ const AddItem = ({ onItemAdd, onItemCancel, category }) => {
       </Dialog>
       {showError}
     </Box>
-  )
+  );
 };
 
 export default AddItem;

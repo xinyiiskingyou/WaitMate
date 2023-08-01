@@ -79,8 +79,8 @@ class MemeDB():
 
     def like_a_meme(self, email: str, filename: str) -> None:
 
-        # if not self._check_valid_email(email):
-        #     raise InputError("Email is not valid.")
+        if not self._check_valid_email(email):
+            raise InputError("Email is not valid.")
 
         meme = self.session.query(Memes).filter(Memes.filename.ilike(f'%{filename}%')).first()
         if not meme:

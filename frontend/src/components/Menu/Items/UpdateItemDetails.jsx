@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { 
   Box, 
   FormControlLabel, 
@@ -24,7 +24,7 @@ const UpdateItemDetails = ({
   itemIngredient, 
   itemVegetarian,
   itemIndex,
-  cookies
+  cookies,
 }) => {
 
   const [name, setName] = useState(itemName);
@@ -40,6 +40,7 @@ const UpdateItemDetails = ({
   };
 
   const handleOpen = () => {
+    console.log("hii")
     setOpen(true);
   };
 
@@ -55,6 +56,7 @@ const UpdateItemDetails = ({
       is_vegan: vegetarian
     };
 
+    console.log('id: ', parseInt(itemIndex, 10) + 1);
     try {
       const response = await fetch('http://localhost:8000/menu/item/update/details', {
         method: 'PUT',
@@ -76,7 +78,7 @@ const UpdateItemDetails = ({
       handleShowSnackbar(error.message);
     }
   }
-  
+
   useEffect(() => {
     setName(itemName);
     setPrice(itemPrice);

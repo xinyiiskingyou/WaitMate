@@ -8,15 +8,16 @@ import {
   DialogActions,
   Divider
 } from '@mui/material'
-import ErrorHandler from '../ErrorHandler';
 import ListTableOrder from "../Orders/ListTableOrder";
+import bill from "../../assets/bill.png"
+import SubmitCoupon from "../Checkout/SubmitCoupon";
+import SubmitTips from "../Checkout/SubmitTips";
 
 const buttonStyle = { 
   border: '4px solid #FFA0A0', 
-  height: '7vh', 
-  width: '12vw',
-  textAlign: 'center', 
-  justifyContent: 'center',
+  height: '43px', 
+  width: '200px',
+  justifyContent: 'space-evenly',
   background: "#FFCFCF",
   color: 'black',
   fontWeight: "bold",
@@ -24,14 +25,14 @@ const buttonStyle = {
 }
 
 const GetBill = ({id}) => {
-  const { handleShowSnackbar, showError } = ErrorHandler();
 
   const [orders, setOrders] = useState([]);
   const [total, setTotal] = useState(0);
-  const [coupon, setCoupon] = useState(0);
+  const [discount, setDiscount] = useState(0);
   const [tips, setTips] = useState(0);
 
   const [open, setOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const currentDate = new Date();
   const formattedDate = currentDate.toLocaleDateString();
@@ -42,6 +43,11 @@ const GetBill = ({id}) => {
     setOpen(false);
     navigate("/");
   };
+
+  const handleDialogClose = () => {
+    setDialogOpen(false);
+    setOpen(true);
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,11 +73,10 @@ const GetBill = ({id}) => {
     }).then((data) => {
       console.log(data);
       setTotal(data.total);
-      setCoupon(data.discount);
+      setDiscount(data.discount);
       setTips(data.tip);
     }).catch(error => {
       console.log(error);
-      handleShowSnackbar(error.message);
     })    
   }
 
@@ -81,13 +86,58 @@ const GetBill = ({id}) => {
 
   return (
     <>
-      <Button variant="contained" color="primary" style={buttonStyle} onClick={() => setOpen(true)}>
+      <Button variant="contained" color="primary" style={buttonStyle} onClick={() => setDialogOpen(true)}>
         Request Bill
+        <img src={bill} alt="BillIcon" style={{
+          width: '36px',
+          height: '32px',
+        }}/>
       </Button>
+      
+      <Dialog open={dialogOpen} onClose={handleDialogClose}>
+        <DialogTitle style={{ textAlign: 'center', fontSize: '17px' }}>
+          <b>Would you like to use a coupon code or add tip?</b>
+          <br /> 
+        </DialogTitle>
+          <SubmitTips id={id} tip={tips} />
+          <SubmitCoupon id={id} />
+
+          <DialogActions style={{ justifyContent: 'center' }}>
+            <Button
+              size="small"
+              onClick={handleDialogClose} 
+              style={{
+                background: '#81c784', 
+                color: 'black',
+                fontWeight: 'bold',
+                fontSize: '13px',
+                width: '6vw',
+                height: '4vh',
+                borderRadius: 10,
+              }}
+            >
+              CONFIRM
+            </Button>
+            <Button
+              size="small"
+              onClick={() => setDialogOpen(false)} 
+              style={{
+                background: '#81A9C7', 
+                color: 'black',
+                fontWeight: 'bold',
+                fontSize: '13px',
+                width: '6vw',
+                height: '4vh',
+                borderRadius: 10,
+              }}
+            >
+              Cancel
+            </Button>
+        </DialogActions>
+      </Dialog>
+
       <Dialog open={open} onClose={handleClose} sx={{
         "& .MuiDialog-paper": {
-          border: "8px solid #FFA0A0",
-          borderRadius: 7,
           width: 400,
           height: '65%',
         },
@@ -113,7 +163,7 @@ const GetBill = ({id}) => {
             <Divider />
             
             <div style={{ fontSize: '20px', fontWeight: 'bold', margin: '5px 0' }}>
-              Discount: -${coupon}
+              Discount: -${discount}
             </div>
             <div style={{ fontSize: '20px', fontWeight: 'bold', margin: '5px 0' }}>
               Tips: ${tips}
@@ -150,7 +200,6 @@ const GetBill = ({id}) => {
           </Button>
         </DialogActions>
       </Dialog>
-      {showError}
     </>
   )
 }

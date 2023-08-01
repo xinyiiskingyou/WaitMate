@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
-import { 
-  Drawer, 
+import {
+  Drawer,
   Box,
   Typography,
   Button,
@@ -15,7 +15,7 @@ import ListCategories from "./Category/ListCategories";
 import AddCategory from "./Category/AddCategoy";
 import ListItems from './Items/ListItems'
 import ManageItems from './Items/ManageItems'
-import Manager from '../Staff/ManagerInterface'
+import Manager from "../UserInterface/ManagerInterface";
 import { Reorder, motion } from "framer-motion";
 import { CategoryItem } from "./Category/CategoryItem";
 const EditButtonStyle = {
@@ -39,13 +39,22 @@ const smallbuttonStyle = {
 const ManageMenu = () => {
   const { categories, setCategories } = ListCategories();
   const [selectedCategory, setSelectedCategory] = useState(-1);
+  const [editedCategory, setEditedCategory] = useState('');
+  const [categoryEditingIndex, setCategoryEditingIndex] = useState(-1);
   const { menuItems, setMenuItems, fetchMenuItems } = ListItems(selectedCategory);
   const [items, setItems] = useState(categories);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
   const [cookies] = useCookies(['token']);
-  
+
+  const handleCategoryInputChange = (value) => {
+    setEditedCategory(value);
+  };
+
+  const handleEditCategory = (index) => {
+    setCategoryEditingIndex(index);
+  };
 
   const handleCategoryClick = (index) => {
     setMenuItems([]);
@@ -61,16 +70,29 @@ const ManageMenu = () => {
     setItems(categories);
   }, [categories]);
 
+  useEffect(() => {
+    // Check if selectedCategory is not -1 (i.e., a category is selected)
+    if (selectedCategory !== -1) {
+      // Fetch menu items for the selected category
+      fetchMenuItems(selectedCategory);
+    }
+  }, [selectedCategory]);
+  // "
+  // categories={categories}
+  // selectedCategory={selectedCategory}
+  // menuItems={menuItems}
+  // setMenuItems={setMenuItems}
+  // onItemsCategory={() => handleCategoryClick(selectedCategory)}"
 
   return (
     <Container maxWidth="100%">
       <Manager />
 
-      <div style={{display: "flex", alignItems: "center", justifyContent: "center", height: "80vh", marginLeft: "-40px"}}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "80vh", marginLeft: "-40px" }}>
         <Button style={{
-          height: "50%", 
-          background: "white",  
-          marginTop: "40vh", 
+          height: "50%",
+          background: "white",
+          marginTop: "40vh",
           padding: "100px 0",
           borderTopRightRadius: '20px',
           borderBottomRightRadius: '20px'
@@ -78,9 +100,9 @@ const ManageMenu = () => {
           <Typography className='sideways-text' color={"black"}>Menu Category</Typography>
         </Button>
 
-        <Box 
-          flexGrow={1} 
-          p={2} 
+        <Box
+          flexGrow={1}
+          p={2}
           display="flex"
           height="80vh"
           width="350px"
@@ -90,15 +112,17 @@ const ManageMenu = () => {
             open={isSidebarOpen}
             onClose={toggleSidebar}
             ModalProps={{ keepMounted: true }}
-            PaperProps={{ style: { 
-              marginTop: "180px",
-              width: '250px', 
-              height: "600px", 
-              borderTopRightRadius: '20px',
-              borderBottomRightRadius: '20px'
-            }}}>
+            PaperProps={{
+              style: {
+                marginTop: "180px",
+                width: '250px',
+                height: "600px",
+                borderTopRightRadius: '20px',
+                borderBottomRightRadius: '20px'
+              }
+            }}>
             <div style={{ display: "flex", alignContent: "center", justifyContent: "center" }}>
-              <Typography variant='h5'style={{margin: "20px"}}>
+              <Typography variant='h5' style={{ margin: "20px" }}>
                 Menu Category
               </Typography>
             </div>
@@ -106,13 +130,13 @@ const ManageMenu = () => {
             <AddCategory cookies={cookies} categories={categories} setCategories={setCategories} />
             <Reorder.Group axis="y" onReorder={setCategories} values={items}>
               {Object.entries(items).map(([index, category]) => (
-                <CategoryItem 
-                  key={category} 
-                  item={category} 
+                <CategoryItem
+                  key={category}
+                  item={category}
                   index={index}
                   selectedCategory={selectedCategory}
                   handleCategoryClick={handleCategoryClick}
-                  />
+                />
               ))}
             </Reorder.Group>
           </Drawer>
@@ -121,21 +145,21 @@ const ManageMenu = () => {
             <Paper elevation={3} sx={{
               padding: "20px",
               borderRadius: "8px",
-              width: "70vw", 
-              height: "80vh", 
+              width: "70vw",
+              height: "80vh",
               marginTop: "10vh",
               marginLeft: "10vw",
             }}>
-              <ManageItems 
-                categories={categories} 
+              <ManageItems
+                categories={categories}
                 selectedCategory={selectedCategory}
-                menuItems={menuItems} 
+                menuItems={menuItems}
                 setMenuItems={setMenuItems}
                 onItemsCategory={() => handleCategoryClick(selectedCategory)}
                 cookies={cookies}
               />
             </Paper>
-          ) : ( <></> )}
+          ) : (<></>)}
         </Box>
       </div>
     </Container>

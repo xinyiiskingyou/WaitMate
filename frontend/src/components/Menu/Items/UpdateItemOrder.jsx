@@ -2,23 +2,16 @@ import React from "react";
 import OrderButton from '../OrderButton';
 import ErrorHandler from '../../ErrorHandler';
 
-const UpdateItemOrder = ({ name, index, onItemsCategory, cookies } ) => {
+const UpdateItemOrder = ({ name, onItemsCategory, cookies } ) => {
 
   const { handleShowSnackbar, showError } = ErrorHandler(); 
 
   const handleUpdateOrder = async (is_up) => {
-    let new_index = parseInt(index, 10) + 1;
-    if (is_up) {
-      new_index = new_index + 1;
-    } else {
-      new_index = new_index - 1;
-    }
     const payload = {
       name: name,
-      new_index: new_index
+      is_up: is_up
     };
-    console.log(payload);
-    
+
     try {
       const response = await fetch('http://localhost:8000/menu/item/update/order', {
         method: 'PUT',

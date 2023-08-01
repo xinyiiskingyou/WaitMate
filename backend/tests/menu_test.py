@@ -176,14 +176,14 @@ def test_cat_update_details_valid():
 def test_item_update_order_invalid():
     menu_1()
     with pytest.raises(InputError):
-        menu.update_order_menu_items('SeaBass', 0) 
+        menu.update_order_menu_items('SeaBass', True) 
     with pytest.raises(InputError):
-        menu.update_order_menu_items('FlatFish', 3)
+        menu.update_order_menu_items('FlatFish', False)
 
 def test_item_update_order_valid():
     menu_1()
     original = menu.get_items_in_category(1)
-    menu.update_order_menu_items('SeaBass', 2) 
+    menu.update_order_menu_items('SeaBass', False) 
     res = menu.get_items_in_category(1)
 
     assert original != res
@@ -402,13 +402,13 @@ def test_item_update_details(client, manager_token):
 def test_item_update_order_endpoint(client, manager_token):
 
     resp = client.put("/menu/item/update/order", 
-        json={"name": "hawaiian", "new_index": 1},
+        json={"name": "hawaiian", "is_up": True},
         headers=manager_token
     )
     assert resp.status_code == VALID
 
     resp = client.put("/menu/item/update/order", 
-        json={"name": "hawaiian", "new_index": 0},
+        json={"name": "hawaiian", "is_up": True},
         headers=manager_token
     )
     assert resp.status_code == INPUTERROR

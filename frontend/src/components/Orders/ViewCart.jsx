@@ -7,23 +7,20 @@ import {
   Typography,
   TableContainer,
   Table,
-  TableCell,
   TableBody,
   TableRow,
   Box,
 } from "@mui/material";
 import WestIcon from '@mui/icons-material/West';
 import ListTableOrder from "./ListTableOrder";
-import SubmitCoupon from "../Checkout/SubmitCoupon";
-import SubmitTips from "../Checkout/SubmitTips";
 import GetBill from "../Checkout/GetBill";
+import customTableCell,  { CustomCell } from './CellStyle';
 
 const ViewCart = () => {
   const id = useParams();
   const [orders, setOrders] = useState([]);
-  const [tips] = useState('');
 
-  const backLink = `/browse/${id.id}` 
+  const backLink = `/customer/browse/${id.id}` 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,15 +33,17 @@ const ViewCart = () => {
 
   return (
     <Container>
-      <Grid container direction="column" spacing={2}>
+      <Grid container direction="row" spacing={2} style={{ marginTop: '7vh', marginBottom: '3vh' }}>
         <Grid item xs={2}>
           <Link to={backLink}>
             <Button              
               sx={{ 
                 border: 5,
-                borderColor: '#FFA0A0',
+                borderColor: '#FFFFFF',
+                background: '#FFFFFF',
                 borderRadius: 2,
                 color: 'black',
+                marginLeft: '20px',
               }}>
               <WestIcon/>
             </Button>
@@ -63,64 +62,46 @@ const ViewCart = () => {
           </Typography>
         </Grid>
 
-        <Grid item xs={2}>
+        <Grid item xs={2} style={{ marginLeft: '-40px'}}>
           <GetBill id={id.id} />
         </Grid>
       </Grid>
 
       <Grid item xs={2}>
-        <Box
-          sx={{ 
-            margin: 1, 
-            border: 10,
-            borderColor: '#FFA0A0',
-            borderRadius: 2, 
-            display:"flex",
-          }}>
-        </Box>
-        <Grid container direction="column">
-          <Grid item>
-            <TableContainer sx={{
-              height: 500,
-              pt: 4,  
-            }}>
-              <Table aria-label='custom pagination table' >
-                <TableBody>
-                  {orders.map((row) => (
-                    <TableRow key={row.name}>
-                      <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify="space-between" align="center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10 }}>
-                        {row.name}
-                      </TableCell>
-                      <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify="space-between" align="center" sx={{ fontSize: 27, borderBottom: 'none', pr: -5 }}>
-                        {row.amount}
-                      </TableCell>
-                      <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify="space-between" align="center" sx={{ fontSize: 27, borderBottom: 'none', pl: 10 }}>
-                        ${row.cost}
-                      </TableCell>
-                      <TableCell style={{ width: '20%', textAlign: 'center', color: row.is_prepared === 0 ? 'orange' : row.is_served === 1 ? 'green' : 'blue' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pl: 10}}>
-                      {row.is_prepared === 0 ? "Preparing" : row.is_served === 1 ? "Served" : "Ready"}
-                    </TableCell>
+        <Box sx={{ 
+          margin: 1, 
+          border: 10,
+          borderColor: '#FFFFFF',
+          background: "#FFFFFF",
+          borderRadius: 2, 
+          display:"flex",
+        }}>
+          <Grid container direction="column">
+            <Grid item>
+              <TableContainer sx={{ height: '70vh', pt: 4, }}>
+                <Table aria-label='custom pagination table' >
+                  <TableBody>
+                    <TableRow>
+                      {customTableCell('Qty x Item')}
+                      {customTableCell('Price')}
+                      {customTableCell('Status')}
                     </TableRow>
-                  ))}
-
-                  <TableRow>
-                    <TableCell style={{ width: '20%', textAlign: 'center', fontWeight: 'bold' }} component='th' scope='row' justify="space-between" align="center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10 }}>
-                      Coupon Code?
-                    </TableCell>
-                    <SubmitCoupon id={id} />
-                  </TableRow>
-
-                  <TableRow>
-                    <TableCell style={{ width: '20%', textAlign: 'center', fontWeight: 'bold' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 27, borderBottom: 'none', pr: -10}}>
-                      Tips?
-                    </TableCell>
-                    <SubmitTips id={id} tip={tips}/>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </TableContainer>
+                    {orders.map((row) => (
+                      <TableRow key={row.name}>
+                        <CustomCell content={`${row.amount} x ${row.name.toUpperCase()}`} width="23%"/>
+                        <CustomCell content={`$${row.cost}`} paddingRight={1}/>
+                        <CustomCell
+                          content={row.is_prepared === 0 ? "Preparing" : row.is_served === 1 ? "Served" : "Ready"}
+                          color={row.is_prepared === 0 ? '#C9A735' : row.is_served === 1 ? '#A1C935' : '#35A1C9'}
+                        />
+                      </TableRow>
+                    ))}
+                  </TableBody> 
+                </Table>
+              </TableContainer>
+            </Grid>
           </Grid>
-        </Grid>
+        </Box>
       </Grid>
     </Container>
   );

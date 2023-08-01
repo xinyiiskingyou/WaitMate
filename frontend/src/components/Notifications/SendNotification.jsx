@@ -5,12 +5,13 @@ import thanks from '../../assets/thank.png'
 import bell from '../../assets/bell.png'
 
 const buttonStyle = { 
-  border: '4px solid #FFA0A0', 
-  height: '8vh', 
-  width: '10vw',
+  border: '4px solid #FFFFFF', 
+  height: '6vh', 
+  width: '200px',
   textAlign: 'center', 
-  justifyContent: 'center',
-  background: "transparent",
+  justifyContent: 'right',
+  alignItems: 'right',
+  background: "#FFFFFF",
   color: 'black',
   fontWeight: "bolder",
   borderRadius: 6,
@@ -30,6 +31,7 @@ const SendNotification = ({ id }) => {
       table_id: id,
       status: "ASSIST"
     };
+    console.log(id.id);
     try {
       const response = await fetch('http://localhost:8000/notification/customer/send', {
         method: 'POST',
@@ -57,14 +59,15 @@ const SendNotification = ({ id }) => {
       <Button 
         variant="contained" 
         color="primary" 
+        justifyContent="flex-end"
         style={buttonStyle}
         onClick={() => handle_require_assistance()}
       >
         <img src={bell} alt="BellIcon" style={{
-          width: '2.6vw',
-          height: '5vh',
+          width: '2.1vw',
+          height: '4vh',
         }}/>
-        Require Assistance
+        Request Assistance
       </Button>
 
       <Dialog open={open} onClose={handleClose} fullWidth>

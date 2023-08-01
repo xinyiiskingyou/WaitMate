@@ -7,10 +7,12 @@ import ErrorHandler from '../ErrorHandler';
 
 const buttonStyle = {
   width: '7.5vw',
-  height: '3.3vh',
+  height: '4vh',
   fontSize: '1vw',
-  background: '#FFA0A0',
-  borderRadius: 5,
+  background: '#FFFFFF',
+  fontWeight: 'bold',
+  color: 'black',
+  borderRadius: 5
 };
 
 const SelectTable = () => {
@@ -18,7 +20,7 @@ const SelectTable = () => {
   const { showSnackbar, handleShowSnackbar, showError } = ErrorHandler(); 
 
   const navigate = useNavigate();
-  const nextLink = `/browse/${value}`;
+  const nextLink = `/customer/browse/${value}`;
 
   const handleInputChange = (event) => {
     const inputValue = event.target.value;

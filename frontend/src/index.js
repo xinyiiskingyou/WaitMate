@@ -5,18 +5,19 @@ import { Navigate } from 'react-router-dom';
 import Home from './components/Home';
 import BrowseMenu from './components/Menu/BrowseMenu'
 import ViewCart from './components/Orders/ViewCart';
-import Staff from './components/Staff/Staff';
-import ManagerLogin from './components/Staff/ManagerLogin'
+import Staff from './components/StaffType';
+import ManagerLogin from './components/LoginPage/ManagerLogin'
 import ManageMenu from './components/Menu/ManageMenu';
 import ManageMeme from './components/Meme/ManageMeme';
-import ManagerSettings from './components/Staff/ManagerSettings';
+import ManagerSettings from './components/LoginPage/ManagerSettings';
 import Coupon from './components/Coupon/CouponPage';
-import KitchenstaffLogin from './components/Staff/KitchenstaffLogin'
-import KitchenInterface from './components/Staff/KitchenInterface';
-import WaitstaffLogin from './components/Staff/WaitstaffLogin';
-import WaitStaffInterface from './components/Staff/WaitStaffInterface';
-
+import KitchenstaffLogin from './components/LoginPage/KitchenstaffLogin'
+import KitchenInterface from './components/UserInterface/KitchenInterface';
+import WaitstaffLogin from './components/LoginPage/WaitstaffLogin';
+import WaitStaffInterface from './components/UserInterface/WaitStaffInterface';
 import { getToken } from './auth.js';
+import CustomerTooBored from './components/Activity/CustomerTooBored';
+import CustomerMeme from './components/Meme/CustomerMeme';
 
 function App() {
   const [manager, setManager] = React.useState("false");
@@ -49,8 +50,10 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/browse/:id" element={<BrowseMenu />} />
-        <Route path="/cart/:id" element={<ViewCart />} />
+        <Route path="/customer/browse/:id" element={<BrowseMenu />} />
+        <Route path="/customer/cart/:id" element={<ViewCart />} />
+        <Route path="/customer/activity/:id" element={<CustomerTooBored />} />
+        <Route path="/customer/meme/:id" element={<CustomerMeme />} />
         <Route path="/staff" element={<Staff />} />
         <Route path="/manager/login" element={<ManagerLogin />} />
         <Route path="/manager/menu" element={ manager ? (<ManageMenu />) : (<Navigate to='/manager/login'/>)} />

@@ -10,7 +10,7 @@ import ErrorHandler from '../ErrorHandler';
 import thanks from '../../assets/thank.png'
 
 const buttonStyle = { 
-  background: '#eeeeee', 
+  background: '#C0C0C0', 
   color: 'black',
   marginTop: '1vh',
   fontWeight: 'bold',

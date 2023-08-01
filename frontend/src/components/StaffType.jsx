@@ -1,9 +1,9 @@
 import React from 'react';
 import { Box, Grid, Button, Typography } from '@mui/material';
 import {Link} from 'react-router-dom';
-import worker from '../../assets/worker.png'
-import chef from '../../assets/chef.png'
-import manager from '../../assets/manager.png'
+import worker from '../assets/worker.png'
+import chef from '../assets/chef.png'
+import manager from '../assets/manager.png'
 
 const Staff = () => {
 
@@ -11,9 +11,9 @@ const Staff = () => {
     width: '18vw',
     height: '50vh',
     fontSize: '18px',
-    background: 'transparent',
+    background: '#FFFFFF',
     color: 'black',
-    border: "10px solid #FFA0A0",
+    border: "10px solid #FFFFFF",
   };
 
   const headingStyle = {
@@ -40,7 +40,7 @@ const Staff = () => {
                 <Grid item>
                   <img src={manager} alt="managerIcon" style={{
                     width: '14vw',
-                    height: '25vh',
+                    height: '27vh',
                   }}/>
                 </Grid>
                 <Grid item>
@@ -59,7 +59,7 @@ const Staff = () => {
               <Grid item>
                 <img src={chef} alt="ChefIcon" style={{
                   width: '14vw',
-                  height: '25vh',
+                  height: '27vh',
                 }}/>
               </Grid>
               <Grid item>
@@ -78,7 +78,7 @@ const Staff = () => {
               <Grid item>
                 <img src={worker} alt="WorkerIcon" style={{
                   width: '14vw',
-                  height: '25vh',
+                  height: '27vh',
                 }}/>
               </Grid>
               <Grid item>
