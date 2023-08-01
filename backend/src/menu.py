@@ -320,7 +320,7 @@ class MenuDB:
         finally:
             self.session.close()
 
-    def update_order_menu_items(self, item_name: str, is_up: bool) -> None:
+    def update_order_menu_items(self, item_name: str, new_index: int) -> None:
         '''
         Updates the order of a menu item.
 
@@ -344,14 +344,12 @@ class MenuDB:
         total_count = self.session.query(Items).where(Items.category_name==cat_name).count()
 
         # if item is the last one in the category
-        if prev_order + 1 > total_count and not is_up:
+        if prev_order + 1 > total_count and new_index > prev_order:
             raise InputError(detail=INVALID_ORDER_MSG)
 
         # the first item of the table cannot move up
-        if prev_order == 1 and is_up:
+        if prev_order == 1 and new_index < prev_order:
             raise InputError(detail=INVALID_ORDER_MSG)
-
-        new_order = prev_order - 1 if is_up else prev_order + 1
 
         try:
             row1 = (
@@ -364,7 +362,7 @@ class MenuDB:
             row2 = (
                 self.session.query(Items)
                 .where(Items.category_name==cat_name)
-                .filter_by(item_order=new_order).one()
+                .filter_by(item_order=new_index).one()
             )
             row1.item_order, row2.item_order = row2.item_order, row1.item_order
 
@@ -375,7 +373,7 @@ class MenuDB:
         finally:
             self.session.close()
 
-    def update_order_menu_category(self, category_name: str, is_up: bool) -> None:
+    def update_order_menu_category(self, category_name: str, new_index: int) -> None:
         '''
         Updates the order of a category.
 
@@ -388,7 +386,8 @@ class MenuDB:
         Return Value:
             None
         '''
-
+        print(self.get_all_categories())
+        print(new_index)
         # check if category name is valid
         if not check_categories_key_is_valid('name', category_name, self.session):
             raise InputError(detail='Invalid category name')
@@ -398,19 +397,17 @@ class MenuDB:
         total_count = self.session.query(Categories.name).count()
 
         # the last item of the database cannot move down
-        if prev_order + 1 > total_count and not is_up:
+        if prev_order + 1 > total_count and new_index > prev_order:
             raise InputError(detail=INVALID_ORDER_MSG)
 
          # the first item of the table cannot move up
-        if prev_order == 1 and is_up:
+        if prev_order == 1 and new_index < prev_order:
             raise InputError(detail=INVALID_ORDER_MSG)
-
-        new_order = prev_order - 1 if is_up else prev_order + 1
 
         try:
             # swap order
             row1 = self.session.query(Categories).filter_by(cat_order=prev_order).one()
-            row2 = self.session.query(Categories).filter_by(cat_order=new_order).one()
+            row2 = self.session.query(Categories).filter_by(cat_order=new_index).one()
             row1.cat_order, row2.cat_order = row2.cat_order, row1.cat_order
             self.session.commit()
         except Exception as error:

@@ -1,3 +1,4 @@
+
 import * as React from 'react';
 import { render } from 'react-dom';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
@@ -8,13 +9,15 @@ import ViewCart from './components/Orders/ViewCart';
 import Staff from './components/StaffType';
 import ManagerLogin from './components/LoginPage/ManagerLogin'
 import ManageMenu from './components/Menu/ManageMenu';
-import ManagerSettings from './components/LoginPage/ManagerSettings';
+import ManageMeme from './components/Meme/ManageMeme';
+import SettingPage from './components/LoginPage/ManagerSettingsPage';
 import Coupon from './components/Coupon/CouponPage';
 import KitchenstaffLogin from './components/LoginPage/KitchenstaffLogin'
 import KitchenInterface from './components/UserInterface/KitchenInterface';
 import WaitstaffLogin from './components/LoginPage/WaitstaffLogin';
 import WaitStaffInterface from './components/UserInterface/WaitStaffInterface';
 import { getToken } from './auth.js';
+import GamePage from './components/Activity/ActivityGamePage';
 import CustomerTooBored from './components/Activity/CustomerTooBored';
 import CustomerMeme from './components/Meme/CustomerMeme';
 
@@ -52,16 +55,26 @@ function App() {
         <Route path="/customer/browse/:id" element={<BrowseMenu />} />
         <Route path="/customer/cart/:id" element={<ViewCart />} />
         <Route path="/customer/activity/:id" element={<CustomerTooBored />} />
+        <Route path="/customer/activity/gamepage/:id" element={<GamePage />} />
+
         <Route path="/customer/meme/:id" element={<CustomerMeme />} />
         <Route path="/staff" element={<Staff />} />
         <Route path="/manager/login" element={<ManagerLogin />} />
         <Route path="/manager/menu" element={ manager ? (<ManageMenu />) : (<Navigate to='/manager/login'/>)} />
-        <Route path="/manager/setting" element={ manager ? (<ManagerSettings />) : (<Navigate to='/manager/login'/> )} />
+        <Route path="/manager/meme" element={ manager ? (<ManageMeme />) : (<Navigate to='/manager/login'/>)} />
+        <Route path="/manager/setting" element={ manager ? (<SettingPage />) : (<Navigate to='/manager/login'/> )} />
         <Route path="/manager/coupon" element={manager ? (<Coupon />) : (<Navigate to='/manager/login'/>)} />
         <Route path="/waitstaff/login" element={<WaitstaffLogin />} />
         <Route path="/waitstaff/list" element={<WaitStaffInterface />} />
         <Route path="/kitchenstaff/login" element={<KitchenstaffLogin />} />
         <Route path="/kitchenstaff/list" element={<KitchenInterface />} />
+        <Route path="/customer/activity/:id" element={<CustomerTooBored />} />
+        <Route path="/customer/meme/:id" element={<CustomerMeme />} />
+
+        <Route path="/toobored/:id" element={<CustomerTooBored />} />
+        <Route path="/customermeme/:id" element={<CustomerMeme />} />
+
+
       </Routes>
     </Router>
   );

@@ -12,6 +12,8 @@ import flippingcards from "../../assets/flippingcards.png";
 import barbieleft from "../../assets/barbieleft.png";
 import barbieright from "../../assets/barbieright.png";
 import CustomerInterface from "../UserInterface/CustomerInterface";
+import ToggleColorMode from "./CustomerDarkMode";
+import App from "./CustomerDarkMode";
 
 const buttonStyle = { 
   border: '4px solid #FFFFFF', 
@@ -28,7 +30,7 @@ const buttonStyle = {
 }
 
 const CustomerTooBored = () => {
-
+  const id = useParams();
   return (
     <Container maxWidth="sm">
       <CustomerInterface />
@@ -46,7 +48,7 @@ const CustomerTooBored = () => {
           </Typography>
         </Grid>     
         <Grid item xs={8} justifyContent= 'center' alignItems= 'center' >
-          <Button variant="contained" style={buttonStyle}>
+          <Button variant="contained" style={buttonStyle} component={Link} to={`/customer/activity/gamepage/${id.id}`}>
             <img src={flippingcards} alt="flippingcards" style={{
               width: '20vw',
               height: '30vh',
@@ -56,10 +58,11 @@ const CustomerTooBored = () => {
               height: '35vh',
             }}/>
             <div>
-              Flipping Cards
+              Activity Page
             </div>
           </Button>
-        </Grid>     
+        </Grid>  
+        <App/>   
       </Grid>
     </Container>
   );

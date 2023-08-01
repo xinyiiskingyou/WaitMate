@@ -176,14 +176,14 @@ def test_cat_update_details_valid():
 def test_item_update_order_invalid():
     menu_1()
     with pytest.raises(InputError):
-        menu.update_order_menu_items('SeaBass', True) 
+        menu.update_order_menu_items('SeaBass', 0) 
     with pytest.raises(InputError):
-        menu.update_order_menu_items('FlatFish', False)
+        menu.update_order_menu_items('FlatFish', 3)
 
 def test_item_update_order_valid():
     menu_1()
     original = menu.get_items_in_category(1)
-    menu.update_order_menu_items('SeaBass', False) 
+    menu.update_order_menu_items('SeaBass', 2) 
     res = menu.get_items_in_category(1)
 
     assert original != res
@@ -191,15 +191,15 @@ def test_item_update_order_valid():
 def test_cat_update_order_invalid():
     menu_1()
     with pytest.raises(InputError):
-        menu.update_order_menu_category('Fish', True) 
+        menu.update_order_menu_category('Fish', 0) 
     with pytest.raises(InputError):
-        menu.update_order_menu_category('Water', False)
+        menu.update_order_menu_category('Water', 3)
 
 def test_cat_update_order_valid():
     menu_1()
 
     original = menu.get_all_categories()
-    menu.update_order_menu_category('Fish', False) 
+    menu.update_order_menu_category('Fish', 2) 
     result = menu.get_all_categories()
     assert original != result
 
@@ -255,15 +255,15 @@ def test_category_add_endpoint(client, manager_token):
 
 def test_category_update_order_endpoint(client, manager_token):
     # valid case
-    resp = client.put("/menu/category/update/order", json={"name": "pizza"}, params={"is_up": False}, headers=manager_token)
+    resp = client.put("/menu/category/update/order", json={"name": "pizza", "new_index": 2}, headers=manager_token)
     assert resp.status_code == VALID
 
     # invalid move
-    resp = client.put("/menu/category/update/order", json={"name": "pizza"}, params={"is_up": False}, headers=manager_token)
+    resp = client.put("/menu/category/update/order", json={"name": "pizza", "new_index": 0}, headers=manager_token)
     assert resp.status_code == INPUTERROR
 
     # invalid category name
-    resp = client.put("/menu/category/update/order", json={"name": "random"}, params={"is_up": False}, headers=manager_token)
+    resp = client.put("/menu/category/update/order", json={"name": "random", "new_index": 1}, headers=manager_token)
     assert resp.status_code == INPUTERROR
 
 def test_category_update_name_endpoint(client, manager_token):
@@ -402,13 +402,13 @@ def test_item_update_details(client, manager_token):
 def test_item_update_order_endpoint(client, manager_token):
 
     resp = client.put("/menu/item/update/order", 
-        json={"name": "hawaiian", "is_up": True},
+        json={"name": "hawaiian", "new_index": 1},
         headers=manager_token
     )
     assert resp.status_code == VALID
 
     resp = client.put("/menu/item/update/order", 
-        json={"name": "hawaiian", "is_up": True},
+        json={"name": "hawaiian", "new_index": 0},
         headers=manager_token
     )
     assert resp.status_code == INPUTERROR

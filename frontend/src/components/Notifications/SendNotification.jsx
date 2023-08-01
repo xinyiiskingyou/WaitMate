@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Grid, Dialog, DialogContent, DialogActions } from "@mui/material";
+import { Box, Button, Grid, Dialog, DialogContent, DialogActions } from "@mui/material";
 import ErrorHandler from '../ErrorHandler';
 import thanks from '../../assets/thank.png'
 import bell from '../../assets/bell.png'

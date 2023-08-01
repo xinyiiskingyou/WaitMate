@@ -6,7 +6,8 @@ import {
   Paper,
   Button,
   DialogActions,
-  Divider
+  Divider,
+  Box
 } from '@mui/material'
 import ListTableOrder from "../Orders/ListTableOrder";
 import bill from "../../assets/bill.png"
