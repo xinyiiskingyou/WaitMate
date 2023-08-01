@@ -1,6 +1,6 @@
 import { DragControls } from "framer-motion";
 
-export function ReorderIcon({ dragControls }) {
+export function ReorderIcon({ dragControls, handleUpdateOrder }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -8,6 +8,7 @@ export function ReorderIcon({ dragControls }) {
       width="20"
       height="20"
       onPointerDown={(event) => dragControls.start(event)}
+      onPointerUp={handleUpdateOrder}
     >
       <path
         d="M 5 0 C 7.761 0 10 2.239 10 5 C 10 7.761 7.761 10 5 10 C 2.239 10 0 7.761 0 5 C 0 2.239 2.239 0 5 0 Z"

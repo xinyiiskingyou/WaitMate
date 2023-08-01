@@ -2,22 +2,22 @@
 import React, { useState, useEffect } from "react";
 import { useCookies } from 'react-cookie';
 import { useMotionValue, Reorder, motion, useDragControls } from "framer-motion";
-import { useRaisedShadow } from "./use-raised-shadow";
+import { useRaisedShadow } from "../use-raised-shadow";
 import { Button, Typography, TextField } from "@mui/material";
-import ListCategories from "./Category/ListCategories";
-import UpdateCategoryOrder from "./Category/UpdateCategoryOrder";
-import UpdateCategoryName from "./Category/UpdateCategoryName";
-import EditIcon from '../../assets/edit.png';
-import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import { ReorderIcon } from "./DragIcon";
-export const Item = ({ item, index, selectedCategory, handleCategoryClick }) => {
+import ListCategories from "./ListCategories"; 
+import UpdateCategoryName from "./UpdateCategoryName";
+import EditIcon from '../../../assets/edit.png';
+import { ReorderIcon } from "./CategoryDragIcon";
+import ErrorHandler from '../../ErrorHandler';
+
+export const CategoryItem = ({ item, index, selectedCategory, handleCategoryClick }) => {
   const [originalIndex, setOriginalIndex] = useState(index);
   const y = useMotionValue(0);
   const boxShadow = useRaisedShadow(y);
   const dragControls = useDragControls();
 
   const [ItemName, setItemName] = useState(item);
-//   const [selectedCategory, setSelectedCategory] = useState(-1);
+
   const handleItemNameChange = (newItemName) => {
     setItemName(newItemName);
   };
@@ -30,12 +30,43 @@ export const Item = ({ item, index, selectedCategory, handleCategoryClick }) => 
     setCategoryEditingIndex(index);
   };
 
-//   const handleCategoryClick = (index) => {
-//     setSelectedCategory(index);
-//   };
-
   const handleClick = () => {
     handleCategoryClick(index);
+  };
+
+
+  const { handleShowSnackbar, showError } = ErrorHandler(); 
+
+  const handleUpdateOrder = async () => {
+    const payload = {
+      name: ItemName,
+      new_index: parseInt(index, 10) + 1
+    };
+
+    try {
+      const response = await fetch('http://localhost:8000/menu/category/update/order', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${cookies.token}`
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        // const updated = [...categories];
+        // const currIndex = parseInt(index, 10);
+        // const newIndex = is_up ? currIndex - 1 : currIndex + 1;
+        // [updated[currIndex], updated[newIndex]] = [updated[newIndex], updated[currIndex]];
+        // setCategories(updated);
+      } else {
+        const errorResponse = await response.json();
+        handleShowSnackbar(errorResponse.detail);
+      }
+    } catch (error) {
+      console.error(error);
+      handleShowSnackbar(error.message);
+    }
   };
   const { categories, setCategories } = ListCategories();
   const [cookies] = useCookies(['token']);
@@ -94,11 +125,10 @@ export const Item = ({ item, index, selectedCategory, handleCategoryClick }) => 
               height: '3vh',
             }}/>
         </Button>
-        {/* <UpdateCategoryOrder cookies={cookies} index={index} categories={categories} 
-                    setCategories={setCategories} 
-        /> */}
-        <Button style={{...EditbuttonStyle,maxWidth: '40px', maxHeight: '40px', minWidth: '40px', minHeight: '40px'}}>
-            <ReorderIcon dragControls={dragControls} />
+
+        <Button 
+          style={{...EditbuttonStyle,maxWidth: '40px', maxHeight: '40px', minWidth: '40px', minHeight: '40px'}}>
+            <ReorderIcon dragControls={dragControls} handleUpdateOrder={handleUpdateOrder}/>
         </Button>
         </div>
         )}

@@ -1,5 +1,6 @@
 import uvicorn
 from src.meme import MemeDB
+from src.menu import MenuDB
 if __name__ == '__main__':
     # meme = MemeDB()
     # meme.like_a_meme("aypasha2@gmail.com", "./images/meme1.png")
@@ -11,4 +12,6 @@ if __name__ == '__main__':
     # meme.like_a_meme("123456@gmail.com", "./images/images?q=tbn:ANd9GcTwrN-gYs0DEy8SJWL5KvUmPSFxrX11ux7fDQ&usqp=CAU.png")
     
     # meme.clear_data()
+    # menu = MenuDB()
+    # menu.clear_data()
     uvicorn.run('app.api:app', host='0.0.0.0', port=8000, reload=True)

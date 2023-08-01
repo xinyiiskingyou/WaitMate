@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Card, IconButton, Pagination, PaginationItem, Tooltip } from "@mui/material";
 import AddItem from "./AddItem"
 import UpdateItemOrder from "./UpdateItemOrder"
@@ -23,6 +23,11 @@ const ManageItems = ({
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
   const itemsForCurrentPage = menuItems.slice(startIndex, endIndex);
+  const [items, setItems] = useState(itemsForCurrentPage);
+
+  useEffect(() => {
+    setItems(itemsForCurrentPage);
+  }, [itemsForCurrentPage]);
 
   const handlePageChange = (event, newPage) => {
     setCurrentPage(newPage);
@@ -89,7 +94,7 @@ const ManageItems = ({
                     cookies={cookies}
                   />
                   <RemoveItem itemName={menuItem.name} cookies={cookies} onItemRemove={() => handleRemoveItemClick(index)}/>
-                  <UpdateItemOrder name={menuItem.name} onItemsCategory={onItemsCategory} cookies={cookies} />
+                  <UpdateItemOrder name={menuItem.name} index={index} onItemsCategory={onItemsCategory} cookies={cookies} />
                 </Card>
               </div>
           ))}

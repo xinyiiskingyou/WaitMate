@@ -17,7 +17,7 @@ import ListItems from './Items/ListItems'
 import ManageItems from './Items/ManageItems'
 import Manager from '../Staff/ManagerInterface'
 import { Reorder, motion } from "framer-motion";
-import { Item } from "./Item";
+import { CategoryItem } from "./Category/CategoryItem";
 const EditButtonStyle = {
   marginTop: '2.5vh',
   marginLeft: '1vw',
@@ -106,7 +106,7 @@ const ManageMenu = () => {
             <AddCategory cookies={cookies} categories={categories} setCategories={setCategories} />
             <Reorder.Group axis="y" onReorder={setCategories} values={items}>
               {Object.entries(items).map(([index, category]) => (
-                <Item 
+                <CategoryItem 
                   key={category} 
                   item={category} 
                   index={index}

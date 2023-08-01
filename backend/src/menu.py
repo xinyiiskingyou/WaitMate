@@ -387,11 +387,12 @@ class MenuDB:
             None
         '''
         print(self.get_all_categories())
-        print(new_index)
+        print("currently: ", category_name, " ", new_index)
         # check if category name is valid
         if not check_categories_key_is_valid('name', category_name, self.session):
             raise InputError(detail='Invalid category name')
 
+        print("breakpoint")
         prev_order = self.session.query(Categories.cat_order).filter_by(name=category_name).scalar()
 
         total_count = self.session.query(Categories.name).count()
@@ -403,15 +404,18 @@ class MenuDB:
          # the first item of the table cannot move up
         if prev_order == 1 and new_index < prev_order:
             raise InputError(detail=INVALID_ORDER_MSG)
-
+        print("prev order : ", prev_order)
         try:
             # swap order
             row1 = self.session.query(Categories).filter_by(cat_order=prev_order).one()
+            print("row1: ", row1)
             row2 = self.session.query(Categories).filter_by(cat_order=new_index).one()
+            print("row2: ", row2)
             row1.cat_order, row2.cat_order = row2.cat_order, row1.cat_order
             self.session.commit()
         except Exception as error:
             self.session.rollback()
+            print(str(error))
             raise InputError(detail=f'Error occurred: {str(error)}') from error
         finally:
             self.session.close()
