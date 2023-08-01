@@ -15,6 +15,7 @@ import {
 import WestIcon from '@mui/icons-material/West';
 import ListTableOrder from "./ListTableOrder";
 import GetBill from "../Checkout/GetBill";
+import customTableCell,  { CustomCell } from './CellStyle';
 
 const ViewCart = () => {
   const id = useParams();
@@ -82,27 +83,18 @@ const ViewCart = () => {
                 <Table aria-label='custom pagination table' >
                   <TableBody>
                     <TableRow>
-                      <TableCell style={{ width: '25%', textAlign: 'center' }} component='th' scope='row' justify="space-between" align="center" sx={{ fontSize: 24, borderBottom: 'none', pr: -10 }}>
-                        <b>Qty x Item</b>
-                      </TableCell>
-                      <TableCell style={{ width: '25%', textAlign: 'center' }} component='th' scope='row' justify="space-between" align="center" sx={{ fontSize: 24, borderBottom: 'none', pr: -10 }}>
-                        <b>Price</b>
-                      </TableCell>
-                      <TableCell style={{ width: '25%', textAlign: 'center' }} component='th' scope='row' justify="space-between" align="center" sx={{ fontSize: 24, borderBottom: 'none', pr: -10 }}>
-                        <b>Status</b>
-                      </TableCell>
+                      {customTableCell('Qty x Item')}
+                      {customTableCell('Price')}
+                      {customTableCell('Status')}
                     </TableRow>
                     {orders.map((row) => (
                       <TableRow key={row.name}>
-                        <TableCell style={{ width: '25%', textAlign: 'center' }} component='th' scope='row' justify="space-between" align="center" sx={{ fontSize: 23, borderBottom: 'none', pr: -10 }}>
-                          {row.amount} x {row.name.toUpperCase()}
-                        </TableCell>
-                        <TableCell style={{ width: '20%', textAlign: 'center' }} component='th' scope='row' justify="space-between" align="center" sx={{ fontSize: 23, borderBottom: 'none', pl: 3 }}>
-                          ${row.cost}
-                        </TableCell>
-                        <TableCell style={{ width: '20%', textAlign: 'center', color: row.is_prepared === 0 ? 'orange' : row.is_served === 1 ? 'green' : 'blue' }} component='th' scope='row' justify= "space-between" align= "center" sx={{ fontSize: 23, borderBottom: 'none', pl: 3}}>
-                          {row.is_prepared === 0 ? "Preparing" : row.is_served === 1 ? "Served" : "Ready"}
-                        </TableCell>
+                        <CustomCell content={`${row.amount} x ${row.name.toUpperCase()}`} width="23%"/>
+                        <CustomCell content={`$${row.cost}`} paddingRight={1}/>
+                        <CustomCell
+                          content={row.is_prepared === 0 ? "Preparing" : row.is_served === 1 ? "Served" : "Ready"}
+                          color={row.is_prepared === 0 ? '#C9A735' : row.is_served === 1 ? '#A1C935' : '#35A1C9'}
+                        />
                       </TableRow>
                     ))}
                   </TableBody> 
