@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useCookies } from 'react-cookie';
-import { IconButton, Box } from "@mui/material";
+import { IconButton, Paper } from "@mui/material";
 import UpdateTable from "./UpdateTable";
 import ErrorHandler from '../ErrorHandler';
 import order from "../../assets/order.png";
@@ -49,11 +49,11 @@ const ViewTables = ({
             justifyContent: "center",
           }}
         >
-          <div style={{ textAlign: "center" }}><b>Table {id}</b></div>
+          <div style={{ textAlign: "center", whiteSpace: 'nowrap', fontSize: '2.7vh'}}><b>Table {id}</b></div>
         </div>
           <UpdateTable table_id={id} value={value} cookies={cookies} />
         <IconButton onClick={() => handleFetchOrder(id)}>
-          <img src={order} alt="MemeIcon" style={{ width: '1.8vw', height: '3.5vh' }}/>
+          <img src={order} alt="MemeIcon" style={{ width: '1.8vw', height: '3.7vh' }}/>
         </IconButton>
       </div>
     );
@@ -64,10 +64,18 @@ const ViewTables = ({
   })
 
   return (
-    <Box sx={{ border: '2px solid #000', width: '50%', height: '80vh', m: 2, padding: "3%" }}>
+    <Paper elevation={5} sx={{
+      padding: "20px",
+      borderRadius: "8px",
+      width: "31vw", 
+      height: "80vh", 
+      left: "250px",
+      position: 'fixed',
+      marginTop: '9vh',
+    }}>
       {tableElements}
       {showError}
-    </Box>
+    </Paper>
   );
 };
 

@@ -7,7 +7,6 @@ import {
   Typography,
   TableContainer,
   Table,
-  TableCell,
   TableBody,
   TableRow,
   Box,

@@ -45,7 +45,7 @@ const WaitstaffMarkOrder = ({amount, name, is_prepared, is_served, id}) => {
   return (
   <div style={{width: "100%"}}>
     <div style={{ marginTop: "20px", display:"flex", flexDirection: "row", justifyContent: "space-between"}}>
-      <Typography variant="h5">{amount} x {name} </Typography>
+      <Typography variant="h5">{amount} x {name.toUpperCase()} </Typography>
       <Button onClick={handleComplete} disabled={state !== "ready"}>{state}</Button>
     </div>
     {showError}
