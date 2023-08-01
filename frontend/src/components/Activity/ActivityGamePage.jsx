@@ -3,11 +3,18 @@ import { Box } from '@mui/material';
 import logo from '../../assets/WaitMate.png'
 import ActivityPink from './ActivityPink'
 import MemoryTab from './MemoryTab'
+import { pink } from '@mui/material/colors';
+import { useState } from "react";
 
 function GamePage() {
   const id = useParams();
   const backLink = `/customer/activity/${id.id}`
   const darkMode = false 
+  const [cardBackground, setCardBackground] = useState(pink[300])
+
+  const changeBackground = (value) => {
+    setCardBackground(value)
+  }
 
   return(
     <Box 
@@ -27,7 +34,7 @@ function GamePage() {
           pr: 2
         }}
       >
-        <ActivityPink backLink={backLink}/>
+        <ActivityPink backLink={backLink} changeBackground={changeBackground}/>
         <Box          
           sx={{
             display: 'flex',
@@ -47,7 +54,7 @@ function GamePage() {
         </Box>
       </Box>
 
-      <MemoryTab />
+      <MemoryTab pinkbackground={cardBackground}/>
     </Box>
   )
 }

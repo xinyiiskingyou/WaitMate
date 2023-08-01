@@ -32,7 +32,7 @@ const cardImages = [
   {src: "/img/memory_6.png", matched: false},
 ]
 
-function MemoryTab() {
+function MemoryTab({pinkbackground}) {
   const [cards, setCards] = useState([])
   const [turns, setTurns] = useState(0)
   const [firstCard, setFirstCard] = useState(null)
@@ -175,6 +175,7 @@ function MemoryTab() {
                 handleChoice={handleChoice}
                 flipped={card === firstCard || card === secCard || card.matched}
                 disable={disabled}
+                pinkbackground={pinkbackground}
               />
             ))}
           </Grid>

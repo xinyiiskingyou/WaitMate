@@ -18,7 +18,7 @@ const CardBack = styled(Box)(() => ({
   transitionDelay: 0.2,
   border: `4px outset ${mainPink}`,
   borderRadius: 5,
-  backgroundColor: mainPink,
+  backgroundColor: `${(props) => props.backgroundColor || mainPink}`
 }));
 
 const styles =  {
@@ -28,7 +28,7 @@ const styles =  {
   }
 }
 
-function MemoryCard({ card, handleChoice, flipped, disable }) {
+function MemoryCard({ card, handleChoice, flipped, disable, pinkbackground }) {
   const handleClick = () => {
     if (!disable) {
       handleChoice(card)
@@ -39,7 +39,7 @@ function MemoryCard({ card, handleChoice, flipped, disable }) {
     <Grid item>
       <Grid className={flipped ? "flipped" : ""}>
         {flipped ?           
-          <CardBack>
+          <CardBack backgroundColor={pinkbackground}>
             <img 
               src={card.src} 
               style={styles.imgsize} 
@@ -67,7 +67,7 @@ function MemoryCard({ card, handleChoice, flipped, disable }) {
               xs={{transform: 0}}
             />
           </CardFace> :         
-          <CardBack>
+          <CardBack backgroundColor={pinkbackground}>
             <img 
               src='/img/memory_bg.jpg' 
               onClick={handleClick} 

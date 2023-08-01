@@ -28,7 +28,7 @@ export const GameSlider = styled(Slider)(() => ({
    },
 }));
 
-function ActivityPink({backLink}) {
+function ActivityPink({backLink, changeBackground}) {
   const [gamePink, setGamePink] = useState(0)
   const [gameGreen, setGameGreen] = useState(0)
   const [gameBlue, setGameBlue] = useState(0)
@@ -42,6 +42,14 @@ function ActivityPink({backLink}) {
     // console.log(color.slice(0, 3) + String(gameGreen) + color.slice(4,5))
 
     return color.slice(0, 3) + String(gameGreen) + color.slice(4,5) + String(gameBlue) + color.slice(6);
+  }
+
+  const handleGameClick = () => {
+    if (gamePink === 0) {
+      changeBackground(pink[300])
+    } else {
+      changeBackground(getPink())
+    }
   }
 
   const handlePinkClickUp = () => {
@@ -131,7 +139,7 @@ function ActivityPink({backLink}) {
         height='100%' 
         flexDirection="column"
         justifyContent='center'>
-        <Box 
+        <GameButton onClick={handleGameClick}
           sx={{ 
             width: '80%', 
             height: '40%', 
@@ -140,7 +148,7 @@ function ActivityPink({backLink}) {
             borderRadius: 1,
             mb: 1
           }}>
-        </Box>  
+        </GameButton>  
         <Box display='flex' flexDirection='row' justifyContent='center' alignItems='center' >
         <Box width='110px'>
           <GameSlider size="small" sx={{ color: blue[300], borderRadius: 0, py: 1.5 }} step={1} min={0} max={9} value={gameBlue} onChange={handleBlueSlide}></GameSlider>
