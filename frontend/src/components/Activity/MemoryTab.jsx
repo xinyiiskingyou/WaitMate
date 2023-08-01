@@ -10,7 +10,7 @@ import { GameButton, HeaderButtons } from './ActivityButtons'
 
 const usedPink = pink[300]
 
-const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
+const BorderLinearProgress = styled(LinearProgress)(({ }) => ({
   height: 30,
   borderRadius: 5,
   border: `4px outset ${pink[300]}`,
