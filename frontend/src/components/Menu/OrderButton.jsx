@@ -4,17 +4,17 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
 const smallbuttonStyle = {
-  marginTop: '2.9vh',
-  height: '50%',
+  padding: '4px',
   border: '1px solid #bdbdbd',
-  color: 'black'
+  color: 'black',
+  marginBottom: "10px"
 }
 
 const OrderButton = ({ onClick, isUpButton }) => {
   const icon = isUpButton ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />;
 
   return (
-    <Button color="primary" style={{ ...smallbuttonStyle, padding: '4px', fontSize: '10px' }} onClick={onClick}>
+    <Button color="primary" style={{ ...smallbuttonStyle}} onClick={onClick}>
       {icon}
     </Button>
   );

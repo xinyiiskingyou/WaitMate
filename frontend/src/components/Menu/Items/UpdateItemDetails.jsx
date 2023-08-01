@@ -90,7 +90,7 @@ const UpdateItemDetails = ({
   
   return (
     <>
-      <CardContent>
+      <CardContent style={{marginTop: "-20px"}}>
         <Typography variant="h6" gutterBottom style={{ fontWeight: 'bold', textAlign: "center" }}>
           {name.toUpperCase()}
           {vegetarian ? (
@@ -122,7 +122,7 @@ const UpdateItemDetails = ({
       <Button
         size="small"
         onClick={handleOpen}
-        style={{ color: 'white', backgroundColor: '#7CBD96' }}>
+        style={{ color: 'white', backgroundColor: '#7CBD96', marginRight: "10px", marginLeft: "10px", marginBottom: "10px" }}>
         <ModeEditIcon/>
       </Button>
       

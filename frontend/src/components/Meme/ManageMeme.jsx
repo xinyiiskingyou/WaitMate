@@ -52,7 +52,7 @@ const ManageMeme = () => {
 
     useEffect(() => {
         fetchMemes();
-    }, []);
+    }, [memes]);
 
     const fetchMemes = async () => {
         try {

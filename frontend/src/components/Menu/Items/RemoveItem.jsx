@@ -1,8 +1,8 @@
 import React from "react";
-import { Button } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import ErrorHandler from '../../ErrorHandler';
 import DeleteIcon from '@mui/icons-material/Delete';
-
+import CloseIcon from '@mui/icons-material/Close';
 const RemoveItem = ({
   itemName,
   cookies,
@@ -37,13 +37,16 @@ const RemoveItem = ({
 
   return (
     <>
-      <Button 
+      {/* <Button 
         variant="contained"
         size="small" 
         onClick={() => handleRemove()}
-        style={{ color: 'white', backgroundColor: '#FF7A7A' }}>
-        <DeleteIcon/>
-      </Button>
+        style={{ color: 'white', backgroundColor: '#FF7A7A' }}> */}
+      <IconButton style={{ }} onClick={() => handleRemove()}>
+      <CloseIcon/>
+      </IconButton>
+        
+      {/* </Button> */}
       {showError}
     </>
   );

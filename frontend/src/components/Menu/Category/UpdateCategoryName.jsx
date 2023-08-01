@@ -5,7 +5,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import ErrorHandler from '../../ErrorHandler';
 
 const EditCatebuttonStyle = {
-  marginTop: '20%',
+  marginTop: '10px',
   width: '10%',
   height: '40%',
 }

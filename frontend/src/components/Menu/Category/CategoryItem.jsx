@@ -98,7 +98,7 @@ export const CategoryItem = ({ item, index, selectedCategory, handleCategoryClic
             size='small'
             variant='outlined'
             color='primary'
-            style={{ margin: '5%', width: '80%' }}
+            style={{ width: '80%' }}
             onChange={(e) => handleCategoryInputChange(e.target.value, index)}
             fullWidth 
             />

@@ -95,6 +95,7 @@ const ManageItems = ({
             .map(([index, menuItem]) => (
               <div key={index} style={{ width: '20vw', height: '30vh', margin: '4%' }}>
                 <Card sx={{ maxHeight: '34vh', width: '100%', backgroundColor: "#FBDDDD" }}>
+                  <RemoveItem itemName={menuItem.name} cookies={cookies} onItemRemove={() => handleRemoveItemClick(index)}/>
                   <UpdateItemDetails 
                     itemCategory={categories[selectedCategory]}
                     itemName={menuItem.name}
@@ -105,7 +106,6 @@ const ManageItems = ({
                     itemIndex={index}
                     cookies={cookies}
                   />
-                  <RemoveItem itemName={menuItem.name} cookies={cookies} onItemRemove={() => handleRemoveItemClick(index)}/>
                   <UpdateItemOrder name={menuItem.name} index={index} onItemsCategory={onItemsCategory} cookies={cookies} />
                 </Card>
               </div>
