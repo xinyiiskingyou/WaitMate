@@ -58,7 +58,7 @@ const CustomerInterface = () => {
                 <Button style={buttonStyle} component={Link} to={`/customer/meme/${id.id}`}>
                   Meme of the Week
                 </Button>
-                <Button style={buttonStyle} component={Link} to={`/customer/activity/${id.id}`}>
+                <Button style={buttonStyle} component={Link} to={`/customer/activity/gamepage/${id.id}`}>
                   Too Bored?
                 </Button>
                 <SendNotification id={id.id}/>

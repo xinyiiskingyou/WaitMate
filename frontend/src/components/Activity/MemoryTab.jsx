@@ -43,7 +43,7 @@ function MemoryTab({pinkbackground}) {
   const [open, setOpen] = useState(false);
 
   const id = useParams();
-  const backLink = `/customer/activity/${id.id}` 
+  const backLink = `/customer/browse/${id.id}` 
 
   const shuffleCards = () => {
     const shuffledCards = [...cardImages, ...cardImages]
@@ -142,11 +142,11 @@ function MemoryTab({pinkbackground}) {
           p: '4px',
           background: `linear-gradient(to right, ${pink[600]}, ${pink[200]})` 
         }}>
-        <Typography color='white' 
+        <Typography color='white'
           sx={{
             ml: 1, 
             fontFamily: 'cursive', 
-            letterSpacing: '1px'
+            letterSpacing: '1px',
           }}
         >
           memory game

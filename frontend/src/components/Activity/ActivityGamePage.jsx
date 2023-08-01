@@ -8,7 +8,7 @@ import { useState } from "react";
 
 function GamePage() {
   const id = useParams();
-  const backLink = `/customer/activity/${id.id}`
+  const backLink = `/customer/browse/${id.id}`
   const darkMode = false 
   const [cardBackground, setCardBackground] = useState(pink[300])
 
