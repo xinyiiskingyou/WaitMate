@@ -16,10 +16,6 @@ const LikeMeme = ({ filename }) => {
   const { handleShowSnackbar, showError } = ErrorHandler();
   const [open, setOpen] = useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
   const handleClose = () => {
     setOpen(false);
   };
@@ -38,8 +34,11 @@ const LikeMeme = ({ filename }) => {
         },
         body: JSON.stringify(payload),
       })
-
-      if (! response.ok) {
+      console.log('email', email);
+      setOpen(false);
+      if (response.ok) {
+        return response.json();
+      } else {
         const errorResponse = await response.json();
         handleShowSnackbar(errorResponse.detail);
       }
@@ -59,7 +58,7 @@ const LikeMeme = ({ filename }) => {
       justifyContent: "center",
       position: 'fixed',
     }}>
-      <Button onClick={handleClickOpen}>
+      <Button onClick={() => setOpen(true)}>
         <FavoriteIcon style={{ fontSize: '6vh', color: '#FF9EE4', position: 'fixed'}}/>
       </Button>
       <Dialog open={open} onClose={handleClose}>
@@ -80,7 +79,7 @@ const LikeMeme = ({ filename }) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleLikeMeme} color="primary">
+          <Button onClick={() => handleLikeMeme()} color="primary">
             Like
           </Button>
         </DialogActions>

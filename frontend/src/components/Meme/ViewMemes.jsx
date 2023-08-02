@@ -28,7 +28,7 @@ const ViewMemes = () => {
 
   useEffect(() => {
     fetchMemes();
-  })
+  }, [memes])
 
   return { memes }
 }

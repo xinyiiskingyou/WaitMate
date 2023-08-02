@@ -79,8 +79,9 @@ class MemeDB():
 
     def like_a_meme(self, email: str, filename: str) -> None:
 
-        if not self._check_valid_email(email):
-            raise InputError("Email is not valid.")
+        search = r'\b^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$\b'
+        if not re.search(search, email):
+            raise InputError(detail='This email is of invalid form')
 
         meme = self.session.query(Memes).filter(Memes.filename.ilike(f'%{filename}%')).first()
         if not meme:
@@ -172,35 +173,35 @@ class MemeDB():
     def _check_valid_email(self, email: str) -> bool:
 
         # Address used for SMTP MAIL FROM command.
-        sender = 'test@example.com'
+        # sender = 'test@example.com'
 
         # Simple Regex for syntax checking
         search = r'\b^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$\b'
         if not re.search(search, email):
             raise InputError(detail='This email is of invalid form')
 
-        # Get domain for DNS lookup
-        address = email.split('@')
-        domain = str(address[1])
+        # # Get domain for DNS lookup
+        # address = email.split('@')
+        # domain = str(address[1])
 
-        server = None
-        try:
-            # MX record lookup
-            records = dns.resolver.resolve(domain, 'MX')
-            mx_record = records[0].exchange
-            mx_record = str(mx_record)
+        # server = None
+        # try:
+        #     # MX record lookup
+        #     records = dns.resolver.resolve(domain, 'MX')
+        #     mx_record = records[0].exchange
+        #     mx_record = str(mx_record)
 
-            host = socket.gethostname()
-            server = smtplib.SMTP()
-            server.set_debuglevel(0)
+        #     host = socket.gethostname()
+        #     server = smtplib.SMTP()
+        #     server.set_debuglevel(0)
 
-            server.connect(mx_record)
-            server.helo(host)
-            server.mail(sender)
-            code, _ = server.rcpt(str(email))
-            return code == 250
-        except Exception as err:
-            raise InputError(detail='Error: '+ str(err)) from err
-        finally:
-            if server:
-                server.quit()
+        #     server.connect(mx_record)
+        #     server.helo(host)
+        #     server.mail(sender)
+        #     code, _ = server.rcpt(str(email))
+        #     return code == 250
+        # except Exception as err:
+        #     raise InputError(detail='Error: '+ str(err)) from err
+        # finally:
+        #     if server:
+        #         server.quit()

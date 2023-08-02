@@ -67,7 +67,7 @@ const CustomerMeme = () => {
         Meme of the Week
       </Typography>
       <Button onClick={handlePrev}><KeyboardArrowLeftIcon style={{...buttonStyle, marginRight: '4vw'}}/></Button>
-      <Paper elevation={10} sx={{ width: '56vw', height: '80vh' }}>
+      <Paper elevation={10} sx={{ width: '56vw', height: '85vh' }}>
         {currentMemes.map((meme) => (
           <div key={meme.memeID} style={{
             display: "flex",
@@ -86,7 +86,7 @@ const CustomerMeme = () => {
             </Typography>
             <CardMedia
               component="img"
-              style={{ maxWidth: "500px", maxHeight: "800px", minWidth: '400px', minHeight: '400px'}}
+              style={{ maxWidth: "500px", maxHeight: "800px", minWidth: '300px', minHeight: '300px'}}
               image={meme.img_url}
               alt={meme.filename}
             />

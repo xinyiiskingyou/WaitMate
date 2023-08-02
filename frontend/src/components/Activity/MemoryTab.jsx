@@ -92,6 +92,7 @@ function MemoryTab({pinkbackground}) {
     })
 
     if (count === 10) {
+      setLost(false)
       setOpen(true)
       return true
     }
